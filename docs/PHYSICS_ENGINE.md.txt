@@ -1,0 +1,220 @@
+Physics AI Engine V2
+
+核心目标
+
+将任意物理题转换为：
+
+Physics Problem
+
+↓
+
+PhysicsScene
+
+↓
+
+3D Experiment
+
+↓
+
+Teaching Animation
+
+↓
+
+Knowledge Graph
+
+↓
+
+Learning Output
+
+⸻
+
+核心原则
+
+理解 > 演示 > 交互 > 答案
+
+优先建立物理直觉。
+
+⸻
+
+PhysicsScene规范
+
+统一数据结构：
+
+{
+entities: [],
+environment: [],
+forces: [],
+constraints: [],
+equations: [],
+timeline: [],
+camera_script: [],
+ui_controls: [],
+knowledge_tags: []
+}
+
+所有模块只能读取PhysicsScene。
+
+禁止直接读取题目文本。
+
+⸻
+
+解析流程
+
+Physics Problem
+
+↓
+
+Entity Extraction
+
+↓
+
+Environment Extraction
+
+↓
+
+Force Analysis
+
+↓
+
+Motion Analysis
+
+↓
+
+Timeline Generation
+
+↓
+
+PhysicsScene
+
+⸻
+
+实体识别
+
+识别：
+
+* 小球
+* 滑块
+* 电荷
+* 摆球
+* 光线
+* 弹簧
+* 导体棒
+* 活塞
+
+⸻
+
+环境识别
+
+识别：
+
+* 斜面
+* 电场
+* 磁场
+* 重力场
+* 导轨
+* 透镜
+* 容器
+
+⸻
+
+运动识别
+
+识别：
+
+* 匀速运动
+* 匀变速运动
+* 自由落体
+* 平抛运动
+* 圆周运动
+* 简谐运动
+* 碰撞
+* 波动
+* 光学传播
+
+⸻
+
+Three.js实验生成规则
+
+必须生成：
+
+* 三维坐标系
+* 发光轨迹
+* 动态受力箭头
+* 参数控制面板
+* 数据面板
+
+支持：
+
+* Rotate
+* Zoom
+* Pan
+* Replay
+* Reset
+
+⸻
+
+Manim动画规则
+
+自动生成：
+
+* 受力分析动画
+* 能量分析动画
+* 公式推导动画
+* 运动轨迹动画
+
+⸻
+
+学习系统输出
+
+输出：
+
+* 知识点
+* 易错点
+* 推荐练习
+* 学习建议
+
+⸻
+
+输出顺序
+
+Step1
+
+PhysicsScene
+
+↓
+
+Step2
+
+知识点分析
+
+↓
+
+Step3
+
+实验控件
+
+↓
+
+Step4
+
+Three.js实验方案
+
+↓
+
+Step5
+
+Manim动画方案
+
+↓
+
+Step6
+
+学习系统输出
+
+↓
+
+Step7
+
+扩展练习
+
+禁止跳过步骤。

@@ -1,16 +1,17 @@
 ﻿# Project Status
 
-**Version:** V2.0 (Sprint S04)
+**Version:** V2.0 (Sprint S05)
 **Last Commit:** TBD
 **Branch:** main
-**Status:** Building & Running (653 modules, zero type errors, 237 i18n keys)
+**Status:** Building & Running (655 modules, zero type errors, 260 i18n keys)
 
-## Experiments Available
+## Experiments
 
-| Plugin | ID | Difficulty |
-|--------|-----|------------|
-| Free Fall | free-fall | easy |
-| Projectile Motion | projectile-motion | medium |
+| # | Plugin | ID | Difficulty | Forces |
+|---|--------|-----|------------|--------|
+| 1 | Free Fall | free-fall | easy | Gravity |
+| 2 | Projectile Motion | projectile-motion | medium | Gravity |
+| 3 | Inclined Plane | inclined-plane | medium | Gravity + Normal + Friction |
 
 ## Features
 
@@ -18,25 +19,18 @@
 |---------|--------|
 | 3-mode system (Learning/Experiment/Analysis) | Done |
 | Timeline with phase nodes + playhead | Done |
-| Teacher Panel 7-step flow + quizzes | Done |
+| Teacher Panel 7-step flow + interactive quizzes | Done |
 | Canvas charts with hover tooltips | Done |
 | Plugin switching (experiment selector) | Done |
 | 2D physics (ballX + ballY) | Done |
 | Camera animations between phases | Done |
 | Bounce squash/stretch visual | Done |
-| Full i18n (zh-CN + en-US) | Done |
+| Full i18n (zh-CN + en-US, 260 keys) | Done |
 | Rule-based AI parser | Done |
 
 ## Known Issues
 
 - No Ollama integration yet (rule-based parser only)
-- Camera transitions can conflict with OrbitControls drag
-- Large bundle: ~1.2 MB JS (needs code splitting)
-
-## Tech Stack
-
-- Electron + React + TypeScript
-- Three.js / React Three Fiber
-- Zustand (state management)
-- TailwindCSS (styling)
-- Vite (bundling)
+- Camera can conflict with OrbitControls during phase transitions
+- Large bundle: ~1.24 MB JS (needs code splitting)
+- Inclined plane block uses "ball" key in store (semantic mismatch)

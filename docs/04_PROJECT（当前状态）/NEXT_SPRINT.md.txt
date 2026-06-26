@@ -1,21 +1,15 @@
-﻿# Next Sprint: S05
+﻿# Next Sprint: S06
 
 ## Priority 1: Ollama AI Integration
 - Wire AIProvider to Ollama (qwen2.5 or deepseek)
-- Parse free-fall problems from natural language input
+- Parse free-fall/incline problems from natural language
 - Graceful fallback when Ollama unavailable
-- Stream parsing progress to UI
 
-## Priority 2: Inclined Plane Plugin
-- New experiment: friction block on incline
-- Visual: tilted plane, normal force, friction arrows
-- Physics: component decomposition, friction model
-
-## Priority 3: Collision Plugin
-- Two balls colliding (elastic + inelastic)
+## Priority 2: Collision Plugin
+- Two-ball elastic + inelastic collisions
 - Conservation of momentum visualization
 - Coefficient of restitution parameter
 
-## Priority 4: Experiment Report Export
-- Generate PDF/Markdown report from experiment state
+## Priority 3: Experiment Report Export
+- Generate PDF/Markdown report from scene + data
 - Include: parameters, charts, formulas, knowledge points

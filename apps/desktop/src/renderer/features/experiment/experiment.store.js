@@ -9,8 +9,14 @@ function computePhysics(height, gravity, mass, t, pluginId) {
     const plugin = pluginRegistry.get(pluginId);
     if (plugin?.computeState) {
         if (pluginId === "projectile-motion") {
-            // Projectile: params include v0 and angle
             const state = plugin.computeState(t, { g: gravity, h0: height, mass, v0: 10, angle: 30 });
+            const pos = state.positions.ball;
+            const vel = state.velocities.ball;
+            const acc = state.accelerations.ball;
+            return { x: pos[0], y: Math.max(pos[1], GROUND_Y), vy: vel[1], ay: acc[1] };
+        }
+        if (pluginId === "inclined-plane") {
+            const state = plugin.computeState(t, { g: gravity, angle: 30, friction: 0.3, mass });
             const pos = state.positions.ball;
             const vel = state.velocities.ball;
             const acc = state.accelerations.ball;
@@ -237,7 +243,7 @@ export const useSimulation = create((set, get) => ({
             set({
                 currentTime: s.totalDuration, playing: false,
                 trail: generateTrail(s.height, s.gravity, s.mass, s.totalDuration, s.activePluginId),
-                ballX: s.activePluginId === "projectile-motion" ? 8.66 * s.totalDuration : 0,
+                ballX: s.activePluginId === "projectile-motion" ? 8.66 * s.totalDuration : (s.activePluginId === "inclined-plane" ? 5.5 : 0),
                 ballY: GROUND_Y, ballVelocity: 0, ballAcceleration: -s.gravity,
                 currentPhaseId: getPhaseId(s.phases, s.totalDuration),
             });

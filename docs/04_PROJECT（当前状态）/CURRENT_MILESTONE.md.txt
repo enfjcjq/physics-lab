@@ -1,17 +1,16 @@
-﻿# Current Milestone: S04 (Completed)
+﻿# Current Milestone: S05 (Completed)
 
-**Goal:** Canvas charts upgrade, interactive quizzes, Ollama prep, UI polish
+**Goal:** Inclined plane plugin — 3rd experiment, force decomposition + friction
 
 **Completed:**
-- [x] Charts: SVG migrated to Canvas (ResizeObserver, DPR-aware, playhead, tooltips)
-- [x] Interactive quiz: 2 checkpoints in TeacherPanel (after force analysis + after derivation)
-- [x] Quiz feedback: correct/incorrect with explanations
-- [x] Plugin dropdown i18n fix
-- [x] i18n: 237 keys (zh-CN + en-US)
-- [x] Type-check + build: 653 modules, zero errors
+- [x] Inclined plane PhysicsScene (4 phases, incline entity, 3 forces: gravity/normal/friction)
+- [x] Inclined plane plugin: computeState with angle/friction/mass/gravity params
+- [x] Plugin registered in App.tsx (3 plugins total)
+- [x] experiment.store updated for incline physics (angle + friction)
+- [x] i18n: 260 keys (zh-CN + en-US) including 7 teacher steps
+- [x] Type-check + build: 655 modules, zero errors
 
-**Next: S05**
-- Ollama AI integration for problem parsing
-- Inclined plane plugin (3rd experiment)
-- Collision plugin
-- Experiment report export
+**Next: S06**
+- Ollama AI integration for real problem parsing
+- Collision plugin (elastic + inelastic)
+- Experiment report export (PDF/Markdown)

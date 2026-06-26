@@ -2,34 +2,39 @@
 
 ---
 
+# S05 - Inclined Plane Plugin (3rd Experiment)
+
+Completed:
+- New inclined plane PhysicsScene with incline geometry, 3 forces (G/N/f)
+- Inclined plane plugin: computeState with angle + friction parameters
+- Plugin architecture now supports 3 experiments (free-fall, projectile, incline)
+- i18n: 260 keys (zh-CN + en-US) with 7 teacher steps for incline
+- Type-check + build: 655 modules, zero errors
+
+---
+
 # S04 - Canvas Charts & Interactive Quiz
 
 Completed:
-- Charts: migrated from SVG to Canvas (ResizeObserver, DPR-aware, playhead sync, mouse hover tooltips)
-- Interactive quiz: 2 checkpoints in TeacherPanel with correct/incorrect feedback
-- Quiz questions: force analysis check + velocity-time relationship check
-- Plugin dropdown now uses i18n for names
-- i18n: 237 keys (zh-CN + en-US)
-- Type-check + build: 653 modules, zero errors
+- Charts migrated from SVG to Canvas with DPR-aware rendering and hover tooltips
+- Interactive quiz: 2 checkpoints in TeacherPanel (force + derivation)
+- Plugin dropdown i18n fix
 
 ---
 
 # S03 - Projectile Motion Plugin & 2D Physics
 
 Completed:
-- New projectile motion PhysicsScene (6 phases, 5 equations, 4 knowledge tags)
-- Projectile motion plugin: 2D computeState with v0/angle/g/mass params
-- Plugin switching: dropdown selector in LeftPanel changes active experiment
-- 2D physics engine: ballX tracking in experiment.store
-- Scene3D: all renderers (ball, arrows, ruler, HUD, formula) now 2D-aware
-- i18n: 221 keys
+- Projectile motion plugin (6 phases, 5 equations)
+- 2D physics: ballX tracking, Scene3D 2D-aware
+- Plugin switching dropdown
 
 ---
 
 # S02 - 3D Polish & Plugin Wiring
 
 Completed:
-- CameraAnimator smooth lerp, bounce visual, plugin computeState wired to store
+- CameraAnimator, bounce visual, plugin computeState wired
 - MenuBar learning-mode simplification
 
 ---
@@ -37,39 +42,39 @@ Completed:
 # V1.1 - UX Polish
 
 Completed:
-- Timeline rebuilt, 7-step Teacher Panel, 3D arrows/ruler/HUD, i18n 196 keys
+- Timeline rebuilt, 7-step Teacher Panel, 3D arrows, i18n 196 keys
 
 ---
 
 # V1.0
 
 Completed:
-- Timeline as single source of truth, 3-mode system, AppShell redesign
+- Timeline as single source of truth, 3-mode system
 
 ---
 
 # V0.4
 
 Completed:
-- Full Timeline controls, Teaching Overlay, Visualization toggles, i18n foundation
+- Full Timeline controls, Teaching Overlay, i18n foundation
 
 ---
 
 # V0.3
 
 Completed:
-- Dock windows, Timeline, Language switching, Plugin System
+- Dock windows, Timeline, Plugin System
 
 ---
 
 # V0.2
 
 Completed:
-- Free fall experiment, Parameter controls, AI analysis, Charts
+- Free fall, Parameter controls, AI analysis
 
 ---
 
 # V0.1
 
 Completed:
-- Electron project, React framework, Three.js basic scene
+- Electron + React + Three.js

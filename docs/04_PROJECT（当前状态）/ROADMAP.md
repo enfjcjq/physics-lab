@@ -6,12 +6,12 @@
 - [x] 3-mode system (Learning/Experiment/Analysis)
 - [x] PhysicsScene-driven architecture v2.0
 - [x] AI Parser (rule-based)
-- [x] Full i18n (196 keys)
+- [x] Full i18n (221 keys)
 - [x] Camera animations + bounce visuals
 - [x] Plugin physics engine wired to store
 
-## Phase 4: Multi-Experiment Platform (S03-S04)
-- [ ] Projectile motion plugin
+## Phase 4: Multi-Experiment Platform (In Progress)
+- [x] Projectile motion plugin
 - [ ] Inclined plane plugin
 - [ ] Collision plugin
 - [ ] Charts: Canvas-based rendering

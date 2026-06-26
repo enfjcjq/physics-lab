@@ -2,39 +2,48 @@
 
 ---
 
-# S02 - 3D Polish & Plugin Wiring
+# S03 - Projectile Motion Plugin & 2D Physics
 
 Completed:
-- CameraAnimator: smooth lerp between phase camera presets via useFrame
-- Bounce visual: squash/stretch + emissive glow on ball impact
-- Bounce detection: isBouncing + bounceCount in experiment.store tick()
-- MenuBar: Edit and Experiment menus hidden in learning mode
-- Plugin wiring: computeState() from free-fall plugin drives all physics
-- Type-check clean (0 errors), build succeeds (651 modules)
+- New projectile motion PhysicsScene (6 phases, 5 equations, 4 knowledge tags)
+- Projectile motion plugin: 2D computeState with v0/angle/g/mass params
+- Plugin switching: dropdown selector in LeftPanel changes active experiment
+- 2D physics engine: ballX tracking in experiment.store
+- Scene3D: all renderers (ball, arrows, ruler, HUD, formula) now 2D-aware
+- i18n: 221 keys including projectile teacher steps (zh-CN + en-US)
+- Type-check + build: 653 modules, zero errors
 
 ---
 
-# V1.1 (Current) - UX Polish
+# S02 - 3D Polish & Plugin Wiring
 
 Completed:
-- Timeline rebuilt: phase milestone nodes, time tick marks, always-visible playhead, continuous drag
-- Teacher Panel restructured: 7-step pedagogical flow (Observe → Analyze → Model → Derive → Compute → Verify → Summary)
-- 3D scene enhanced: velocity arrow (blue), acceleration arrow (green), height ruler, HUD labels, formula overlay
-- Player upgraded: skip 0.5s forward/backward, next/prev phase, loop toggle, Shift+Arrow shortcuts
-- UI simplified: learning mode hides BottomDrawer, cleaner mode switcher bar
-- i18n 100%: 181 keys, all hardcoded strings replaced, TeachingOverlay i18n, Timeline i18n
+- CameraAnimator: smooth lerp between phase camera presets
+- Bounce squash/stretch visual in Scene3D
+- Bounce detection in experiment.store tick()
+- MenuBar simplified in learning mode (hides Edit, Experiment)
+- Plugin wiring: computeState() from free-fall plugin drives all physics
+
+---
+
+# V1.1 - UX Polish
+
+Completed:
+- Timeline rebuilt: phase milestone nodes, time tick marks
+- Teacher Panel: 7-step pedagogical flow
+- 3D scene enhanced: velocity/accel/force arrows, height ruler, HUD
+- Player upgraded: skip, next/prev phase, loop toggle
+- i18n 100%: 196 keys
 
 ---
 
 # V1.0
 
 Completed:
-- Timeline as single source of truth: all navigation regenerates trail
-- Teacher Panel: phase-synced step-by-step narrative
-- 3-mode system: Learning (default), Experiment, Analysis
+- Timeline as single source of truth
+- Teacher Panel phase-synced narrative
+- 3-mode system (Learning/Experiment/Analysis)
 - AppShell redesign with mode switcher
-- LeftPanel mode-aware (experiment mode shows live sliders)
-- Bounce physics timeline continuity fix
 
 ---
 
@@ -46,24 +55,21 @@ Completed:
 - Visualization toggle system
 - Dockable panel manager
 - Menu bar system
-- i18n (zh-CN / en-US)
-- Theme system (Dark / Light / Auto)
-- Undo/Redo + State bookmarks
-- Plugin architecture foundation
+- i18n foundation
 
 ---
 
 # V0.3
 
 Completed:
-- Dock windows, Timeline, Language switching, Teaching Overlay, Plugin System, UI refactor
+- Dock windows, Timeline, Language switching, Plugin System
 
 ---
 
 # V0.2
 
 Completed:
-- Free fall experiment, Parameter controls, AI basic analysis, Charts, History, PhysicsScene
+- Free fall experiment, Parameter controls, AI analysis, Charts
 
 ---
 
@@ -71,5 +77,3 @@ Completed:
 
 Completed:
 - Electron project, React framework, Three.js basic scene
-
----

@@ -1,17 +1,19 @@
-﻿# Current Milestone: S02 (Completed)
+﻿# Current Milestone: S03 (Completed)
 
-**Goal:** Code cleanup, 3D polish, plugin wiring, learning-mode simplification
+**Goal:** First new experiment (projectile motion), plugin switching, 2D physics support
 
 **Completed:**
-- [x] CameraAnimator: smooth lerp between phase camera presets
-- [x] Bounce squash/stretch visual in Scene3D
-- [x] Bounce detection in experiment.store tick()
-- [x] MenuBar simplified in learning mode (hides Edit, Experiment)
-- [x] Free-fall plugin computeState wired into experiment.store
-- [x] Type-check passes, build succeeds (651 modules)
+- [x] Projectile motion PhysicsScene with 6 phases (launch/ascend/peak/descend/impact/aftermath)
+- [x] Projectile motion plugin with computeState, teacher steps, controls
+- [x] Plugin switching: experiment selector dropdown in LeftPanel
+- [x] 2D physics in experiment.store (ballX + ballY)
+- [x] Scene3D: ball, arrows, ruler, HUD all track ballX position
+- [x] Both plugins registered in App.tsx
+- [x] i18n: 221 keys (zh-CN + en-US)
+- [x] Type-check + build: 653 modules, zero errors
 
-**Next: S03**
-- Projectile motion plugin (first new experiment)
-- Charts: migrate from SVG to Canvas for perf
-- Add interactive quiz between teacher steps
-- Ollama LLM integration for problem parsing
+**Next: S04**
+- Charts: Canvas-based rendering with hover tooltips
+- Interactive quiz between teacher steps
+- Ollama AI integration for problem parsing
+- Inclined plane plugin

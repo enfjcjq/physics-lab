@@ -5,6 +5,7 @@ import { useSimulation } from "../../features/experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
 import type { InputMethod } from "../../stores/ui.store";
 import { CollapseHandle } from "../layout/CollapseHandle";
+import { pluginRegistry } from "../../core/plugin-registry";
 
 const INPUT_TABS: { id: InputMethod; label: string }[] = [
   { id: "text", label: "Text" }, { id: "ocr", label: "OCR" }, { id: "image", label: "Image" }, { id: "pdf", label: "PDF" },
@@ -33,6 +34,8 @@ export function LeftPanel() {
   const setGravity = useSimulation((s) => s.setGravity);
   const jumpToTime = useSimulation((s) => s.jumpToTime);
   const currentTime = useSimulation((s) => s.currentTime);
+  const activePluginId = useSimulation((s) => s.activePluginId);
+  const setActivePlugin = useSimulation((s) => s.setActivePlugin);
 
   const showFullInput = mode !== "learning";
 
@@ -48,6 +51,19 @@ export function LeftPanel() {
 
         <div className="px-4 pt-4 pb-2">
           <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t("panel.problem")}</h2>
+        </div>
+
+        {/* Experiment Selector */}
+        <div className="px-4 pb-3">
+          <select
+            value={activePluginId}
+            onChange={(e) => setActivePlugin(e.target.value)}
+            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-sky-600 cursor-pointer"
+          >
+            {pluginRegistry.list().map((p) => (
+              <option key={p.id} value={p.id}>{p.name} ({p.difficulty})</option>
+            ))}
+          </select>
         </div>
 
         {showFullInput && (

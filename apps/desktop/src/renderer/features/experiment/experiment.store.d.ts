@@ -3,6 +3,7 @@ export type SpeedLevel = 0.25 | 0.5 | 1 | 2 | 4;
 export interface SimulationState {
     scene: PhysicsScene | null;
     sceneLoaded: boolean;
+    activePluginId: string;
     mass: number;
     height: number;
     gravity: number;
@@ -10,6 +11,7 @@ export interface SimulationState {
     timeScale: SpeedLevel;
     currentTime: number;
     totalDuration: number;
+    ballX: number;
     ballY: number;
     ballVelocity: number;
     ballAcceleration: number;
@@ -23,6 +25,7 @@ export interface SimulationState {
     phases: TimelinePhase[];
     currentPhaseId: string;
     setScene: (scene: PhysicsScene) => void;
+    setActivePlugin: (pluginId: string) => void;
     setMass: (mass: number) => void;
     setHeight: (height: number) => void;
     setGravity: (gravity: number) => void;

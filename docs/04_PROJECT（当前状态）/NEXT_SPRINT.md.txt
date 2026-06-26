@@ -1,20 +1,21 @@
-﻿# Next Sprint: S03
+﻿# Next Sprint: S04
 
-## Priority 1: First New Experiment - Projectile Motion
-- Create projectile-motion plugin
-- Implement computeState for 2D kinematics (horizontal + vertical)
-- Add initial velocity + angle parameters
-- Generate PhysicsScene with proper phases
-
-## Priority 2: Charts Performance
+## Priority 1: Charts Performance
 - Replace SVG-based charts with Canvas rendering
 - Add hover tooltips showing data values
 - Support zoom and pan on charts
+- Handle 2D motion data (x, y, vx, vy, etc.)
 
-## Priority 3: Interactive Teaching
+## Priority 2: Interactive Teaching
 - Add "check understanding" quiz between teacher steps
-- Students answer simple questions before proceeding
+- Students answer simple multiple-choice before proceeding
 
-## Priority 4: Ollama Integration Prep
-- Wire AIProvider abstraction to Ollama
-- Test with qwen2.5 for free-fall problem parsing
+## Priority 3: Ollama Integration
+- Wire AIProvider abstraction to Ollama API
+- Test with qwen2.5 for free-fall and projectile problem parsing
+- Graceful fallback to rule parser when Ollama unavailable
+
+## Priority 4: Inclined Plane Plugin
+- New experiment: block on incline with friction
+- New entity type: incline visualization
+- New force: normal + friction

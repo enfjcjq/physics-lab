@@ -22,7 +22,7 @@ function Ground(){return<mesh rotation={[-Math.PI/2,0,0]} position={[0,0,0]} rec
 function Grid(){return<gridHelper args={[20,20,"#334155","#1e293b"]} position={[0,0.01,0]}/>;}
 
 function Ball(){
-  const y=useSimulation(s=>s.ballY),m=useSimulation(s=>s.mass),isBouncing=useSimulation(s=>s.isBouncing);
+  const x=useSimulation(s=>s.ballX),y=useSimulation(s=>s.ballY),m=useSimulation(s=>s.mass),isBouncing=useSimulation(s=>s.isBouncing);
   const ref=useRef<THREE.Mesh>(null),r=0.15+m*0.05;
   const [squash,setSquash]=useState(1);
   
@@ -34,7 +34,7 @@ function Ball(){
     }
   },[isBouncing]);
   
-  return<mesh ref={ref} position={[0,y,0]} castShadow scale={[1/squash,squash,1/squash]}>
+  return<mesh ref={ref} position={[x,y,0]} castShadow scale={[1/squash,squash,1/squash]}>
     <sphereGeometry args={[r,32,32]}/>
     <meshStandardMaterial color="#FF6B6B" metalness={0.3} roughness={0.4} emissive={isBouncing?"#661111":"#331111"} emissiveIntensity={isBouncing?0.6:0.2}/>
   </mesh>;
@@ -52,22 +52,22 @@ function Arrow3D({o,d,len,c}:{o:[number,number,number];d:[number,number,number];
   return<group><Line points={pts} color={c} lineWidth={2}/><mesh position={e}><coneGeometry args={[0.08,0.2,8]}/><meshBasicMaterial color={c}/></mesh></group>;
 }
 
-function VelocityArrow(){const y=useSimulation(s=>s.ballY),v=useSimulation(s=>s.ballVelocity),len=Math.min(Math.abs(v)*0.2,4),d:[number,number,number]=v>=0?[0,1,0]:[0,-1,0];return<Arrow3D o={[0.5,y,0]} d={d} len={len} c="#3b82f6"/>;}
-function AccelArrow(){const y=useSimulation(s=>s.ballY),a=useSimulation(s=>s.ballAcceleration),len=Math.min(Math.abs(a)*0.2,3),d:[number,number,number]=a>=0?[0,1,0]:[0,-1,0];return<Arrow3D o={[-0.5,y,0]} d={d} len={len} c="#22c55e"/>;}
-function ForceArrow(){const y=useSimulation(s=>s.ballY),m=useSimulation(s=>s.mass),g=useSimulation(s=>s.gravity),len=Math.min(m*g*0.1,3);return<Arrow3D o={[0,y+0.5,0]} d={[0,-1,0]} len={len} c="#ef4444"/>;}
+function VelocityArrow(){const x=useSimulation(s=>s.ballX),y=useSimulation(s=>s.ballY),v=useSimulation(s=>s.ballVelocity),len=Math.min(Math.abs(v)*0.2,4),d:[number,number,number]=v>=0?[0,1,0]:[0,-1,0];return<Arrow3D o={[x+0.5,y,0]} d={d} len={len} c="#3b82f6"/>;}
+function AccelArrow(){const x=useSimulation(s=>s.ballX),y=useSimulation(s=>s.ballY),a=useSimulation(s=>s.ballAcceleration),len=Math.min(Math.abs(a)*0.2,3),d:[number,number,number]=a>=0?[0,1,0]:[0,-1,0];return<Arrow3D o={[x-0.5,y,0]} d={d} len={len} c="#22c55e"/>;}
+function ForceArrow(){const x=useSimulation(s=>s.ballX),y=useSimulation(s=>s.ballY),m=useSimulation(s=>s.mass),g=useSimulation(s=>s.gravity),len=Math.min(m*g*0.1,3);return<Arrow3D o={[x,y+0.5,0]} d={[0,-1,0]} len={len} c="#ef4444"/>;}
 
-function HeightRuler(){const by=useSimulation(s=>s.ballY);if(by<=0.3)return null;const pts=useMemo(()=>[new THREE.Vector3(-0.5,0.2,0),new THREE.Vector3(-0.5,by,0)],[by]);return<group><Line points={pts} color="#94a3b8" lineWidth={1} dashed transparent opacity={0.4}/><Text position={[-0.5,by/2,0]} fontSize={0.2} color="#94a3b8" anchorX="right">{by.toFixed(1)+"m"}</Text></group>;}
+function HeightRuler(){const bx=useSimulation(s=>s.ballX),by=useSimulation(s=>s.ballY);if(by<=0.3)return null;const pts=useMemo(()=>[new THREE.Vector3(bx-0.5,0.2,0),new THREE.Vector3(bx-0.5,by,0)],[bx,by]);return<group><Line points={pts} color="#94a3b8" lineWidth={1} dashed transparent opacity={0.4}/><Text position={[bx-0.5,by/2,0]} fontSize={0.2} color="#94a3b8" anchorX="right">{by.toFixed(1)+"m"}</Text></group>;}
 
 function HudLabels(){
-  const by=useSimulation(s=>s.ballY),bv=useSimulation(s=>s.ballVelocity),ct=useSimulation(s=>s.currentTime);
+  const bx=useSimulation(s=>s.ballX),by=useSimulation(s=>s.ballY),bv=useSimulation(s=>s.ballVelocity),ct=useSimulation(s=>s.currentTime);
   if(by<0.3)return null;
-  return<group><Text position={[1.2,by,0]} fontSize={0.3} color="#f8fafc" anchorX="left" outlineWidth={0.02} outlineColor="#000000">{"v = "+bv.toFixed(1)+" m/s"}</Text><Text position={[1.2,by-0.4,0]} fontSize={0.25} color="#94a3b8" anchorX="left" outlineWidth={0.02} outlineColor="#000000">{"t = "+ct.toFixed(2)+" s"}</Text></group>;
+  return<group><Text position={[bx+1.2,by,0]} fontSize={0.3} color="#f8fafc" anchorX="left" outlineWidth={0.02} outlineColor="#000000">{"v = "+bv.toFixed(1)+" m/s"}</Text><Text position={[bx+1.2,by-0.4,0]} fontSize={0.25} color="#94a3b8" anchorX="left" outlineWidth={0.02} outlineColor="#000000">{"t = "+ct.toFixed(2)+" s"}</Text></group>;
 }
 
 function FormulaOverlay(){
-  const h=useSimulation(s=>s.height),g=useSimulation(s=>s.gravity),show=useVisualization(s=>s.toggles.showFormulas);
+  const bx=useSimulation(s=>s.ballX),h=useSimulation(s=>s.height),g=useSimulation(s=>s.gravity),show=useVisualization(s=>s.toggles.showFormulas);
   if(!show)return null;
-  return<Text position={[0,h+3,0]} fontSize={0.35} color="#facc15" anchorX="center" outlineWidth={0.03} outlineColor="#000000">{"h = h0 - 1/2 * g * t^2"}</Text>;
+  return<Text position={[bx,h+3,0]} fontSize={0.35} color="#facc15" anchorX="center" outlineWidth={0.03} outlineColor="#000000">{"h = h0 - 1/2 * g * t^2"}</Text>;
 }
 
 function Animator(){const tick=useSimulation(s=>s.tick);useFrame((_,d)=>{tick(d)});return null;}

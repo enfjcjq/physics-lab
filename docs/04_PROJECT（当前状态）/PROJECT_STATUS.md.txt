@@ -1,30 +1,39 @@
 ﻿# Project Status
 
-**Version:** V2.0 (Sprint S02)
+**Version:** V2.0 (Sprint S03)
 **Last Commit:** TBD
 **Branch:** main
-**Status:** Building & Running (651 modules, zero type errors)
+**Status:** Building & Running (653 modules, zero type errors)
 
 ## Current Architecture
 
 Problem -> AI Parser -> PhysicsScene -> Timeline -> Experiment -> Teacher -> Charts -> UI
 
-## Completed S02
+## Experiments Available
+
+| Plugin | ID | Difficulty |
+|--------|-----|------------|
+| Free Fall | free-fall | easy |
+| Projectile Motion | projectile-motion | medium |
+
+## Completed S03
 
 | Task | Status |
 |------|--------|
-| CameraAnimator smooth lerp | Done |
-| Bounce squash/stretch visual | Done |
-| Bounce detection in tick() | Done |
-| MenuBar learning-mode simplification | Done |
-| Plugin computeState wired to store | Done |
+| Projectile motion PhysicsScene | Done |
+| Projectile motion plugin | Done |
+| Plugin switching dropdown in LeftPanel | Done |
+| 2D physics (ballX + ballY) in store | Done |
+| Scene3D 2D-aware rendering | Done |
+| Dual plugin registration | Done |
+| i18n: 221 keys | Done |
 | Type-check + build | Done |
 
 ## Known Issues
 
-- Charts still use SVG (should use Canvas/WebGL for performance)
-- No Ollama integration yet (rule-based parser only)
-- Camera transitions can conflict with user OrbitControls drag
+- Charts still use SVG (should use Canvas/WebGL)
+- Camera transitions can conflict with OrbitControls drag
+- Plugin selector uses raw English plugin name (should use i18n)
 
 ## Tech Stack
 

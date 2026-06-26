@@ -1,98 +1,54 @@
-Physics Lab 开发路线图
+# Physics Lab Roadmap
 
-Phase 1 MVP
+## Phase 1: MVP (Completed)
+- [x] Electron desktop app
+- [x] React + Three.js framework
+- [x] Free fall 3D experiment
+- [x] Parameter controls
+- [x] Basic charts
+- [x] Problem input with history
 
-目标：
+## Phase 2: Interactive Teaching Framework (Completed - v0.4)
+- [x] Full Timeline transport controls
+- [x] Teaching Overlay with 4 modes
+- [x] Visualization toggle system
+- [x] Dockable panel manager
+- [x] Menu bar system
+- [x] i18n (zh-CN / en-US)
+- [x] Theme system (Dark / Light / Auto)
+- [x] Undo/Redo + State bookmarks
+- [x] Plugin architecture foundation
 
-验证核心价值
+## Phase 3: Learning-First Redesign (Completed - v1.0)
+- [x] Timeline as single source of truth with trail regeneration
+- [x] Teacher Panel: phase-synced step-by-step narrative
+- [x] 3-mode system: Learning / Experiment / Analysis
+- [x] AppShell redesign with mode switcher
+- [x] Timeline scroll-wheel fine-tuning
+- [x] 100% i18n coverage for new features
 
-功能：
+## Phase 4: Multi-Experiment Platform (Next)
+- [ ] Projectile motion plugin
+- [ ] Circular motion plugin
+- [ ] Inclined plane plugin
+- [ ] Collision plugin
+- [ ] Spring-mass plugin
+- [ ] Ollama AI integration for problem parsing
+- [ ] Floating panel drag-and-drop docking
+- [ ] Experiment report export (PDF/Markdown/HTML)
+- [ ] Ruler and protractor toolbox tools
 
-* OCR识别
-* 图片上传
-* PDF上传
-* 题目解析
-* PhysicsScene生成
-* 基础3D实验
-* 错题本
-* 收藏夹
+## Phase 5: Learning System
+- [ ] Knowledge graph visualization
+- [ ] Adaptive learning paths
+- [ ] Error analysis
+- [ ] Recommended exercises
+- [ ] Learning analytics dashboard
 
-预计周期：
+## Phase 6: Commercialization
+- [ ] User accounts
+- [ ] Pro membership
+- [ ] School licensing
+- [ ] Cloud sync
+- [ ] Teacher dashboard
 
-4~8周
-
-⸻
-
-Phase 2
-
-目标：
-
-构建完整实验平台
-
-功能：
-
-* 高级Three.js实验
-* 参数调节
-* 数据图表
-* 多镜头动画
-* AI教师模式
-
-预计周期：
-
-2个月
-
-⸻
-
-Phase 3
-
-目标：
-
-构建学习系统
-
-功能：
-
-* 知识图谱
-* 学习路径
-* 错题分析
-* 推荐练习
-
-预计周期：
-
-2个月
-
-⸻
-
-Phase 4
-
-目标：
-
-本地AI化
-
-功能：
-
-* Ollama集成
-* 本地推理
-* 离线学习
-
-预计周期：
-
-1个月
-
-⸻
-
-Phase 5
-
-目标：
-
-商业化
-
-功能：
-
-* 用户系统
-* Pro会员
-* 学校授权
-* 云同步
-
-预计周期：
-
-持续迭代

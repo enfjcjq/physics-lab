@@ -1,6 +1,10 @@
 import { create } from "zustand";
 
-export type TeachingMode = "experiment" | "teaching" | "solving" | "explore";
+/** V1.0 mode system: 3 primary modes */
+export type AppMode = "learning" | "experiment" | "analysis";
+
+/** Legacy teaching sub-mode (used within the old teaching overlay) */
+export type TeachingSubMode = "experiment" | "teaching" | "solving" | "explore";
 
 export interface TeachingOverlayState {
   showKnowledge: boolean;
@@ -13,14 +17,18 @@ export interface TeachingOverlayState {
 }
 
 interface TeachingState {
-  mode: TeachingMode;
+  /** Primary app mode (V1.0) */
+  mode: AppMode;
+  /** Legacy teaching sub-mode (for overlay behavior) */
+  subMode: TeachingSubMode;
   overlay: TeachingOverlayState;
-  setMode: (mode: TeachingMode) => void;
+  setMode: (mode: AppMode) => void;
+  setSubMode: (subMode: TeachingSubMode) => void;
   toggleOverlay: (key: keyof TeachingOverlayState) => void;
   getVisibleOverlays: () => (keyof TeachingOverlayState)[];
 }
 
-const MODE_PRESETS: Record<TeachingMode, TeachingOverlayState> = {
+const SUB_MODE_PRESETS: Record<TeachingSubMode, TeachingOverlayState> = {
   experiment: {
     showKnowledge: false, showForces: false, showMotion: false,
     showDerivation: false, showTips: false, showAnswer: false, showFormulas: false,
@@ -40,10 +48,27 @@ const MODE_PRESETS: Record<TeachingMode, TeachingOverlayState> = {
 };
 
 export const useTeaching = create<TeachingState>((set, get) => ({
-  mode: "teaching",
-  overlay: { ...MODE_PRESETS.teaching },
-  setMode: (mode) => set({ mode, overlay: { ...MODE_PRESETS[mode] } }),
-  toggleOverlay: (key) => set((s) => ({ overlay: { ...s.overlay, [key]: !s.overlay[key] } })),
+  mode: "learning",
+  subMode: "teaching",
+  overlay: { ...SUB_MODE_PRESETS.teaching },
+
+  setMode: (mode) => {
+    // When switching to learning/experiment/analysis, adjust sub-mode
+    const subModeMap: Record<AppMode, TeachingSubMode> = {
+      learning: "teaching",
+      experiment: "experiment",
+      analysis: "solving",
+    };
+    const sub = subModeMap[mode];
+    set({ mode, subMode: sub, overlay: { ...SUB_MODE_PRESETS[sub] } });
+  },
+
+  setSubMode: (subMode) =>
+    set({ subMode, overlay: { ...SUB_MODE_PRESETS[subMode] } }),
+
+  toggleOverlay: (key) =>
+    set((s) => ({ overlay: { ...s.overlay, [key]: !s.overlay[key] } })),
+
   getVisibleOverlays: () => {
     const o = get().overlay;
     return (Object.keys(o) as (keyof TeachingOverlayState)[]).filter((k) => o[k]);

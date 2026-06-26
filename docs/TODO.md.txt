@@ -1,0 +1,71 @@
+# Physics Lab TODO
+
+> Current version: V1.0
+
+---
+
+# Completed (V1.0)
+
+- [x] Timeline as single source of truth (trail regenerates on jump/step/phase)
+- [x] Teacher Panel: phase-synced step-by-step narrative
+- [x] 3-mode system: Learning / Experiment / Analysis
+- [x] AppShell mode switcher + layout redesign
+- [x] Timeline scroll-wheel fine-tuning + phase segments
+- [x] All new text via i18n (zh-CN / en-US)
+
+---
+
+# Phase 4: Multi-Experiment Platform (Next)
+
+- [ ] Projectile motion plugin
+- [ ] Inclined plane plugin
+- [ ] Circular motion plugin
+- [ ] Collision plugin
+- [ ] Spring-mass plugin
+- [ ] Ollama AI integration for problem parsing
+- [ ] Floating panel drag-and-drop docking
+- [ ] Experiment report export (PDF/Markdown/HTML)
+- [ ] Ruler and protractor toolbox tools
+
+---
+
+# Teaching System
+
+- [ ] Knowledge graph visualization
+- [ ] Adaptive learning path
+- [ ] Adaptive difficulty
+- [ ] Student progress tracking
+
+---
+
+# Visualization
+
+- [ ] Glowing trails
+- [ ] Dynamic arrow scaling (velocity/acceleration/force)
+- [ ] Camera presets per phase
+- [ ] HUD real-time labels
+- [ ] Collision particle effects
+
+---
+
+# Internationalization
+
+- [x] Chinese (zh-CN)
+- [x] English (en-US)
+- [ ] Japanese (ja)
+- [ ] Korean (ko)
+
+---
+
+# Future
+
+- [ ] OCR problem input
+- [ ] PDF parsing
+- [ ] Image recognition
+- [ ] AI PhysicsScene generation
+- [ ] Plugin SDK
+- [ ] Teacher dashboard
+- [ ] Student dashboard
+- [ ] Experiment report generation
+- [ ] Auto-update system
+

@@ -1,0 +1,47 @@
+# Physics Plugin Specification
+
+所有实验必须实现：
+
+PhysicsPlugin
+
+接口。
+
+插件负责：
+
+- 初始化实验
+- PhysicsScene生成
+- 参数定义
+- Timeline
+- Solver
+- Teaching
+- Charts
+
+UI：
+
+不得由插件负责。
+
+Timeline：
+
+不得由插件负责。
+
+Teaching：
+
+不得由插件负责。
+
+Chart：
+
+不得由插件负责。
+
+插件只负责：
+
+Physics。
+
+这样：
+
+新增实验
+
+=
+
+新增一个Plugin。
+
+无需修改整个项目。

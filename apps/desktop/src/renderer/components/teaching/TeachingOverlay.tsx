@@ -9,7 +9,6 @@ interface TeachingStep {
   formula?: string;
 }
 
-// Teaching steps synchronized with free-fall timeline
 const STEPS: TeachingStep[] = [
   {
     time: 0.0,
@@ -38,7 +37,7 @@ const STEPS: TeachingStep[] = [
   {
     time: 1.4,
     title: "Impact",
-    content: "The ball hits the ground. Impact velocity is approximately 14 m/s.",
+    content: "The ball hits the ground. Impact velocity is about 14 m/s.",
     formula: "v_impact = sqrt(2*g*h0) = 14 m/s",
   },
   {
@@ -57,28 +56,29 @@ const STEPS: TeachingStep[] = [
 
 export function TeachingOverlay() {
   const currentTime = useSimulation((s) => s.currentTime);
-  const { mode, overlay: ov, setMode } = useTeaching();
+  const { mode, subMode, overlay: ov, setSubMode } = useTeaching();
   const { t } = useI18n();
 
+  // In experiment app mode, hide overlay completely
   if (mode === "experiment") return null;
 
-  // Find current teaching step
   const currentStep = [...STEPS].reverse().find((s) => currentTime >= s.time) ?? STEPS[0];
   const nextStep = STEPS.find((s) => s.time > currentTime);
   const stepIndex = STEPS.indexOf(currentStep);
 
   return (
     <div className="absolute left-4 bottom-20 z-20 max-w-sm">
-      <div className="bg-slate-900/90 backdrop-blur border border-sky-800/40 rounded-xl p-4 shadow-2xl
-        animate-in fade-in slide-in-from-bottom-2 duration-300">
-        {/* Mode selector */}
+      <div className="bg-slate-900/90 backdrop-blur border border-sky-800/40 rounded-xl p-4 shadow-2xl transition-all duration-300">
+        {/* Sub-mode selector */}
         <div className="flex gap-1 mb-3">
           {(["experiment", "teaching", "solving", "explore"] as const).map((m) => (
             <button
               key={m}
-              onClick={() => setMode(m)}
+              onClick={() => setSubMode(m)}
               className={`px-2 py-1 rounded text-[10px] font-medium transition-colors ${
-                mode === m ? "bg-sky-600 text-white" : "bg-slate-800 text-slate-500 hover:text-slate-300"
+                subMode === m
+                  ? "bg-sky-600 text-white"
+                  : "bg-slate-800 text-slate-500 hover:text-slate-300"
               }`}
             >
               {t("teaching.mode." + m)}
@@ -112,8 +112,8 @@ export function TeachingOverlay() {
           </div>
         )}
 
-        {/* Next step hint (explore mode) */}
-        {mode === "explore" && nextStep && (
+        {/* Next step hint (explore sub-mode) */}
+        {subMode === "explore" && nextStep && (
           <div className="mt-2 pt-2 border-t border-slate-800">
             <div className="text-[10px] text-slate-600">Next:</div>
             <div className="text-xs text-slate-500 mt-0.5">{nextStep.title}</div>

@@ -284,5 +284,7 @@
   "teacher.collision.step6.desc": "Total momentum before and after collision are equal. Adjust parameters to verify.",
   "teacher.collision.step7.title": "Knowledge Summary",
   "teacher.collision.step7.desc": "The core of collision problems is momentum conservation. Elastic collisions also conserve kinetic energy. The restitution coefficient describes elasticity.",
-  "ui.shortcuts": "Shortcuts: Space Play/Pause | ? ? Frame | Home/End Jump"
+  "ui.shortcuts": "Shortcuts: Space Play/Pause | ? ? Frame | Home/End Jump",
+  "analysis.graph": "Graph",
+  "knowledge.title": "Knowledge Graph"
 }

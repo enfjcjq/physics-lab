@@ -1,13 +1,12 @@
 ﻿# Project Status
 
-**Version:** V2.0 (Sprint S09)
+**Version:** V2.0 (Sprint S10)
 **Last Commit:** TBD
 **Branch:** main
-**Status:** Building & Running (659 modules, code-split, 286 i18n keys)
+**Status:** Building & Running (660 modules, 4 lazy-loaded plugins, 288 i18n keys)
 
-## Key UX Features
-- Loading overlay on experiment switch
-- Keyboard shortcut hints (Space/Arrows/Home/End)
-- localStorage persists last experiment
-- Markdown report export
-- Interactive quiz during teaching
+## Feature Highlights
+- 4 physics experiments (free-fall, projectile, incline, collision)
+- 3-mode system (Learning/Experiment/Analysis)
+- Canvas charts + interactive quiz + knowledge graph
+- Report export + loading overlay + keyboard hints

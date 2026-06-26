@@ -1,15 +1,17 @@
-﻿# Current Milestone: S09 (Completed)
+﻿# Current Milestone: S10 (Completed)
 
-**Goal:** UX polish — loading states, keyboard hints, state persistence
+**Goal:** Knowledge graph visualization connecting physics concepts
 
 **Completed:**
-- [x] Plugin loading overlay: spinner + text when switching experiments
-- [x] Keyboard shortcut hints: displayed below Timeline
-- [x] localStorage persistence: last used experiment saved and restored
-- [x] i18n: 286 keys
-- [x] Type-check + build: 659 modules, zero errors
+- [x] Interactive SVG knowledge graph with nodes + edges
+- [x] Collects knowledge points from all 4 plugins
+- [x] Color-coded by category (kinematics, forces, energy, momentum)
+- [x] Clickable nodes show details + prerequisites
+- [x] Added as "Graph" tab in RightPanel
+- [x] 288 i18n keys
+- [x] Type-check + build: 660 modules, zero errors
 
-**Next: S10**
-- Knowledge graph visualization experiment
-- Student progress tracking (completed steps, time spent)
-- More keyboard shortcut refinements
+**Next: S11**
+- Spring-mass plugin (harmonic motion)
+- Pendulum plugin (circular motion variant)
+- HUD refinements

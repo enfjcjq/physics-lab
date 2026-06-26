@@ -3,8 +3,9 @@ import { usePanelManager } from "../../core/panel-manager.store";
 import { useSimulation } from "../../features/experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
 import { CollapseHandle } from "../layout/CollapseHandle";
+import { KnowledgeGraph } from "../teaching/KnowledgeGraph";
 
-type AnalysisTab = "force" | "motion" | "formula" | "knowledge" | "tips";
+type AnalysisTab = "force" | "motion" | "formula" | "knowledge" | "tips" | "graph";
 
 export function RightPanel() {
   const rightOpen = usePanelManager((s) => s.panels.analysis?.isOpen ?? true);
@@ -19,6 +20,7 @@ export function RightPanel() {
     { id: "formula", labelKey: "analysis.formula" },
     { id: "knowledge", labelKey: "analysis.knowledge" },
     { id: "tips", labelKey: "analysis.tips" },
+    { id: "graph", labelKey: "analysis.graph" },
   ];
 
   const forces = scene?.forces ?? [];
@@ -123,6 +125,7 @@ export function RightPanel() {
               )}
             </div>
           )}
+          {activeTab === "graph" && <KnowledgeGraph />}
           {activeTab === "tips" && (
             <div className="space-y-4">
               <h3 className="text-sm font-semibold text-slate-200">{t("analysis.tips_title")}</h3>

@@ -1,9 +1,1 @@
-"use strict";
-const electron = require("electron");
-const api = {
-  scene: {
-    getDefault: () => electron.ipcRenderer.invoke("scene:getDefault")
-  },
-  platform: process.platform
-};
-electron.contextBridge.exposeInMainWorld("physicsLab", api);
+"use strict";const e=require("electron"),t={scene:{getDefault:()=>e.ipcRenderer.invoke("scene:getDefault")},platform:process.platform};e.contextBridge.exposeInMainWorld("physicsLab",t);

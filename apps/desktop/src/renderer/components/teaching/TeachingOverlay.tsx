@@ -4,54 +4,19 @@ import { useI18n } from "../../core/i18n";
 
 interface TeachingStep {
   time: number;
-  title: string;
-  content: string;
-  formula?: string;
+  titleKey: string;
+  contentKey: string;
+  formulaKey?: string;
 }
 
 const STEPS: TeachingStep[] = [
-  {
-    time: 0.0,
-    title: "Release",
-    content: "The ball is released from rest at height h0. Initial velocity is zero.",
-    formula: "v0 = 0,  y = h0",
-  },
-  {
-    time: 0.3,
-    title: "Gravity",
-    content: "Only gravity acts on the ball. Acceleration is constant: g = 9.8 m/s^2 downward.",
-    formula: "F = mg,  a = g",
-  },
-  {
-    time: 0.6,
-    title: "Velocity Increases",
-    content: "Velocity increases linearly with time. After 0.6s, v = 5.88 m/s.",
-    formula: "v(t) = g * t",
-  },
-  {
-    time: 1.0,
-    title: "Midpoint",
-    content: "At t = 1.0s, the ball has fallen 4.9m and reaches 9.8 m/s.",
-    formula: "y = h0 - 1/2 * g * t^2",
-  },
-  {
-    time: 1.4,
-    title: "Impact",
-    content: "The ball hits the ground. Impact velocity is about 14 m/s.",
-    formula: "v_impact = sqrt(2*g*h0) = 14 m/s",
-  },
-  {
-    time: 1.5,
-    title: "Rebound",
-    content: "The ball bounces back with 60% of impact speed due to energy loss.",
-    formula: "v_rebound = 0.6 * v_impact",
-  },
-  {
-    time: 2.5,
-    title: "Second Fall",
-    content: "The ball reaches a lower peak and falls again.",
-    formula: "h_peak = v_rebound^2 / (2g)",
-  },
+  { time: 0.0, titleKey: "overlay.step.release",       contentKey: "overlay.step.content.release",       formulaKey: "overlay.step.formula.release" },
+  { time: 0.3, titleKey: "overlay.step.gravity",       contentKey: "overlay.step.content.gravity",       formulaKey: "overlay.step.formula.gravity" },
+  { time: 0.6, titleKey: "overlay.step.accelerating",  contentKey: "overlay.step.content.accelerating",  formulaKey: "overlay.step.formula.accelerating" },
+  { time: 1.0, titleKey: "overlay.step.midpoint",      contentKey: "overlay.step.content.midpoint",      formulaKey: "overlay.step.formula.midpoint" },
+  { time: 1.4, titleKey: "overlay.step.impact",        contentKey: "overlay.step.content.impact",        formulaKey: "overlay.step.formula.impact" },
+  { time: 1.5, titleKey: "overlay.step.rebound",       contentKey: "overlay.step.content.rebound",       formulaKey: "overlay.step.formula.rebound" },
+  { time: 2.5, titleKey: "overlay.step.second_fall",   contentKey: "overlay.step.content.second_fall",   formulaKey: "overlay.step.formula.second_fall" },
 ];
 
 export function TeachingOverlay() {
@@ -59,7 +24,6 @@ export function TeachingOverlay() {
   const { mode, subMode, overlay: ov, setSubMode } = useTeaching();
   const { t } = useI18n();
 
-  // In experiment app mode, hide overlay completely
   if (mode === "experiment") return null;
 
   const currentStep = [...STEPS].reverse().find((s) => currentTime >= s.time) ?? STEPS[0];
@@ -76,9 +40,7 @@ export function TeachingOverlay() {
               key={m}
               onClick={() => setSubMode(m)}
               className={`px-2 py-1 rounded text-[10px] font-medium transition-colors ${
-                subMode === m
-                  ? "bg-sky-600 text-white"
-                  : "bg-slate-800 text-slate-500 hover:text-slate-300"
+                subMode === m ? "bg-sky-600 text-white" : "bg-slate-800 text-slate-500 hover:text-slate-300"
               }`}
             >
               {t("teaching.mode." + m)}
@@ -89,34 +51,29 @@ export function TeachingOverlay() {
         {/* Step progress */}
         <div className="flex gap-1 mb-3">
           {STEPS.map((_, i) => (
-            <div
-              key={i}
-              className={`flex-1 h-1 rounded-full transition-colors ${
-                i <= stepIndex ? "bg-sky-500" : "bg-slate-700"
-              }`}
-            />
+            <div key={i} className={`flex-1 h-1 rounded-full transition-colors ${i <= stepIndex ? "bg-sky-500" : "bg-slate-700"}`} />
           ))}
         </div>
 
         {/* Current step */}
         <div className="mb-1">
           <span className="text-[10px] text-sky-400 uppercase tracking-wider">
-            Step {stepIndex + 1}/{STEPS.length}
+            {t("overlay.step")} {stepIndex + 1}/{STEPS.length}
           </span>
         </div>
-        <h3 className="text-sm font-semibold text-white mb-1">{currentStep.title}</h3>
-        <p className="text-xs text-slate-300 leading-relaxed mb-2">{currentStep.content}</p>
-        {currentStep.formula && ov.showFormulas && (
+        <h3 className="text-sm font-semibold text-white mb-1">{t(currentStep.titleKey)}</h3>
+        <p className="text-xs text-slate-300 leading-relaxed mb-2">{t(currentStep.contentKey)}</p>
+        {currentStep.formulaKey && ov.showFormulas && (
           <div className="px-2 py-1.5 bg-slate-800 rounded-lg text-xs font-mono text-sky-300">
-            {currentStep.formula}
+            {t(currentStep.formulaKey)}
           </div>
         )}
 
-        {/* Next step hint (explore sub-mode) */}
+        {/* Next step hint */}
         {subMode === "explore" && nextStep && (
           <div className="mt-2 pt-2 border-t border-slate-800">
-            <div className="text-[10px] text-slate-600">Next:</div>
-            <div className="text-xs text-slate-500 mt-0.5">{nextStep.title}</div>
+            <div className="text-[10px] text-slate-600">{t("overlay.next")}:</div>
+            <div className="text-xs text-slate-500 mt-0.5">{t(nextStep.titleKey)}</div>
           </div>
         )}
       </div>

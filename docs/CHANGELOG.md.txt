@@ -2,15 +2,27 @@
 
 ---
 
-# V1.0 (Current)
+# V1.1 (Current) - UX Polish
 
 Completed:
-- Timeline as single source of truth: all navigation (drag, jump, step, phase click) regenerates trail
-- Teacher Panel: phase-synced step-by-step narrative replacing static AI Analysis
-- 3-mode system: Learning (default, simplified), Experiment (full controls), Analysis (detailed)
-- AppShell redesign: mode switcher bar, TeacherPanel in learning mode, cleaner layout
-- Timeline scroll-wheel fine-tuning and phase segment indicators
-- Complete i18n: all new text via locale files, zh-CN/en-US
+- Timeline rebuilt: phase milestone nodes, time tick marks, always-visible playhead, continuous drag
+- Teacher Panel restructured: 7-step pedagogical flow (Observe → Analyze → Model → Derive → Compute → Verify → Summary)
+- 3D scene enhanced: velocity arrow (blue), acceleration arrow (green), height ruler, HUD labels, formula overlay
+- Player upgraded: skip 0.5s forward/backward, next/prev phase, loop toggle, Shift+Arrow shortcuts
+- UI simplified: learning mode hides BottomDrawer, cleaner mode switcher bar
+- i18n 100%: 181 keys, all hardcoded strings replaced, TeachingOverlay i18n, Timeline i18n
+
+---
+
+# V1.0
+
+Completed:
+- Timeline as single source of truth: all navigation regenerates trail
+- Teacher Panel: phase-synced step-by-step narrative
+- 3-mode system: Learning (default), Experiment, Analysis
+- AppShell redesign with mode switcher
+- LeftPanel mode-aware (experiment mode shows live sliders)
+- Bounce physics timeline continuity fix
 
 ---
 
@@ -32,33 +44,21 @@ Completed:
 # V0.3
 
 Completed:
-- Dock windows
-- Timeline
-- Language switching
-- Teaching Overlay
-- Plugin System foundation
-- UI refactor
+- Dock windows, Timeline, Language switching, Teaching Overlay, Plugin System, UI refactor
 
 ---
 
 # V0.2
 
 Completed:
-- Free fall experiment
-- Parameter controls
-- AI basic analysis
-- Charts
-- History
-- PhysicsScene basic structure
+- Free fall experiment, Parameter controls, AI basic analysis, Charts, History, PhysicsScene
 
 ---
 
 # V0.1
 
 Completed:
-- Electron project
-- React framework
-- Three.js basic scene
+- Electron project, React framework, Three.js basic scene
 
 ---
 

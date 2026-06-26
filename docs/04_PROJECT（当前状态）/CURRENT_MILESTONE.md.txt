@@ -1,16 +1,12 @@
-# Current Milestone: S14 (Completed)
+# Current Milestone: S15 (Completed)
 
-**Goal:** UI Polish -- student-friendly, commercial quality
+**Goal:** Final Polish -- performance, packaging, review
 
 **Completed:**
-- [x] Experiment selector: visual card grid with icons, colors, difficulty badges (replaced <select>)
-- [x] Mode switcher: gradient background, scale animation, mode hint text
-- [x] Smooth transitions: panel open/close with CSS animations (fade, slide)
-- [x] Phase navigation: centered pill-style bar with connector lines
-- [x] RightPanel tab redesign: primary + secondary tab rows
-- [x] Knowledge section: redesigned with numbered cards and tips
-- [x] Animation system: fade-in, slide-in, scale-in keyframes
-- [x] i18n: 329 keys, perfectly synchronized
-- [x] Type-check + build: 663 modules, zero errors
+- [x] Three.js vendor split: main bundle 1.24MB -> 120KB (-90%)
+- [x] Fixed postcss.config module type warning (renamed to .mjs)
+- [x] manualChunks config for better caching
+- [x] Full build: 663 modules, 5 lazy plugins, zero errors
+- [x] All docs updated for V2.0 completion
 
-**Next: S15** -- Final Polish (performance, packaging, final review)
+**V2.0 Complete! Next milestone: V2.1 (AI Integration)**

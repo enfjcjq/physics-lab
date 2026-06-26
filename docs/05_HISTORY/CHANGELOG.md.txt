@@ -1,3 +1,19 @@
+## [S15] -- 2026-06-26
+
+### Added
+- Three.js vendor code-split (main bundle: 1.24MB -> 120KB, -90%)
+- manualChunks config in vite.config.ts for better caching
+
+### Fixed
+- postcss.config.js module type warning (renamed to .mjs)
+- Remaining build warnings reduced
+
+### Build Stats (V2.0 Final)
+- 663 modules | 5 plugins (4 lazy) | 329 i18n keys
+- Main: 120KB | Three.js: 1,121KB | CSS: 30KB
+- TypeScript: zero errors | Build: clean
+
+
 ## [S14] -- 2026-06-26
 
 ### Added

@@ -1,0 +1,125 @@
+import { useSimulation } from "../../features/experiment/experiment.store";
+import { useTeaching } from "../../core/teaching.store";
+import { useI18n } from "../../core/i18n";
+
+interface TeachingStep {
+  time: number;
+  title: string;
+  content: string;
+  formula?: string;
+}
+
+// Teaching steps synchronized with free-fall timeline
+const STEPS: TeachingStep[] = [
+  {
+    time: 0.0,
+    title: "Release",
+    content: "The ball is released from rest at height h0. Initial velocity is zero.",
+    formula: "v0 = 0,  y = h0",
+  },
+  {
+    time: 0.3,
+    title: "Gravity",
+    content: "Only gravity acts on the ball. Acceleration is constant: g = 9.8 m/s^2 downward.",
+    formula: "F = mg,  a = g",
+  },
+  {
+    time: 0.6,
+    title: "Velocity Increases",
+    content: "Velocity increases linearly with time. After 0.6s, v = 5.88 m/s.",
+    formula: "v(t) = g * t",
+  },
+  {
+    time: 1.0,
+    title: "Midpoint",
+    content: "At t = 1.0s, the ball has fallen 4.9m and reaches 9.8 m/s.",
+    formula: "y = h0 - 1/2 * g * t^2",
+  },
+  {
+    time: 1.4,
+    title: "Impact",
+    content: "The ball hits the ground. Impact velocity is approximately 14 m/s.",
+    formula: "v_impact = sqrt(2*g*h0) = 14 m/s",
+  },
+  {
+    time: 1.5,
+    title: "Rebound",
+    content: "The ball bounces back with 60% of impact speed due to energy loss.",
+    formula: "v_rebound = 0.6 * v_impact",
+  },
+  {
+    time: 2.5,
+    title: "Second Fall",
+    content: "The ball reaches a lower peak and falls again.",
+    formula: "h_peak = v_rebound^2 / (2g)",
+  },
+];
+
+export function TeachingOverlay() {
+  const currentTime = useSimulation((s) => s.currentTime);
+  const { mode, overlay: ov, setMode } = useTeaching();
+  const { t } = useI18n();
+
+  if (mode === "experiment") return null;
+
+  // Find current teaching step
+  const currentStep = [...STEPS].reverse().find((s) => currentTime >= s.time) ?? STEPS[0];
+  const nextStep = STEPS.find((s) => s.time > currentTime);
+  const stepIndex = STEPS.indexOf(currentStep);
+
+  return (
+    <div className="absolute left-4 bottom-20 z-20 max-w-sm">
+      <div className="bg-slate-900/90 backdrop-blur border border-sky-800/40 rounded-xl p-4 shadow-2xl
+        animate-in fade-in slide-in-from-bottom-2 duration-300">
+        {/* Mode selector */}
+        <div className="flex gap-1 mb-3">
+          {(["experiment", "teaching", "solving", "explore"] as const).map((m) => (
+            <button
+              key={m}
+              onClick={() => setMode(m)}
+              className={`px-2 py-1 rounded text-[10px] font-medium transition-colors ${
+                mode === m ? "bg-sky-600 text-white" : "bg-slate-800 text-slate-500 hover:text-slate-300"
+              }`}
+            >
+              {t("teaching.mode." + m)}
+            </button>
+          ))}
+        </div>
+
+        {/* Step progress */}
+        <div className="flex gap-1 mb-3">
+          {STEPS.map((_, i) => (
+            <div
+              key={i}
+              className={`flex-1 h-1 rounded-full transition-colors ${
+                i <= stepIndex ? "bg-sky-500" : "bg-slate-700"
+              }`}
+            />
+          ))}
+        </div>
+
+        {/* Current step */}
+        <div className="mb-1">
+          <span className="text-[10px] text-sky-400 uppercase tracking-wider">
+            Step {stepIndex + 1}/{STEPS.length}
+          </span>
+        </div>
+        <h3 className="text-sm font-semibold text-white mb-1">{currentStep.title}</h3>
+        <p className="text-xs text-slate-300 leading-relaxed mb-2">{currentStep.content}</p>
+        {currentStep.formula && ov.showFormulas && (
+          <div className="px-2 py-1.5 bg-slate-800 rounded-lg text-xs font-mono text-sky-300">
+            {currentStep.formula}
+          </div>
+        )}
+
+        {/* Next step hint (explore mode) */}
+        {mode === "explore" && nextStep && (
+          <div className="mt-2 pt-2 border-t border-slate-800">
+            <div className="text-[10px] text-slate-600">Next:</div>
+            <div className="text-xs text-slate-500 mt-0.5">{nextStep.title}</div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

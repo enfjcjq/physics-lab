@@ -1,0 +1,166 @@
+import { useState, useRef, useEffect } from "react";
+import { usePanelManager } from "../../core/panel-manager.store";
+import { useI18n } from "../../core/i18n";
+import { useTheme } from "../../core/theme.store";
+import type { Locale } from "../../core/i18n";
+import type { ThemeMode } from "../../core/theme.store";
+import type { DockZone } from "../../core/panel-manager.store";
+
+// ===== Dropdown Menu =====
+function Dropdown({ label, children }: { label: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen(!open)}
+        className={`px-3 py-1.5 text-xs rounded transition-colors
+          ${open ? "bg-slate-700 text-white" : "text-slate-400 hover:text-white hover:bg-slate-800"}`}
+      >
+        {label}
+      </button>
+      {open && (
+        <div className="absolute top-full left-0 mt-1 w-56 bg-slate-800 border border-slate-700
+          rounded-lg shadow-2xl py-1 z-50 animate-in fade-in">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MenuItem({ label, shortcut, onClick, checked }: {
+  label: string; shortcut?: string; onClick?: () => void; checked?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full flex items-center px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-700
+        hover:text-white transition-colors text-left"
+    >
+      <span className="w-4">{checked ? "\u2713" : checked === false ? "  " : ""}</span>
+      <span className="flex-1">{label}</span>
+      {shortcut && <span className="text-slate-500 ml-4">{shortcut}</span>}
+    </button>
+  );
+}
+
+function MenuSeparator() {
+  return <div className="border-t border-slate-700 my-1" />;
+}
+
+// ===== MenuBar =====
+export function MenuBar() {
+  const { t, locale, setLocale } = useI18n();
+  const { mode, setMode } = useTheme();
+  const panelMgr = usePanelManager();
+
+  const panelItems = panelMgr.panelDefs.map((def) => ({
+    id: def.id,
+    label: t(def.titleKey),
+    open: panelMgr.panels[def.id]?.isOpen ?? false,
+  }));
+
+  return (
+    <div className="h-8 bg-slate-900 border-b border-slate-800 flex items-center px-2 select-none flex-shrink-0"
+         style={{ WebkitAppRegion: "drag" } as React.CSSProperties}>
+      {/* File */}
+      <Dropdown label={t("menu.file")}>
+        <MenuItem label={t("menu.file.new")} shortcut="Ctrl+N" />
+        <MenuItem label={t("menu.file.open")} shortcut="Ctrl+O" />
+        <MenuItem label={t("menu.file.save")} shortcut="Ctrl+S" />
+        <MenuSeparator />
+        <MenuItem label={t("menu.file.export")} shortcut="Ctrl+E" />
+        <MenuSeparator />
+        <MenuItem label={t("menu.file.exit")} />
+      </Dropdown>
+
+      {/* Edit */}
+      <Dropdown label={t("menu.edit")}>
+        <MenuItem label={t("menu.edit.undo")} shortcut="Ctrl+Z" />
+        <MenuItem label={t("menu.edit.redo")} shortcut="Ctrl+Y" />
+        <MenuSeparator />
+        <MenuItem label={t("menu.edit.reset")} />
+      </Dropdown>
+
+      {/* View */}
+      <Dropdown label={t("menu.view")}>
+        {panelItems.map((p) => (
+          <MenuItem
+            key={p.id}
+            label={p.label}
+            checked={p.open}
+            onClick={() => panelMgr.toggle(p.id)}
+          />
+        ))}
+        <MenuSeparator />
+        <MenuItem label={t("menu.view.coordinates")} checked={true} />
+        <MenuItem label={t("menu.view.forces")} checked={true} />
+        <MenuItem label={t("menu.view.grid")} checked={true} />
+        <MenuSeparator />
+        <MenuItem label="Reset Layout" onClick={() => panelMgr.resetLayout()} />
+      </Dropdown>
+
+      {/* Experiment */}
+      <Dropdown label={t("menu.experiment")}>
+        <MenuItem label={t("ctrl.play")} shortcut="Space" />
+        <MenuItem label={t("ctrl.pause")} shortcut="Space" />
+        <MenuItem label={t("ctrl.stop")} />
+        <MenuItem label={t("ctrl.reset")} shortcut="Ctrl+R" />
+        <MenuSeparator />
+        <MenuItem label={t("ctrl.prevFrame")} shortcut="," />
+        <MenuItem label={t("ctrl.nextFrame")} shortcut="." />
+        <MenuSeparator />
+        <MenuItem label="0.5x" />
+        <MenuItem label="1x" checked={true} />
+        <MenuItem label="2x" />
+      </Dropdown>
+
+      {/* Teaching */}
+      <Dropdown label={t("menu.teaching")}>
+        <MenuItem label={t("menu.teaching.overlay")} checked={false} />
+        <MenuSeparator />
+        <MenuItem label={t("menu.teaching.knowledge")} checked={true} />
+        <MenuItem label={t("menu.teaching.forces")} checked={true} />
+        <MenuItem label={t("menu.teaching.motion")} checked={true} />
+        <MenuItem label={t("menu.teaching.derivation")} checked={true} />
+        <MenuItem label={t("menu.teaching.tips")} checked={true} />
+        <MenuSeparator />
+        <MenuItem label={t("menu.teaching.answer")} checked={true} />
+      </Dropdown>
+
+      {/* Spacer */}
+      <div className="flex-1" />
+
+      {/* Language */}
+      <Dropdown label={t("menu.language")}>
+        <MenuItem label="English" checked={locale === "en-US"} onClick={() => setLocale("en-US")} />
+        <MenuItem label={"\u4e2d\u6587"} checked={locale === "zh-CN"} onClick={() => setLocale("zh-CN")} />
+      </Dropdown>
+
+      {/* Theme */}
+      <Dropdown label={t("menu.theme")}>
+        <MenuItem label={t("menu.theme.dark")} checked={mode === "dark"} onClick={() => setMode("dark")} />
+        <MenuItem label={t("menu.theme.light")} checked={mode === "light"} onClick={() => setMode("light")} />
+        <MenuItem label={t("menu.theme.auto")} checked={mode === "auto"} onClick={() => setMode("auto")} />
+      </Dropdown>
+
+      {/* Help */}
+      <Dropdown label={t("menu.help")}>
+        <MenuItem label="About Physics Lab" />
+        <MenuItem label="Documentation" />
+        <MenuSeparator />
+        <MenuItem label="Version 0.3.0" />
+      </Dropdown>
+    </div>
+  );
+}

@@ -1,0 +1,199 @@
+"use strict";
+Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
+const FREE_FALL_SCENE = {
+  $schema: "https://physics-lab.app/schemas/physics-scene/2.0.json",
+  version: "2.0",
+  metadata: {
+    title: "自由落体运动",
+    description: "小球从高处自由落下，忽略空气阻力",
+    subject: "mechanics",
+    topic: "free_fall",
+    difficulty: "easy",
+    grade: "senior_high",
+    tags: ["自由落体", "匀变速运动", "能量守恒"]
+  },
+  entities: [
+    {
+      id: "ball_1",
+      type: "ball",
+      name: "小球",
+      position: [0, 10, 0],
+      properties: {
+        mass: 2,
+        radius: 0.2,
+        restitution: 0.6
+      },
+      initial_conditions: {
+        velocity: [0, 0, 0]
+      },
+      visual: {
+        color: "#FF6B6B",
+        material: "metal",
+        show_trail: true,
+        trail_color: "#FF6B6B44",
+        trail_max_points: 500
+      }
+    },
+    {
+      id: "ground",
+      type: "block",
+      name: "地面",
+      position: [0, -0.05, 0],
+      scale: [12, 0.1, 12],
+      properties: {
+        mass: 0,
+        dimensions: [12, 0.1, 12],
+        is_static: true,
+        friction_coefficient: 0.5
+      },
+      visual: {
+        color: "#334155"
+      }
+    }
+  ],
+  environment: [
+    {
+      type: "gravity_field",
+      properties: {
+        acceleration: 9.8,
+        direction: [0, -1, 0]
+      }
+    }
+  ],
+  forces: [
+    {
+      id: "gravity_ball_1",
+      type: "gravity",
+      target_entity: "ball_1",
+      magnitude: "mass * g",
+      direction: [0, -1, 0],
+      is_constant: true,
+      description: "重力",
+      visual: {
+        color: "#EF4444",
+        arrow_scale: 0.3,
+        label: "G"
+      }
+    }
+  ],
+  constraints: [
+    {
+      id: "ground_collision",
+      type: "contact",
+      entities: ["ball_1", "ground"],
+      properties: {
+        restitution: 0.6,
+        friction: 0.5
+      },
+      description: "地面碰撞"
+    }
+  ],
+  equations: [
+    {
+      id: "eq_motion",
+      name: "运动方程",
+      expression: "y(t) = h_0 - \\frac{1}{2}gt^2",
+      variables: {
+        h_0: { symbol: "h₀", unit: "m", description: "初始高度" },
+        g: { symbol: "g", unit: "m/s²", description: "重力加速度" },
+        t: { symbol: "t", unit: "s", description: "时间" }
+      },
+      type: "motion"
+    },
+    {
+      id: "eq_velocity",
+      name: "落地速度",
+      expression: "v = \\sqrt{2gh}",
+      variables: {
+        v: { symbol: "v", unit: "m/s", description: "落地速度" },
+        g: { symbol: "g", unit: "m/s²", description: "重力加速度" },
+        h: { symbol: "h", unit: "m", description: "下落高度" }
+      },
+      type: "target",
+      is_solution: true
+    }
+  ],
+  timeline: {
+    total_duration: 5,
+    fps: 60,
+    events: [
+      {
+        id: "start",
+        time: 0,
+        type: "phase_start",
+        data: { label: "释放小球" },
+        description: "小球自由下落"
+      },
+      {
+        id: "impact",
+        time: 1.43,
+        type: "collision",
+        target: "ball_1",
+        data: { collision_with: "ground", impact_velocity: 14 },
+        description: "触地"
+      }
+    ]
+  },
+  camera_script: [
+    {
+      id: "overview",
+      time: 0,
+      position: [8, 6, 8],
+      target: [0, 5, 0],
+      fov: 60,
+      description: "全景视角"
+    }
+  ],
+  ui_controls: [
+    {
+      id: "ctrl_mass",
+      parameter: "entities[0].properties.mass",
+      type: "slider",
+      label: "质量",
+      default_value: 2,
+      min: 0.1,
+      max: 10,
+      step: 0.1,
+      unit: "kg",
+      group: "物理参数"
+    },
+    {
+      id: "ctrl_gravity",
+      parameter: "environment[0].properties.acceleration",
+      type: "slider",
+      label: "重力加速度",
+      default_value: 9.8,
+      min: 0.1,
+      max: 20,
+      step: 0.5,
+      unit: "m/s²",
+      group: "物理参数"
+    },
+    {
+      id: "ctrl_height",
+      parameter: "entities[0].position[1]",
+      type: "slider",
+      label: "初始高度",
+      default_value: 10,
+      min: 1,
+      max: 50,
+      step: 0.5,
+      unit: "m",
+      group: "初始条件"
+    }
+  ],
+  knowledge_tags: [
+    {
+      id: "kp_free_fall",
+      name: "自由落体运动",
+      category: "mechanics",
+      level: 2,
+      importance: 1,
+      common_mistakes: [
+        "忽略自由落体初速度为零的条件",
+        "混淆位移与路程"
+      ]
+    }
+  ]
+};
+exports.FREE_FALL_SCENE = FREE_FALL_SCENE;

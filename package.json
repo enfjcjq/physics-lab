@@ -1,0 +1,16 @@
+{
+  "name": "physics-lab",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm -w @physics-lab/desktop run dev",
+    "build": "npm -w @physics-lab/desktop run build",
+    "typecheck": "npm -w @physics-lab/shared run typecheck"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

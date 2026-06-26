@@ -1,13 +1,9 @@
 ﻿# Project Status
 
-**Version:** V2.0 (Sprint S03)
+**Version:** V2.0 (Sprint S04)
 **Last Commit:** TBD
 **Branch:** main
-**Status:** Building & Running (653 modules, zero type errors)
-
-## Current Architecture
-
-Problem -> AI Parser -> PhysicsScene -> Timeline -> Experiment -> Teacher -> Charts -> UI
+**Status:** Building & Running (653 modules, zero type errors, 237 i18n keys)
 
 ## Experiments Available
 
@@ -16,24 +12,26 @@ Problem -> AI Parser -> PhysicsScene -> Timeline -> Experiment -> Teacher -> Cha
 | Free Fall | free-fall | easy |
 | Projectile Motion | projectile-motion | medium |
 
-## Completed S03
+## Features
 
-| Task | Status |
-|------|--------|
-| Projectile motion PhysicsScene | Done |
-| Projectile motion plugin | Done |
-| Plugin switching dropdown in LeftPanel | Done |
-| 2D physics (ballX + ballY) in store | Done |
-| Scene3D 2D-aware rendering | Done |
-| Dual plugin registration | Done |
-| i18n: 221 keys | Done |
-| Type-check + build | Done |
+| Feature | Status |
+|---------|--------|
+| 3-mode system (Learning/Experiment/Analysis) | Done |
+| Timeline with phase nodes + playhead | Done |
+| Teacher Panel 7-step flow + quizzes | Done |
+| Canvas charts with hover tooltips | Done |
+| Plugin switching (experiment selector) | Done |
+| 2D physics (ballX + ballY) | Done |
+| Camera animations between phases | Done |
+| Bounce squash/stretch visual | Done |
+| Full i18n (zh-CN + en-US) | Done |
+| Rule-based AI parser | Done |
 
 ## Known Issues
 
-- Charts still use SVG (should use Canvas/WebGL)
+- No Ollama integration yet (rule-based parser only)
 - Camera transitions can conflict with OrbitControls drag
-- Plugin selector uses raw English plugin name (should use i18n)
+- Large bundle: ~1.2 MB JS (needs code splitting)
 
 ## Tech Stack
 

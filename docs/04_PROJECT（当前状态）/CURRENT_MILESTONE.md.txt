@@ -1,19 +1,17 @@
-﻿# Current Milestone: S03 (Completed)
+﻿# Current Milestone: S04 (Completed)
 
-**Goal:** First new experiment (projectile motion), plugin switching, 2D physics support
+**Goal:** Canvas charts upgrade, interactive quizzes, Ollama prep, UI polish
 
 **Completed:**
-- [x] Projectile motion PhysicsScene with 6 phases (launch/ascend/peak/descend/impact/aftermath)
-- [x] Projectile motion plugin with computeState, teacher steps, controls
-- [x] Plugin switching: experiment selector dropdown in LeftPanel
-- [x] 2D physics in experiment.store (ballX + ballY)
-- [x] Scene3D: ball, arrows, ruler, HUD all track ballX position
-- [x] Both plugins registered in App.tsx
-- [x] i18n: 221 keys (zh-CN + en-US)
+- [x] Charts: SVG migrated to Canvas (ResizeObserver, DPR-aware, playhead, tooltips)
+- [x] Interactive quiz: 2 checkpoints in TeacherPanel (after force analysis + after derivation)
+- [x] Quiz feedback: correct/incorrect with explanations
+- [x] Plugin dropdown i18n fix
+- [x] i18n: 237 keys (zh-CN + en-US)
 - [x] Type-check + build: 653 modules, zero errors
 
-**Next: S04**
-- Charts: Canvas-based rendering with hover tooltips
-- Interactive quiz between teacher steps
+**Next: S05**
 - Ollama AI integration for problem parsing
-- Inclined plane plugin
+- Inclined plane plugin (3rd experiment)
+- Collision plugin
+- Experiment report export

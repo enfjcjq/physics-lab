@@ -1,8 +1,32 @@
-import { useSimulation } from "../../features/experiment/experiment.store";
+﻿import { useSimulation } from "../../features/experiment/experiment.store";
 import type { TeacherStep } from "@physics-lab/shared";
 import { useI18n } from "../../core/i18n";
+import { useState } from "react";
 
 const STEP_ICONS = ["○", "↓", "Σ", "≈", "√", "✓", "★"];
+
+// Quiz data keyed by teacher step order
+interface QuizItem {
+  questionKey: string;
+  options: string[];
+  correctIndex: number;
+  explanationKey: string;
+}
+
+const STEP_QUIZZES: Record<number, QuizItem> = {
+  2: {
+    questionKey: "quiz.freefall.q1",
+    options: ["quiz.freefall.q1.a", "quiz.freefall.q1.b", "quiz.freefall.q1.c"],
+    correctIndex: 1,
+    explanationKey: "quiz.freefall.q1.exp",
+  },
+  5: {
+    questionKey: "quiz.freefall.q2",
+    options: ["quiz.freefall.q2.a", "quiz.freefall.q2.b", "quiz.freefall.q2.c"],
+    correctIndex: 0,
+    explanationKey: "quiz.freefall.q2.exp",
+  },
+};
 
 export function TeacherPanel() {
   const currentTime = useSimulation((s) => s.currentTime);
@@ -16,11 +40,11 @@ export function TeacherPanel() {
   const jumpToTime = useSimulation((s) => s.jumpToTime);
   const { t } = useI18n();
 
-  // Get teacher steps from PhysicsScene
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, number | null>>({});
+
   const steps: TeacherStep[] = scene?.teacher_steps ?? [];
   const sortedSteps = [...steps].sort((a, b) => a.order - b.order);
 
-  // Find current step by time
   const currentIdx = (() => {
     for (let i = sortedSteps.length - 1; i >= 0; i--) {
       if (currentTime >= sortedSteps[i].timeStart) return i;
@@ -36,6 +60,17 @@ export function TeacherPanel() {
 
   const isPast = (i: number) => i < currentIdx;
   const isCurrent = (i: number) => i === currentIdx;
+
+  // Quiz for current step
+  const stepOrder = step?.order ?? -1;
+  const quiz = STEP_QUIZZES[stepOrder];
+  const quizAnswer = quizAnswers[stepOrder];
+  const showQuiz = quiz && quizAnswer === undefined;
+  const quizCorrect = quizAnswer === quiz?.correctIndex;
+
+  const handleQuizAnswer = (idx: number) => {
+    setQuizAnswers((prev) => ({ ...prev, [stepOrder]: idx }));
+  };
 
   return (
     <div className="flex flex-col h-full">
@@ -56,6 +91,38 @@ export function TeacherPanel() {
       </div>
 
       <div className="flex-1 overflow-y-auto px-4 space-y-2.5">
+        {/* Interactive Quiz */}
+        {showQuiz && (
+          <div className="bg-gradient-to-br from-amber-900/20 to-orange-900/20 border border-amber-700/30 rounded-xl p-3.5 animate-in fade-in">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-lg">💡</span>
+              <h3 className="text-sm font-semibold text-amber-300">{t("quiz.title")}</h3>
+            </div>
+            <p className="text-xs text-slate-300 mb-3">{t(quiz.questionKey)}</p>
+            <div className="space-y-1.5">
+              {quiz.options.map((opt, i) => (
+                <button key={i} onClick={() => handleQuizAnswer(i)}
+                  className="w-full text-left px-3 py-2 rounded-lg text-xs border transition-all bg-slate-800/60 border-slate-700 hover:border-amber-600/50 hover:bg-slate-700/60 text-slate-300">
+                  {String.fromCharCode(65 + i)}. {t(opt)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Quiz feedback */}
+        {quizAnswer !== undefined && quiz && (
+          <div className={`border rounded-xl p-3.5 ${quizCorrect ? "bg-emerald-900/20 border-emerald-700/30" : "bg-red-900/20 border-red-700/30"}`}>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-lg">{quizCorrect ? "✅" : "❌"}</span>
+              <h3 className={`text-sm font-semibold ${quizCorrect ? "text-emerald-300" : "text-red-300"}`}>
+                {quizCorrect ? t("quiz.correct") : t("quiz.incorrect")}
+              </h3>
+            </div>
+            <p className="text-xs text-slate-400">{t(quiz.explanationKey)}</p>
+          </div>
+        )}
+
         {/* Current step */}
         {step && (
           <div className="bg-gradient-to-br from-emerald-900/20 to-sky-900/20 border border-emerald-800/30 rounded-xl p-3.5">

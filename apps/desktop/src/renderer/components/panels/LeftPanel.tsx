@@ -61,7 +61,7 @@ export function LeftPanel() {
             className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-sky-600 cursor-pointer"
           >
             {pluginRegistry.list().map((p) => (
-              <option key={p.id} value={p.id}>{p.name} ({p.difficulty})</option>
+              <option key={p.id} value={p.id}>{t(p.name)} ({p.difficulty})</option>
             ))}
           </select>
         </div>

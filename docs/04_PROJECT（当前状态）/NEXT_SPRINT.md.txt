@@ -1,21 +1,21 @@
-﻿# Next Sprint: S04
+﻿# Next Sprint: S05
 
-## Priority 1: Charts Performance
-- Replace SVG-based charts with Canvas rendering
-- Add hover tooltips showing data values
-- Support zoom and pan on charts
-- Handle 2D motion data (x, y, vx, vy, etc.)
+## Priority 1: Ollama AI Integration
+- Wire AIProvider to Ollama (qwen2.5 or deepseek)
+- Parse free-fall problems from natural language input
+- Graceful fallback when Ollama unavailable
+- Stream parsing progress to UI
 
-## Priority 2: Interactive Teaching
-- Add "check understanding" quiz between teacher steps
-- Students answer simple multiple-choice before proceeding
+## Priority 2: Inclined Plane Plugin
+- New experiment: friction block on incline
+- Visual: tilted plane, normal force, friction arrows
+- Physics: component decomposition, friction model
 
-## Priority 3: Ollama Integration
-- Wire AIProvider abstraction to Ollama API
-- Test with qwen2.5 for free-fall and projectile problem parsing
-- Graceful fallback to rule parser when Ollama unavailable
+## Priority 3: Collision Plugin
+- Two balls colliding (elastic + inelastic)
+- Conservation of momentum visualization
+- Coefficient of restitution parameter
 
-## Priority 4: Inclined Plane Plugin
-- New experiment: block on incline with friction
-- New entity type: incline visualization
-- New force: normal + friction
+## Priority 4: Experiment Report Export
+- Generate PDF/Markdown report from experiment state
+- Include: parameters, charts, formulas, knowledge points

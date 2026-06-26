@@ -104,6 +104,15 @@ function CameraAnimator(){
 
   return null;
 }
+function Ball2(){
+  const x=useSimulation(s=>s.ball2X),y=useSimulation(s=>s.ball2Y),activePlugin=useSimulation(s=>s.activePluginId);
+  if(activePlugin!=="collision")return null;
+  const ref=useRef<THREE.Mesh>(null),r=0.25;
+  return<mesh ref={ref} position={[x,y,0]} castShadow>
+    <sphereGeometry args={[r,32,32]}/>
+    <meshStandardMaterial color="#ef4444" metalness={0.3} roughness={0.4} emissive="#441111" emissiveIntensity={0.2}/>
+  </mesh>;
+}
 
 export function Scene3D(){
   const viz=useVisualization(s=>s.toggles),by=useSimulation(s=>s.ballY),h=useSimulation(s=>s.height);
@@ -122,7 +131,7 @@ export function Scene3D(){
     <directionalLight position={[10,15,5]} intensity={0.8} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024}/>
     <pointLight position={[0,8,0]} intensity={0.3} color="#FF6B6B"/>
     {viz.showAxes&&<Axes/>}{viz.showGrid&&<Grid/>}<Ground/><Ball/>
-    {viz.showTrail&&<Trail/>}{viz.showDataLabels&&<HeightRuler/>}
+    {viz.showTrail&&<Trail/>}<Ball2/>{viz.showDataLabels&&<HeightRuler/>}
     {viz.showVelocityArrow&&<VelocityArrow/>}{viz.showAccelArrow&&<AccelArrow/>}{viz.showGravityArrow&&<ForceArrow/>}
     {viz.showDataLabels&&<HudLabels/>}{viz.showFormulas&&<FormulaOverlay/>}
     <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>

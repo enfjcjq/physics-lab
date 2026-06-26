@@ -1,16 +1,17 @@
-﻿# Current Milestone: S05 (Completed)
+﻿# Current Milestone: S06 (Completed)
 
-**Goal:** Inclined plane plugin — 3rd experiment, force decomposition + friction
+**Goal:** Collision plugin (4th experiment) — momentum conservation, elastic/inelastic collisions
 
 **Completed:**
-- [x] Inclined plane PhysicsScene (4 phases, incline entity, 3 forces: gravity/normal/friction)
-- [x] Inclined plane plugin: computeState with angle/friction/mass/gravity params
-- [x] Plugin registered in App.tsx (3 plugins total)
-- [x] experiment.store updated for incline physics (angle + friction)
-- [x] i18n: 260 keys (zh-CN + en-US) including 7 teacher steps
-- [x] Type-check + build: 655 modules, zero errors
+- [x] Collision PhysicsScene (2 balls, 3 phases: approach/collision/separate)
+- [x] Collision plugin: elastic collision formula, restitution parameter
+- [x] Scene3D: Ball2 component for second collision ball
+- [x] experiment.store: ball2X/ball2Y two-ball tracking
+- [x] 4 plugins registered (free-fall, projectile, incline, collision)
+- [x] i18n: 285 keys (zh-CN + en-US)
+- [x] Type-check + build: 657 modules, zero errors
 
-**Next: S06**
-- Ollama AI integration for real problem parsing
-- Collision plugin (elastic + inelastic)
+**Next: S07**
 - Experiment report export (PDF/Markdown)
+- Code splitting (reduce bundle size)
+- AIProvider prepared for future Ollama integration

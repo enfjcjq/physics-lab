@@ -2,47 +2,52 @@
 
 ---
 
-# S05 - Inclined Plane Plugin (3rd Experiment)
+# S06 - Collision Plugin (4th Experiment)
 
 Completed:
-- New inclined plane PhysicsScene with incline geometry, 3 forces (G/N/f)
-- Inclined plane plugin: computeState with angle + friction parameters
-- Plugin architecture now supports 3 experiments (free-fall, projectile, incline)
-- i18n: 260 keys (zh-CN + en-US) with 7 teacher steps for incline
-- Type-check + build: 655 modules, zero errors
+- Collision PhysicsScene: 2 balls, elastic + inelastic, 3 phases (approach/collision/separate)
+- Collision plugin: momentum conservation formula, restitution coefficient
+- Scene3D: Ball2 component for two-ball rendering
+- experiment.store: ball2X/ball2Y for dual-object tracking
+- 285 i18n keys (zh-CN + en-US) including collision teacher steps
+- Type-check + build: 657 modules, zero errors
+
+---
+
+# S05 - Inclined Plane (3rd Experiment)
+
+Completed:
+- Inclined plane PhysicsScene: 3 forces (G/N/f), angle + friction parameters
+- i18n: 260 keys
 
 ---
 
 # S04 - Canvas Charts & Interactive Quiz
 
 Completed:
-- Charts migrated from SVG to Canvas with DPR-aware rendering and hover tooltips
-- Interactive quiz: 2 checkpoints in TeacherPanel (force + derivation)
-- Plugin dropdown i18n fix
+- Charts: SVG -> Canvas with DPR-aware rendering + hover tooltips
+- Interactive quiz: 2 checkpoints in TeacherPanel
 
 ---
 
-# S03 - Projectile Motion Plugin & 2D Physics
+# S03 - Projectile Motion (2nd Experiment)
 
 Completed:
-- Projectile motion plugin (6 phases, 5 equations)
-- 2D physics: ballX tracking, Scene3D 2D-aware
-- Plugin switching dropdown
+- Projectile motion plugin (6 phases), 2D physics, plugin switching
 
 ---
 
 # S02 - 3D Polish & Plugin Wiring
 
 Completed:
-- CameraAnimator, bounce visual, plugin computeState wired
-- MenuBar learning-mode simplification
+- CameraAnimator, bounce visual, plugin computeState wired to store
 
 ---
 
 # V1.1 - UX Polish
 
 Completed:
-- Timeline rebuilt, 7-step Teacher Panel, 3D arrows, i18n 196 keys
+- Timeline rebuilt, 7-step Teacher Panel, full i18n
 
 ---
 
@@ -70,7 +75,7 @@ Completed:
 # V0.2
 
 Completed:
-- Free fall, Parameter controls, AI analysis
+- Free fall experiment, Parameter controls
 
 ---
 

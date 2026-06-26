@@ -6,23 +6,24 @@
 - [x] 3-mode system (Learning/Experiment/Analysis)
 - [x] PhysicsScene-driven architecture v2.0
 - [x] AI Parser (rule-based)
-- [x] Full i18n (260 keys)
+- [x] Full i18n (285 keys)
 - [x] Camera animations + bounce visuals
 - [x] Plugin physics engine wired to store
 
-## Phase 4: Multi-Experiment Platform (In Progress)
+## Phase 4: Multi-Experiment Platform
 - [x] Projectile motion plugin (2D kinematics)
 - [x] Inclined plane plugin (force decomposition + friction)
+- [x] Collision plugin (momentum conservation)
 - [x] Canvas chart engine with tooltips
 - [x] Interactive quiz between teacher steps
-- [ ] Collision plugin (elastic + inelastic)
+- [ ] Experiment report export (PDF/Markdown)
 - [ ] Ollama AI integration
 
 ## Phase 5: Learning System
 - [ ] Knowledge graph visualization
 - [ ] Adaptive learning paths
 - [ ] Student progress tracking
-- [ ] Experiment report export
+- [ ] Code splitting (bundle optimization)
 
 ## Phase 6: Commercialization
 - [ ] User accounts

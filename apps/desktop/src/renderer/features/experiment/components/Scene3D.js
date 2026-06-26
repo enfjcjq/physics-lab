@@ -89,6 +89,13 @@ function CameraAnimator() {
     });
     return null;
 }
+function Ball2() {
+    const x = useSimulation(s => s.ball2X), y = useSimulation(s => s.ball2Y), activePlugin = useSimulation(s => s.activePluginId);
+    if (activePlugin !== "collision")
+        return null;
+    const ref = useRef(null), r = 0.25;
+    return _jsxs("mesh", { ref: ref, position: [x, y, 0], castShadow: true, children: [_jsx("sphereGeometry", { args: [r, 32, 32] }), _jsx("meshStandardMaterial", { color: "#ef4444", metalness: 0.3, roughness: 0.4, emissive: "#441111", emissiveIntensity: 0.2 })] });
+}
 export function Scene3D() {
     const viz = useVisualization(s => s.toggles), by = useSimulation(s => s.ballY), h = useSimulation(s => s.height);
     const currentPhaseId = useSimulation(s => s.currentPhaseId);
@@ -103,6 +110,6 @@ export function Scene3D() {
         const preset = scene.camera_script.find(c => c.id === phase.cameraPresetId);
         return preset ? preset.target : [0, 5, 0];
     }, [currentPhaseId, phases, scene]);
-    return _jsxs(Canvas, { camera: { position: [8, 6, 8], fov: 55, near: 0.1, far: 100 }, gl: { antialias: true, alpha: false, preserveDrawingBuffer: true }, style: { background: "linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)" }, onCreated: ({ gl }) => { gl.setClearColor(new THREE.Color("#0f172a")); }, children: [_jsx("ambientLight", { intensity: 0.4 }), _jsx("directionalLight", { position: [10, 15, 5], intensity: 0.8, castShadow: true, "shadow-mapSize-width": 1024, "shadow-mapSize-height": 1024 }), _jsx("pointLight", { position: [0, 8, 0], intensity: 0.3, color: "#FF6B6B" }), viz.showAxes && _jsx(Axes, {}), viz.showGrid && _jsx(Grid, {}), _jsx(Ground, {}), _jsx(Ball, {}), viz.showTrail && _jsx(Trail, {}), viz.showDataLabels && _jsx(HeightRuler, {}), viz.showVelocityArrow && _jsx(VelocityArrow, {}), viz.showAccelArrow && _jsx(AccelArrow, {}), viz.showGravityArrow && _jsx(ForceArrow, {}), viz.showDataLabels && _jsx(HudLabels, {}), viz.showFormulas && _jsx(FormulaOverlay, {}), _jsx(CameraAnimator, {}), _jsx(OrbitControls, { enableDamping: true, dampingFactor: 0.1, target: targetVec, maxPolarAngle: Math.PI * 0.8 }), _jsx(Animator, {})] });
+    return _jsxs(Canvas, { camera: { position: [8, 6, 8], fov: 55, near: 0.1, far: 100 }, gl: { antialias: true, alpha: false, preserveDrawingBuffer: true }, style: { background: "linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)" }, onCreated: ({ gl }) => { gl.setClearColor(new THREE.Color("#0f172a")); }, children: [_jsx("ambientLight", { intensity: 0.4 }), _jsx("directionalLight", { position: [10, 15, 5], intensity: 0.8, castShadow: true, "shadow-mapSize-width": 1024, "shadow-mapSize-height": 1024 }), _jsx("pointLight", { position: [0, 8, 0], intensity: 0.3, color: "#FF6B6B" }), viz.showAxes && _jsx(Axes, {}), viz.showGrid && _jsx(Grid, {}), _jsx(Ground, {}), _jsx(Ball, {}), viz.showTrail && _jsx(Trail, {}), _jsx(Ball2, {}), viz.showDataLabels && _jsx(HeightRuler, {}), viz.showVelocityArrow && _jsx(VelocityArrow, {}), viz.showAccelArrow && _jsx(AccelArrow, {}), viz.showGravityArrow && _jsx(ForceArrow, {}), viz.showDataLabels && _jsx(HudLabels, {}), viz.showFormulas && _jsx(FormulaOverlay, {}), _jsx(CameraAnimator, {}), _jsx(OrbitControls, { enableDamping: true, dampingFactor: 0.1, target: targetVec, maxPolarAngle: Math.PI * 0.8 }), _jsx(Animator, {})] });
 }
 //# sourceMappingURL=Scene3D.js.map

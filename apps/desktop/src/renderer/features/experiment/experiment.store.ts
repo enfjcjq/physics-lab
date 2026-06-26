@@ -24,9 +24,11 @@ export interface SimulationState {
   currentTime: number;
   totalDuration: number;
 
-  // Computed state (2D)
+  // Computed state (2D + two-ball support)
   ballX: number;
   ballY: number;
+  ball2X: number;
+  ball2Y: number;
   ballVelocity: number;
   ballAcceleration: number;
   isBouncing: boolean;
@@ -67,6 +69,13 @@ const FRAME_STEP = 1 / 60;
 function computePhysics(height: number, gravity: number, mass: number, t: number, pluginId: string) {
   const plugin = pluginRegistry.get(pluginId);
   if (plugin?.computeState) {
+    if (pluginId === "collision") {
+      const state = plugin.computeState(t, { m1: 2, m2: 1, v1: 3, v2: -1, restitution: 0.9 });
+      const posA = state.positions.ball_a;
+      const posB = state.positions.ball_b;
+      const velA = state.velocities.ball_a;
+      return { x: posA[0], y: posA[1], vy: velA[1], ay: 0, x2: posB[0], y2: posB[1] };
+    }
     if (pluginId === "projectile-motion") {
       const state = plugin.computeState(t, { g: gravity, h0: height, mass, v0: 10, angle: 30 });
       const pos = state.positions.ball;
@@ -140,6 +149,8 @@ export const useSimulation = create<SimulationState>((set, get) => ({
   totalDuration: 5.0,
   ballX: 0,
   ballY: 10.0,
+  ball2X: 3,
+  ball2Y: 1,
   ballVelocity: 0,
   ballAcceleration: -9.8,
   isBouncing: false,
@@ -219,11 +230,13 @@ export const useSimulation = create<SimulationState>((set, get) => ({
   jumpToTime: (t) => {
     const { height, gravity, totalDuration, phases, mass, activePluginId } = get();
     const clamped = Math.max(0, Math.min(t, totalDuration));
-    const { x, y, vy, ay } = computePhysics(height, gravity, mass, clamped, activePluginId);
+    const result = computePhysics(height, gravity, mass, clamped, activePluginId);
+    const { x, y, vy, ay } = result;
     const onGround = y <= GROUND_Y && vy < 0;
     set({
       currentTime: clamped,
       ballX: x, ballY: y, ballVelocity: vy, ballAcceleration: ay,
+      ball2X: (result as any).x2 ?? 3, ball2Y: (result as any).y2 ?? 1,
       currentPhaseId: getPhaseId(phases, clamped),
       playing: false,
       trail: generateTrail(height, gravity, mass, clamped, activePluginId),
@@ -321,7 +334,8 @@ export const useSimulation = create<SimulationState>((set, get) => ({
       return;
     }
 
-    const { x, y, vy, ay } = computePhysics(s.height, s.gravity, s.mass, newTime, s.activePluginId);
+    const result = computePhysics(s.height, s.gravity, s.mass, newTime, s.activePluginId);
+    const { x, y, vy, ay } = result;
     const newTrail = [...s.trail, { x, y, z: 0 }].slice(-MAX_TRAIL);
 
     const justBounced = y <= GROUND_Y && s.ballY > GROUND_Y && vy < 0;
@@ -330,6 +344,7 @@ export const useSimulation = create<SimulationState>((set, get) => ({
     set({
       currentTime: newTime,
       ballX: x, ballY: y, ballVelocity: vy, ballAcceleration: ay,
+      ball2X: (result as any).x2 ?? 3, ball2Y: (result as any).y2 ?? 1,
       currentPhaseId: getPhaseId(s.phases, newTime),
       trail: newTrail,
       isBouncing: justBounced,

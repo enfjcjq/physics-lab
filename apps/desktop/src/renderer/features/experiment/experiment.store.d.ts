@@ -13,6 +13,8 @@ export interface SimulationState {
     totalDuration: number;
     ballX: number;
     ballY: number;
+    ball2X: number;
+    ball2Y: number;
     ballVelocity: number;
     ballAcceleration: number;
     isBouncing: boolean;

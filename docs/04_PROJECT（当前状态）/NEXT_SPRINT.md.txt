@@ -1,15 +1,14 @@
-﻿# Next Sprint: S06
+﻿# Next Sprint: S07
 
-## Priority 1: Ollama AI Integration
-- Wire AIProvider to Ollama (qwen2.5 or deepseek)
-- Parse free-fall/incline problems from natural language
-- Graceful fallback when Ollama unavailable
+## Priority 1: Experiment Report Export
+- Generate Markdown report from PhysicsScene + experiment data
+- Include: parameters, charts, formulas, knowledge points, screenshots
+- Export as PDF via electron print
 
-## Priority 2: Collision Plugin
-- Two-ball elastic + inelastic collisions
-- Conservation of momentum visualization
-- Coefficient of restitution parameter
+## Priority 2: Bundle Optimization
+- Code-split plugins (lazy load per experiment)
+- Reduce main bundle below 500KB
 
-## Priority 3: Experiment Report Export
-- Generate PDF/Markdown report from scene + data
-- Include: parameters, charts, formulas, knowledge points
+## Priority 3: AIProvider Hardening
+- Complete AIProvider interface with streaming support
+- Ready for Ollama/OpenAI/Claude drop-in

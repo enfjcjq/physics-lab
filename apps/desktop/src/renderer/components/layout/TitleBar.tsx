@@ -1,7 +1,7 @@
 import { useSimulation } from "../../features/experiment/experiment.store";
 
 export function TitleBar() {
-  const currentPhase = useSimulation((s) => s.currentPhase);
+  const currentPhaseId = useSimulation((s) => s.currentPhaseId);
   const playing = useSimulation((s) => s.playing);
 
   const phaseLabels: Record<string, string> = {
@@ -24,7 +24,7 @@ export function TitleBar() {
       <div className="flex-1 flex justify-center">
         <div className="flex items-center gap-2 text-xs">
           <span className={`w-2 h-2 rounded-full ${playing ? "bg-green-400 animate-pulse" : "bg-yellow-400"}`} />
-          <span className="text-slate-400">{phaseLabels[currentPhase]}</span>
+          <span className="text-slate-400">{phaseLabels[currentPhaseId]}</span>
         </div>
       </div>
       <div className="flex items-center gap-2 text-xs text-slate-500">

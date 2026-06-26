@@ -16,7 +16,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.170.0",
-    "zustand": "^4.5.5"
+    "zustand": "^4.5.5",
+    "@physics-lab/ai-parser": "*"
   },
   "devDependencies": {
     "@types/react": "^18.3.11",

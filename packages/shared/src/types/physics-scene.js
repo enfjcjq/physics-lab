@@ -1,6 +1,6 @@
 // ============================================================
-// PhysicsScene v2.0 — TypeScript 权威类型定义
-// 所有模块引用此文件作为唯一类型来源
+// PhysicsScene v2.1 -- TypeScript authoritative type definitions
+// ALL modules read from this as the single source of truth.
 // ============================================================
 export {};
 //# sourceMappingURL=physics-scene.js.map

@@ -128,11 +128,23 @@ export interface TimelineEvent {
     data: Record<string, unknown>;
     description?: string;
 }
+/** A phase is a continuous segment of the timeline. */
+export interface TimelinePhase {
+    id: string;
+    label: string;
+    icon: string;
+    timeRange: [number, number];
+    color?: string;
+    description?: string;
+    cameraPresetId?: string;
+}
 export interface Timeline {
     total_duration: number;
     fps?: number;
     time_scale?: number;
     events: TimelineEvent[];
+    /** v2.1: phases for Timeline display */
+    phases?: TimelinePhase[];
 }
 export type EasingType = "linear" | "ease_in" | "ease_out" | "ease_in_out" | "smooth";
 export interface CameraScriptItem {
@@ -168,6 +180,38 @@ export interface KnowledgeTag {
     common_mistakes?: string[];
     learning_tips?: string;
 }
+/** One teaching step in the pedagogical flow */
+export interface TeacherStep {
+    id: string;
+    /** Order in the sequence */
+    order: number;
+    /** i18n key for the title */
+    titleKey: string;
+    /** i18n key for the description */
+    descKey: string;
+    /** Optional i18n key for a formula */
+    formulaKey?: string;
+    /** Time in the experiment when this step becomes active */
+    timeStart: number;
+}
+/** Chart definition */
+export type ChartType = "position_time" | "velocity_time" | "acceleration_time" | "kinetic_energy" | "potential_energy" | "mechanical_energy" | "momentum";
+export interface ChartDef {
+    id: string;
+    type: ChartType;
+    label: string;
+    xAxis: {
+        label: string;
+        unit: string;
+        key: string;
+    };
+    yAxis: {
+        label: string;
+        unit: string;
+        key: string;
+    };
+    color?: string;
+}
 export interface PhysicsScene {
     $schema: string;
     version: "2.0";
@@ -181,5 +225,9 @@ export interface PhysicsScene {
     camera_script: CameraScriptItem[];
     ui_controls: UIControl[];
     knowledge_tags: KnowledgeTag[];
+    /** v2.1: teaching steps */
+    teacher_steps?: TeacherStep[];
+    /** v2.1: chart definitions */
+    charts?: ChartDef[];
 }
 //# sourceMappingURL=physics-scene.d.ts.map

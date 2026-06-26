@@ -1,19 +1,53 @@
 import { create } from "zustand";
+import { aiRegistry, ruleParser } from "@physics-lab/ai-parser";
+// Register the rule parser on first import
+if (!aiRegistry.get("rule-parser")) {
+    aiRegistry.register(ruleParser);
+    aiRegistry.setActive("rule-parser");
+}
 const MOCK_HISTORY = [
     { id: "h1", title: "Free Fall (10m)", inputMethod: "text", timestamp: Date.now() - 86400000 },
     { id: "h2", title: "Free Fall (20m)", inputMethod: "text", timestamp: Date.now() - 172800000 },
-    { id: "h3", title: "Inclined Plane Problem", inputMethod: "image", timestamp: Date.now() - 259200000 },
 ];
-export const useProblemStore = create((set) => ({
+export const useProblemStore = create((set, get) => ({
     inputMethod: "text",
-    inputText: "A 2kg ball is dropped from a height of 10m. Ignore air resistance, g=10m/s^2. Find: (1) impact time; (2) impact velocity.",
+    inputText: "A 2kg ball is dropped from a height of 10m. Ignore air resistance, g=10m/s^2. Find impact time and velocity.",
     isSubmitting: false,
+    parseError: null,
     history: MOCK_HISTORY,
     setInputMethod: (inputMethod) => set({ inputMethod }),
     setInputText: (inputText) => set({ inputText }),
-    submit: () => {
-        set({ isSubmitting: true });
-        setTimeout(() => set({ isSubmitting: false }), 800);
+    submit: async () => {
+        const { inputText } = get();
+        set({ isSubmitting: true, parseError: null });
+        const provider = aiRegistry.getActive();
+        if (!provider) {
+            set({ isSubmitting: false, parseError: "No AI provider available" });
+            return null;
+        }
+        try {
+            const result = await provider.parseProblem(inputText);
+            set({ isSubmitting: false });
+            if (result.success && result.scene) {
+                // Add to history
+                const title = result.scene.metadata.title || inputText.slice(0, 40);
+                get().addToHistory({
+                    id: "h" + Date.now(),
+                    title,
+                    inputMethod: "text",
+                    timestamp: Date.now(),
+                });
+                return result.scene;
+            }
+            else {
+                set({ parseError: result.error || "Failed to parse problem" });
+                return null;
+            }
+        }
+        catch (e) {
+            set({ isSubmitting: false, parseError: e?.message || "Parse error" });
+            return null;
+        }
     },
     addToHistory: (item) => set((s) => ({ history: [item, ...s.history].slice(0, 50) })),
     clearHistory: () => set({ history: [] }),

@@ -10,10 +10,11 @@ interface ProblemState {
     inputMethod: InputMethod;
     inputText: string;
     isSubmitting: boolean;
+    parseError: string | null;
     history: HistoryItem[];
     setInputMethod: (m: InputMethod) => void;
     setInputText: (t: string) => void;
-    submit: () => void;
+    submit: () => Promise<import("@physics-lab/shared").PhysicsScene | null>;
     addToHistory: (item: HistoryItem) => void;
     clearHistory: () => void;
 }

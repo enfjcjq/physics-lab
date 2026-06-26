@@ -2,64 +2,33 @@
 
 ---
 
-# V1.1 (Current) - UX Polish
+# V2.0 (Current) - PhysicsScene AI Engine
+
+Architecture upgrade: PhysicsScene becomes the single source of truth for the entire application.
 
 Completed:
-- Timeline rebuilt: phase milestone nodes, time tick marks, always-visible playhead, continuous drag
-- Teacher Panel restructured: 7-step pedagogical flow (Observe → Analyze → Model → Derive → Compute → Verify → Summary)
-- 3D scene enhanced: velocity arrow (blue), acceleration arrow (green), height ruler, HUD labels, formula overlay
-- Player upgraded: skip 0.5s forward/backward, next/prev phase, loop toggle, Shift+Arrow shortcuts
-- UI simplified: learning mode hides BottomDrawer, cleaner mode switcher bar
-- i18n 100%: 181 keys, all hardcoded strings replaced, TeachingOverlay i18n, Timeline i18n
+- PhysicsScene Schema v2.1: added TimelinePhase, TeacherStep, ChartDef types
+- AI Parser package (@physics-lab/ai-parser): rule-based parser extracts physical quantities from text
+- AIProvider interface: abstract parseProblem(), future-proof for Ollama/OpenAI/Claude/DeepSeek
+- experiment.store.ts refactored: phases from scene, ballAcceleration tracking
+- Timeline fully data-driven: renders phases from PhysicsScene.timeline.phases
+- TeacherPanel data-driven: reads steps from PhysicsScene.teacher_steps
+- Problem input wired to AI parser: text to PhysicsScene to simulation
+- Free-fall scene v2.1: includes phases, teacher_steps, charts definitions
+- 652 modules, 0 TypeScript errors
+
+Architecture:
+  Problem -> AI Parser -> PhysicsScene -> Timeline -> Experiment -> Teacher -> Charts -> UI
 
 ---
 
-# V1.0
+# V1.1 - UX Polish
 
-Completed:
-- Timeline as single source of truth: all navigation regenerates trail
-- Teacher Panel: phase-synced step-by-step narrative
-- 3-mode system: Learning (default), Experiment, Analysis
-- AppShell redesign with mode switcher
-- LeftPanel mode-aware (experiment mode shows live sliders)
-- Bounce physics timeline continuity fix
+- Timeline rebuild, 7-step Teacher flow, 3D arrows, 181 i18n keys
+- Learning mode simplified, player controls upgraded
 
 ---
 
-# V0.4
+# V1.0 - Interactive Teaching Framework
 
-Completed:
-- Full Timeline transport controls
-- Teaching Overlay with 4 sub-modes
-- Visualization toggle system
-- Dockable panel manager
-- Menu bar system
-- i18n (zh-CN / en-US)
-- Theme system (Dark / Light / Auto)
-- Undo/Redo + State bookmarks
-- Plugin architecture foundation
-
----
-
-# V0.3
-
-Completed:
-- Dock windows, Timeline, Language switching, Teaching Overlay, Plugin System, UI refactor
-
----
-
-# V0.2
-
-Completed:
-- Free fall experiment, Parameter controls, AI basic analysis, Charts, History, PhysicsScene
-
----
-
-# V0.1
-
-Completed:
-- Electron project, React framework, Three.js basic scene
-
----
-
-Each completed version adds a new section.
+- 3-mode system, TeacherPanel, trail sync, bounce physics fix

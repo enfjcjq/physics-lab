@@ -1,5 +1,4 @@
-import type { PhysicsScene } from "@physics-lab/shared";
-import type { ExperimentPhase } from "../../stores/ui.store";
+import type { PhysicsScene, TimelinePhase } from "@physics-lab/shared";
 export type SpeedLevel = 0.25 | 0.5 | 1 | 2 | 4;
 export interface SimulationState {
     scene: PhysicsScene | null;
@@ -11,14 +10,16 @@ export interface SimulationState {
     timeScale: SpeedLevel;
     currentTime: number;
     totalDuration: number;
-    currentPhase: ExperimentPhase;
     ballY: number;
     ballVelocity: number;
+    ballAcceleration: number;
     trail: Array<{
         x: number;
         y: number;
         z: number;
     }>;
+    phases: TimelinePhase[];
+    currentPhaseId: string;
     setScene: (scene: PhysicsScene) => void;
     setMass: (mass: number) => void;
     setHeight: (height: number) => void;
@@ -32,11 +33,10 @@ export interface SimulationState {
     jumpToTime: (t: number) => void;
     stepForward: () => void;
     stepBackward: () => void;
-    jumpToPhase: (phase: ExperimentPhase) => void;
+    jumpToPhase: (phaseId: string) => void;
     tick: (deltaTime: number) => void;
     undo: () => void;
     redo: () => void;
-    saveBookmark: () => void;
 }
 export declare const useSimulation: import("zustand").UseBoundStore<import("zustand").StoreApi<SimulationState>>;
 //# sourceMappingURL=experiment.store.d.ts.map

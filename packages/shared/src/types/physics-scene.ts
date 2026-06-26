@@ -1,6 +1,6 @@
-﻿// ============================================================
-// PhysicsScene v2.0 — TypeScript 权威类型定义
-// 所有模块引用此文件作为唯一类型来源
+// ============================================================
+// PhysicsScene v2.1 -- TypeScript authoritative type definitions
+// ALL modules read from this as the single source of truth.
 // ============================================================
 
 // ---- Meta ----
@@ -163,11 +163,24 @@ export interface TimelineEvent {
   description?: string;
 }
 
+/** A phase is a continuous segment of the timeline. */
+export interface TimelinePhase {
+  id: string;
+  label: string;            // i18n key
+  icon: string;
+  timeRange: [number, number];
+  color?: string;
+  description?: string;
+  cameraPresetId?: string;
+}
+
 export interface Timeline {
   total_duration: number;
   fps?: number;
   time_scale?: number;
   events: TimelineEvent[];
+  /** v2.1: phases for Timeline display */
+  phases?: TimelinePhase[];
 }
 
 // ---- Camera Script ----
@@ -215,7 +228,39 @@ export interface KnowledgeTag {
   learning_tips?: string;
 }
 
-// ---- PhysicsScene (顶层) ----
+// ============================================================
+// v2.1: Teacher & Charts - data-driven teaching and visualization
+// ============================================================
+
+/** One teaching step in the pedagogical flow */
+export interface TeacherStep {
+  id: string;
+  /** Order in the sequence */
+  order: number;
+  /** i18n key for the title */
+  titleKey: string;
+  /** i18n key for the description */
+  descKey: string;
+  /** Optional i18n key for a formula */
+  formulaKey?: string;
+  /** Time in the experiment when this step becomes active */
+  timeStart: number;
+}
+
+/** Chart definition */
+export type ChartType = "position_time" | "velocity_time" | "acceleration_time"
+  | "kinetic_energy" | "potential_energy" | "mechanical_energy" | "momentum";
+
+export interface ChartDef {
+  id: string;
+  type: ChartType;
+  label: string;            // i18n key or display label
+  xAxis: { label: string; unit: string; key: string };
+  yAxis: { label: string; unit: string; key: string };
+  color?: string;
+}
+
+// ---- PhysicsScene (top level) ----
 
 export interface PhysicsScene {
   $schema: string;
@@ -230,4 +275,8 @@ export interface PhysicsScene {
   camera_script: CameraScriptItem[];
   ui_controls: UIControl[];
   knowledge_tags: KnowledgeTag[];
+  /** v2.1: teaching steps */
+  teacher_steps?: TeacherStep[];
+  /** v2.1: chart definitions */
+  charts?: ChartDef[];
 }

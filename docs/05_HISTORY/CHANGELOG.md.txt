@@ -1,3 +1,18 @@
+## [S13] -- 2026-06-26
+
+### Changed
+- TeachingOverlay: fully data-driven (reads PhysicsScene.teacher_steps, no hardcoded steps)
+- TeachingOverlay: shows phase description, upcoming step indicator, contextual info
+- TeacherPanel: steps now auto-advance with frameCache-driven currentTime
+- FormulaOverlay (Scene3D): phase-aware formula display using i18n
+- FormulaOverlay: now uses useI18n (Zustand) for translated formulas
+
+### Added
+- Phase transition indicator in TeachingOverlay (pulse animation for upcoming step)
+- 2 new i18n keys (overlay.upcoming, teacher step formulas)
+- i18n sync verification: 324 keys, zh-CN == en-US perfectly
+
+
 ## [S12] -- 2026-06-26
 
 ### Added

@@ -3,6 +3,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useSimulation } from "../experiment.store";
+import { useI18n } from "../../../core/i18n";
 import { useVisualization } from "../../../core/visualization.store";
 
 function Axes() {
@@ -65,9 +66,30 @@ function HudLabels(){
 }
 
 function FormulaOverlay(){
-  const bx=useSimulation(s=>s.ballX),h=useSimulation(s=>s.height),g=useSimulation(s=>s.gravity),show=useVisualization(s=>s.toggles.showFormulas);
-  if(!show)return null;
-  return<Text position={[bx,h+3,0]} fontSize={0.35} color="#facc15" anchorX="center" outlineWidth={0.03} outlineColor="#000000">{"h = h0 - 1/2 * g * t^2"}</Text>;
+  const bx=useSimulation(s=>s.ballX),h=useSimulation(s=>s.height);
+  const currentPhaseId=useSimulation(s=>s.currentPhaseId);
+  const scene=useSimulation(s=>s.scene);
+  const {t}=useI18n();
+  const show=useVisualization(s=>s.toggles.showFormulas);
+  if(!show || !scene?.teacher_steps)return null;
+
+  // Find active teacher step for current phase
+  const steps = [...scene.teacher_steps].sort((a,b)=>a.order-b.order);
+  let activeStep = steps[0];
+  for (let i=steps.length-1; i>=0; i--) {
+    const s=steps[i]; const phase=scene.timeline.phases?.find(p=>p.id===currentPhaseId);
+    if (phase && s.timeStart >= phase.timeRange[0] && s.timeStart <= phase.timeRange[1]) {
+      activeStep = s; break;
+    }
+  }
+
+  const formulaKey = activeStep?.formulaKey;
+  if (!formulaKey) return null;
+  const formula = t(formulaKey);
+
+  return<Text position={[bx,h+3,0]} fontSize={0.35} color="#facc15" anchorX="center" outlineWidth={0.03} outlineColor="#000000">
+    {formula}
+  </Text>;
 }
 
 function Animator(){const tick=useSimulation(s=>s.tick);useFrame((_,d)=>{tick(d)});return null;}

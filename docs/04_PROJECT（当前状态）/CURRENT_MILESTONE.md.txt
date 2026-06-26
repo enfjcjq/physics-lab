@@ -1,14 +1,13 @@
-# Current Milestone: S12 (Completed)
+# Current Milestone: S13 (Completed)
 
-**Goal:** Timeline overhaul -- true data-driven synchronization
+**Goal:** Teaching Flow Integration -- Teacher + Timeline sync
 
 **Completed:**
-- [x] FrameCache: precompute all physics frames at 60fps on scene load
-- [x] jumpToTime uses binary search in cache (instant, no physics computation)
-- [x] tick() uses cache lookup (no per-frame computation)
-- [x] Trail derived from cache subset (not recomputed from scratch)
-- [x] Charts use shared frameCache (no independent derivation)
-- [x] Parameter changes rebuild entire cache
+- [x] TeachingOverlay: fully data-driven from PhysicsScene.teacher_steps (no hardcoded steps)
+- [x] TeachingOverlay: shows phase-aware contextual info (current phase, upcoming step)
+- [x] TeacherPanel: step auto-advances with playback/scrubbing via currentTime
+- [x] FormulaOverlay (3D): phase-aware, uses i18n for formula display
+- [x] i18n: 324 keys, perfectly synchronized zh-CN + en-US
 - [x] Type-check + build: 663 modules, zero errors
 
-**Next: S13** -- Teaching Flow Integration (Teacher+Timeline sync)
+**Next: S14** -- UI Polish (student-friendly, commercial quality)

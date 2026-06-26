@@ -1,19 +1,16 @@
 # Project Status
 
-**Version:** V2.0 (Sprint S12)
+**Version:** V2.0 (Sprint S13)
 **Last Commit:** TBD
 **Branch:** main
-**Status:** Building & Running (663 modules, 5 plugins, 322 i18n keys)
+**Status:** Building & Running (663 modules, 5 plugins, 324 i18n keys)
 
 ## Feature Highlights
 - 5 physics experiments (free-fall, projectile, incline, collision, spring-mass)
 - FrameCache: precomputed physics at 60fps for instant timeline scrubbing
-- All modules (3D, charts, teacher, trail) read from single cache
-- Binary search seek: no physics computation during drag/scrub
-- Parameter changes rebuild cache, state stays in sync
+- TeachingOverlay: data-driven from PhysicsScene, phase-aware
+- TeacherPanel: 7-step flow auto-advances with timeline
+- FormulaOverlay (3D): phase-aware with i18n
+- 324 i18n keys, perfectly synchronized
 - 3-mode system (Learning/Experiment/Analysis)
-
-## S12 Performance Gains
-- Scrubbing: from O(n) compute per mousemove to O(log n) binary search
-- Trail: from full regeneration to cache subset sampling
-- Charts: from independent derivation to shared frameCache
+- Report export + Welcome screen + About dialog

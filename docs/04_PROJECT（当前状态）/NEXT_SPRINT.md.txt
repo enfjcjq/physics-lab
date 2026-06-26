@@ -1,16 +1,17 @@
-# Next Sprint: S13
+# Next Sprint: S14
 
-## Priority 1: Teaching Flow Integration (P0)
-- Teacher steps follow timeline phases precisely
-- When scrubbing to a new phase, teacher panel shows correct step
-- Auto-advance teacher steps during playback
-- Quiz triggers at correct phase transitions
+## Priority 1: UI Polish (P0)
+- Reduce visual clutter in learning mode
+- More whitespace, fewer buttons
+- Student-friendly defaults
+- Smooth transitions between modes
 
-## Priority 2: Teaching Overlay Timing (P1)
-- Overlay appears only during relevant phases
-- Auto-hides when phase changes
-- Smooth fade transitions
+## Priority 2: Visual Consistency (P1)
+- Unified color system across all components
+- Consistent spacing and typography
+- Better empty states and loading indicators
 
-## Priority 3: Formula Highlight Sync (P2)
-- Formula overlay shows correct formula for current phase
-- Highlights active terms as time progresses
+## Priority 3: Accessibility (P2)
+- Keyboard navigation for all interactive elements
+- Focus indicators
+- Screen reader support basics

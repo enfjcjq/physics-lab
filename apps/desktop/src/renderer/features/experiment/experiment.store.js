@@ -1,10 +1,21 @@
 import { create } from "zustand";
 import { useHistory } from "../../core/history.store";
+import { pluginRegistry } from "../../core/plugin-registry";
 // ---- Physics engine (pure functions) ----
 const GROUND_Y = 0.2;
 const MAX_TRAIL = 600;
 const FRAME_STEP = 1 / 60;
-function computeFreeFall(height, gravity, t) {
+function computePhysics(height, gravity, mass, t) {
+    // Use the registered free-fall plugin for physics computation
+    const plugin = pluginRegistry.get("free-fall");
+    if (plugin?.computeState) {
+        const state = plugin.computeState(t, { g: gravity, h0: height, mass });
+        const pos = state.positions.ball;
+        const vel = state.velocities.ball;
+        const acc = state.accelerations.ball;
+        return { y: Math.max(pos[1], GROUND_Y), vy: vel[1], ay: acc[1] };
+    }
+    // Fallback to built-in computation
     const y = height - 0.5 * gravity * t * t;
     const vy = -gravity * t;
     return { y: Math.max(y, GROUND_Y), vy, ay: -gravity };
@@ -16,12 +27,12 @@ function getPhaseId(phases, t) {
     }
     return phases.length > 0 ? phases[0].id : "unknown";
 }
-function generateTrail(height, gravity, toTime) {
+function generateTrail(height, gravity, mass, toTime) {
     const trail = [];
     const dt = 1 / 60;
     let t = 0;
     while (t <= toTime && trail.length < MAX_TRAIL) {
-        const { y } = computeFreeFall(height, gravity, t);
+        const { y } = computePhysics(height, gravity, mass, t);
         trail.push({ x: 0, y: Math.max(y, GROUND_Y), z: 0 });
         t += dt;
     }
@@ -53,6 +64,8 @@ export const useSimulation = create((set, get) => ({
     ballY: 10.0,
     ballVelocity: 0,
     ballAcceleration: -9.8,
+    isBouncing: false,
+    bounceCount: 0,
     trail: [{ x: 0, y: 10, z: 0 }],
     phases: [],
     currentPhaseId: "release",
@@ -107,37 +120,39 @@ export const useSimulation = create((set, get) => ({
     jumpToTime: (t) => {
         const { height, gravity, totalDuration, phases } = get();
         const clamped = Math.max(0, Math.min(t, totalDuration));
-        const { y, vy, ay } = computeFreeFall(height, gravity, clamped);
+        const { y, vy, ay } = computePhysics(height, gravity, get().mass, clamped);
+        const onGround = y <= GROUND_Y && vy < 0;
         set({
             currentTime: clamped,
             ballY: y, ballVelocity: vy, ballAcceleration: ay,
             currentPhaseId: getPhaseId(phases, clamped),
             playing: false,
-            trail: generateTrail(height, gravity, clamped),
+            trail: generateTrail(height, gravity, get().mass, clamped),
+            isBouncing: onGround,
         });
     },
     stepForward: () => {
         const { currentTime, height, gravity, totalDuration, phases } = get();
         const t = Math.min(currentTime + FRAME_STEP, totalDuration);
-        const { y, vy, ay } = computeFreeFall(height, gravity, t);
+        const { y, vy, ay } = computePhysics(height, gravity, get().mass, t);
         set({
             currentTime: t,
             ballY: y, ballVelocity: vy, ballAcceleration: ay,
             currentPhaseId: getPhaseId(phases, t),
             playing: false,
-            trail: generateTrail(height, gravity, t),
+            trail: generateTrail(height, gravity, get().mass, t),
         });
     },
     stepBackward: () => {
         const { currentTime, height, gravity, phases } = get();
         const t = Math.max(currentTime - FRAME_STEP, 0);
-        const { y, vy, ay } = computeFreeFall(height, gravity, t);
+        const { y, vy, ay } = computePhysics(height, gravity, get().mass, t);
         set({
             currentTime: t,
             ballY: y, ballVelocity: vy, ballAcceleration: ay,
             currentPhaseId: getPhaseId(phases, t),
             playing: false,
-            trail: generateTrail(height, gravity, t),
+            trail: generateTrail(height, gravity, get().mass, t),
         });
     },
     jumpToPhase: (phaseId) => {
@@ -146,13 +161,13 @@ export const useSimulation = create((set, get) => ({
         if (!p)
             return;
         const t = p.timeRange[0];
-        const { y, vy, ay } = computeFreeFall(height, gravity, t);
+        const { y, vy, ay } = computePhysics(height, gravity, get().mass, t);
         set({
             currentTime: t,
             ballY: y, ballVelocity: vy, ballAcceleration: ay,
             currentPhaseId: phaseId,
             playing: false,
-            trail: generateTrail(height, gravity, t),
+            trail: generateTrail(height, gravity, get().mass, t),
         });
     },
     // ---- History ----
@@ -164,7 +179,7 @@ export const useSimulation = create((set, get) => ({
             set({
                 mass: snap.params.mass ?? get().mass, height: h, gravity: g,
                 currentTime: snap.time, ballY: snap.ballY, ballVelocity: snap.ballVelocity,
-                playing: false, trail: generateTrail(h, g, snap.time),
+                playing: false, trail: generateTrail(h, g, snap.params.mass ?? get().mass, snap.time),
             });
         }
     },
@@ -176,7 +191,7 @@ export const useSimulation = create((set, get) => ({
             set({
                 mass: snap.params.mass ?? get().mass, height: h, gravity: g,
                 currentTime: snap.time, ballY: snap.ballY, ballVelocity: snap.ballVelocity,
-                playing: false, trail: generateTrail(h, g, snap.time),
+                playing: false, trail: generateTrail(h, g, snap.params.mass ?? get().mass, snap.time),
             });
         }
     },
@@ -190,19 +205,24 @@ export const useSimulation = create((set, get) => ({
         if (newTime >= s.totalDuration) {
             set({
                 currentTime: s.totalDuration, playing: false,
-                trail: generateTrail(s.height, s.gravity, s.totalDuration),
+                trail: generateTrail(s.height, s.gravity, s.mass, s.totalDuration),
                 ballY: GROUND_Y, ballVelocity: 0, ballAcceleration: -s.gravity,
                 currentPhaseId: getPhaseId(s.phases, s.totalDuration),
             });
             return;
         }
-        const { y, vy, ay } = computeFreeFall(s.height, s.gravity, newTime);
+        const { y, vy, ay } = computePhysics(s.height, s.gravity, s.mass, newTime);
         const newTrail = [...s.trail, { x: 0, y, z: 0 }].slice(-MAX_TRAIL);
+        // Bounce detection: ball just hit the ground
+        const justBounced = y <= GROUND_Y && s.ballY > GROUND_Y && vy < 0;
+        const newBounceCount = justBounced ? s.bounceCount + 1 : s.bounceCount;
         set({
             currentTime: newTime,
             ballY: y, ballVelocity: vy, ballAcceleration: ay,
             currentPhaseId: getPhaseId(s.phases, newTime),
             trail: newTrail,
+            isBouncing: justBounced,
+            bounceCount: newBounceCount,
         });
     },
 }));

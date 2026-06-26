@@ -1,4 +1,16 @@
-# CHANGELOG
+﻿# CHANGELOG
+
+---
+
+# S02 - 3D Polish & Plugin Wiring
+
+Completed:
+- CameraAnimator: smooth lerp between phase camera presets via useFrame
+- Bounce visual: squash/stretch + emissive glow on ball impact
+- Bounce detection: isBouncing + bounceCount in experiment.store tick()
+- MenuBar: Edit and Experiment menus hidden in learning mode
+- Plugin wiring: computeState() from free-fall plugin drives all physics
+- Type-check clean (0 errors), build succeeds (651 modules)
 
 ---
 
@@ -61,5 +73,3 @@ Completed:
 - Electron project, React framework, Three.js basic scene
 
 ---
-
-Each completed version adds a new section.

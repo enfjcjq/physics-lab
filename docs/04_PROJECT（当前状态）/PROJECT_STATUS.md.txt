@@ -1,23 +1,30 @@
-# Project Status
+﻿# Project Status
 
-**Version:** V2.0 (Sprint S01)
-**Last Commit:** 42df3b3
+**Version:** V2.0 (Sprint S02)
+**Last Commit:** TBD
 **Branch:** main
-**Status:** Building & Running
+**Status:** Building & Running (651 modules, zero type errors)
 
 ## Current Architecture
 
 Problem -> AI Parser -> PhysicsScene -> Timeline -> Experiment -> Teacher -> Charts -> UI
 
-## Completed Milestones
+## Completed S02
 
-| Milestone | Status | Key Deliverables |
-|-----------|--------|-----------------|
-| V0.1-V0.4 | Done | Electron, React, Three.js, Timeline, Teaching Overlay |
-| V1.0 | Done | 3-mode system, TeacherPanel, trail sync |
-| V1.1 | Done | UX Polish, 7-step teacher, 3D arrows, full i18n |
-| V2.0 | Done | PhysicsScene AI Engine, data-driven architecture |
-| S01 | Done | Code cleanup, PHASES removal, i18n RightPanel |
+| Task | Status |
+|------|--------|
+| CameraAnimator smooth lerp | Done |
+| Bounce squash/stretch visual | Done |
+| Bounce detection in tick() | Done |
+| MenuBar learning-mode simplification | Done |
+| Plugin computeState wired to store | Done |
+| Type-check + build | Done |
+
+## Known Issues
+
+- Charts still use SVG (should use Canvas/WebGL for performance)
+- No Ollama integration yet (rule-based parser only)
+- Camera transitions can conflict with user OrbitControls drag
 
 ## Tech Stack
 
@@ -26,9 +33,3 @@ Problem -> AI Parser -> PhysicsScene -> Timeline -> Experiment -> Teacher -> Cha
 - Zustand (state management)
 - TailwindCSS (styling)
 - Vite (bundling)
-
-## Known Issues
-
-- Bounce animation needs smoother interpolation
-- No smooth camera transitions between phases
-- Charts still use SVG (should use Canvas/WebGL for performance)

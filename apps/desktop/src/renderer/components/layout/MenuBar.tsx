@@ -71,7 +71,7 @@ function MenuSeparator() {
 export function MenuBar() {
   const { t, locale, setLocale } = useI18n();
   const { mode, setMode } = useTheme();
-  const { subMode: teachingMode, setSubMode: setTeachingMode } = useTeaching();
+  const { mode: appMode, subMode: teachingMode, setSubMode: setTeachingMode } = useTeaching();
   const panelMgr = usePanelManager();
   const viz = useVisualization();
 
@@ -104,13 +104,15 @@ export function MenuBar() {
         <MenuItem label={t("menu.file.exit")} />
       </Dropdown>
 
-      {/* Edit */}
+      {/* Edit - hidden in learning mode */}
+      {appMode !== "learning" && (
       <Dropdown label={t("menu.edit")}>
         <MenuItem label={t("menu.edit.undo")} shortcut="Ctrl+Z" />
         <MenuItem label={t("menu.edit.redo")} shortcut="Ctrl+Y" />
         <MenuSeparator />
         <MenuItem label={t("menu.edit.reset")} />
       </Dropdown>
+      )}
 
       {/* View */}
       <Dropdown label={t("menu.view")}>

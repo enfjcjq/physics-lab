@@ -1,21 +1,29 @@
-# Physics Lab TODO
+﻿# Physics Lab TODO
 
-> Current version: V1.0
-
----
-
-# Completed (V1.0)
-
-- [x] Timeline as single source of truth (trail regenerates on jump/step/phase)
-- [x] Teacher Panel: phase-synced step-by-step narrative
-- [x] 3-mode system: Learning / Experiment / Analysis
-- [x] AppShell mode switcher + layout redesign
-- [x] Timeline scroll-wheel fine-tuning + phase segments
-- [x] All new text via i18n (zh-CN / en-US)
+> Current version: V2.0 (S02)
 
 ---
 
-# Phase 4: Multi-Experiment Platform (Next)
+# Completed (S02)
+
+- [x] CameraAnimator smooth phase transitions
+- [x] Bounce squash/stretch ball visual
+- [x] Bounce detection in experiment.store
+- [x] MenuBar simplified for learning mode
+- [x] Plugin computeState wired to experiment.store
+
+---
+
+# Completed (S01)
+
+- [x] PHASES removal from ui.store
+- [x] Data-driven RightPanel
+- [x] 196 i18n keys
+- [x] Code cleanup
+
+---
+
+# Phase 4: Multi-Experiment Platform (S03+)
 
 - [ ] Projectile motion plugin
 - [ ] Inclined plane plugin
@@ -35,23 +43,25 @@
 - [ ] Adaptive learning path
 - [ ] Adaptive difficulty
 - [ ] Student progress tracking
+- [ ] Interactive quiz between teacher steps
 
 ---
 
 # Visualization
 
+- [ ] Charts: Canvas-based replacement for SVG
 - [ ] Glowing trails
 - [ ] Dynamic arrow scaling (velocity/acceleration/force)
-- [ ] Camera presets per phase
-- [ ] HUD real-time labels
+- [x] Camera presets per phase
+- [x] HUD real-time labels
 - [ ] Collision particle effects
 
 ---
 
 # Internationalization
 
-- [x] Chinese (zh-CN)
-- [x] English (en-US)
+- [x] Chinese (zh-CN) - 196 keys
+- [x] English (en-US) - 196 keys
 - [ ] Japanese (ja)
 - [ ] Korean (ko)
 
@@ -68,4 +78,3 @@
 - [ ] Student dashboard
 - [ ] Experiment report generation
 - [ ] Auto-update system
-

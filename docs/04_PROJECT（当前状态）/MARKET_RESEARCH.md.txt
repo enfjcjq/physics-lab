@@ -1,20 +1,31 @@
-# Market Research (S01)
+﻿# Market Research (S02)
 
 ## PhET Interactive Simulations
 - **Strength:** Zero learning curve, instant feedback, beautiful visuals
 - **Learn:** Default mode should be extremely simple. Hide complexity.
-- **Apply:** Learning mode already hides charts and params. Go further.
+- **Apply S02:** MenuBar now hides Edit/Experiment in learning mode.
 
 ## GeoGebra
 - **Strength:** Algebra-geometry linking, slider-driven exploration
 - **Learn:** Real-time parameter sliders with instant visual feedback
-- **Apply:** Experiment mode sliders are good. Make them more prominent.
+- **Apply S02:** Plugin computeState now drives physics in real-time.
 
 ## Brilliant
 - **Strength:** Step-by-step guided discovery, interactive puzzles
 - **Learn:** Teacher step flow is correct. Add more interactive checkpoints.
-- **Apply:** Add "check understanding" moments between teacher steps.
+- **Apply S02:** TeacherPanel 7-step flow active. Quiz checkpoints planned for S03.
 
-## Common Pattern
+## Desmos
+- **Strength:** Stunning visual math, smooth animations, beautiful graphs
+- **Learn:** Smooth camera transitions matter for learning experience.
+- **Apply S02:** CameraAnimator with exponential lerp between phase presets.
+
+## Apple Human Interface Guidelines
+- **Strength:** Focus on content, minimal chrome, progressive disclosure
+- **Learn:** Learning mode should feel like an Apple education app.
+- **Apply S02:** MenuBar simplification, cleaner mode bar, hidden panels in learning mode.
+
+## Common Pattern (Updated)
 All top products prioritize immediate understanding over feature count.
-Physics Lab should follow: open -> see -> understand -> explore.
+Physics Lab follows: open -> see -> understand -> explore.
+S02 advanced: smooth transitions, intelligent defaults, progressive disclosure.

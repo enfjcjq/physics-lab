@@ -1,5 +1,5 @@
-import { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useRef, useMemo, useEffect, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useSimulation } from "../experiment.store";
@@ -22,8 +22,22 @@ function Ground(){return<mesh rotation={[-Math.PI/2,0,0]} position={[0,0,0]} rec
 function Grid(){return<gridHelper args={[20,20,"#334155","#1e293b"]} position={[0,0.01,0]}/>;}
 
 function Ball(){
-  const y=useSimulation(s=>s.ballY),m=useSimulation(s=>s.mass),ref=useRef<THREE.Mesh>(null),r=0.15+m*0.05;
-  return<mesh ref={ref} position={[0,y,0]} castShadow><sphereGeometry args={[r,32,32]}/><meshStandardMaterial color="#FF6B6B" metalness={0.3} roughness={0.4} emissive="#331111" emissiveIntensity={0.2}/></mesh>;
+  const y=useSimulation(s=>s.ballY),m=useSimulation(s=>s.mass),isBouncing=useSimulation(s=>s.isBouncing);
+  const ref=useRef<THREE.Mesh>(null),r=0.15+m*0.05;
+  const [squash,setSquash]=useState(1);
+  
+  useEffect(()=>{
+    if(isBouncing){
+      setSquash(0.7);
+      const t=setTimeout(()=>setSquash(1),150);
+      return ()=>clearTimeout(t);
+    }
+  },[isBouncing]);
+  
+  return<mesh ref={ref} position={[0,y,0]} castShadow scale={[1/squash,squash,1/squash]}>
+    <sphereGeometry args={[r,32,32]}/>
+    <meshStandardMaterial color="#FF6B6B" metalness={0.3} roughness={0.4} emissive={isBouncing?"#661111":"#331111"} emissiveIntensity={isBouncing?0.6:0.2}/>
+  </mesh>;
 }
 
 function Trail(){
@@ -58,8 +72,51 @@ function FormulaOverlay(){
 
 function Animator(){const tick=useSimulation(s=>s.tick);useFrame((_,d)=>{tick(d)});return null;}
 
+// Smooth camera transition between phase presets
+function CameraAnimator(){
+  const currentPhaseId = useSimulation(s=>s.currentPhaseId);
+  const phases = useSimulation(s=>s.phases);
+  const scene = useSimulation(s=>s.scene);
+  const { camera } = useThree();
+  const targetPos = useRef(new THREE.Vector3(8,6,8));
+  const animating = useRef(false);
+
+  useEffect(() => {
+    if (!scene?.camera_script || phases.length===0) return;
+    const phase = phases.find(p=>p.id===currentPhaseId);
+    if (!phase?.cameraPresetId) return;
+    const preset = scene.camera_script.find(c=>c.id===phase.cameraPresetId);
+    if (preset) {
+      targetPos.current.set(...preset.position);
+      animating.current = true;
+    }
+  }, [currentPhaseId, phases, scene]);
+
+  useFrame((_, delta) => {
+    if (!animating.current) return;
+    const f = 1 - Math.exp(-3 * delta);
+    camera.position.lerp(targetPos.current, f);
+    if (camera.position.distanceTo(targetPos.current) < 0.05) {
+      camera.position.copy(targetPos.current);
+      animating.current = false;
+    }
+  });
+
+  return null;
+}
+
 export function Scene3D(){
   const viz=useVisualization(s=>s.toggles),by=useSimulation(s=>s.ballY),h=useSimulation(s=>s.height);
+  const currentPhaseId=useSimulation(s=>s.currentPhaseId);
+  const scene=useSimulation(s=>s.scene);
+  const phases=useSimulation(s=>s.phases);
+  const targetVec=useMemo(()=>{
+    if(!scene?.camera_script||phases.length===0)return [0,5,0] as [number,number,number];
+    const phase=phases.find(p=>p.id===currentPhaseId);
+    if(!phase?.cameraPresetId)return [0,5,0] as [number,number,number];
+    const preset=scene.camera_script.find(c=>c.id===phase.cameraPresetId);
+    return preset?preset.target as [number,number,number]:[0,5,0] as [number,number,number];
+  },[currentPhaseId,phases,scene]);
   return<Canvas camera={{position:[8,6,8],fov:55,near:0.1,far:100}} gl={{antialias:true,alpha:false,preserveDrawingBuffer:true}} style={{background:"linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)"}} onCreated={({gl})=>{gl.setClearColor(new THREE.Color("#0f172a"))}}>
     <ambientLight intensity={0.4}/>
     <directionalLight position={[10,15,5]} intensity={0.8} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024}/>
@@ -68,7 +125,7 @@ export function Scene3D(){
     {viz.showTrail&&<Trail/>}{viz.showDataLabels&&<HeightRuler/>}
     {viz.showVelocityArrow&&<VelocityArrow/>}{viz.showAccelArrow&&<AccelArrow/>}{viz.showGravityArrow&&<ForceArrow/>}
     {viz.showDataLabels&&<HudLabels/>}{viz.showFormulas&&<FormulaOverlay/>}
-    <OrbitControls enableDamping dampingFactor={0.1} target={[0,5,0]} maxPolarAngle={Math.PI*0.8}/>
+    <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>
     <Animator/>
   </Canvas>;
 }

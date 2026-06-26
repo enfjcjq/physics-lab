@@ -13,6 +13,8 @@ export interface SimulationState {
     ballY: number;
     ballVelocity: number;
     ballAcceleration: number;
+    isBouncing: boolean;
+    bounceCount: number;
     trail: Array<{
         x: number;
         y: number;

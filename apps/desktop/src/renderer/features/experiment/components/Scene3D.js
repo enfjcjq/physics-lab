@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useRef, useMemo } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { useRef, useMemo, useEffect, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useSimulation } from "../experiment.store";
@@ -16,8 +16,17 @@ function Axes() {
 function Ground() { return _jsxs("mesh", { rotation: [-Math.PI / 2, 0, 0], position: [0, 0, 0], receiveShadow: true, children: [_jsx("planeGeometry", { args: [20, 20] }), _jsx("meshStandardMaterial", { color: "#1e293b" })] }); }
 function Grid() { return _jsx("gridHelper", { args: [20, 20, "#334155", "#1e293b"], position: [0, 0.01, 0] }); }
 function Ball() {
-    const y = useSimulation(s => s.ballY), m = useSimulation(s => s.mass), ref = useRef(null), r = 0.15 + m * 0.05;
-    return _jsxs("mesh", { ref: ref, position: [0, y, 0], castShadow: true, children: [_jsx("sphereGeometry", { args: [r, 32, 32] }), _jsx("meshStandardMaterial", { color: "#FF6B6B", metalness: 0.3, roughness: 0.4, emissive: "#331111", emissiveIntensity: 0.2 })] });
+    const y = useSimulation(s => s.ballY), m = useSimulation(s => s.mass), isBouncing = useSimulation(s => s.isBouncing);
+    const ref = useRef(null), r = 0.15 + m * 0.05;
+    const [squash, setSquash] = useState(1);
+    useEffect(() => {
+        if (isBouncing) {
+            setSquash(0.7);
+            const t = setTimeout(() => setSquash(1), 150);
+            return () => clearTimeout(t);
+        }
+    }, [isBouncing]);
+    return _jsxs("mesh", { ref: ref, position: [0, y, 0], castShadow: true, scale: [1 / squash, squash, 1 / squash], children: [_jsx("sphereGeometry", { args: [r, 32, 32] }), _jsx("meshStandardMaterial", { color: "#FF6B6B", metalness: 0.3, roughness: 0.4, emissive: isBouncing ? "#661111" : "#331111", emissiveIntensity: isBouncing ? 0.6 : 0.2 })] });
 }
 function Trail() {
     const t = useSimulation(s => s.trail), pts = useMemo(() => t.map(p => new THREE.Vector3(p.x, p.y, p.z)), [t]);
@@ -48,8 +57,52 @@ function FormulaOverlay() {
     return _jsx(Text, { position: [0, h + 3, 0], fontSize: 0.35, color: "#facc15", anchorX: "center", outlineWidth: 0.03, outlineColor: "#000000", children: "h = h0 - 1/2 * g * t^2" });
 }
 function Animator() { const tick = useSimulation(s => s.tick); useFrame((_, d) => { tick(d); }); return null; }
+// Smooth camera transition between phase presets
+function CameraAnimator() {
+    const currentPhaseId = useSimulation(s => s.currentPhaseId);
+    const phases = useSimulation(s => s.phases);
+    const scene = useSimulation(s => s.scene);
+    const { camera } = useThree();
+    const targetPos = useRef(new THREE.Vector3(8, 6, 8));
+    const animating = useRef(false);
+    useEffect(() => {
+        if (!scene?.camera_script || phases.length === 0)
+            return;
+        const phase = phases.find(p => p.id === currentPhaseId);
+        if (!phase?.cameraPresetId)
+            return;
+        const preset = scene.camera_script.find(c => c.id === phase.cameraPresetId);
+        if (preset) {
+            targetPos.current.set(...preset.position);
+            animating.current = true;
+        }
+    }, [currentPhaseId, phases, scene]);
+    useFrame((_, delta) => {
+        if (!animating.current)
+            return;
+        const f = 1 - Math.exp(-3 * delta);
+        camera.position.lerp(targetPos.current, f);
+        if (camera.position.distanceTo(targetPos.current) < 0.05) {
+            camera.position.copy(targetPos.current);
+            animating.current = false;
+        }
+    });
+    return null;
+}
 export function Scene3D() {
     const viz = useVisualization(s => s.toggles), by = useSimulation(s => s.ballY), h = useSimulation(s => s.height);
-    return _jsxs(Canvas, { camera: { position: [8, 6, 8], fov: 55, near: 0.1, far: 100 }, gl: { antialias: true, alpha: false, preserveDrawingBuffer: true }, style: { background: "linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)" }, onCreated: ({ gl }) => { gl.setClearColor(new THREE.Color("#0f172a")); }, children: [_jsx("ambientLight", { intensity: 0.4 }), _jsx("directionalLight", { position: [10, 15, 5], intensity: 0.8, castShadow: true, "shadow-mapSize-width": 1024, "shadow-mapSize-height": 1024 }), _jsx("pointLight", { position: [0, 8, 0], intensity: 0.3, color: "#FF6B6B" }), viz.showAxes && _jsx(Axes, {}), viz.showGrid && _jsx(Grid, {}), _jsx(Ground, {}), _jsx(Ball, {}), viz.showTrail && _jsx(Trail, {}), viz.showDataLabels && _jsx(HeightRuler, {}), viz.showVelocityArrow && _jsx(VelocityArrow, {}), viz.showAccelArrow && _jsx(AccelArrow, {}), viz.showGravityArrow && _jsx(ForceArrow, {}), viz.showDataLabels && _jsx(HudLabels, {}), viz.showFormulas && _jsx(FormulaOverlay, {}), _jsx(OrbitControls, { enableDamping: true, dampingFactor: 0.1, target: [0, 5, 0], maxPolarAngle: Math.PI * 0.8 }), _jsx(Animator, {})] });
+    const currentPhaseId = useSimulation(s => s.currentPhaseId);
+    const scene = useSimulation(s => s.scene);
+    const phases = useSimulation(s => s.phases);
+    const targetVec = useMemo(() => {
+        if (!scene?.camera_script || phases.length === 0)
+            return [0, 5, 0];
+        const phase = phases.find(p => p.id === currentPhaseId);
+        if (!phase?.cameraPresetId)
+            return [0, 5, 0];
+        const preset = scene.camera_script.find(c => c.id === phase.cameraPresetId);
+        return preset ? preset.target : [0, 5, 0];
+    }, [currentPhaseId, phases, scene]);
+    return _jsxs(Canvas, { camera: { position: [8, 6, 8], fov: 55, near: 0.1, far: 100 }, gl: { antialias: true, alpha: false, preserveDrawingBuffer: true }, style: { background: "linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)" }, onCreated: ({ gl }) => { gl.setClearColor(new THREE.Color("#0f172a")); }, children: [_jsx("ambientLight", { intensity: 0.4 }), _jsx("directionalLight", { position: [10, 15, 5], intensity: 0.8, castShadow: true, "shadow-mapSize-width": 1024, "shadow-mapSize-height": 1024 }), _jsx("pointLight", { position: [0, 8, 0], intensity: 0.3, color: "#FF6B6B" }), viz.showAxes && _jsx(Axes, {}), viz.showGrid && _jsx(Grid, {}), _jsx(Ground, {}), _jsx(Ball, {}), viz.showTrail && _jsx(Trail, {}), viz.showDataLabels && _jsx(HeightRuler, {}), viz.showVelocityArrow && _jsx(VelocityArrow, {}), viz.showAccelArrow && _jsx(AccelArrow, {}), viz.showGravityArrow && _jsx(ForceArrow, {}), viz.showDataLabels && _jsx(HudLabels, {}), viz.showFormulas && _jsx(FormulaOverlay, {}), _jsx(CameraAnimator, {}), _jsx(OrbitControls, { enableDamping: true, dampingFactor: 0.1, target: targetVec, maxPolarAngle: Math.PI * 0.8 }), _jsx(Animator, {})] });
 }
 //# sourceMappingURL=Scene3D.js.map

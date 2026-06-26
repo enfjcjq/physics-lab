@@ -1,19 +1,20 @@
-# Next Sprint: S02
+﻿# Next Sprint: S03
 
-## Priority 1: Physics Engine Wiring
-- Use free-fall plugin's computeState() in experiment.store
-- Remove hardcoded computeFreeFall()
+## Priority 1: First New Experiment - Projectile Motion
+- Create projectile-motion plugin
+- Implement computeState for 2D kinematics (horizontal + vertical)
+- Add initial velocity + angle parameters
+- Generate PhysicsScene with proper phases
 
-## Priority 2: 3D Polish
-- Smooth camera lerp between phase presets
-- Ball bounce interpolation (don't snap to ground)
-- Trail fade effect
-
-## Priority 3: Charts Upgrade
-- Replace SVG charts with Canvas-based rendering
+## Priority 2: Charts Performance
+- Replace SVG-based charts with Canvas rendering
 - Add hover tooltips showing data values
+- Support zoom and pan on charts
 
-## Priority 4: UI Refinement
-- Learning mode: hide MenuBar complexity
-- Add keyboard shortcut hints
-- Loading states for AI parsing
+## Priority 3: Interactive Teaching
+- Add "check understanding" quiz between teacher steps
+- Students answer simple questions before proceeding
+
+## Priority 4: Ollama Integration Prep
+- Wire AIProvider abstraction to Ollama
+- Test with qwen2.5 for free-fall problem parsing

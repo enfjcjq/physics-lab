@@ -1,15 +1,17 @@
-# Current Milestone: S01
+﻿# Current Milestone: S02 (Completed)
 
-**Goal:** Code cleanup, architecture refinement, i18n completion
+**Goal:** Code cleanup, 3D polish, plugin wiring, learning-mode simplification
 
 **Completed:**
-- [x] Remove hardcoded PHASES from ui.store.ts
-- [x] Data-driven RightPanel (reads from PhysicsScene)
-- [x] 196 i18n keys (zh-CN / en-US)
-- [x] 651 modules building clean
+- [x] CameraAnimator: smooth lerp between phase camera presets
+- [x] Bounce squash/stretch visual in Scene3D
+- [x] Bounce detection in experiment.store tick()
+- [x] MenuBar simplified in learning mode (hides Edit, Experiment)
+- [x] Free-fall plugin computeState wired into experiment.store
+- [x] Type-check passes, build succeeds (651 modules)
 
-**Next: S02**
-- Wire plugin physics engine
-- Smooth camera transitions
-- Bounce animation fix
-- Charts performance optimization
+**Next: S03**
+- Projectile motion plugin (first new experiment)
+- Charts: migrate from SVG to Canvas for perf
+- Add interactive quiz between teacher steps
+- Ollama LLM integration for problem parsing

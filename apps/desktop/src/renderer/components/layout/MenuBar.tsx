@@ -7,6 +7,8 @@ import { useVisualization } from "../../core/visualization.store";
 import type { Locale } from "../../core/i18n";
 import type { ThemeMode } from "../../core/theme.store";
 import type { TeachingSubMode } from "../../core/teaching.store";
+import { useSimulation } from "../../features/experiment/experiment.store";
+import { generateMarkdownReport, downloadReport } from "../../lib/report";
 
 // ===== Dropdown Menu =====
 function Dropdown({ label, children }: { label: string; children: React.ReactNode }) {
@@ -74,6 +76,21 @@ export function MenuBar() {
   const { mode: appMode, subMode: teachingMode, setSubMode: setTeachingMode } = useTeaching();
   const panelMgr = usePanelManager();
   const viz = useVisualization();
+  const sim = useSimulation();
+
+  const handleExport = () => {
+    const scene = sim.scene;
+    if (!scene) return;
+    const report = generateMarkdownReport({
+      scene,
+      params: { mass: sim.mass, height: sim.height, gravity: sim.gravity },
+      currentTime: sim.currentTime,
+      ballY: sim.ballY,
+      ballVelocity: sim.ballVelocity,
+    }, locale);
+    const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    downloadReport(report, `physics-lab-report-${ts}.md`);
+  };
 
   const panelItems = panelMgr.panelDefs.map((def) => ({
     id: def.id,
@@ -99,7 +116,7 @@ export function MenuBar() {
         <MenuItem label={t("menu.file.open")} shortcut="Ctrl+O" />
         <MenuItem label={t("menu.file.save")} shortcut="Ctrl+S" />
         <MenuSeparator />
-        <MenuItem label={t("menu.file.export")} shortcut="Ctrl+E" />
+        <MenuItem label={t("menu.file.export")} shortcut="Ctrl+E" onClick={handleExport} />
         <MenuSeparator />
         <MenuItem label={t("menu.file.exit")} />
       </Dropdown>

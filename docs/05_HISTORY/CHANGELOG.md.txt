@@ -2,80 +2,88 @@
 
 ---
 
+# S07 - Experiment Report Export
+
+Completed:
+- Markdown report generator with full experiment data
+- Export button: File > Export (Ctrl+E) in MenuBar
+- Report includes: overview, parameters, current state, equations, knowledge points, teacher steps
+- Localized: zh-CN and en-US templates
+- Type-check + build: 658 modules, zero errors
+
+---
+
 # S06 - Collision Plugin (4th Experiment)
 
 Completed:
-- Collision PhysicsScene: 2 balls, elastic + inelastic, 3 phases (approach/collision/separate)
-- Collision plugin: momentum conservation formula, restitution coefficient
+- Collision PhysicsScene: 2 balls, elastic/inelastic, momentum conservation
 - Scene3D: Ball2 component for two-ball rendering
-- experiment.store: ball2X/ball2Y for dual-object tracking
-- 285 i18n keys (zh-CN + en-US) including collision teacher steps
-- Type-check + build: 657 modules, zero errors
+- experiment.store: ball2X/ball2Y dual-object tracking
+- 285 i18n keys
 
 ---
 
 # S05 - Inclined Plane (3rd Experiment)
 
 Completed:
-- Inclined plane PhysicsScene: 3 forces (G/N/f), angle + friction parameters
-- i18n: 260 keys
+- Force decomposition + friction, 260 i18n keys
 
 ---
 
 # S04 - Canvas Charts & Interactive Quiz
 
 Completed:
-- Charts: SVG -> Canvas with DPR-aware rendering + hover tooltips
-- Interactive quiz: 2 checkpoints in TeacherPanel
+- Canvas charts with DPR-aware rendering + hover tooltips
+- Interactive quiz in TeacherPanel
 
 ---
 
 # S03 - Projectile Motion (2nd Experiment)
 
 Completed:
-- Projectile motion plugin (6 phases), 2D physics, plugin switching
+- 2D physics, plugin switching
 
 ---
 
 # S02 - 3D Polish & Plugin Wiring
 
 Completed:
-- CameraAnimator, bounce visual, plugin computeState wired to store
+- CameraAnimator, bounce visual, plugin computeState
 
 ---
 
 # V1.1 - UX Polish
 
 Completed:
-- Timeline rebuilt, 7-step Teacher Panel, full i18n
+- Timeline, 7-step Teacher, full i18n
 
 ---
 
-# V1.0
+# V1.0 - Interactive Teaching Framework
 
 Completed:
-- Timeline as single source of truth, 3-mode system
+- Timeline, 3-mode system
 
 ---
 
-# V0.4
+# V0.4 - Foundation
 
 Completed:
-- Full Timeline controls, Teaching Overlay, i18n foundation
+- Timeline controls, Teaching Overlay, i18n foundation
 
 ---
 
 # V0.3
 
 Completed:
-- Dock windows, Timeline, Plugin System
+- Dock windows, Plugin System
 
 ---
 
 # V0.2
 
 Completed:
-- Free fall experiment, Parameter controls
+- Free fall, Parameter controls
 
 ---
 

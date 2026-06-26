@@ -1,14 +1,13 @@
-﻿# Next Sprint: S07
+﻿# Next Sprint: S08
 
-## Priority 1: Experiment Report Export
-- Generate Markdown report from PhysicsScene + experiment data
-- Include: parameters, charts, formulas, knowledge points, screenshots
-- Export as PDF via electron print
+## Priority 1: Bundle Optimization
+- Code-split plugins so each experiment is lazy-loaded
+- Reduce initial bundle below 500KB
 
-## Priority 2: Bundle Optimization
-- Code-split plugins (lazy load per experiment)
-- Reduce main bundle below 500KB
+## Priority 2: AIProvider Finalization
+- Complete AIProvider interface
+- Rule-based parser coverage for all 4 experiments
 
-## Priority 3: AIProvider Hardening
-- Complete AIProvider interface with streaming support
-- Ready for Ollama/OpenAI/Claude drop-in
+## Priority 3: Student Progress
+- Track time spent per experiment
+- Track completed teacher steps

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { useHistory } from "../../core/history.store";
 import { pluginRegistry } from "../../core/plugin-registry";
+import { ensurePlugin } from "../../core/plugin-loader";
 // ---- Physics engine (pure functions) ----
 const GROUND_Y = 0.2;
 const MAX_TRAIL = 600;
@@ -94,8 +95,12 @@ export const useSimulation = create((set, get) => ({
     trail: [{ x: 0, y: 10, z: 0 }],
     phases: [],
     currentPhaseId: "release",
-    // ---- Plugin switching ----
-    setActivePlugin: (pluginId) => {
+    // ---- Plugin switching (with lazy loading) ----
+    setActivePlugin: async (pluginId) => {
+        // Lazy-load the plugin if not yet registered
+        if (!pluginRegistry.get(pluginId)) {
+            await ensurePlugin(pluginId);
+        }
         const plugin = pluginRegistry.get(pluginId);
         if (!plugin)
             return;

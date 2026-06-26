@@ -2,6 +2,7 @@
 import type { PhysicsScene, TimelinePhase } from "@physics-lab/shared";
 import { useHistory } from "../../core/history.store";
 import { pluginRegistry } from "../../core/plugin-registry";
+import { ensurePlugin } from "../../core/plugin-loader";
 
 export type SpeedLevel = 0.25 | 0.5 | 1 | 2 | 4;
 
@@ -159,8 +160,12 @@ export const useSimulation = create<SimulationState>((set, get) => ({
   phases: [],
   currentPhaseId: "release",
 
-  // ---- Plugin switching ----
-  setActivePlugin: (pluginId) => {
+  // ---- Plugin switching (with lazy loading) ----
+  setActivePlugin: async (pluginId) => {
+    // Lazy-load the plugin if not yet registered
+    if (!pluginRegistry.get(pluginId)) {
+      await ensurePlugin(pluginId);
+    }
     const plugin = pluginRegistry.get(pluginId);
     if (!plugin) return;
     const scene = plugin.getDefaultScene();

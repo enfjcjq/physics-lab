@@ -2,39 +2,43 @@
 
 ---
 
+# S08 - Code Splitting
+
+Completed:
+- 3 plugins (projectile, incline, collision) now lazy-loaded via dynamic import()
+- Only free-fall is eagerly registered at startup (~1,224 KB main bundle)
+- Plugin loader utility with async ensurePlugin()
+- ~32 KB deferred from initial load
+- Type-check + build: 659 modules, zero errors
+
+---
+
 # S07 - Experiment Report Export
 
 Completed:
-- Markdown report generator with full experiment data
-- Export button: File > Export (Ctrl+E) in MenuBar
-- Report includes: overview, parameters, current state, equations, knowledge points, teacher steps
-- Localized: zh-CN and en-US templates
-- Type-check + build: 658 modules, zero errors
+- Markdown report: params, formulas, knowledge, teacher steps
+- File > Export in MenuBar
 
 ---
 
 # S06 - Collision Plugin (4th Experiment)
 
 Completed:
-- Collision PhysicsScene: 2 balls, elastic/inelastic, momentum conservation
-- Scene3D: Ball2 component for two-ball rendering
-- experiment.store: ball2X/ball2Y dual-object tracking
-- 285 i18n keys
+- Momentum conservation, 2-ball rendering
 
 ---
 
 # S05 - Inclined Plane (3rd Experiment)
 
 Completed:
-- Force decomposition + friction, 260 i18n keys
+- Force decomposition + friction
 
 ---
 
 # S04 - Canvas Charts & Interactive Quiz
 
 Completed:
-- Canvas charts with DPR-aware rendering + hover tooltips
-- Interactive quiz in TeacherPanel
+- Canvas charts with tooltips, quiz in TeacherPanel
 
 ---
 
@@ -45,49 +49,4 @@ Completed:
 
 ---
 
-# S02 - 3D Polish & Plugin Wiring
-
-Completed:
-- CameraAnimator, bounce visual, plugin computeState
-
----
-
-# V1.1 - UX Polish
-
-Completed:
-- Timeline, 7-step Teacher, full i18n
-
----
-
-# V1.0 - Interactive Teaching Framework
-
-Completed:
-- Timeline, 3-mode system
-
----
-
-# V0.4 - Foundation
-
-Completed:
-- Timeline controls, Teaching Overlay, i18n foundation
-
----
-
-# V0.3
-
-Completed:
-- Dock windows, Plugin System
-
----
-
-# V0.2
-
-Completed:
-- Free fall, Parameter controls
-
----
-
-# V0.1
-
-Completed:
-- Electron + React + Three.js
+(earlier versions summarized above)

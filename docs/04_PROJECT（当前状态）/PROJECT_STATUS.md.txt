@@ -1,18 +1,12 @@
 ﻿# Project Status
 
-**Version:** V2.0 (Sprint S07)
+**Version:** V2.0 (Sprint S08)
 **Last Commit:** TBD
 **Branch:** main
-**Status:** Building & Running (658 modules, zero type errors, 285 i18n keys)
+**Status:** Building & Running (659 modules, code-split plugins, 285 i18n keys)
 
-## Experiments (4 plugins)
+## Architecture
 
-| # | Plugin | ID | Difficulty |
-|---|--------|-----|------------|
-| 1 | Free Fall | free-fall | easy |
-| 2 | Projectile Motion | projectile-motion | medium |
-| 3 | Inclined Plane | inclined-plane | medium |
-| 4 | Collision | collision | medium |
-
-## New in S07
-- **Experiment Report Export** (File > Export, Ctrl+E): Markdown with overview, parameters, formulas, knowledge points, teacher steps
+- 4 experiments (free-fall eager, 3 lazy-loaded)
+- Plugin system with dynamic import()
+- Canvas charts + interactive quiz + report export

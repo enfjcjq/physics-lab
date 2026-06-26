@@ -1,14 +1,22 @@
-﻿# Current Milestone: S07 (Completed)
+﻿# Current Milestone: S08 (Completed)
 
-**Goal:** Experiment report export + code quality
+**Goal:** Plugin code splitting — lazy-load non-default experiments
 
 **Completed:**
-- [x] Markdown report generator: params, formulas, knowledge points, teacher steps
-- [x] Export button: File > Export (Ctrl+E) in MenuBar
-- [x] Report includes: overview, parameters, current state, equations, knowledge, teaching steps
-- [x] Type-check + build: 658 modules, zero errors
+- [x] Plugin loader: dynamic import() for projectile, incline, collision
+- [x] Only free-fall eagerly registered at startup
+- [x] 3 plugins code-split: ~32 KB deferred from main bundle
+- [x] Type-check + build: 659 modules, zero errors, no import warnings
 
-**Next: S08**
-- Bundle optimization (code splitting plugins)
-- AIProvider for Ollama/OpenAI integration
-- Student progress tracking foundation
+**Bundle split:**
+| Chunk | Size |
+|-------|------|
+| Main (index) | 1,224 KB |
+| projectile-motion.plugin | 11 KB (lazy) |
+| inclined-plane.plugin | 11 KB (lazy) |
+| collision.plugin | 10 KB (lazy) |
+
+**Next: S09**
+- Knowledge graph visualization foundation
+- Student progress tracking
+- Experiment state persistence (localStorage)

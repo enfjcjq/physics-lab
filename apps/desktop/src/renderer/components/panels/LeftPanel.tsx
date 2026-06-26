@@ -57,7 +57,7 @@ export function LeftPanel() {
         <div className="px-4 pb-3">
           <select
             value={activePluginId}
-            onChange={(e) => setActivePlugin(e.target.value)}
+            onChange={async (e) => { await setActivePlugin(e.target.value); }}
             className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-sky-600 cursor-pointer"
           >
             {pluginRegistry.list().map((p) => (

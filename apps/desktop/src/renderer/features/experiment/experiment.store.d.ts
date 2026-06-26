@@ -4,6 +4,7 @@ export interface SimulationState {
     scene: PhysicsScene | null;
     sceneLoaded: boolean;
     activePluginId: string;
+    pluginLoading: boolean;
     mass: number;
     height: number;
     gravity: number;

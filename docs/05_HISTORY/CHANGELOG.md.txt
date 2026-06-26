@@ -2,51 +2,14 @@
 
 ---
 
-# S08 - Code Splitting
+# S09 - UX Polish
 
 Completed:
-- 3 plugins (projectile, incline, collision) now lazy-loaded via dynamic import()
-- Only free-fall is eagerly registered at startup (~1,224 KB main bundle)
-- Plugin loader utility with async ensurePlugin()
-- ~32 KB deferred from initial load
-- Type-check + build: 659 modules, zero errors
+- Loading overlay: spinner shown during lazy plugin load
+- Keyboard shortcut hints: displayed below Timeline
+- localStorage: last experiment persisted across sessions
+- i18n: 286 keys
 
 ---
 
-# S07 - Experiment Report Export
-
-Completed:
-- Markdown report: params, formulas, knowledge, teacher steps
-- File > Export in MenuBar
-
----
-
-# S06 - Collision Plugin (4th Experiment)
-
-Completed:
-- Momentum conservation, 2-ball rendering
-
----
-
-# S05 - Inclined Plane (3rd Experiment)
-
-Completed:
-- Force decomposition + friction
-
----
-
-# S04 - Canvas Charts & Interactive Quiz
-
-Completed:
-- Canvas charts with tooltips, quiz in TeacherPanel
-
----
-
-# S03 - Projectile Motion (2nd Experiment)
-
-Completed:
-- 2D physics, plugin switching
-
----
-
-(earlier versions summarized above)
+(earlier versions above)

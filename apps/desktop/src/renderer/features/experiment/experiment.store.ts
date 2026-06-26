@@ -13,6 +13,7 @@ export interface SimulationState {
 
   // Active plugin
   activePluginId: string;
+  pluginLoading: boolean;
 
   // Parameters (from scene)
   mass: number;
@@ -141,6 +142,7 @@ export const useSimulation = create<SimulationState>((set, get) => ({
   scene: null,
   sceneLoaded: false,
   activePluginId: "free-fall",
+  pluginLoading: false,
   mass: 2.0,
   height: 10.0,
   gravity: 9.8,
@@ -162,12 +164,14 @@ export const useSimulation = create<SimulationState>((set, get) => ({
 
   // ---- Plugin switching (with lazy loading) ----
   setActivePlugin: async (pluginId) => {
+    if (pluginId === get().activePluginId) return;
     // Lazy-load the plugin if not yet registered
     if (!pluginRegistry.get(pluginId)) {
+      set({ pluginLoading: true });
       await ensurePlugin(pluginId);
     }
     const plugin = pluginRegistry.get(pluginId);
-    if (!plugin) return;
+    if (!plugin) { set({ pluginLoading: false }); return; }
     const scene = plugin.getDefaultScene();
     const { h, m, g, dur, phases } = extractParams(scene);
     set({
@@ -178,6 +182,7 @@ export const useSimulation = create<SimulationState>((set, get) => ({
       ballX: 0, ballY: h, ballVelocity: 0, ballAcceleration: -g,
       currentTime: 0, currentPhaseId: getPhaseId(phases, 0),
       trail: [{ x: 0, y: h, z: 0 }],
+      pluginLoading: false,
     });
   },
 

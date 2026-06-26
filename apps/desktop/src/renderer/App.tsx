@@ -14,7 +14,10 @@ export function App() {
   const sceneLoaded = useSimulation((s) => s.sceneLoaded);
 
   useEffect(() => {
-    const plugin = pluginRegistry.get("free-fall");
+    // Restore last experiment from localStorage
+    const savedPlugin = localStorage.getItem("physics-lab:lastPlugin");
+    const pluginId = savedPlugin || "free-fall";
+    const plugin = pluginRegistry.get(pluginId);
     const scene = plugin?.getDefaultScene() ?? FREE_FALL_SCENE;
 
     async function loadScene() {
@@ -29,6 +32,14 @@ export function App() {
     }
     loadScene();
   }, [setScene]);
+
+  // Persist active plugin when scene loads
+  const activePluginId = useSimulation((s) => s.activePluginId);
+  useEffect(() => {
+    if (activePluginId) {
+      localStorage.setItem("physics-lab:lastPlugin", activePluginId);
+    }
+  }, [activePluginId]);
 
   if (!sceneLoaded) {
     return (

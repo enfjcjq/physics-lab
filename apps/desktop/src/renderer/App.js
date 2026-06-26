@@ -11,7 +11,10 @@ export function App() {
     const setScene = useSimulation((s) => s.setScene);
     const sceneLoaded = useSimulation((s) => s.sceneLoaded);
     useEffect(() => {
-        const plugin = pluginRegistry.get("free-fall");
+        // Restore last experiment from localStorage
+        const savedPlugin = localStorage.getItem("physics-lab:lastPlugin");
+        const pluginId = savedPlugin || "free-fall";
+        const plugin = pluginRegistry.get(pluginId);
         const scene = plugin?.getDefaultScene() ?? FREE_FALL_SCENE;
         async function loadScene() {
             try {
@@ -26,6 +29,13 @@ export function App() {
         }
         loadScene();
     }, [setScene]);
+    // Persist active plugin when scene loads
+    const activePluginId = useSimulation((s) => s.activePluginId);
+    useEffect(() => {
+        if (activePluginId) {
+            localStorage.setItem("physics-lab:lastPlugin", activePluginId);
+        }
+    }, [activePluginId]);
     if (!sceneLoaded) {
         return (_jsx("div", { className: "w-full h-full flex items-center justify-center", style: { background: "var(--bg-root)" }, children: _jsxs("div", { className: "text-center", children: [_jsx("div", { className: "w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" }), _jsx("p", { className: "text-slate-400 text-lg", children: "Physics Lab" })] }) }));
     }

@@ -4,6 +4,7 @@ import { TeachingOverlay } from "../teaching/TeachingOverlay";
 import { useI18n } from "../../core/i18n";
 
 export function CenterPanel() {
+  const pluginLoading = useSimulation((s) => s.pluginLoading);
   const currentPhaseId = useSimulation((s) => s.currentPhaseId);
   const phases = useSimulation((s) => s.phases);
   const jumpToPhase = useSimulation((s) => s.jumpToPhase);
@@ -13,6 +14,14 @@ export function CenterPanel() {
 
   return (
     <div className="flex-1 relative min-w-0">
+      {pluginLoading && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-8 h-8 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
+            <span className="text-xs text-slate-400">{t("ui.loading")}</span>
+          </div>
+        </div>
+      )}
       <Scene3D />
       <TeachingOverlay />
       {/* Phase indicator */}

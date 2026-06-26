@@ -1,22 +1,15 @@
-﻿# Current Milestone: S08 (Completed)
+﻿# Current Milestone: S09 (Completed)
 
-**Goal:** Plugin code splitting — lazy-load non-default experiments
+**Goal:** UX polish — loading states, keyboard hints, state persistence
 
 **Completed:**
-- [x] Plugin loader: dynamic import() for projectile, incline, collision
-- [x] Only free-fall eagerly registered at startup
-- [x] 3 plugins code-split: ~32 KB deferred from main bundle
-- [x] Type-check + build: 659 modules, zero errors, no import warnings
+- [x] Plugin loading overlay: spinner + text when switching experiments
+- [x] Keyboard shortcut hints: displayed below Timeline
+- [x] localStorage persistence: last used experiment saved and restored
+- [x] i18n: 286 keys
+- [x] Type-check + build: 659 modules, zero errors
 
-**Bundle split:**
-| Chunk | Size |
-|-------|------|
-| Main (index) | 1,224 KB |
-| projectile-motion.plugin | 11 KB (lazy) |
-| inclined-plane.plugin | 11 KB (lazy) |
-| collision.plugin | 10 KB (lazy) |
-
-**Next: S09**
-- Knowledge graph visualization foundation
-- Student progress tracking
-- Experiment state persistence (localStorage)
+**Next: S10**
+- Knowledge graph visualization experiment
+- Student progress tracking (completed steps, time spent)
+- More keyboard shortcut refinements

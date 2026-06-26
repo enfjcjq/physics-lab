@@ -167,6 +167,9 @@ export function Timeline() {
           </div>;
         })}
       </div>
+    
+      {/* Keyboard hints */}
+      <div className="h-1 text-[8px] text-slate-600 text-center">{t("ui.shortcuts")}</div>
     </div>
   );
 }

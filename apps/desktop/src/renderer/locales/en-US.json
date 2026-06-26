@@ -322,5 +322,10 @@
   "teacher.spring.step7.title": "Knowledge Summary",
   "teacher.spring.step7.desc": "SHM is the foundation of periodic motion. Key properties: force proportional to displacement, period independent of amplitude, energy conserved.",
   "overlay.upcoming": "Upcoming",
-  "overlay.phase_info": "Current Phase"
+  "overlay.phase_info": "Current Phase",
+  "mode.learning_hint": "Learn step by step with the teacher",
+  "mode.experiment_hint": "Adjust parameters and explore freely",
+  "mode.analysis_hint": "View full derivations and knowledge",
+  "input.text": "Text",
+  "input.ocr": "OCR"
 }

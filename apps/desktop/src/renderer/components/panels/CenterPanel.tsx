@@ -33,14 +33,29 @@ export function CenterPanel() {
           </span>
         </div>
       </div>
-      {/* Phase quick-jump */}
-      <div className="absolute top-3 right-3 z-10 flex gap-1">
-        {phases.map((p) => (
-          <button key={p.id} onClick={() => jumpToPhase(p.id)}
-            className={`px-2 py-1 rounded text-[10px] font-medium transition-all ${currentPhaseId===p.id?"bg-sky-600/30 text-sky-300 border border-sky-600/40":"bg-slate-900/60 text-slate-500 hover:text-slate-300 border border-slate-700/30"}`}>
-            {p.icon} {t(p.label)}
-          </button>
-        ))}
+      {/* Phase quick-jump - timeline-style */}
+      <div className="absolute top-3 left-1/2 -translate-x-1/2 z-10">
+        <div className="flex items-center gap-0 bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-full px-1 py-1 shadow-lg">
+          {phases.map((p, i) => (
+            <div key={p.id} className="flex items-center">
+              <button
+                onClick={() => jumpToPhase(p.id)}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all duration-300 ${
+                  currentPhaseId === p.id
+                    ? "bg-sky-600 text-white shadow-md shadow-sky-900/30 scale-105"
+                    : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"
+                }`}
+                title={p.description || t(p.label)}
+              >
+                <span className={`w-1.5 h-1.5 rounded-full ${currentPhaseId===p.id ? "bg-white" : "bg-slate-600"}`} />
+                <span className="hidden sm:inline">{t(p.label)}</span>
+              </button>
+              {i < phases.length - 1 && (
+                <div className="w-3 h-px bg-slate-700" />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

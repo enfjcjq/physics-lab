@@ -1,13 +1,16 @@
-# Current Milestone: S13 (Completed)
+# Current Milestone: S14 (Completed)
 
-**Goal:** Teaching Flow Integration -- Teacher + Timeline sync
+**Goal:** UI Polish -- student-friendly, commercial quality
 
 **Completed:**
-- [x] TeachingOverlay: fully data-driven from PhysicsScene.teacher_steps (no hardcoded steps)
-- [x] TeachingOverlay: shows phase-aware contextual info (current phase, upcoming step)
-- [x] TeacherPanel: step auto-advances with playback/scrubbing via currentTime
-- [x] FormulaOverlay (3D): phase-aware, uses i18n for formula display
-- [x] i18n: 324 keys, perfectly synchronized zh-CN + en-US
+- [x] Experiment selector: visual card grid with icons, colors, difficulty badges (replaced <select>)
+- [x] Mode switcher: gradient background, scale animation, mode hint text
+- [x] Smooth transitions: panel open/close with CSS animations (fade, slide)
+- [x] Phase navigation: centered pill-style bar with connector lines
+- [x] RightPanel tab redesign: primary + secondary tab rows
+- [x] Knowledge section: redesigned with numbered cards and tips
+- [x] Animation system: fade-in, slide-in, scale-in keyframes
+- [x] i18n: 329 keys, perfectly synchronized
 - [x] Type-check + build: 663 modules, zero errors
 
-**Next: S14** -- UI Polish (student-friendly, commercial quality)
+**Next: S15** -- Final Polish (performance, packaging, final review)

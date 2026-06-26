@@ -1,16 +1,17 @@
 # Project Status
 
-**Version:** V2.0 (Sprint S13)
+**Version:** V2.0 (Sprint S14)
 **Last Commit:** TBD
 **Branch:** main
-**Status:** Building & Running (663 modules, 5 plugins, 324 i18n keys)
+**Status:** Building & Running (663 modules, 5 plugins, 329 i18n keys)
 
 ## Feature Highlights
-- 5 physics experiments (free-fall, projectile, incline, collision, spring-mass)
-- FrameCache: precomputed physics at 60fps for instant timeline scrubbing
-- TeachingOverlay: data-driven from PhysicsScene, phase-aware
-- TeacherPanel: 7-step flow auto-advances with timeline
-- FormulaOverlay (3D): phase-aware with i18n
-- 324 i18n keys, perfectly synchronized
-- 3-mode system (Learning/Experiment/Analysis)
-- Report export + Welcome screen + About dialog
+- 5 physics experiments with visual card selector
+- FrameCache: precomputed physics at 60fps for instant scrubbing
+- Data-driven TeachingOverlay from PhysicsScene.teacher_steps
+- Phase-aware FormulaOverlay with i18n
+- Smooth CSS animations for panel transitions
+- Centered phase navigation with pill-style design
+- 3-mode system with gradient buttons and hint text
+- 329 i18n keys, zh-CN == en-US perfectly
+- Welcome screen + About dialog + Report export

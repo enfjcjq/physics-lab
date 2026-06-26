@@ -1,3 +1,24 @@
+## [S14] -- 2026-06-26
+
+### Added
+- Visual experiment selector cards (icon + name + difficulty badge)
+- CSS animation system (fade-in, slide-in-left/right/bottom, scale-in, pulse-glow)
+- Mode hint text below mode switcher
+- Centered phase navigation with connector lines
+
+### Changed
+- LeftPanel: replaced <select> dropdown with 2-column card grid
+- LeftPanel: simplified input tabs (only Text + OCR, others hidden)
+- AppShell: smooth panel transitions (500ms cubic-bezier)
+- CenterPanel: phase quick-jump redesigned as centered pill bar
+- RightPanel: tab bar redesigned (4 primary + 2 secondary rows)
+- RightPanel: knowledge section redesigned with numbered cards
+- Mode switcher: gradient background + scale animation on active
+
+### Fixed
+- i18n sync: 329 keys, zh-CN == en-US (added mode hints, input labels)
+
+
 ## [S13] -- 2026-06-26
 
 ### Changed

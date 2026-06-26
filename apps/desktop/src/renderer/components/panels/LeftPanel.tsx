@@ -4,6 +4,7 @@ import { useTeaching } from "../../core/teaching.store";
 import { useSimulation } from "../../features/experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
 import type { InputMethod } from "../../stores/ui.store";
+// INPUT_TABS kept for future use
 import { CollapseHandle } from "../layout/CollapseHandle";
 import { pluginRegistry } from "../../core/plugin-registry";
 
@@ -53,26 +54,37 @@ export function LeftPanel() {
           <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t("panel.problem")}</h2>
         </div>
 
-        {/* Experiment Selector */}
-        <div className="px-4 pb-3">
-          <select
-            value={activePluginId}
-            onChange={async (e) => { await setActivePlugin(e.target.value); }}
-            className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-sky-600 cursor-pointer"
-          >
+        {/* Experiment Selector - Visual Cards */}
+        <div className="px-3 pb-3">
+          <div className="grid grid-cols-2 gap-1.5">
             {pluginRegistry.list().map((p) => (
-              <option key={p.id} value={p.id}>{t(p.name)} ({p.difficulty})</option>
+              <button
+                key={p.id}
+                onClick={async () => { if (p.id !== activePluginId) await setActivePlugin(p.id); }}
+                className={`text-left px-2.5 py-2 rounded-lg text-xs transition-all duration-200 border ${
+                  p.id === activePluginId
+                    ? "bg-sky-600/10 border-sky-600/40 text-sky-300 shadow-sm shadow-sky-900/20"
+                    : "bg-slate-800/30 border-slate-700/30 text-slate-400 hover:border-slate-600 hover:text-slate-200"
+                }`}
+              >
+                <div className="text-base mb-0.5">
+                  {p.id === "free-fall" ? "?" : p.id === "projectile-motion" ? "?" : p.id === "inclined-plane" ? "?" : p.id === "collision" ? "?" : "?"}
+                </div>
+                <div className="font-medium truncate">{t(p.name)}</div>
+                <div className={`text-[9px] mt-0.5 ${
+                  p.difficulty === "easy" ? "text-emerald-500" : p.difficulty === "medium" ? "text-amber-500" : "text-red-500"
+                }`}>{p.difficulty}</div>
+              </button>
             ))}
-          </select>
+          </div>
         </div>
 
+        {/* Input tabs - only show text in learning mode */}
         {showFullInput && (
           <div className="px-4 pb-2">
             <div className="flex bg-slate-800/50 rounded-lg p-0.5">
-              {INPUT_TABS.map((tab) => (
-                <button key={tab.id} onClick={() => setInputMethod(tab.id)}
-                  className={`flex-1 py-1.5 text-xs rounded-md transition-all ${inputMethod===tab.id?"bg-sky-600 text-white shadow":"text-slate-400 hover:text-slate-200"}`}>{tab.label}</button>
-              ))}
+              <button className="flex-1 py-1.5 text-xs rounded-md bg-sky-600 text-white shadow">{t("input.text")}</button>
+              <button className="flex-1 py-1.5 text-xs rounded-md text-slate-500 cursor-not-allowed opacity-50">{t("input.ocr")}</button>
             </div>
           </div>
         )}

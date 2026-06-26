@@ -34,12 +34,26 @@ export function RightPanel() {
         <div className="px-4 pt-4 pb-2">
           <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t("panel.analysis")}</h2>
         </div>
-        <div className="px-2 pb-3">
-          <div className="flex flex-wrap gap-1">
-            {TABS.map((tab) => (
+        <div className="px-3 pb-3">
+          <div className="flex bg-slate-800/30 rounded-xl p-0.5">
+            {TABS.slice(0, 4).map((tab) => (
               <button key={tab.id} onClick={() => setActiveTab(tab.id)}
-                className={`px-2.5 py-1.5 text-xs rounded-md transition-all whitespace-nowrap ${
-                  activeTab === tab.id ? "bg-sky-600/20 text-sky-400 border border-sky-600/30" : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"
+                className={`flex-1 py-1.5 text-[11px] rounded-lg font-medium transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? "bg-slate-700 text-white shadow-sm"
+                    : "text-slate-500 hover:text-slate-300"
+                }`}>
+                {t(tab.labelKey)}
+              </button>
+            ))}
+          </div>
+          <div className="flex mt-1 gap-1">
+            {TABS.slice(4).map((tab) => (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 py-1 text-[10px] rounded-lg font-medium transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? "bg-slate-700/50 text-slate-300 border border-slate-600/30"
+                    : "text-slate-600 hover:text-slate-400"
                 }`}>
                 {t(tab.labelKey)}
               </button>
@@ -102,11 +116,17 @@ export function RightPanel() {
           {activeTab === "knowledge" && (
             <div className="space-y-3">
               <h3 className="text-sm font-semibold text-slate-200">{t("analysis.knowledge_title")}</h3>
-              <div className="flex flex-wrap gap-2">
-                {knowledgeTags.map((kp) => (
-                  <div key={kp.id} className="px-3 py-1.5 rounded-full text-xs font-medium border bg-slate-800/50 border-slate-700/50 text-slate-400">
-                    {kp.name}
-                    <span className="ml-1 text-[10px] opacity-60">{kp.category}</span>
+              <div className="space-y-2">
+                {knowledgeTags.map((kp, i) => (
+                  <div key={kp.id} className="bg-slate-800/40 rounded-lg p-2.5 border border-slate-700/30 hover:border-sky-700/30 transition-colors">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="w-5 h-5 rounded-md bg-sky-900/30 flex items-center justify-center text-[10px] text-sky-400">{i+1}</span>
+                      <span className="text-xs font-medium text-slate-200">{kp.name}</span>
+                      <span className="text-[9px] text-slate-600 ml-auto">{kp.category}</span>
+                    </div>
+                    {kp.learning_tips && (
+                      <p className="text-[10px] text-slate-500 ml-7">{kp.learning_tips}</p>
+                    )}
                   </div>
                 ))}
               </div>

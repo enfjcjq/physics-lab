@@ -179,5 +179,20 @@
   "overlay.step.formula.rebound": "v' = 0.6·v",
   "overlay.step.formula.second_fall": "h' = v'²/(2g)",
   "overlay.step": "步骤",
-  "overlay.next": "下一步"
+  "overlay.next": "下一步",
+  "analysis.force": "受力",
+  "analysis.motion": "运动",
+  "analysis.formula": "公式",
+  "analysis.knowledge": "知识点",
+  "analysis.tips": "建议",
+  "analysis.force_title": "受力分析",
+  "analysis.motion_title": "运动分析",
+  "analysis.formula_title": "公式推导",
+  "analysis.knowledge_title": "相关知识点",
+  "analysis.tips_title": "学习建议",
+  "analysis.constant": "恒力",
+  "analysis.variable": "变力",
+  "analysis.direction": "方向",
+  "analysis.solution": "答案",
+  "analysis.mistakes": "常见错误"
 }

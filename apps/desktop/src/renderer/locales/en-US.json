@@ -179,5 +179,20 @@
   "overlay.step.formula.rebound": "v' = 0.6·v",
   "overlay.step.formula.second_fall": "h' = v'²/(2g)",
   "overlay.step": "Step",
-  "overlay.next": "Next"
+  "overlay.next": "Next",
+  "analysis.force": "Forces",
+  "analysis.motion": "Motion",
+  "analysis.formula": "Formulas",
+  "analysis.knowledge": "Topics",
+  "analysis.tips": "Tips",
+  "analysis.force_title": "Force Analysis",
+  "analysis.motion_title": "Motion Analysis",
+  "analysis.formula_title": "Formula Derivation",
+  "analysis.knowledge_title": "Related Topics",
+  "analysis.tips_title": "Learning Tips",
+  "analysis.constant": "Constant",
+  "analysis.variable": "Variable",
+  "analysis.direction": "Direction",
+  "analysis.solution": "Solution",
+  "analysis.mistakes": "Common Mistakes"
 }

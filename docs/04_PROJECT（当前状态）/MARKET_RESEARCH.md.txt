@@ -1,0 +1,20 @@
+# Market Research (S01)
+
+## PhET Interactive Simulations
+- **Strength:** Zero learning curve, instant feedback, beautiful visuals
+- **Learn:** Default mode should be extremely simple. Hide complexity.
+- **Apply:** Learning mode already hides charts and params. Go further.
+
+## GeoGebra
+- **Strength:** Algebra-geometry linking, slider-driven exploration
+- **Learn:** Real-time parameter sliders with instant visual feedback
+- **Apply:** Experiment mode sliders are good. Make them more prominent.
+
+## Brilliant
+- **Strength:** Step-by-step guided discovery, interactive puzzles
+- **Learn:** Teacher step flow is correct. Add more interactive checkpoints.
+- **Apply:** Add "check understanding" moments between teacher steps.
+
+## Common Pattern
+All top products prioritize immediate understanding over feature count.
+Physics Lab should follow: open -> see -> understand -> explore.

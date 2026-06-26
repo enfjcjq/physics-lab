@@ -1,14 +1,7 @@
-export type ExperimentPhase = "release" | "falling" | "impact" | "bounce";
-interface PhaseInfo {
-    id: ExperimentPhase;
-    label: string;
-    icon: string;
-    timeRange: [number, number];
-    cameraPos: [number, number, number];
-    cameraTarget: [number, number, number];
-}
-export declare const PHASES: PhaseInfo[];
-export type ChartTab = "timeline" | "vt" | "st" | "energy";
+import type { TimelinePhase } from "@physics-lab/shared";
+export type ExperimentPhase = string;
+export declare const PHASES: TimelinePhase[];
+export type ChartTab = "position_time" | "velocity_time" | "acceleration_time" | "kinetic_energy" | "potential_energy" | "mechanical_energy";
 export type AnalysisTab = "force" | "motion" | "derivation" | "knowledge" | "tips";
 export type InputMethod = "text" | "ocr" | "image" | "pdf";
 interface UIState {
@@ -16,14 +9,12 @@ interface UIState {
     rightOpen: boolean;
     drawerOpen: boolean;
     drawerHeight: number;
-    activePhase: ExperimentPhase;
     activeChartTab: ChartTab;
     activeAnalysisTab: AnalysisTab;
     toggleLeft: () => void;
     toggleRight: () => void;
     toggleDrawer: () => void;
     setDrawerHeight: (h: number) => void;
-    setPhase: (phase: ExperimentPhase) => void;
     setChartTab: (tab: ChartTab) => void;
     setAnalysisTab: (tab: AnalysisTab) => void;
 }

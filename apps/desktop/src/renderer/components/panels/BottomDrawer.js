@@ -4,10 +4,10 @@ import { usePanelManager } from "../../core/panel-manager.store";
 import { useUIStore } from "../../stores/ui.store";
 import { useSimulation } from "../../features/experiment/experiment.store";
 const CHART_TABS = [
-    { id: "timeline", label: "Timeline" },
-    { id: "vt", label: "v-t" },
-    { id: "st", label: "s-t" },
-    { id: "energy", label: "Energy" },
+    { id: "position_time", label: "s-t" },
+    { id: "velocity_time", label: "v-t" },
+    { id: "acceleration_time", label: "a-t" },
+    { id: "kinetic_energy", label: "KE" },
 ];
 export function BottomDrawer() {
     const drawerOpen = usePanelManager((s) => s.panels.charts?.isOpen ?? true);
@@ -48,7 +48,7 @@ export function BottomDrawer() {
     }, [onMouseMove]);
     return (_jsxs("div", { className: "flex-shrink-0 border-t border-slate-800 bg-slate-900/95 transition-all duration-300", style: { height: drawerOpen ? `${drawerHeight}px` : "0px", overflow: "hidden" }, children: [_jsx("div", { onMouseDown: onMouseDown, className: "h-1.5 bg-slate-800 hover:bg-sky-700 cursor-ns-resize transition-colors\r\n          flex items-center justify-center group", children: _jsx("div", { className: "w-8 h-0.5 rounded-full bg-slate-600 group-hover:bg-sky-400 transition-colors" }) }), _jsxs("div", { className: "flex items-center px-4 py-1.5 gap-1", children: [CHART_TABS.map((tab) => (_jsx("button", { onClick: () => setTab(tab.id), className: `px-3 py-1 rounded-md text-xs transition-all ${activeTab === tab.id
                             ? "bg-sky-600/20 text-sky-400 border border-sky-600/30"
-                            : "text-slate-500 hover:text-slate-300"}`, children: tab.label }, tab.id))), _jsx("div", { className: "flex-1" }), _jsx("button", { onClick: toggleDrawer, className: "px-2 py-1 text-xs text-slate-500 hover:text-slate-300", children: drawerOpen ? "v" : "^" })] }), _jsxs("div", { className: "px-4 pb-3", style: { height: "calc(100% - 44px)" }, children: [activeTab === "timeline" && _jsx(TimelineChart, { trail: trail, height: height }), activeTab === "vt" && _jsx(VTChart, { trail: trail, gravity: gravity }), activeTab === "st" && _jsx(STChart, { trail: trail, height: height, gravity: gravity }), activeTab === "energy" && (_jsx(EnergyChart, { trail: trail, mass: mass, gravity: gravity, height: height }))] })] }));
+                            : "text-slate-500 hover:text-slate-300"}`, children: tab.label }, tab.id))), _jsx("div", { className: "flex-1" }), _jsx("button", { onClick: toggleDrawer, className: "px-2 py-1 text-xs text-slate-500 hover:text-slate-300", children: drawerOpen ? "v" : "^" })] }), _jsxs("div", { className: "px-4 pb-3", style: { height: "calc(100% - 44px)" }, children: [activeTab === "position_time" && _jsx(TimelineChart, { trail: trail, height: height }), activeTab === "velocity_time" && _jsx(VTChart, { trail: trail, gravity: gravity }), activeTab === "position_time" && _jsx(STChart, { trail: trail, height: height, gravity: gravity }), activeTab === "kinetic_energy" && (_jsx(EnergyChart, { trail: trail, mass: mass, gravity: gravity, height: height }))] })] }));
 }
 function TimelineChart({ trail, height: initialH }) {
     const w = 800;

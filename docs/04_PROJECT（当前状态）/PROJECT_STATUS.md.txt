@@ -1,0 +1,34 @@
+# Project Status
+
+**Version:** V2.0 (Sprint S01)
+**Last Commit:** 42df3b3
+**Branch:** main
+**Status:** Building & Running
+
+## Current Architecture
+
+Problem -> AI Parser -> PhysicsScene -> Timeline -> Experiment -> Teacher -> Charts -> UI
+
+## Completed Milestones
+
+| Milestone | Status | Key Deliverables |
+|-----------|--------|-----------------|
+| V0.1-V0.4 | Done | Electron, React, Three.js, Timeline, Teaching Overlay |
+| V1.0 | Done | 3-mode system, TeacherPanel, trail sync |
+| V1.1 | Done | UX Polish, 7-step teacher, 3D arrows, full i18n |
+| V2.0 | Done | PhysicsScene AI Engine, data-driven architecture |
+| S01 | Done | Code cleanup, PHASES removal, i18n RightPanel |
+
+## Tech Stack
+
+- Electron + React + TypeScript
+- Three.js / React Three Fiber
+- Zustand (state management)
+- TailwindCSS (styling)
+- Vite (bundling)
+
+## Known Issues
+
+- Bounce animation needs smoother interpolation
+- No smooth camera transitions between phases
+- Charts still use SVG (should use Canvas/WebGL for performance)

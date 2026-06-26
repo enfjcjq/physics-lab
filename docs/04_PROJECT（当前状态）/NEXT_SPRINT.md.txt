@@ -1,0 +1,19 @@
+# Next Sprint: S02
+
+## Priority 1: Physics Engine Wiring
+- Use free-fall plugin's computeState() in experiment.store
+- Remove hardcoded computeFreeFall()
+
+## Priority 2: 3D Polish
+- Smooth camera lerp between phase presets
+- Ball bounce interpolation (don't snap to ground)
+- Trail fade effect
+
+## Priority 3: Charts Upgrade
+- Replace SVG charts with Canvas-based rendering
+- Add hover tooltips showing data values
+
+## Priority 4: UI Refinement
+- Learning mode: hide MenuBar complexity
+- Add keyboard shortcut hints
+- Loading states for AI parsing

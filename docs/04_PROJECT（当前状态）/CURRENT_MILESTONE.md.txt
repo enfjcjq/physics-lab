@@ -1,0 +1,15 @@
+# Current Milestone: S01
+
+**Goal:** Code cleanup, architecture refinement, i18n completion
+
+**Completed:**
+- [x] Remove hardcoded PHASES from ui.store.ts
+- [x] Data-driven RightPanel (reads from PhysicsScene)
+- [x] 196 i18n keys (zh-CN / en-US)
+- [x] 651 modules building clean
+
+**Next: S02**
+- Wire plugin physics engine
+- Smooth camera transitions
+- Bounce animation fix
+- Charts performance optimization

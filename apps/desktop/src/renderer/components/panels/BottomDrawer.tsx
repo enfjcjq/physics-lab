@@ -1,14 +1,14 @@
 import { useRef, useCallback } from "react";
 import { usePanelManager } from "../../core/panel-manager.store";
-import { useUIStore, PHASES } from "../../stores/ui.store";
+import { useUIStore } from "../../stores/ui.store";
 import type { ChartTab } from "../../stores/ui.store";
 import { useSimulation } from "../../features/experiment/experiment.store";
 
 const CHART_TABS: { id: ChartTab; label: string }[] = [
-  { id: "timeline", label: "Timeline" },
-  { id: "vt", label: "v-t" },
-  { id: "st", label: "s-t" },
-  { id: "energy", label: "Energy" },
+  { id: "position_time", label: "s-t" },
+  { id: "velocity_time", label: "v-t" },
+  { id: "acceleration_time", label: "a-t" },
+  { id: "kinetic_energy", label: "KE" },
 ];
 
 export function BottomDrawer() {
@@ -77,10 +77,10 @@ export function BottomDrawer() {
         </button>
       </div>
       <div className="px-4 pb-3" style={{ height: "calc(100% - 44px)" }}>
-        {activeTab === "timeline" && <TimelineChart trail={trail} height={height} />}
-        {activeTab === "vt" && <VTChart trail={trail} gravity={gravity} />}
-        {activeTab === "st" && <STChart trail={trail} height={height} gravity={gravity} />}
-        {activeTab === "energy" && (
+        {activeTab === "position_time" && <TimelineChart trail={trail} height={height} />}
+        {activeTab === "velocity_time" && <VTChart trail={trail} gravity={gravity} />}
+        {activeTab === "position_time" && <STChart trail={trail} height={height} gravity={gravity} />}
+        {activeTab === "kinetic_energy" && (
           <EnergyChart trail={trail} mass={mass} gravity={gravity} height={height} />
         )}
       </div>

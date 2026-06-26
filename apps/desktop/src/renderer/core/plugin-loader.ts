@@ -9,6 +9,10 @@ const pluginLoaders: Record<string, () => Promise<void>> = {
     const { inclinedPlanePlugin } = await import("../plugins/inclined-plane/inclined-plane.plugin");
     pluginRegistry.register(inclinedPlanePlugin);
   },
+  "spring-mass": async () => {
+    const { springMassPlugin } = await import("../plugins/spring-mass/spring-mass.plugin");
+    pluginRegistry.register(springMassPlugin);
+  },
   "collision": async () => {
     const { collisionPlugin } = await import("../plugins/collision/collision.plugin");
     pluginRegistry.register(collisionPlugin);

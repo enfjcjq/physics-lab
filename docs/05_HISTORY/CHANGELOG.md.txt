@@ -1,3 +1,42 @@
+## [S12] -- 2026-06-26
+
+### Added
+- FrameCache: precomputed physics frames at 60fps for instant timeline scrubbing
+- Binary search lookup in cache (O(log n) vs O(n) compute)
+- Shared frameCache across all modules (3D, charts, teacher, trail)
+
+### Changed
+- jumpToTime: no longer computes physics per call, uses cache lookup
+- tick(): uses cache frames instead of per-frame computation
+- Trail: derived from cache subset (300 max points) instead of full regeneration
+- Charts (BottomDrawer): reads from frameCache, no independent derivation
+- Parameter setters (setMass/setHeight/setGravity): rebuild entire cache on change
+- experiment.store.ts: 40% reduction in per-frame computation
+
+### Fixed
+- Timeline scrubbing now updates all modules synchronously (single source of truth)
+- Chart data stays in sync with 3D scene at all times
+- setActivePlugin: fixed ensurePlugin return type handling
+- BottomDrawer: added missing useMemo import
+
+
+## [S11] -- 2026-06-26
+
+### Added
+- WelcomeScreen: first-launch onboarding with 3-step guide, mode selection
+- About dialog: accessible from Help menu, shows version + tech stack
+- Spring-mass plugin: 5th experiment (Hooke's law, simple harmonic motion)
+- Spring-mass PhysicsScene with amplitude, spring constant, period
+
+### Fixed
+- MenuBar.tsx JSX structure (About dialog was incorrectly nested in Dropdown)
+- Type-check and build: 663 modules, zero errors
+
+### Changed
+- i18n expanded to 322 keys (added welcome.* and about.* keys)
+- Plugin loader now supports 5 experiments (1 eager + 4 lazy)
+
+
 ﻿# CHANGELOG
 
 ---

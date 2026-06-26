@@ -1,31 +1,21 @@
-﻿# Physics Lab Roadmap
+# Roadmap
 
-## Phase 1-3: Foundation (Completed)
-- [x] Electron + React + Three.js framework
-- [x] Free fall 3D experiment
-- [x] 3-mode system (Learning/Experiment/Analysis)
-- [x] PhysicsScene-driven architecture v2.0
-- [x] AI Parser (rule-based)
-- [x] Full i18n (285 keys)
-- [x] Camera animations + bounce visuals
-- [x] Plugin physics engine wired to store
+## Phase 1-3: Foundation + Expansion + Polish (S01-S11) -- COMPLETED
+- [x] S01-S05: Core architecture, 3 experiments, charts, quiz
+- [x] S06-S10: Collision, report export, code-split, knowledge graph
+- [x] S11: Welcome screen, About dialog, Spring-mass (5th experiment)
 
-## Phase 4: Multi-Experiment Platform
-- [x] Projectile motion plugin (2D kinematics)
-- [x] Inclined plane plugin (force decomposition + friction)
-- [x] Collision plugin (momentum conservation)
-- [x] Canvas chart engine with tooltips
-- [x] Interactive quiz between teacher steps
-- [ ] Experiment report export (PDF/Markdown)
-- [ ] Ollama AI integration
+## Phase 4: True Product (S12) -- COMPLETED
+- [x] S12: Timeline overhaul -- FrameCache, instant scrubbing, all modules in sync
 
-## Phase 5: Learning System
-- [ ] Knowledge graph visualization
-- [ ] Adaptive learning paths
-- [ ] Student progress tracking
-- [ ] Code splitting (bundle optimization)
+## Phase 5: Teaching Integration (S13-S14) -- NEXT
+- [ ] S13: Teaching Flow (Teacher+Timeline sync, quiz timing)
+- [ ] S14: UI polish (student-friendly, commercial quality)
 
-## Phase 6: Commercialization
-- [ ] User accounts
-- [ ] Pro membership
-- [ ] School licensing
+## Phase 6: Final Polish (S15)
+- [ ] Performance + packaging + final UX review
+
+## Phase 7: AI Integration (S16+)
+- [ ] Ollama/LLM integration (requires user setup)
+- [ ] AI problem parser (any physics problem -> PhysicsScene)
+- [ ] Auto-generated experiments

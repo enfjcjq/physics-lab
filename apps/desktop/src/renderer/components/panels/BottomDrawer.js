@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useRef, useCallback, useEffect, useState } from "react";
+import { useRef, useCallback, useEffect, useState, useMemo } from "react";
 import { usePanelManager } from "../../core/panel-manager.store";
 import { useUIStore } from "../../stores/ui.store";
 import { useSimulation } from "../../features/experiment/experiment.store";
@@ -24,7 +24,7 @@ export function BottomDrawer() {
     const mass = useSimulation((s) => s.mass);
     const gravity = useSimulation((s) => s.gravity);
     const height = useSimulation((s) => s.height);
-    const trail = useSimulation((s) => s.trail);
+    const frameCache = useSimulation((s) => s.frameCache);
     const currentTime = useSimulation((s) => s.currentTime);
     const { t } = useI18n();
     const isDragging = useRef(false);
@@ -51,17 +51,17 @@ export function BottomDrawer() {
     }, [onMouseMove]);
     return (_jsxs("div", { className: "flex-shrink-0 border-t border-slate-800 bg-slate-900/95 transition-all duration-300", style: { height: drawerOpen ? `${drawerHeight}px` : "0px", overflow: "hidden" }, children: [_jsx("div", { onMouseDown: onMouseDown, className: "h-1.5 bg-slate-800 hover:bg-sky-700 cursor-ns-resize transition-colors\n          flex items-center justify-center group", children: _jsx("div", { className: "w-8 h-0.5 rounded-full bg-slate-600 group-hover:bg-sky-400 transition-colors" }) }), _jsxs("div", { className: "flex items-center px-4 py-1.5 gap-1", children: [CHART_TABS.map((tab) => (_jsx("button", { onClick: () => setTab(tab.id), className: `px-3 py-1 rounded-md text-xs transition-all ${activeTab === tab.id
                             ? "bg-sky-600/20 text-sky-400 border border-sky-600/30"
-                            : "text-slate-500 hover:text-slate-300"}`, children: t(tab.labelKey) }, tab.id))), _jsx("div", { className: "flex-1" }), _jsx("button", { onClick: toggleDrawer, className: "px-2 py-1 text-xs text-slate-500 hover:text-slate-300", children: drawerOpen ? "▾" : "▴" })] }), _jsx("div", { className: "px-4 pb-3", style: { height: "calc(100% - 44px)" }, children: _jsx(CanvasChart, { activeTab: activeTab, trail: trail, mass: mass, gravity: gravity, height: height, currentTime: currentTime }) })] }));
+                            : "text-slate-500 hover:text-slate-300"}`, children: t(tab.labelKey) }, tab.id))), _jsx("div", { className: "flex-1" }), _jsx("button", { onClick: toggleDrawer, className: "px-2 py-1 text-xs text-slate-500 hover:text-slate-300", children: drawerOpen ? "▾" : "▴" })] }), _jsx("div", { className: "px-4 pb-3", style: { height: "calc(100% - 44px)" }, children: _jsx(CanvasChart, { activeTab: activeTab, frameCache: frameCache, mass: mass, gravity: gravity, height: height, currentTime: currentTime }) })] }));
 }
-function deriveData(trail, mass, gravity, height) {
-    return trail.map((p, i) => {
-        const t = i / 60;
-        const y = p.y;
+function deriveData(frameCache, mass, gravity, height) {
+    return frameCache.filter((_, i) => i % 3 === 0).map((f) => {
+        const y = f.ballY;
         const s = height - y;
-        const v = -gravity * t;
+        const v = f.ballVelocity;
+        const a = f.ballAcceleration;
         const ke = 0.5 * mass * v * v;
         const pe = mass * gravity * y;
-        return { time: t, y, s, v, a: -gravity, ke, pe, me: ke + pe };
+        return { time: f.time, y, s, v, a, ke, pe, me: ke + pe };
     });
 }
 const COLORS = {
@@ -76,12 +76,12 @@ const COLORS = {
 const PLOT_COLORS = {
     s: "#22c55e", v: "#f59e0b", a: "#ef4444", ke: "#f59e0b", pe: "#22c55e", me: "#3b82f6",
 };
-function CanvasChart({ activeTab, trail, mass, gravity, height, currentTime }) {
+function CanvasChart({ activeTab, frameCache, mass, gravity, height, currentTime }) {
     const canvasRef = useRef(null);
     const containerRef = useRef(null);
     const [tooltip, setTooltip] = useState(null);
     const [dimensions, setDimensions] = useState({ w: 600, h: 140 });
-    const data = deriveData(trail, mass, gravity, height);
+    const data = useMemo(() => deriveData(frameCache, mass, gravity, height), [frameCache, mass, gravity, height]);
     // Resize observer
     useEffect(() => {
         const el = containerRef.current;

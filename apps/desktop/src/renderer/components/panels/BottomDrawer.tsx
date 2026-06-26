@@ -1,8 +1,8 @@
-﻿import { useRef, useCallback, useEffect, useState } from "react";
+﻿import { useRef, useCallback, useEffect, useState, useMemo } from "react";
 import { usePanelManager } from "../../core/panel-manager.store";
 import { useUIStore } from "../../stores/ui.store";
 import type { ChartTab } from "../../stores/ui.store";
-import { useSimulation } from "../../features/experiment/experiment.store";
+import { useSimulation, type CachedFrame } from "../../features/experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
 
 const CHART_TABS: { id: ChartTab; labelKey: string }[] = [
@@ -26,7 +26,7 @@ export function BottomDrawer() {
   const mass = useSimulation((s) => s.mass);
   const gravity = useSimulation((s) => s.gravity);
   const height = useSimulation((s) => s.height);
-  const trail = useSimulation((s) => s.trail);
+  const frameCache = useSimulation((s) => s.frameCache);
   const currentTime = useSimulation((s) => s.currentTime);
   const { t } = useI18n();
 
@@ -80,7 +80,7 @@ export function BottomDrawer() {
         </button>
       </div>
       <div className="px-4 pb-3" style={{ height: "calc(100% - 44px)" }}>
-        <CanvasChart activeTab={activeTab} trail={trail} mass={mass} gravity={gravity} height={height} currentTime={currentTime} />
+        <CanvasChart activeTab={activeTab} frameCache={frameCache} mass={mass} gravity={gravity} height={height} currentTime={currentTime} />
       </div>
     </div>
   );
@@ -99,15 +99,15 @@ interface ChartData {
   me: number;
 }
 
-function deriveData(trail: Array<{x:number;y:number;z:number}>, mass: number, gravity: number, height: number): ChartData[] {
-  return trail.map((p, i) => {
-    const t = i / 60;
-    const y = p.y;
+function deriveData(frameCache: CachedFrame[], mass: number, gravity: number, height: number): ChartData[] {
+  return frameCache.filter((_, i) => i % 3 === 0).map((f) => {
+    const y = f.ballY;
     const s = height - y;
-    const v = -gravity * t;
+    const v = f.ballVelocity;
+    const a = f.ballAcceleration;
     const ke = 0.5 * mass * v * v;
     const pe = mass * gravity * y;
-    return { time: t, y, s, v, a: -gravity, ke, pe, me: ke + pe };
+    return { time: f.time, y, s, v, a, ke, pe, me: ke + pe };
   });
 }
 
@@ -125,15 +125,15 @@ const PLOT_COLORS: Record<string, string> = {
   s: "#22c55e", v: "#f59e0b", a: "#ef4444", ke: "#f59e0b", pe: "#22c55e", me: "#3b82f6",
 };
 
-function CanvasChart({ activeTab, trail, mass, gravity, height, currentTime }: {
-  activeTab: ChartTab; trail: Array<{x:number;y:number;z:number}>; mass: number; gravity: number; height: number; currentTime: number;
+function CanvasChart({ activeTab, frameCache, mass, gravity, height, currentTime }: {
+  activeTab: ChartTab; frameCache: CachedFrame[]; mass: number; gravity: number; height: number; currentTime: number;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string[] } | null>(null);
   const [dimensions, setDimensions] = useState({ w: 600, h: 140 });
 
-  const data = deriveData(trail, mass, gravity, height);
+  const data = useMemo(() => deriveData(frameCache, mass, gravity, height), [frameCache, mass, gravity, height]);
 
   // Resize observer
   useEffect(() => {

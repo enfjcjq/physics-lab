@@ -1,17 +1,14 @@
-﻿# Current Milestone: S10 (Completed)
+# Current Milestone: S12 (Completed)
 
-**Goal:** Knowledge graph visualization connecting physics concepts
+**Goal:** Timeline overhaul -- true data-driven synchronization
 
 **Completed:**
-- [x] Interactive SVG knowledge graph with nodes + edges
-- [x] Collects knowledge points from all 4 plugins
-- [x] Color-coded by category (kinematics, forces, energy, momentum)
-- [x] Clickable nodes show details + prerequisites
-- [x] Added as "Graph" tab in RightPanel
-- [x] 288 i18n keys
-- [x] Type-check + build: 660 modules, zero errors
+- [x] FrameCache: precompute all physics frames at 60fps on scene load
+- [x] jumpToTime uses binary search in cache (instant, no physics computation)
+- [x] tick() uses cache lookup (no per-frame computation)
+- [x] Trail derived from cache subset (not recomputed from scratch)
+- [x] Charts use shared frameCache (no independent derivation)
+- [x] Parameter changes rebuild entire cache
+- [x] Type-check + build: 663 modules, zero errors
 
-**Next: S11**
-- Spring-mass plugin (harmonic motion)
-- Pendulum plugin (circular motion variant)
-- HUD refinements
+**Next: S13** -- Teaching Flow Integration (Teacher+Timeline sync)

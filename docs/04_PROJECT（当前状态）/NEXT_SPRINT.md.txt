@@ -1,13 +1,16 @@
-﻿# Next Sprint: S08
+# Next Sprint: S13
 
-## Priority 1: Bundle Optimization
-- Code-split plugins so each experiment is lazy-loaded
-- Reduce initial bundle below 500KB
+## Priority 1: Teaching Flow Integration (P0)
+- Teacher steps follow timeline phases precisely
+- When scrubbing to a new phase, teacher panel shows correct step
+- Auto-advance teacher steps during playback
+- Quiz triggers at correct phase transitions
 
-## Priority 2: AIProvider Finalization
-- Complete AIProvider interface
-- Rule-based parser coverage for all 4 experiments
+## Priority 2: Teaching Overlay Timing (P1)
+- Overlay appears only during relevant phases
+- Auto-hides when phase changes
+- Smooth fade transitions
 
-## Priority 3: Student Progress
-- Track time spent per experiment
-- Track completed teacher steps
+## Priority 3: Formula Highlight Sync (P2)
+- Formula overlay shows correct formula for current phase
+- Highlights active terms as time progresses

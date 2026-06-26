@@ -24,6 +24,7 @@ function Dropdown({ label, children }: { label: string; children: React.ReactNod
   }, []);
 
   return (
+    <>
     <div ref={ref} className="relative">
       <button
         onClick={() => setOpen(!open)}
@@ -39,6 +40,7 @@ function Dropdown({ label, children }: { label: string; children: React.ReactNod
         </div>
       )}
     </div>
+        </>
   );
 }
 
@@ -76,6 +78,7 @@ export function MenuBar() {
   const { mode: appMode, subMode: teachingMode, setSubMode: setTeachingMode } = useTeaching();
   const panelMgr = usePanelManager();
   const viz = useVisualization();
+  const [showAbout, setShowAbout] = useState(false);
   const sim = useSimulation();
 
   const handleExport = () => {
@@ -106,6 +109,7 @@ export function MenuBar() {
   };
 
   return (
+    <>
     <div
       className="h-8 bg-slate-900 border-b border-slate-800 flex items-center px-2 select-none flex-shrink-0"
       style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
@@ -196,11 +200,36 @@ export function MenuBar() {
 
       {/* Help */}
       <Dropdown label={t("menu.help")}>
-        <MenuItem label="About Physics Lab" />
+        <MenuItem label={t("about.title")} onClick={() => setShowAbout(true)} />
         <MenuItem label="Documentation" />
         <MenuSeparator />
-        <MenuItem label="Version 1.0.0" />
+        <MenuItem label="Version 2.0.0" />
       </Dropdown>
     </div>
+    {/* About Dialog */}
+      {showAbout && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowAbout(false)}>
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="text-center mb-6">
+              <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-sky-600 to-violet-600 flex items-center justify-center text-xl">?</div>
+              <h2 className="text-xl font-bold text-white">{t("about.title")}</h2>
+              <p className="text-xs text-slate-500 mt-1">{t("about.version")} 2.0.0</p>
+            </div>
+            <p className="text-sm text-slate-400 leading-relaxed mb-4">{t("about.desc")}</p>
+            <div className="bg-slate-800/50 rounded-xl p-4 mb-4">
+              <h3 className="text-xs text-slate-500 uppercase tracking-wider mb-2">{t("about.tech")}</h3>
+              <div className="flex flex-wrap gap-1.5">
+                {["Electron","React","TypeScript","Three.js","Zustand","TailwindCSS","Vite"].map((tech) => (
+                  <span key={tech} className="px-2 py-0.5 rounded text-[10px] bg-slate-700/50 text-slate-400">{tech}</span>
+                ))}
+              </div>
+            </div>
+            <button onClick={() => setShowAbout(false)} className="w-full py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-sm font-medium">
+              {t("about.close")}
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

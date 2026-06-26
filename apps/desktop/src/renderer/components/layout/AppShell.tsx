@@ -8,6 +8,7 @@ import { RightPanel } from "../panels/RightPanel";
 import { CenterPanel } from "../panels/CenterPanel";
 import { BottomDrawer } from "../panels/BottomDrawer";
 import { TeacherPanel } from "../teaching/TeacherPanel";
+import { WelcomeScreen } from "./WelcomeScreen";
 
 const MODES = ["learning", "experiment", "analysis"] as const;
 
@@ -28,7 +29,8 @@ export function AppShell() {
   const showBottomDrawer = mode !== "learning" && bottomOpen;
 
   return (
-    <div className="w-full h-full flex flex-col" style={{ background: "var(--bg-root)" }}>
+    <div className="w-full h-full flex flex-col relative" style={{ background: "var(--bg-root)" }}>
+      <WelcomeScreen />
       <MenuBar />
 
       {/* Mode switcher bar */}

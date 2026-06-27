@@ -3,7 +3,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useSimulation } from "../experiment.store";
-import { useI18n } from "../../../core/i18n";
 import { useVisualization } from "../../../core/visualization.store";
 
 function Axes() {
@@ -71,59 +70,51 @@ function HudLabels(){
   return<group><Text position={[bx+1.2,by,0]} fontSize={0.3} color="#f8fafc" anchorX="left" outlineWidth={0.02} outlineColor="#000000">{"v = "+bv.toFixed(1)+" m/s"}</Text><Text position={[bx+1.2,by-0.4,0]} fontSize={0.25} color="#94a3b8" anchorX="left" outlineWidth={0.02} outlineColor="#000000">{"t = "+ct.toFixed(2)+" s"}</Text></group>;
 }
 
-function FormulaOverlay(){
-  const bx=useSimulation(s=>s.ballX),h=useSimulation(s=>s.height);
-  const currentPhaseId=useSimulation(s=>s.currentPhaseId);
-  const currentTime=useSimulation(s=>s.currentTime);
-  const scene=useSimulation(s=>s.scene);
-  const {t}=useI18n();
-  const show=useVisualization(s=>s.toggles.showFormulas);
-  if(!show || !scene?.teacher_steps)return null;
+// FormulaOverlay removed - HTML version in CenterPanel.tsx
 
-  // Find the best formula to show for current phase/time
-  const steps = [...scene.teacher_steps].sort((a,b)=>a.order-b.order);
-  
-  // Strategy: show the formula of the step whose timeStart is closest to currentTime but not after it
-  let bestStep = null;
-  for (const s of steps) {
-    if (s.timeStart <= currentTime && s.formulaKey) {
-      bestStep = s;
-    }
-  }
-  
-  // If no step with formula found before current time, find the next one
-  if (!bestStep) {
-    for (const s of steps) {
-      if (s.formulaKey) { bestStep = s; break; }
-    }
-  }
+function Animator(){const tick=useSimulation(s=>s.tick);useFrame((_,d)=>{tick(d)});return null;}
 
-  if (!bestStep?.formulaKey) return null;
-  
-  // Split multi-line formulas
-  const formula = t(bestStep.formulaKey);
-  const lines = formula.split("\n");
+
+// Impact particle burst
+function ImpactParticles() {
+  const isBouncing = useSimulation(s => s.isBouncing);
+  const bx = useSimulation(s => s.ballX);
+  const by = useSimulation(s => s.ballY);
+  const [particles, setParticles] = useState<Array<{id:number; x:number; y:number; z:number; vx:number; vy:number; life:number}>>([]);
+  const nextId = useRef(0);
+
+  useEffect(() => {
+    if (isBouncing) {
+      const newParticles = Array.from({ length: 15 }, () => ({
+        id: nextId.current++,
+        x: bx, y: 0.2, z: 0,
+        vx: (Math.random() - 0.5) * 3,
+        vy: Math.random() * 5 + 2,
+        life: 1.0,
+      }));
+      setParticles(prev => [...prev, ...newParticles].slice(-30));
+    }
+  }, [isBouncing, bx, by]);
+
+  useFrame((_, delta) => {
+    if (particles.length === 0) return;
+    setParticles(prev => prev
+      .map(p => ({ ...p, x: p.x + p.vx * delta, y: p.y + p.vy * delta, vy: p.vy - 9.8 * delta, life: p.life - delta * 2 }))
+      .filter(p => p.life > 0)
+    );
+  });
 
   return (
     <group>
-      {lines.map((line, i) => (
-        <Text
-          key={i}
-          position={[bx, h + 2.5 - i * 0.5, 0]}
-          fontSize={0.3}
-          color="#fbbf24"
-          anchorX="center"
-          outlineWidth={0.02}
-          outlineColor="#000000"
-        >
-          {line.trim()}
-        </Text>
+      {particles.map(p => (
+        <mesh key={p.id} position={[p.x, p.y, p.z]}>
+          <sphereGeometry args={[0.03, 4, 4]} />
+          <meshBasicMaterial color="#fbbf24" transparent opacity={p.life * 0.8} />
+        </mesh>
       ))}
     </group>
   );
 }
-
-function Animator(){const tick=useSimulation(s=>s.tick);useFrame((_,d)=>{tick(d)});return null;}
 
 // Smooth camera transition between phase presets
 function CameraAnimator(){
@@ -167,7 +158,15 @@ function Ball2(){
   </mesh>;
 }
 
-export function Scene3D(){
+export function Scene3D() {
+  const [transitioning, setTransitioning] = useState(false);
+  const activePluginId = useSimulation(s => s.activePluginId);
+
+  useEffect(() => {
+    setTransitioning(true);
+    const t = setTimeout(() => setTransitioning(false), 400);
+    return () => clearTimeout(t);
+  }, [activePluginId]);
   const viz=useVisualization(s=>s.toggles),by=useSimulation(s=>s.ballY),h=useSimulation(s=>s.height);
   const currentPhaseId=useSimulation(s=>s.currentPhaseId);
   const scene=useSimulation(s=>s.scene);
@@ -179,7 +178,8 @@ export function Scene3D(){
     const preset=scene.camera_script.find(c=>c.id===phase.cameraPresetId);
     return preset?preset.target as [number,number,number]:[0,5,0] as [number,number,number];
   },[currentPhaseId,phases,scene]);
-  return<Canvas camera={{position:[8,6,8],fov:55,near:0.1,far:100}} gl={{antialias:true,alpha:false,preserveDrawingBuffer:true}} style={{background:"linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)"}} onCreated={({gl})=>{gl.setClearColor(new THREE.Color("#0f172a"))}}>
+  return <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <Canvas camera={{position:[8,6,8],fov:55,near:0.1,far:100}} gl={{antialias:true,alpha:false,preserveDrawingBuffer:true}} style={{background:"linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)"}} onCreated={({gl})=>{gl.setClearColor(new THREE.Color("#0f172a"))}}>
     <ambientLight intensity={0.4}/>
     <directionalLight position={[10,15,5]} intensity={0.8} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024}/>
     <pointLight position={[0,8,0]} intensity={0.3} color="#FF6B6B"/>
@@ -189,5 +189,10 @@ export function Scene3D(){
     {viz.showDataLabels&&<HudLabels/>}
     <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>
     <Animator/>
-  </Canvas>;
+  </Canvas>
+    {/* Transition overlay */}
+    {transitioning && (
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.3)', zIndex: 10, pointerEvents: 'none', transition: 'opacity 300ms' }} />
+    )}
+  </div>;
 }

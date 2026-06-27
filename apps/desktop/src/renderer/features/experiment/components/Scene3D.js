@@ -4,7 +4,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useSimulation } from "../experiment.store";
-import { useI18n } from "../../../core/i18n";
 import { useVisualization } from "../../../core/visualization.store";
 function Axes() {
     const pts = useMemo(() => ({
@@ -59,41 +58,36 @@ function HudLabels() {
         return null;
     return _jsxs("group", { children: [_jsx(Text, { position: [bx + 1.2, by, 0], fontSize: 0.3, color: "#f8fafc", anchorX: "left", outlineWidth: 0.02, outlineColor: "#000000", children: "v = " + bv.toFixed(1) + " m/s" }), _jsx(Text, { position: [bx + 1.2, by - 0.4, 0], fontSize: 0.25, color: "#94a3b8", anchorX: "left", outlineWidth: 0.02, outlineColor: "#000000", children: "t = " + ct.toFixed(2) + " s" })] });
 }
-function FormulaOverlay() {
-    const bx = useSimulation(s => s.ballX), h = useSimulation(s => s.height);
-    const currentPhaseId = useSimulation(s => s.currentPhaseId);
-    const currentTime = useSimulation(s => s.currentTime);
-    const scene = useSimulation(s => s.scene);
-    const { t } = useI18n();
-    const show = useVisualization(s => s.toggles.showFormulas);
-    if (!show || !scene?.teacher_steps)
-        return null;
-    // Find the best formula to show for current phase/time
-    const steps = [...scene.teacher_steps].sort((a, b) => a.order - b.order);
-    // Strategy: show the formula of the step whose timeStart is closest to currentTime but not after it
-    let bestStep = null;
-    for (const s of steps) {
-        if (s.timeStart <= currentTime && s.formulaKey) {
-            bestStep = s;
-        }
-    }
-    // If no step with formula found before current time, find the next one
-    if (!bestStep) {
-        for (const s of steps) {
-            if (s.formulaKey) {
-                bestStep = s;
-                break;
-            }
-        }
-    }
-    if (!bestStep?.formulaKey)
-        return null;
-    // Split multi-line formulas
-    const formula = t(bestStep.formulaKey);
-    const lines = formula.split("\n");
-    return (_jsx("group", { children: lines.map((line, i) => (_jsx(Text, { position: [bx, h + 2.5 - i * 0.5, 0], fontSize: 0.3, color: "#fbbf24", anchorX: "center", outlineWidth: 0.02, outlineColor: "#000000", children: line.trim() }, i))) }));
-}
+// FormulaOverlay removed - HTML version in CenterPanel.tsx
 function Animator() { const tick = useSimulation(s => s.tick); useFrame((_, d) => { tick(d); }); return null; }
+// Impact particle burst
+function ImpactParticles() {
+    const isBouncing = useSimulation(s => s.isBouncing);
+    const bx = useSimulation(s => s.ballX);
+    const by = useSimulation(s => s.ballY);
+    const [particles, setParticles] = useState([]);
+    const nextId = useRef(0);
+    useEffect(() => {
+        if (isBouncing) {
+            const newParticles = Array.from({ length: 15 }, () => ({
+                id: nextId.current++,
+                x: bx, y: 0.2, z: 0,
+                vx: (Math.random() - 0.5) * 3,
+                vy: Math.random() * 5 + 2,
+                life: 1.0,
+            }));
+            setParticles(prev => [...prev, ...newParticles].slice(-30));
+        }
+    }, [isBouncing, bx, by]);
+    useFrame((_, delta) => {
+        if (particles.length === 0)
+            return;
+        setParticles(prev => prev
+            .map(p => ({ ...p, x: p.x + p.vx * delta, y: p.y + p.vy * delta, vy: p.vy - 9.8 * delta, life: p.life - delta * 2 }))
+            .filter(p => p.life > 0));
+    });
+    return (_jsx("group", { children: particles.map(p => (_jsxs("mesh", { position: [p.x, p.y, p.z], children: [_jsx("sphereGeometry", { args: [0.03, 4, 4] }), _jsx("meshBasicMaterial", { color: "#fbbf24", transparent: true, opacity: p.life * 0.8 })] }, p.id))) }));
+}
 // Smooth camera transition between phase presets
 function CameraAnimator() {
     const currentPhaseId = useSimulation(s => s.currentPhaseId);
@@ -134,6 +128,13 @@ function Ball2() {
     return _jsxs("mesh", { ref: ref, position: [x, y, 0], castShadow: true, children: [_jsx("sphereGeometry", { args: [r, 32, 32] }), _jsx("meshStandardMaterial", { color: "#ef4444", metalness: 0.3, roughness: 0.4, emissive: "#441111", emissiveIntensity: 0.2 })] });
 }
 export function Scene3D() {
+    const [transitioning, setTransitioning] = useState(false);
+    const activePluginId = useSimulation(s => s.activePluginId);
+    useEffect(() => {
+        setTransitioning(true);
+        const t = setTimeout(() => setTransitioning(false), 400);
+        return () => clearTimeout(t);
+    }, [activePluginId]);
     const viz = useVisualization(s => s.toggles), by = useSimulation(s => s.ballY), h = useSimulation(s => s.height);
     const currentPhaseId = useSimulation(s => s.currentPhaseId);
     const scene = useSimulation(s => s.scene);
@@ -147,6 +148,6 @@ export function Scene3D() {
         const preset = scene.camera_script.find(c => c.id === phase.cameraPresetId);
         return preset ? preset.target : [0, 5, 0];
     }, [currentPhaseId, phases, scene]);
-    return _jsxs(Canvas, { camera: { position: [8, 6, 8], fov: 55, near: 0.1, far: 100 }, gl: { antialias: true, alpha: false, preserveDrawingBuffer: true }, style: { background: "linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)" }, onCreated: ({ gl }) => { gl.setClearColor(new THREE.Color("#0f172a")); }, children: [_jsx("ambientLight", { intensity: 0.4 }), _jsx("directionalLight", { position: [10, 15, 5], intensity: 0.8, castShadow: true, "shadow-mapSize-width": 1024, "shadow-mapSize-height": 1024 }), _jsx("pointLight", { position: [0, 8, 0], intensity: 0.3, color: "#FF6B6B" }), viz.showAxes && _jsx(Axes, {}), viz.showGrid && _jsx(Grid, {}), _jsx(Ground, {}), _jsx(Ball, {}), viz.showTrail && _jsx(Trail, {}), _jsx(Ball2, {}), viz.showDataLabels && _jsx(HeightRuler, {}), viz.showVelocityArrow && _jsx(VelocityArrow, {}), viz.showAccelArrow && _jsx(AccelArrow, {}), viz.showGravityArrow && _jsx(ForceArrow, {}), viz.showDataLabels && _jsx(HudLabels, {}), _jsx(CameraAnimator, {}), _jsx(OrbitControls, { enableDamping: true, dampingFactor: 0.1, target: targetVec, maxPolarAngle: Math.PI * 0.8 }), _jsx(Animator, {})] });
+    return _jsxs("div", { style: { position: 'relative', width: '100%', height: '100%' }, children: [_jsxs(Canvas, { camera: { position: [8, 6, 8], fov: 55, near: 0.1, far: 100 }, gl: { antialias: true, alpha: false, preserveDrawingBuffer: true }, style: { background: "linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)" }, onCreated: ({ gl }) => { gl.setClearColor(new THREE.Color("#0f172a")); }, children: [_jsx("ambientLight", { intensity: 0.4 }), _jsx("directionalLight", { position: [10, 15, 5], intensity: 0.8, castShadow: true, "shadow-mapSize-width": 1024, "shadow-mapSize-height": 1024 }), _jsx("pointLight", { position: [0, 8, 0], intensity: 0.3, color: "#FF6B6B" }), viz.showAxes && _jsx(Axes, {}), viz.showGrid && _jsx(Grid, {}), _jsx(Ground, {}), _jsx(Ball, {}), viz.showTrail && _jsx(Trail, {}), _jsx(Ball2, {}), viz.showDataLabels && _jsx(HeightRuler, {}), viz.showVelocityArrow && _jsx(VelocityArrow, {}), viz.showAccelArrow && _jsx(AccelArrow, {}), viz.showGravityArrow && _jsx(ForceArrow, {}), viz.showDataLabels && _jsx(HudLabels, {}), _jsx(CameraAnimator, {}), _jsx(OrbitControls, { enableDamping: true, dampingFactor: 0.1, target: targetVec, maxPolarAngle: Math.PI * 0.8 }), _jsx(Animator, {})] }), transitioning && (_jsx("div", { style: { position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.3)', zIndex: 10, pointerEvents: 'none', transition: 'opacity 300ms' } }))] });
 }
 //# sourceMappingURL=Scene3D.js.map

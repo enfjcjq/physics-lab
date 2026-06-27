@@ -88,9 +88,16 @@ export function CenterPanel() {
       </div>
       {pluginLoading && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-8 h-8 border-2 border-sky-500 border-t-transparent rounded-full animate-spin" />
-            <span className="text-xs text-slate-400">{t("ui.loading")}</span>
+          <div className="flex flex-col items-center gap-4">
+            {/* Skeleton 3D viewport */}
+            <div className="w-64 h-40 bg-slate-800/80 rounded-xl animate-pulse border border-slate-700/30 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-slate-700/50" />
+            </div>
+            {/* Skeleton progress bar */}
+            <div className="w-48 h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div className="h-full bg-gradient-to-r from-sky-600 to-violet-600 rounded-full animate-pulse" style={{width: "60%"}} />
+            </div>
+            <span className="text-xs text-slate-500">{t("ui.loading")}</span>
           </div>
         </div>
       )}

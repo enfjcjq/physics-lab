@@ -4,6 +4,7 @@ import { useUIStore } from "../../stores/ui.store";
 import type { ChartTab } from "../../stores/ui.store";
 import { useSimulation, type CachedFrame } from "../../features/experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
+import { DataPanel } from "./DataPanel";
 
 const CHART_TABS: { id: ChartTab; labelKey: string }[] = [
   { id: "position_time", labelKey: "chart.s_t" },
@@ -64,6 +65,14 @@ export function BottomDrawer() {
         <div className="w-8 h-0.5 rounded-full bg-slate-600 group-hover:bg-sky-400 transition-colors" />
       </div>
       <div className="flex items-center px-4 py-1.5 gap-1">
+        <button onClick={() => setTab("data" as any)}
+          className={`px-3 py-1 rounded-md text-xs transition-all ${
+            (activeTab as string) === "data"
+              ? "bg-sky-600/20 text-sky-400 border border-sky-600/30"
+              : "text-slate-500 hover:text-slate-300"
+          }`}>
+          Data
+        </button>
         {CHART_TABS.map((tab) => (
           <button key={tab.id} onClick={() => setTab(tab.id)}
             className={`px-3 py-1 rounded-md text-xs transition-all ${
@@ -80,7 +89,10 @@ export function BottomDrawer() {
         </button>
       </div>
       <div className="px-4 pb-3" style={{ height: "calc(100% - 44px)" }}>
-        <CanvasChart activeTab={activeTab} frameCache={frameCache} mass={mass} gravity={gravity} height={height} currentTime={currentTime} />
+        {(activeTab as string) === "data"
+          ? <DataPanel />
+          : <CanvasChart activeTab={activeTab as ChartTab} frameCache={frameCache} mass={mass} gravity={gravity} height={height} currentTime={currentTime} />
+        }
       </div>
     </div>
   );

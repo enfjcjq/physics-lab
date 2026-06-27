@@ -4,6 +4,7 @@ import { usePanelManager } from "../../core/panel-manager.store";
 import { useUIStore } from "../../stores/ui.store";
 import { useSimulation } from "../../features/experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
+import { DataPanel } from "./DataPanel";
 const CHART_TABS = [
     { id: "position_time", labelKey: "chart.s_t" },
     { id: "velocity_time", labelKey: "chart.v_t" },
@@ -49,9 +50,13 @@ export function BottomDrawer() {
         document.removeEventListener("mousemove", onMouseMove);
         document.removeEventListener("mouseup", onMouseUp);
     }, [onMouseMove]);
-    return (_jsxs("div", { className: "flex-shrink-0 border-t border-slate-800 bg-slate-900/95 transition-all duration-300", style: { height: drawerOpen ? `${drawerHeight}px` : "0px", overflow: "hidden" }, children: [_jsx("div", { onMouseDown: onMouseDown, className: "h-1.5 bg-slate-800 hover:bg-sky-700 cursor-ns-resize transition-colors\n          flex items-center justify-center group", children: _jsx("div", { className: "w-8 h-0.5 rounded-full bg-slate-600 group-hover:bg-sky-400 transition-colors" }) }), _jsxs("div", { className: "flex items-center px-4 py-1.5 gap-1", children: [CHART_TABS.map((tab) => (_jsx("button", { onClick: () => setTab(tab.id), className: `px-3 py-1 rounded-md text-xs transition-all ${activeTab === tab.id
+    return (_jsxs("div", { className: "flex-shrink-0 border-t border-slate-800 bg-slate-900/95 transition-all duration-300", style: { height: drawerOpen ? `${drawerHeight}px` : "0px", overflow: "hidden" }, children: [_jsx("div", { onMouseDown: onMouseDown, className: "h-1.5 bg-slate-800 hover:bg-sky-700 cursor-ns-resize transition-colors\n          flex items-center justify-center group", children: _jsx("div", { className: "w-8 h-0.5 rounded-full bg-slate-600 group-hover:bg-sky-400 transition-colors" }) }), _jsxs("div", { className: "flex items-center px-4 py-1.5 gap-1", children: [_jsx("button", { onClick: () => setTab("data"), className: `px-3 py-1 rounded-md text-xs transition-all ${activeTab === "data"
                             ? "bg-sky-600/20 text-sky-400 border border-sky-600/30"
-                            : "text-slate-500 hover:text-slate-300"}`, children: t(tab.labelKey) }, tab.id))), _jsx("div", { className: "flex-1" }), _jsx("button", { onClick: toggleDrawer, className: "px-2 py-1 text-xs text-slate-500 hover:text-slate-300", children: drawerOpen ? "▾" : "▴" })] }), _jsx("div", { className: "px-4 pb-3", style: { height: "calc(100% - 44px)" }, children: _jsx(CanvasChart, { activeTab: activeTab, frameCache: frameCache, mass: mass, gravity: gravity, height: height, currentTime: currentTime }) })] }));
+                            : "text-slate-500 hover:text-slate-300"}`, children: "Data" }), CHART_TABS.map((tab) => (_jsx("button", { onClick: () => setTab(tab.id), className: `px-3 py-1 rounded-md text-xs transition-all ${activeTab === tab.id
+                            ? "bg-sky-600/20 text-sky-400 border border-sky-600/30"
+                            : "text-slate-500 hover:text-slate-300"}`, children: t(tab.labelKey) }, tab.id))), _jsx("div", { className: "flex-1" }), _jsx("button", { onClick: toggleDrawer, className: "px-2 py-1 text-xs text-slate-500 hover:text-slate-300", children: drawerOpen ? "▾" : "▴" })] }), _jsx("div", { className: "px-4 pb-3", style: { height: "calc(100% - 44px)" }, children: activeTab === "data"
+                    ? _jsx(DataPanel, {})
+                    : _jsx(CanvasChart, { activeTab: activeTab, frameCache: frameCache, mass: mass, gravity: gravity, height: height, currentTime: currentTime }) })] }));
 }
 function deriveData(frameCache, mass, gravity, height) {
     return frameCache.filter((_, i) => i % 3 === 0).map((f) => {

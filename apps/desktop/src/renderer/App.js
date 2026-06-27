@@ -1,6 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect } from "react";
 import { AppShell } from "./components/layout/AppShell";
+import { ErrorBoundary } from "./components/layout/ErrorBoundary";
 import { useSimulation } from "./features/experiment/experiment.store";
 import { pluginRegistry } from "./core/plugin-registry";
 import { freeFallPlugin } from "./plugins";
@@ -11,7 +12,6 @@ export function App() {
     const setScene = useSimulation((s) => s.setScene);
     const sceneLoaded = useSimulation((s) => s.sceneLoaded);
     useEffect(() => {
-        // Restore last experiment from localStorage
         const savedPlugin = localStorage.getItem("physics-lab:lastPlugin");
         const pluginId = savedPlugin || "free-fall";
         const plugin = pluginRegistry.get(pluginId);
@@ -29,7 +29,6 @@ export function App() {
         }
         loadScene();
     }, [setScene]);
-    // Persist active plugin when scene loads
     const activePluginId = useSimulation((s) => s.activePluginId);
     useEffect(() => {
         if (activePluginId) {
@@ -39,6 +38,6 @@ export function App() {
     if (!sceneLoaded) {
         return (_jsx("div", { className: "w-full h-full flex items-center justify-center", style: { background: "var(--bg-root)" }, children: _jsxs("div", { className: "text-center", children: [_jsx("div", { className: "w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" }), _jsx("p", { className: "text-slate-400 text-lg", children: "Physics Lab" })] }) }));
     }
-    return _jsx(AppShell, {});
+    return _jsx(ErrorBoundary, { children: _jsx(AppShell, {}) });
 }
 //# sourceMappingURL=App.js.map

@@ -42,8 +42,14 @@ function Ball(){
 }
 
 function Trail(){
-  const t=useSimulation(s=>s.trail),pts=useMemo(()=>t.map(p=>new THREE.Vector3(p.x,p.y,p.z)),[t]);
-  return pts.length<2?null:<Line points={pts} color="#FF6B6B" lineWidth={1} transparent opacity={0.5}/>;
+  const t=useSimulation(s=>s.trail),pts=useMemo(()=>{
+    if (!t || t.length === 0) return [];
+    // Limit to 200 points max for GPU safety
+    const limited = t.length > 200 ? t.slice(t.length - 200) : t;
+    return limited.map(p=>new THREE.Vector3(p.x,p.y,p.z));
+  },[t]);
+  if (pts.length < 2) return null;
+  return <Line points={pts} color="#FF6B6B" lineWidth={1} transparent opacity={0.5}/>;
 }
 
 function Arrow3D({o,d,len,c}:{o:[number,number,number];d:[number,number,number];len:number;c:string}){
@@ -68,28 +74,53 @@ function HudLabels(){
 function FormulaOverlay(){
   const bx=useSimulation(s=>s.ballX),h=useSimulation(s=>s.height);
   const currentPhaseId=useSimulation(s=>s.currentPhaseId);
+  const currentTime=useSimulation(s=>s.currentTime);
   const scene=useSimulation(s=>s.scene);
   const {t}=useI18n();
   const show=useVisualization(s=>s.toggles.showFormulas);
   if(!show || !scene?.teacher_steps)return null;
 
-  // Find active teacher step for current phase
+  // Find the best formula to show for current phase/time
   const steps = [...scene.teacher_steps].sort((a,b)=>a.order-b.order);
-  let activeStep = steps[0];
-  for (let i=steps.length-1; i>=0; i--) {
-    const s=steps[i]; const phase=scene.timeline.phases?.find(p=>p.id===currentPhaseId);
-    if (phase && s.timeStart >= phase.timeRange[0] && s.timeStart <= phase.timeRange[1]) {
-      activeStep = s; break;
+  
+  // Strategy: show the formula of the step whose timeStart is closest to currentTime but not after it
+  let bestStep = null;
+  for (const s of steps) {
+    if (s.timeStart <= currentTime && s.formulaKey) {
+      bestStep = s;
+    }
+  }
+  
+  // If no step with formula found before current time, find the next one
+  if (!bestStep) {
+    for (const s of steps) {
+      if (s.formulaKey) { bestStep = s; break; }
     }
   }
 
-  const formulaKey = activeStep?.formulaKey;
-  if (!formulaKey) return null;
-  const formula = t(formulaKey);
+  if (!bestStep?.formulaKey) return null;
+  
+  // Split multi-line formulas
+  const formula = t(bestStep.formulaKey);
+  const lines = formula.split("\n");
 
-  return<Text position={[bx,h+3,0]} fontSize={0.35} color="#facc15" anchorX="center" outlineWidth={0.03} outlineColor="#000000">
-    {formula}
-  </Text>;
+  return (
+    <group>
+      {lines.map((line, i) => (
+        <Text
+          key={i}
+          position={[bx, h + 2.5 - i * 0.5, 0]}
+          fontSize={0.3}
+          color="#fbbf24"
+          anchorX="center"
+          outlineWidth={0.02}
+          outlineColor="#000000"
+        >
+          {line.trim()}
+        </Text>
+      ))}
+    </group>
+  );
 }
 
 function Animator(){const tick=useSimulation(s=>s.tick);useFrame((_,d)=>{tick(d)});return null;}
@@ -155,7 +186,7 @@ export function Scene3D(){
     {viz.showAxes&&<Axes/>}{viz.showGrid&&<Grid/>}<Ground/><Ball/>
     {viz.showTrail&&<Trail/>}<Ball2/>{viz.showDataLabels&&<HeightRuler/>}
     {viz.showVelocityArrow&&<VelocityArrow/>}{viz.showAccelArrow&&<AccelArrow/>}{viz.showGravityArrow&&<ForceArrow/>}
-    {viz.showDataLabels&&<HudLabels/>}{viz.showFormulas&&<FormulaOverlay/>}
+    {viz.showDataLabels&&<HudLabels/>}
     <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>
     <Animator/>
   </Canvas>;

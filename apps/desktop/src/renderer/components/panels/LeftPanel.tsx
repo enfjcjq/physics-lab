@@ -54,8 +54,9 @@ export function LeftPanel() {
           <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t("panel.problem")}</h2>
         </div>
 
-        {/* Experiment Selector - Visual Cards */}
+        {/* Experiment Selector - Always visible */}
         <div className="px-3 pb-3">
+          <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1.5 px-1">{t("panel.experiments")}</div>
           <div className="grid grid-cols-2 gap-1.5">
             {pluginRegistry.list().map((p) => (
               <button

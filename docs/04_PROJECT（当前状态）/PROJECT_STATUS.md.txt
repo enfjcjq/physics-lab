@@ -1,50 +1,16 @@
 # Project Status
 
-**Version:** V2.0 (Sprint S11-S15 Complete)
+**Version:** V2.1 (Sprint S16)
 **Branch:** main
-**Status:** Production Build Ready
+**Status:** Building & Running (666 modules, 6 plugins, 347 i18n keys)
 
-## Build Stats
-- 663 modules transformed
-- 5 experiments (1 eager + 4 lazy-loaded plugins)
-- Main bundle: 120 KB | Three.js vendor: 1,121 KB
-- CSS: 30 KB
-- 329 i18n keys (zh-CN == en-US perfect sync)
-- TypeScript: zero errors
-
-## Features (V2.0)
-### Core Architecture
-- FrameCache: precomputed 60fps physics frames
-- Binary search seek: O(log n) for instant scrubbing
-- All modules driven by single timeline state
-
-### Experiments (5)
+## Experiments (6)
 - Free Fall (eager) | Projectile Motion (lazy) | Inclined Plane (lazy)
-- Collision (lazy) | Spring-Mass (lazy)
+- Collision (lazy) | Spring-Mass (lazy) | Pendulum (lazy)
 
-### Teaching System
-- TeacherPanel: 7-step guided flow, auto-advances with timeline
-- TeachingOverlay: data-driven from PhysicsScene, phase-aware
-- FormulaOverlay (3D): phase-aware with i18n translation
-- Interactive quiz with answer feedback
-
-### UI/UX
-- Visual experiment selector cards (icon + difficulty)
-- Centered phase navigation pill bar
-- Smooth CSS animations (fade, slide, scale)
-- 3-mode system: Learning / Experiment / Analysis
-- Welcome screen (first-launch onboarding)
-- About dialog with tech stack
-
-### Charts & Analysis
-- Canvas charts: position, velocity, acceleration, energy
-- Mouse hover tooltips with data points
-- Knowledge graph (SVG interactive)
-- Report export (Markdown download)
-
-### Platform
-- Electron desktop app
-- React 18 + Three.js (R3F) + Zustand + TailwindCSS
-- Plugin architecture with lazy loading
-- Full i18n (zh-CN / en-US)
-- Dark/Light/Auto theme
+## Recent Fixes
+- Formula display: HTML overlay instead of buggy 3D SDF Text
+- Free-fall timeline: 1.6s (correct physics), 3 phases, no ghost bounce
+- Trail throttling: 20fps updates, 200pt limit
+- ErrorBoundary: prevents white-screen crashes
+- Experiment switcher tabs always visible at top-left of 3D scene

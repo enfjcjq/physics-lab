@@ -1,5 +1,9 @@
 import { pluginRegistry } from "../core/plugin-registry";
 const pluginLoaders = {
+    "pendulum": async () => {
+        const { pendulumPlugin } = await import("../plugins/pendulum/pendulum.plugin");
+        pluginRegistry.register(pendulumPlugin);
+    },
     "projectile-motion": async () => {
         const { projectileMotionPlugin } = await import("../plugins/projectile-motion/projectile-motion.plugin");
         pluginRegistry.register(projectileMotionPlugin);

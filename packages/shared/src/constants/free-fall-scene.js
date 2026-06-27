@@ -71,17 +71,16 @@ export const FREE_FALL_SCENE = {
         },
     ],
     timeline: {
-        total_duration: 5.0,
+        total_duration: 1.6,
         fps: 60,
         events: [
             { id: "start", time: 0.0, type: "phase_start", data: { label: "Release" }, description: "Ball released from rest" },
             { id: "impact", time: 1.43, type: "collision", target: "ball_1", data: { collision_with: "ground", impact_velocity: 14.0 }, description: "Impact with ground" },
         ],
         phases: [
-            { id: "release", label: "phase.release", icon: "o", timeRange: [0, 0.05], color: "#22c55e", description: "Ball at rest, initial state" },
-            { id: "falling", label: "phase.falling", icon: "v", timeRange: [0.05, 1.4], color: "#3b82f6", description: "Uniformly accelerated motion downward" },
-            { id: "impact", label: "phase.impact", icon: "O", timeRange: [1.35, 1.55], color: "#f59e0b", description: "Collision with ground" },
-            { id: "bounce", label: "phase.bounce", icon: "^", timeRange: [1.5, 5.0], color: "#ef4444", description: "Rebound and secondary motion" },
+            { id: "release", label: "phase.release", icon: "o", timeRange: [0, 0.1], color: "#22c55e", description: "Initial state: ball at rest" },
+            { id: "falling", label: "phase.falling", icon: "v", timeRange: [0.05, 1.35], color: "#3b82f6", description: "Uniformly accelerated motion under gravity" },
+            { id: "impact", label: "phase.impact", icon: "O", timeRange: [1.3, 1.6], color: "#f59e0b", description: "Ball reaches ground, experiment ends" },
         ],
     },
     camera_script: [
@@ -115,12 +114,10 @@ export const FREE_FALL_SCENE = {
     ],
     teacher_steps: [
         { id: "ts1", order: 1, titleKey: "teacher.step1.title", descKey: "teacher.step1.desc", timeStart: 0.0 },
-        { id: "ts2", order: 2, titleKey: "teacher.step2.title", descKey: "teacher.step2.desc", formulaKey: "teacher.step2.formula", timeStart: 0.3 },
-        { id: "ts3", order: 3, titleKey: "teacher.step3.title", descKey: "teacher.step3.desc", formulaKey: "teacher.step3.formula", timeStart: 0.6 },
-        { id: "ts4", order: 4, titleKey: "teacher.step4.title", descKey: "teacher.step4.desc", formulaKey: "teacher.step4.formula", timeStart: 1.0 },
-        { id: "ts5", order: 5, titleKey: "teacher.step5.title", descKey: "teacher.step5.desc", formulaKey: "teacher.step5.formula", timeStart: 1.4 },
-        { id: "ts6", order: 6, titleKey: "teacher.step6.title", descKey: "teacher.step6.desc", timeStart: 1.5 },
-        { id: "ts7", order: 7, titleKey: "teacher.step7.title", descKey: "teacher.step7.desc", timeStart: 2.0 },
+        { id: "ts2", order: 2, titleKey: "teacher.step2.title", descKey: "teacher.step2.desc", formulaKey: "teacher.step2.formula", timeStart: 0.2 },
+        { id: "ts3", order: 3, titleKey: "teacher.step3.title", descKey: "teacher.step3.desc", formulaKey: "teacher.step3.formula", timeStart: 0.5 },
+        { id: "ts4", order: 4, titleKey: "teacher.step4.title", descKey: "teacher.step4.desc", formulaKey: "teacher.step4.formula", timeStart: 0.9 },
+        { id: "ts5", order: 5, titleKey: "teacher.step5.title", descKey: "teacher.step5.desc", formulaKey: "teacher.step5.formula", timeStart: 1.3 },
     ],
     charts: [
         { id: "ch_s_t", type: "position_time", label: "s-t", xAxis: { label: "Time", unit: "s", key: "t" }, yAxis: { label: "Displacement", unit: "m", key: "s" }, color: "#22c55e" },

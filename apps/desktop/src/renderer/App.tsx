@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { AppShell } from "./components/layout/AppShell";
+import { ErrorBoundary } from "./components/layout/ErrorBoundary";
 import { useSimulation } from "./features/experiment/experiment.store";
 import { pluginRegistry } from "./core/plugin-registry";
 import { freeFallPlugin } from "./plugins";
@@ -14,7 +15,6 @@ export function App() {
   const sceneLoaded = useSimulation((s) => s.sceneLoaded);
 
   useEffect(() => {
-    // Restore last experiment from localStorage
     const savedPlugin = localStorage.getItem("physics-lab:lastPlugin");
     const pluginId = savedPlugin || "free-fall";
     const plugin = pluginRegistry.get(pluginId);
@@ -33,7 +33,6 @@ export function App() {
     loadScene();
   }, [setScene]);
 
-  // Persist active plugin when scene loads
   const activePluginId = useSimulation((s) => s.activePluginId);
   useEffect(() => {
     if (activePluginId) {
@@ -52,5 +51,5 @@ export function App() {
     );
   }
 
-  return <AppShell />;
+  return <ErrorBoundary><AppShell /></ErrorBoundary>;
 }

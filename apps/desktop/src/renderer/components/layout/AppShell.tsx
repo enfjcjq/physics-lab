@@ -22,7 +22,7 @@ export function AppShell() {
   const bottomOpen = panels.timeline?.isOpen || panels.charts?.isOpen;
 
   // Mode-based visibility
-  const showLeftPanel = leftOpen;
+  const showLeftPanel = leftOpen || mode === "learning";
   const showTeacher = mode === "learning";
   const showRightPanel = (mode === "experiment" || mode === "analysis") && rightOpen;
   // Learning mode: hide bottom drawer for cleaner student experience

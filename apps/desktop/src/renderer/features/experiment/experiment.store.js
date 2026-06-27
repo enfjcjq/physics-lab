@@ -28,6 +28,7 @@ function buildFrameCache(duration, height, gravity, mass, pluginId, phases) {
     // Use plugin computeState for accurate physics
     const getParams = () => {
         switch (pluginId) {
+            case "pendulum": return { L: 4.5, g: gravity, theta0: 20, mass };
             case "spring-mass": return { k: 10, mass, amplitude: 2 };
             case "collision": return { m1: 2, m2: 1, v1: 3, v2: -1, restitution: 0.9 };
             case "projectile-motion": return { g: gravity, h0: height, mass, v0: 10, angle: 30 };
@@ -90,15 +91,15 @@ function findFrame(frames, t) {
     return frames[lo];
 }
 /** Generate trail points from frame cache (subset for rendering). */
-function trailFromCache(frames, toTime, maxPoints = 300) {
+function trailFromCache(frames, toTime, maxPoints = 200) {
     const trail = [];
-    const step = Math.max(1, Math.floor(frames.length / maxPoints));
-    for (let i = 0; i < frames.length && frames[i].time <= toTime; i += step) {
+    const step = Math.max(2, Math.floor(frames.length / maxPoints));
+    for (let i = 0; i < frames.length && frames[i].time <= toTime && trail.length < maxPoints; i += step) {
         trail.push({ x: frames[i].ballX, y: frames[i].ballY, z: 0 });
     }
-    // Always include the current frame
+    // Always include current position
     const last = findFrame(frames, toTime);
-    if (trail.length === 0 || trail[trail.length - 1].y !== last.ballY) {
+    if (trail.length === 0 || Math.abs(trail[trail.length - 1].y - last.ballY) > 0.01) {
         trail.push({ x: last.ballX, y: last.ballY, z: 0 });
     }
     return trail;
@@ -114,6 +115,8 @@ function extractParams(scene) {
     const phases = scene.timeline?.phases ?? [];
     return { height: h, mass: m, gravity: g, duration: dur, phases };
 }
+// Module-level counter for trail throttling (not in React state)
+let tickCounter = 0;
 export const useSimulation = create()((set, get) => ({
     scene: null,
     sceneLoaded: false,
@@ -382,7 +385,7 @@ export const useSimulation = create()((set, get) => ({
             });
         }
     },
-    // ===== Tick (playback update) =====
+    // ===== Tick (playback update, throttled trail updates) =====
     tick: (rawDelta) => {
         const s = get();
         if (!s.playing)
@@ -404,8 +407,13 @@ export const useSimulation = create()((set, get) => ({
             return;
         }
         const frame = findFrame(s.frameCache, newTime);
-        const trail = trailFromCache(s.frameCache, newTime);
         const justBounced = frame.isOnGround && !s.isBouncing;
+        // Throttle trail updates: only rebuild every 3 ticks
+        // Use module-level counter to avoid polluting React state
+        tickCounter += 1;
+        const trail = tickCounter % 3 === 0
+            ? trailFromCache(s.frameCache, newTime)
+            : s.trail;
         set({
             currentTime: newTime,
             ballX: frame.ballX, ballY: frame.ballY,

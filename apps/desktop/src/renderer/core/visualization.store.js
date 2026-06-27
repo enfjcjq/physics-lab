@@ -2,16 +2,16 @@ import { create } from "zustand";
 export const useVisualization = create((set) => ({
     toggles: {
         showTrail: true,
-        showVelocityArrow: false,
-        showAccelArrow: false,
+        showVelocityArrow: true,
+        showAccelArrow: true,
         showGravityArrow: true,
         showNetForce: false,
         showAxes: true,
         showGrid: true,
-        showDataLabels: false,
-        showTeachingLabels: false,
-        showFormulas: false,
-        showUnits: false,
+        showDataLabels: true,
+        showTeachingLabels: true,
+        showFormulas: true,
+        showUnits: true,
     },
     toggle: (key) => set((s) => ({
         toggles: { ...s.toggles, [key]: !s.toggles[key] },

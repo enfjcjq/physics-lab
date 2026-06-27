@@ -30,8 +30,16 @@ function Ball() {
     return _jsxs("mesh", { ref: ref, position: [x, y, 0], castShadow: true, scale: [1 / squash, squash, 1 / squash], children: [_jsx("sphereGeometry", { args: [r, 32, 32] }), _jsx("meshStandardMaterial", { color: "#FF6B6B", metalness: 0.3, roughness: 0.4, emissive: isBouncing ? "#661111" : "#331111", emissiveIntensity: isBouncing ? 0.6 : 0.2 })] });
 }
 function Trail() {
-    const t = useSimulation(s => s.trail), pts = useMemo(() => t.map(p => new THREE.Vector3(p.x, p.y, p.z)), [t]);
-    return pts.length < 2 ? null : _jsx(Line, { points: pts, color: "#FF6B6B", lineWidth: 1, transparent: true, opacity: 0.5 });
+    const t = useSimulation(s => s.trail), pts = useMemo(() => {
+        if (!t || t.length === 0)
+            return [];
+        // Limit to 200 points max for GPU safety
+        const limited = t.length > 200 ? t.slice(t.length - 200) : t;
+        return limited.map(p => new THREE.Vector3(p.x, p.y, p.z));
+    }, [t]);
+    if (pts.length < 2)
+        return null;
+    return _jsx(Line, { points: pts, color: "#FF6B6B", lineWidth: 1, transparent: true, opacity: 0.5 });
 }
 function Arrow3D({ o, d, len, c }) {
     if (len < 0.05)
@@ -54,27 +62,36 @@ function HudLabels() {
 function FormulaOverlay() {
     const bx = useSimulation(s => s.ballX), h = useSimulation(s => s.height);
     const currentPhaseId = useSimulation(s => s.currentPhaseId);
+    const currentTime = useSimulation(s => s.currentTime);
     const scene = useSimulation(s => s.scene);
     const { t } = useI18n();
     const show = useVisualization(s => s.toggles.showFormulas);
     if (!show || !scene?.teacher_steps)
         return null;
-    // Find active teacher step for current phase
+    // Find the best formula to show for current phase/time
     const steps = [...scene.teacher_steps].sort((a, b) => a.order - b.order);
-    let activeStep = steps[0];
-    for (let i = steps.length - 1; i >= 0; i--) {
-        const s = steps[i];
-        const phase = scene.timeline.phases?.find(p => p.id === currentPhaseId);
-        if (phase && s.timeStart >= phase.timeRange[0] && s.timeStart <= phase.timeRange[1]) {
-            activeStep = s;
-            break;
+    // Strategy: show the formula of the step whose timeStart is closest to currentTime but not after it
+    let bestStep = null;
+    for (const s of steps) {
+        if (s.timeStart <= currentTime && s.formulaKey) {
+            bestStep = s;
         }
     }
-    const formulaKey = activeStep?.formulaKey;
-    if (!formulaKey)
+    // If no step with formula found before current time, find the next one
+    if (!bestStep) {
+        for (const s of steps) {
+            if (s.formulaKey) {
+                bestStep = s;
+                break;
+            }
+        }
+    }
+    if (!bestStep?.formulaKey)
         return null;
-    const formula = t(formulaKey);
-    return _jsx(Text, { position: [bx, h + 3, 0], fontSize: 0.35, color: "#facc15", anchorX: "center", outlineWidth: 0.03, outlineColor: "#000000", children: formula });
+    // Split multi-line formulas
+    const formula = t(bestStep.formulaKey);
+    const lines = formula.split("\n");
+    return (_jsx("group", { children: lines.map((line, i) => (_jsx(Text, { position: [bx, h + 2.5 - i * 0.5, 0], fontSize: 0.3, color: "#fbbf24", anchorX: "center", outlineWidth: 0.02, outlineColor: "#000000", children: line.trim() }, i))) }));
 }
 function Animator() { const tick = useSimulation(s => s.tick); useFrame((_, d) => { tick(d); }); return null; }
 // Smooth camera transition between phase presets
@@ -130,6 +147,6 @@ export function Scene3D() {
         const preset = scene.camera_script.find(c => c.id === phase.cameraPresetId);
         return preset ? preset.target : [0, 5, 0];
     }, [currentPhaseId, phases, scene]);
-    return _jsxs(Canvas, { camera: { position: [8, 6, 8], fov: 55, near: 0.1, far: 100 }, gl: { antialias: true, alpha: false, preserveDrawingBuffer: true }, style: { background: "linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)" }, onCreated: ({ gl }) => { gl.setClearColor(new THREE.Color("#0f172a")); }, children: [_jsx("ambientLight", { intensity: 0.4 }), _jsx("directionalLight", { position: [10, 15, 5], intensity: 0.8, castShadow: true, "shadow-mapSize-width": 1024, "shadow-mapSize-height": 1024 }), _jsx("pointLight", { position: [0, 8, 0], intensity: 0.3, color: "#FF6B6B" }), viz.showAxes && _jsx(Axes, {}), viz.showGrid && _jsx(Grid, {}), _jsx(Ground, {}), _jsx(Ball, {}), viz.showTrail && _jsx(Trail, {}), _jsx(Ball2, {}), viz.showDataLabels && _jsx(HeightRuler, {}), viz.showVelocityArrow && _jsx(VelocityArrow, {}), viz.showAccelArrow && _jsx(AccelArrow, {}), viz.showGravityArrow && _jsx(ForceArrow, {}), viz.showDataLabels && _jsx(HudLabels, {}), viz.showFormulas && _jsx(FormulaOverlay, {}), _jsx(CameraAnimator, {}), _jsx(OrbitControls, { enableDamping: true, dampingFactor: 0.1, target: targetVec, maxPolarAngle: Math.PI * 0.8 }), _jsx(Animator, {})] });
+    return _jsxs(Canvas, { camera: { position: [8, 6, 8], fov: 55, near: 0.1, far: 100 }, gl: { antialias: true, alpha: false, preserveDrawingBuffer: true }, style: { background: "linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)" }, onCreated: ({ gl }) => { gl.setClearColor(new THREE.Color("#0f172a")); }, children: [_jsx("ambientLight", { intensity: 0.4 }), _jsx("directionalLight", { position: [10, 15, 5], intensity: 0.8, castShadow: true, "shadow-mapSize-width": 1024, "shadow-mapSize-height": 1024 }), _jsx("pointLight", { position: [0, 8, 0], intensity: 0.3, color: "#FF6B6B" }), viz.showAxes && _jsx(Axes, {}), viz.showGrid && _jsx(Grid, {}), _jsx(Ground, {}), _jsx(Ball, {}), viz.showTrail && _jsx(Trail, {}), _jsx(Ball2, {}), viz.showDataLabels && _jsx(HeightRuler, {}), viz.showVelocityArrow && _jsx(VelocityArrow, {}), viz.showAccelArrow && _jsx(AccelArrow, {}), viz.showGravityArrow && _jsx(ForceArrow, {}), viz.showDataLabels && _jsx(HudLabels, {}), _jsx(CameraAnimator, {}), _jsx(OrbitControls, { enableDamping: true, dampingFactor: 0.1, target: targetVec, maxPolarAngle: Math.PI * 0.8 }), _jsx(Animator, {})] });
 }
 //# sourceMappingURL=Scene3D.js.map

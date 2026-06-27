@@ -1,12 +1,13 @@
-# Current Milestone: S15 (Completed)
+# Current Milestone: S16 (Completed)
 
-**Goal:** Final Polish -- performance, packaging, review
+**Goal:** Fix formula display, add pendulum experiment (6th)
 
 **Completed:**
-- [x] Three.js vendor split: main bundle 1.24MB -> 120KB (-90%)
-- [x] Fixed postcss.config module type warning (renamed to .mjs)
-- [x] manualChunks config for better caching
-- [x] Full build: 663 modules, 5 lazy plugins, zero errors
-- [x] All docs updated for V2.0 completion
+- [x] Formula display: replaced broken 3D Text with HTML overlay (supports all Unicode)
+- [x] Pendulum plugin: 6th experiment (simple harmonic motion, period formula)
+- [x] Pendulum PhysicsScene with pivot, string constraint, tension force
+- [x] Plugin loader wired for pendulum (lazy-loaded)
+- [x] i18n: 347 keys (zh-CN + en-US)
+- [x] Type-check + build: 666 modules, 6 plugins, zero errors
 
-**V2.0 Complete! Next milestone: V2.1 (AI Integration)**
+**Next: S17** -- Problem input parser + student progress

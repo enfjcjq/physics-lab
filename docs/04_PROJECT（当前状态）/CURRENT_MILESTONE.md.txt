@@ -1,14 +1,12 @@
-# Current Milestone: S19 (Completed)
+# Current Milestone: S20 (Completed)
 
-**Goal:** Timeline real-time scrubbing + phase-loop quiz system
+**Goal:** Visual polish — particles, transitions, loading states
 
 **Completed:**
-- [x] Phase-loop: togglePhaseLoop locks playback within current phase
-- [x] Explore mode: correct quiz answer loops phase animation with explanation
-- [x] FrameCache binary search already in place (O(log n) scrubbing)
-- [x] Timeline dragging updates all modules in real-time
-- [x] Quiz retry: resets phase quiz state and stops phase loop
-- [x] Loop indicator (animated arrow) shown when phase is looping
+- [x] Removed failing 3D FormulaOverlay (SDF text), HTML overlay is the single source
+- [x] Impact particles: 15-particle burst on ground collision with physics decay
+- [x] Scene transitions: 400ms semi-transparent overlay when switching experiments
+- [x] Skeleton loading: animated placeholder during lazy plugin load
 - [x] Build: 666 modules, 6 plugins, zero errors
 
-**Next: S20** — Visual polish: transitions, loading states, particle effects
+**Next: S21** — Export system + data panel + final polish

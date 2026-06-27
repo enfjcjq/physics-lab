@@ -1,16 +1,17 @@
-# Next Sprint: S20
+# Next Sprint: S21
 
-## Priority 1: Visual Transitions (P0)
-- Smooth crossfade when switching experiments
-- Phase transition animations (color pulse, camera ease)
-- Loading skeleton screens for lazy-loaded plugins
-
-## Priority 2: Particle Effects (P1)
-- Impact particles when ball hits ground
-- Release spark when ball is dropped
-- Trail glow effect on fast-moving objects
-
-## Priority 3: Export System (P2)
-- Export experiment report as PDF/Markdown
+## Priority 1: Export System (P0)
+- Export experiment report as PDF (with screenshots + parameters + charts + formulas)
+- Export report as Markdown
 - Export chart data as CSV
-- Screenshot of 3D viewport
+- Screenshot capture of 3D viewport
+
+## Priority 2: Data Panel (P1)
+- Real-time data table: position, velocity, acceleration, energy per time step
+- CSV download button on data panel
+- Toggle between chart and table view
+
+## Priority 3: Final Polish (P2)
+- Reduce LF/CRLF git warnings (add .gitattributes)
+- Responsive layout improvements for smaller windows
+- Better keyboard shortcut discoverability

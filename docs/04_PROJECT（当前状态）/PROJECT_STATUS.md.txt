@@ -1,18 +1,16 @@
 # Project Status
 
-**Version:** V2.1 (Sprint S19)
+**Version:** V2.1 (Sprint S20)
 **Status:** Building (666 modules, 6 plugins)
 
-## Key Features
-- 6 physics experiments (free-fall, projectile, incline, collision, spring, pendulum)
-- FrameCache with binary search for instant timeline scrubbing
-- Phase-loop system for explore mode quiz learning
-- 3 modes: learning (teacher-guided), experiment (free params), analysis (full details)
-- Quiz system: 12 questions across all experiments with answer feedback
-- Full i18n: zh-CN (553 keys) + en-US (397 keys)
-- HTML formula overlay with Unicode support
-- ErrorBoundary crash protection
+## Completed Sprints (V2.1)
+| Sprint | Focus | Key Deliverable |
+|--------|-------|----------------|
+| S16 | Formula + Pendulum | HTML formula overlay, 6th experiment |
+| S17 | Parser + i18n | Rule parser rewrite, 553 zh-CN keys |
+| S18 | UX + Quiz | Experiment cards, 12 quiz questions |
+| S19 | Timeline | Phase-loop quiz, FrameCache |
+| S20 | Visual Polish | Impact particles, transitions, skeleton loader |
 
-## Known Issues
-- Electron direct launch unreliable on Windows (use browser: npx vite --port 5173)
-- Timeline dragging and phase-looping need thorough manual testing
+## Experiments (6)
+Free Fall | Projectile Motion | Inclined Plane | Collision | Spring-Mass | Pendulum

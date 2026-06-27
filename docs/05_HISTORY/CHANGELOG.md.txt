@@ -1,3 +1,16 @@
+## [V2.1] Sprint S19 — 2026-06-27
+
+### Added
+- Phase-loop system: togglePhaseLoop locks playback within phase bounds
+- Explore mode: correct quiz answer → phase animation loops with explanation
+- Loop indicator (animated arrow) in TeacherPanel header
+- Quiz retry button properly resets phase state and stops loop
+
+### Changed
+- TeacherPanel: quiz answer handler uses togglePhaseLoop
+- experiment.store: SimulationState includes loopPhaseActive, loopPhaseId
+- Timeline architecture: FrameCache + binary search confirmed working
+
 # Changelog
 
 ## [V2.1] Sprint S18 — 2026-06-27

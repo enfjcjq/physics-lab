@@ -54,6 +54,9 @@ export function TeacherPanel() {
   const jumpToTime = useSimulation((s) => s.jumpToTime);
   const jumpToPhase = useSimulation((s) => s.jumpToPhase);
   const play = useSimulation((s) => s.play);
+  const togglePhaseLoop = useSimulation((s) => s.togglePhaseLoop);
+  const stopPhaseLoop = useSimulation((s) => s.stopPhaseLoop);
+  const loopPhaseActive = useSimulation((s) => s.loopPhaseActive);
   const { t } = useI18n();
   const { subMode } = useTeaching();
 
@@ -87,12 +90,16 @@ export function TeacherPanel() {
   const handlePhaseQuizAnswer = (idx: number) => {
     setPhaseQuizAnswers((prev) => ({ ...prev, [currentPhaseId]: idx }));
     if (phaseQuiz && idx === phaseQuiz.correctIndex) {
-      const p = phases.find((ph) => ph.id === currentPhaseId);
-      if (p) {
-        jumpToPhase(currentPhaseId);
-        setTimeout(() => play(), 150);
+      // Loop the current phase animation while showing explanation
+      if (currentPhaseId) {
+        togglePhaseLoop(currentPhaseId);
       }
     }
+  };
+
+  const handleRetryQuiz = () => {
+    setPhaseQuizAnswers((prev) => ({ ...prev, [currentPhaseId]: null }));
+    stopPhaseLoop();
   };
 
   return (
@@ -103,6 +110,7 @@ export function TeacherPanel() {
         <h2 className="text-sm font-semibold text-white">
           {isExplore ? t("teaching.mode.explore") : t("teacher.title")}
         </h2>
+        {loopPhaseActive && isExplore && <span className="text-[10px] text-amber-400 animate-pulse ml-1">\uD83D\uDD01</span>}
         <span className="ml-auto text-[10px] text-slate-600">
           {currentIdx + 1}/{sortedSteps.length}
         </span>
@@ -166,7 +174,7 @@ export function TeacherPanel() {
                   </div>
                 )}
                 {!phaseQuizCorrect && (
-                  <button onClick={() => setPhaseQuizAnswers((prev) => ({ ...prev, [currentPhaseId]: null }))}
+                  <button onClick={handleRetryQuiz}
                     className="mt-2 text-xs text-sky-400 hover:text-sky-300">
                     {t("quiz.retry")}
                   </button>

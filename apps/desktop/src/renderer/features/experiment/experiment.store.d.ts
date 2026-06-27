@@ -30,6 +30,9 @@ export interface SimulationState {
     ballVelocity: number;
     ballAcceleration: number;
     isBouncing: boolean;
+    /** Phase loop: lock playback to current phase range */
+    loopPhaseActive: boolean;
+    loopPhaseId: string | null;
     bounceCount: number;
     trail: Array<{
         x: number;
@@ -57,6 +60,10 @@ export interface SimulationState {
     tick: (deltaTime: number) => void;
     undo: () => void;
     redo: () => void;
+    /** Toggle looping within the current phase */
+    togglePhaseLoop: (phaseId: string) => void;
+    /** Stop phase loop */
+    stopPhaseLoop: () => void;
     /** Rebuild frame cache (call when params change) */
     rebuildCache: () => void;
 }

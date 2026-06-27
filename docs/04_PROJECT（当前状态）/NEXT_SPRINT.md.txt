@@ -1,16 +1,16 @@
-# Next Sprint: S19
+# Next Sprint: S20
 
-## Priority 1: Timeline Real-Time Scrubbing (P0)
-- Make timeline drag instantly update all modules (3D, charts, teacher, data)
-- FrameCache binary search for O(log n) time lookup
-- 60fps smooth scrubbing
+## Priority 1: Visual Transitions (P0)
+- Smooth crossfade when switching experiments
+- Phase transition animations (color pulse, camera ease)
+- Loading skeleton screens for lazy-loaded plugins
 
-## Priority 2: Visual Polish (P1)
-- Smooth transitions between experiments
-- Loading states with skeleton screens
-- Particle effects for key events (impact, release)
-- Better color system consistency
+## Priority 2: Particle Effects (P1)
+- Impact particles when ball hits ground
+- Release spark when ball is dropped
+- Trail glow effect on fast-moving objects
 
-## Priority 3: Data Panel (P2)
-- Real-time data table showing position, velocity, acceleration per frame
-- Export data as CSV
+## Priority 3: Export System (P2)
+- Export experiment report as PDF/Markdown
+- Export chart data as CSV
+- Screenshot of 3D viewport

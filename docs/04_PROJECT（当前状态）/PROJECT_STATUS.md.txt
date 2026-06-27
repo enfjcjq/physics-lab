@@ -1,22 +1,18 @@
 # Project Status
 
-**Version:** V2.1 (Sprint S18)
-**Branch:** main
-**Status:** Building (666 modules, 6 plugins, 553 zh-CN / 397 en-US keys)
+**Version:** V2.1 (Sprint S19)
+**Status:** Building (666 modules, 6 plugins)
 
-## Experiments (6)
-| Plugin | Difficulty | Quiz |
-|--------|-----------|------|
-| Free Fall | Easy | 2 questions |
-| Projectile Motion | Medium | 2 questions |
-| Inclined Plane | Medium | 2 questions |
-| Collision | Medium | 2 questions |
-| Spring-Mass | Medium | 2 questions |
-| Pendulum | Medium | 2 questions |
+## Key Features
+- 6 physics experiments (free-fall, projectile, incline, collision, spring, pendulum)
+- FrameCache with binary search for instant timeline scrubbing
+- Phase-loop system for explore mode quiz learning
+- 3 modes: learning (teacher-guided), experiment (free params), analysis (full details)
+- Quiz system: 12 questions across all experiments with answer feedback
+- Full i18n: zh-CN (553 keys) + en-US (397 keys)
+- HTML formula overlay with Unicode support
+- ErrorBoundary crash protection
 
-## Recent Fixes (S17-S18)
-- Rule parser with proper unicode escape patterns
-- zh-CN.json: 553 keys, zero corruption
-- Experiment cards: icons, descriptions, difficulty badges
-- Quiz system: explore mode with answer feedback for all experiments
-- All emoji rendering fixed across components
+## Known Issues
+- Electron direct launch unreliable on Windows (use browser: npx vite --port 5173)
+- Timeline dragging and phase-looping need thorough manual testing

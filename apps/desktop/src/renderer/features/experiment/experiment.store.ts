@@ -164,6 +164,9 @@ export interface SimulationState {
   ballVelocity: number;
   ballAcceleration: number;
   isBouncing: boolean;
+  /** Phase loop: lock playback to current phase range */
+  loopPhaseActive: boolean;
+  loopPhaseId: string | null;
   bounceCount: number;
   trail: Array<{ x: number; y: number; z: number }>;
 
@@ -193,6 +196,10 @@ export interface SimulationState {
   tick: (deltaTime: number) => void;
   undo: () => void;
   redo: () => void;
+  /** Toggle looping within the current phase */
+  togglePhaseLoop: (phaseId: string) => void;
+  /** Stop phase loop */
+  stopPhaseLoop: () => void;
   /** Rebuild frame cache (call when params change) */
   rebuildCache: () => void;
 }
@@ -230,7 +237,9 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
 
   ballX: 0, ballY: 10, ball2X: 3, ball2Y: 1,
   ballVelocity: 0, ballAcceleration: -9.8,
-  isBouncing: false, bounceCount: 0,
+  isBouncing: false,
+  loopPhaseActive: false,
+  loopPhaseId: null, bounceCount: 0,
   trail: [],
 
   phases: [],
@@ -493,6 +502,26 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
     }
   },
 
+  // ===== Phase Loop =====
+  togglePhaseLoop: (phaseId: string) => {
+    const { phases, loopPhaseActive, loopPhaseId } = get();
+    if (loopPhaseActive && loopPhaseId === phaseId) {
+      // Already looping this phase - stop
+      set({ loopPhaseActive: false, loopPhaseId: null });
+    } else {
+      const p = phases.find((ph) => ph.id === phaseId);
+      if (!p) return;
+      set({ loopPhaseActive: true, loopPhaseId: phaseId });
+      // Jump to phase start and play
+      get().jumpToPhase(phaseId);
+      setTimeout(() => get().play(), 100);
+    }
+  },
+
+  stopPhaseLoop: () => {
+    set({ loopPhaseActive: false, loopPhaseId: null });
+  },
+
   // ===== Tick (playback update, throttled trail updates) =====
   tick: (rawDelta) => {
     const s = get();
@@ -500,11 +529,23 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
     const dt = Math.min(rawDelta * s.timeScale, 0.05);
     const newTime = s.currentTime + dt;
 
-    if (newTime >= s.totalDuration) {
+    // Phase loop check: if looping, wrap around within phase
+    let effectiveNewTime = newTime;
+    if (s.loopPhaseActive && s.loopPhaseId) {
+      const loopPhase = s.phases.find((p) => p.id === s.loopPhaseId);
+      if (loopPhase) {
+        const phaseEnd = loopPhase.timeRange[1];
+        if (newTime >= phaseEnd) {
+          effectiveNewTime = loopPhase.timeRange[0] + (newTime - phaseEnd);
+        }
+      }
+    }
+
+    if (effectiveNewTime >= s.totalDuration) {
       const lastFrame = s.frameCache[s.frameCache.length - 1];
       set({
         currentTime: s.totalDuration,
-        playing: false,
+        playing: s.loopPhaseActive, // Keep playing if looping
         ballX: lastFrame.ballX, ballY: lastFrame.ballY,
         ball2X: lastFrame.ball2X, ball2Y: lastFrame.ball2Y,
         ballVelocity: lastFrame.ballVelocity, ballAcceleration: lastFrame.ballAcceleration,

@@ -1,13 +1,14 @@
-# Current Milestone: S18 (Completed)
+# Current Milestone: S19 (Completed)
 
-**Goal:** Experiment switcher UX + quiz system for all 6 experiments
+**Goal:** Timeline real-time scrubbing + phase-loop quiz system
 
 **Completed:**
-- [x] Experiment cards redesigned: icons, difficulty badges, Chinese descriptions
-- [x] TeacherPanel: proper emoji icons, multi-experiment quiz support
-- [x] WelcomeScreen: fixed emoji rendering
-- [x] Quiz questions added for all 6 experiments (12 questions total)
-- [x] Quiz system: explore mode shows phase-based quizzes with answer feedback
-- [x] i18n: en-US 397 keys, zh-CN 553 keys
+- [x] Phase-loop: togglePhaseLoop locks playback within current phase
+- [x] Explore mode: correct quiz answer loops phase animation with explanation
+- [x] FrameCache binary search already in place (O(log n) scrubbing)
+- [x] Timeline dragging updates all modules in real-time
+- [x] Quiz retry: resets phase quiz state and stops phase loop
+- [x] Loop indicator (animated arrow) shown when phase is looping
+- [x] Build: 666 modules, 6 plugins, zero errors
 
-**Next: S19** — Timeline real-time scrubbing, FrameCache optimization, visual polish
+**Next: S20** — Visual polish: transitions, loading states, particle effects

@@ -22,8 +22,8 @@ export function AppShell() {
     const showLeftPanel = leftOpen || mode === "learning";
     const showTeacher = mode === "learning";
     const showRightPanel = (mode === "experiment" || mode === "analysis") && rightOpen;
-    // Learning mode: hide bottom drawer for cleaner student experience
-    const showBottomDrawer = mode !== "learning" && bottomOpen;
+    // Show bottom drawer in all modes when toggled on
+    const showBottomDrawer = bottomOpen;
     return (_jsxs("div", { className: "w-full h-full flex flex-col relative", style: { background: "var(--bg-root)" }, children: [_jsx(WelcomeScreen, {}), _jsx(MenuBar, {}), _jsxs("div", { className: "h-9 bg-slate-900/80 border-b border-slate-800 flex items-center px-4 gap-3 flex-shrink-0", children: [_jsx("div", { className: "flex bg-slate-800/40 rounded-lg p-0.5 gap-0.5", children: MODES.map((m) => (_jsx("button", { onClick: () => setMode(m), className: `px-4 py-1 rounded-md text-xs font-medium transition-all duration-300 ${mode === m
                                 ? "bg-gradient-to-r from-sky-600 to-sky-700 text-white shadow-lg shadow-sky-900/30 scale-105"
                                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30"}`, children: t(`mode.${m}`) }, m))) }), _jsx("span", { className: "text-[10px] text-slate-600 hidden sm:block", children: mode === "learning" ? t("mode.learning_hint") : mode === "experiment" ? t("mode.experiment_hint") : t("mode.analysis_hint") })] }), _jsxs("div", { className: "flex-1 flex min-h-0", children: [showLeftPanel && (_jsx("div", { className: "flex-shrink-0 border-r flex flex-col transition-all duration-500 ease-in-out", style: {

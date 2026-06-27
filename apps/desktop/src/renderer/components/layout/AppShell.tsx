@@ -25,8 +25,8 @@ export function AppShell() {
   const showLeftPanel = leftOpen || mode === "learning";
   const showTeacher = mode === "learning";
   const showRightPanel = (mode === "experiment" || mode === "analysis") && rightOpen;
-  // Learning mode: hide bottom drawer for cleaner student experience
-  const showBottomDrawer = mode !== "learning" && bottomOpen;
+  // Show bottom drawer in all modes when toggled on
+  const showBottomDrawer = bottomOpen;
 
   return (
     <div className="w-full h-full flex flex-col relative" style={{ background: "var(--bg-root)" }}>

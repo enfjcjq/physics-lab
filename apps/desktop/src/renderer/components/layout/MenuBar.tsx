@@ -8,7 +8,7 @@ import type { Locale } from "../../core/i18n";
 import type { ThemeMode } from "../../core/theme.store";
 import type { TeachingSubMode } from "../../core/teaching.store";
 import { useSimulation } from "../../features/experiment/experiment.store";
-import { generateMarkdownReport, downloadReport } from "../../lib/report";
+import { generateMarkdownReport, generateHTMLReport, downloadReport, downloadFile } from "../../lib/report";
 
 // ===== Dropdown Menu =====
 function Dropdown({ label, children }: { label: string; children: React.ReactNode }) {
@@ -120,7 +120,15 @@ export function MenuBar() {
         <MenuItem label={t("menu.file.open")} shortcut="Ctrl+O" />
         <MenuItem label={t("menu.file.save")} shortcut="Ctrl+S" />
         <MenuSeparator />
-        <MenuItem label={t("menu.file.export")} shortcut="Ctrl+E" onClick={handleExport} />
+        <MenuItem label={t("menu.file.export") + " (MD)"} shortcut="Ctrl+E" onClick={handleExport} />
+        <MenuItem label={t("menu.file.export") + " (HTML)"} shortcut="Ctrl+H" onClick={() => {
+          const scene = sim.scene;
+          if (!scene) return;
+          const data = { scene, params: { mass: sim.mass, height: sim.height, gravity: sim.gravity }, currentTime: sim.currentTime, ballY: sim.ballY, ballVelocity: sim.ballVelocity };
+          const html = generateHTMLReport(data, locale);
+          const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+          downloadFile(html, `physics-lab-report-${ts}.html`, "text/html");
+        }} />
         <MenuSeparator />
         <MenuItem label={t("menu.file.exit")} />
       </Dropdown>
@@ -211,7 +219,7 @@ export function MenuBar() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowAbout(false)}>
           <div className="bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="text-center mb-6">
-              <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-sky-600 to-violet-600 flex items-center justify-center text-xl">?</div>
+              <div className="w-14 h-14 mx-auto mb-3 rounded-2xl bg-gradient-to-br from-sky-600 to-violet-600 flex items-center justify-center text-2xl">\u269B</div>
               <h2 className="text-xl font-bold text-white">{t("about.title")}</h2>
               <p className="text-xs text-slate-500 mt-1">{t("about.version")} 2.0.0</p>
             </div>

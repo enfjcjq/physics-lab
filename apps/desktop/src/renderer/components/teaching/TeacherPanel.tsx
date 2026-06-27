@@ -4,8 +4,9 @@ import { useI18n } from "../../core/i18n";
 import { useTeaching } from "../../core/teaching.store";
 import { useState } from "react";
 
-const STEP_ICONS = ["?", "?", "?", "?", "?", "?", "?"];
+const STEP_ICONS = ["\uD83D\uDC41\uFE0F", "\uD83D\uDCA1", "\uD83D\uDCD0", "\uD83D\uDCC8", "\uD83E\uDDE0", "\u2705", "\uD83C\uDF1F"];
 
+// Quiz questions mapped by plugin ID -> step index
 interface QuizItem {
   questionKey: string;
   options: string[];
@@ -13,18 +14,30 @@ interface QuizItem {
   explanationKey: string;
 }
 
-const STEP_QUIZZES: Record<number, QuizItem> = {
-  2: {
-    questionKey: "quiz.freefall.q1",
-    options: ["quiz.freefall.q1.a", "quiz.freefall.q1.b", "quiz.freefall.q1.c"],
-    correctIndex: 1,
-    explanationKey: "quiz.freefall.q1.exp",
+const QUIZ_MAP: Record<string, Record<number, QuizItem>> = {
+  "free-fall": {
+    2: { questionKey: "quiz.freefall.q1", options: ["quiz.freefall.q1.a", "quiz.freefall.q1.b", "quiz.freefall.q1.c"], correctIndex: 0, explanationKey: "quiz.freefall.q1.exp" },
+    4: { questionKey: "quiz.freefall.q2", options: ["quiz.freefall.q2.a", "quiz.freefall.q2.b", "quiz.freefall.q2.c"], correctIndex: 0, explanationKey: "quiz.freefall.q2.exp" },
   },
-  5: {
-    questionKey: "quiz.freefall.q2",
-    options: ["quiz.freefall.q2.a", "quiz.freefall.q2.b", "quiz.freefall.q2.c"],
-    correctIndex: 0,
-    explanationKey: "quiz.freefall.q2.exp",
+  "projectile-motion": {
+    2: { questionKey: "quiz.projectile.q1", options: ["quiz.projectile.q1.a", "quiz.projectile.q1.b", "quiz.projectile.q1.c"], correctIndex: 0, explanationKey: "quiz.projectile.q1.exp" },
+    4: { questionKey: "quiz.projectile.q2", options: ["quiz.projectile.q2.a", "quiz.projectile.q2.b", "quiz.projectile.q2.c"], correctIndex: 0, explanationKey: "quiz.projectile.q2.exp" },
+  },
+  "inclined-plane": {
+    2: { questionKey: "quiz.incline.q1", options: ["quiz.incline.q1.a", "quiz.incline.q1.b", "quiz.incline.q1.c"], correctIndex: 0, explanationKey: "quiz.incline.q1.exp" },
+    4: { questionKey: "quiz.incline.q2", options: ["quiz.incline.q2.a", "quiz.incline.q2.b", "quiz.incline.q2.c"], correctIndex: 0, explanationKey: "quiz.incline.q2.exp" },
+  },
+  "collision": {
+    2: { questionKey: "quiz.collision.q1", options: ["quiz.collision.q1.a", "quiz.collision.q1.b", "quiz.collision.q1.c"], correctIndex: 0, explanationKey: "quiz.collision.q1.exp" },
+    4: { questionKey: "quiz.collision.q2", options: ["quiz.collision.q2.a", "quiz.collision.q2.b", "quiz.collision.q2.c"], correctIndex: 0, explanationKey: "quiz.collision.q2.exp" },
+  },
+  "spring-mass": {
+    2: { questionKey: "quiz.spring.q1", options: ["quiz.spring.q1.a", "quiz.spring.q1.b", "quiz.spring.q1.c"], correctIndex: 0, explanationKey: "quiz.spring.q1.exp" },
+    4: { questionKey: "quiz.spring.q2", options: ["quiz.spring.q2.a", "quiz.spring.q2.b", "quiz.spring.q2.c"], correctIndex: 0, explanationKey: "quiz.spring.q2.exp" },
+  },
+  "pendulum": {
+    2: { questionKey: "quiz.pendulum.q1", options: ["quiz.pendulum.q1.a", "quiz.pendulum.q1.b", "quiz.pendulum.q1.c"], correctIndex: 0, explanationKey: "quiz.pendulum.q1.exp" },
+    4: { questionKey: "quiz.pendulum.q2", options: ["quiz.pendulum.q2.a", "quiz.pendulum.q2.b", "quiz.pendulum.q2.c"], correctIndex: 0, explanationKey: "quiz.pendulum.q2.exp" },
   },
 };
 
@@ -37,6 +50,7 @@ export function TeacherPanel() {
   const gravity = useSimulation((s) => s.gravity);
   const scene = useSimulation((s) => s.scene);
   const phases = useSimulation((s) => s.phases);
+  const activePluginId = useSimulation((s) => s.activePluginId);
   const jumpToTime = useSimulation((s) => s.jumpToTime);
   const jumpToPhase = useSimulation((s) => s.jumpToPhase);
   const play = useSimulation((s) => s.play);
@@ -66,7 +80,8 @@ export function TeacherPanel() {
   // Quiz state per phase (explore mode)
   const [phaseQuizAnswers, setPhaseQuizAnswers] = useState<Record<string, number | null>>({});
   const currentPhaseQuizAnswer = phaseQuizAnswers[currentPhaseId];
-  const phaseQuiz = STEP_QUIZZES[currentIdx] ?? null;
+  const quizSet = QUIZ_MAP[activePluginId] || QUIZ_MAP["free-fall"] || {};
+  const phaseQuiz = quizSet[currentIdx] ?? null;
   const phaseQuizCorrect = phaseQuiz && currentPhaseQuizAnswer === phaseQuiz.correctIndex;
 
   const handlePhaseQuizAnswer = (idx: number) => {
@@ -84,7 +99,7 @@ export function TeacherPanel() {
     <div className="flex flex-col h-full">
       {/* Header */}
       <div className="px-4 pt-3 pb-2 flex items-center gap-2 flex-shrink-0">
-        <span className="text-base">{isExplore ? "??" : "?????"}</span>
+        <span className="text-base">{isExplore ? "\uD83D\uDD0D" : "\uD83D\uDC68\u200D\uD83C\uDFEB"}</span>
         <h2 className="text-sm font-semibold text-white">
           {isExplore ? t("teaching.mode.explore") : t("teacher.title")}
         </h2>
@@ -106,7 +121,7 @@ export function TeacherPanel() {
           <>
             <div className="bg-gradient-to-br from-amber-900/20 to-orange-900/20 border border-amber-700/30 rounded-xl p-3.5">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-lg">?</span>
+                <span className="text-lg">\u2753</span>
                 <h3 className="text-sm font-semibold text-amber-300">{t("quiz.title")}</h3>
               </div>
               <p className="text-xs text-slate-300 mb-3">{t(phaseQuiz.questionKey)}</p>
@@ -118,24 +133,28 @@ export function TeacherPanel() {
                     <button key={i} onClick={() => handlePhaseQuizAnswer(i)}
                       disabled={currentPhaseQuizAnswer !== null && currentPhaseQuizAnswer !== undefined}
                       className={`w-full text-left px-3 py-2 rounded-lg text-xs border transition-all ${
-                        isSelected && isWrong
-                          ? "bg-red-900/30 border-red-700/50 text-red-300"
-                          : isSelected && phaseQuizCorrect
-                          ? "bg-emerald-900/30 border-emerald-700/50 text-emerald-300"
-                          : "bg-slate-800/60 border-slate-700 hover:border-amber-600/50 hover:bg-slate-700/60 text-slate-300"
-                      }`}>
-                      {String.fromCharCode(65 + i)}. {t(opt)}
+                        isSelected
+                          ? (i === phaseQuiz.correctIndex ? "border-emerald-500/60 bg-emerald-900/30 text-emerald-300" : "border-red-500/60 bg-red-900/30 text-red-300")
+                          : "border-slate-700/50 bg-slate-800/30 text-slate-300 hover:border-slate-500 hover:bg-slate-800/60"
+                      } ${currentPhaseQuizAnswer !== null && currentPhaseQuizAnswer !== undefined ? "cursor-default" : "cursor-pointer"}`}
+                    >
+                      <span className="inline-block w-5 text-slate-500 font-mono">{String.fromCharCode(65 + i)}.</span>
+                      {t(opt)}
+                      {isSelected && i === phaseQuiz.correctIndex && <span className="ml-2">\u2705</span>}
+                      {isWrong && <span className="ml-2">\u274C</span>}
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            {/* Answer feedback */}
+            {/* Quiz feedback */}
             {currentPhaseQuizAnswer !== null && currentPhaseQuizAnswer !== undefined && (
-              <div className={`border rounded-xl p-3.5 ${phaseQuizCorrect ? "bg-emerald-900/20 border-emerald-700/30" : "bg-red-900/20 border-red-700/30"}`}>
+              <div className={`rounded-xl p-3.5 border ${
+                phaseQuizCorrect ? "bg-emerald-900/20 border-emerald-700/30" : "bg-red-900/20 border-red-700/30"
+              }`}>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-lg">{phaseQuizCorrect ? "?" : "?"}</span>
+                  <span className="text-lg">{phaseQuizCorrect ? "\u2705" : "\u274C"}</span>
                   <h3 className={`text-sm font-semibold ${phaseQuizCorrect ? "text-emerald-300" : "text-red-300"}`}>
                     {phaseQuizCorrect ? t("quiz.correct") : t("quiz.incorrect")}
                   </h3>
@@ -196,7 +215,7 @@ export function TeacherPanel() {
                 <button key={s.id} onClick={() => { jumpToTime(s.timeStart); }}
                   className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-left transition-colors ${isCurrent(i)?"bg-emerald-900/30 border border-emerald-700/30":"hover:bg-slate-800/60"}`}>
                   <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs flex-shrink-0 ${isPast(i)?"bg-emerald-600 text-white":isCurrent(i)?"bg-emerald-900/50 border border-emerald-600 text-emerald-400":"bg-slate-800 border border-slate-700 text-slate-600"}`}>
-                    {isPast(i)?"?":i+1}
+                    {isPast(i)?"\u2713":i+1}
                   </span>
                   <span className="text-sm flex-shrink-0">{STEP_ICONS[i % STEP_ICONS.length]}</span>
                   <span className={`text-xs ${isPast(i)?"text-emerald-400":isCurrent(i)?"text-white":"text-slate-500"}`}>{t(s.titleKey)}</span>

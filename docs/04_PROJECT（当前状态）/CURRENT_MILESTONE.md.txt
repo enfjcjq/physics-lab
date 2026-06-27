@@ -1,12 +1,13 @@
-# Current Milestone: S17 (Completed)
+# Current Milestone: S18 (Completed)
 
-**Goal:** Fix rule parser + i18n corruption + stabilize all 6 experiments
+**Goal:** Experiment switcher UX + quiz system for all 6 experiments
 
 **Completed:**
-- [x] Rule parser rewritten with proper regex (Chinese + English, 6 types)
-- [x] zh-CN.json full rebuild: 503 keys, zero corruption
-- [x] Experiment icons fixed (proper Unicode in CenterPanel)
-- [x] All 6 scene files verified (proper timeline bounds, no ghost phases)
-- [x] Type-check + build: 666 modules, 6 plugins, zero errors
+- [x] Experiment cards redesigned: icons, difficulty badges, Chinese descriptions
+- [x] TeacherPanel: proper emoji icons, multi-experiment quiz support
+- [x] WelcomeScreen: fixed emoji rendering
+- [x] Quiz questions added for all 6 experiments (12 questions total)
+- [x] Quiz system: explore mode shows phase-based quizzes with answer feedback
+- [x] i18n: en-US 397 keys, zh-CN 553 keys
 
-**Next: S18** — User feedback: experiment switching UX polish, quiz system completion
+**Next: S19** — Timeline real-time scrubbing, FrameCache optimization, visual polish

@@ -1,29 +1,31 @@
 # Changelog
 
-## [V2.1] Sprint S17 — 2026-06-27
+## [V2.1] Sprint S18 — 2026-06-27
+
+### Added
+- Quiz questions for all 6 experiments (12 total, zh + en)
+- Quiz map supports per-plugin question sets in TeacherPanel
+- Experiment descriptions in Chinese on card grid
+- Difficulty badges (简单/中等/困难) on experiment cards
 
 ### Fixed
-- **Rule parser rewritten**: All regex patterns use proper unicode escapes. 
-  Detects 6 experiment types from Chinese/English text. Zero TS errors.
-  6 plugins: free-fall, projectile, incline, collision, spring, pendulum.
-- **zh-CN.json rebuilt**: 503 i18n keys with proper Chinese translations.
-  All 119 corrupted values restored. Zero "?" display issues.
-- **Experiment icons fixed**: Unicode symbols in CenterPanel now render correctly.
-- **All scene files verified**: Proper timeline bounds, no ghost phases.
-  Free-fall stops at 1.6s (impact). No post-bounce phases.
+- LeftPanel experiment icons: replaced corrupted Unicode with proper emoji
+- TeacherPanel STEP_ICONS: proper emoji rendering
+- WelcomeScreen emoji: fixed corrupted characters
+- All components use unicode escapes for reliable cross-platform rendering
 
 ### Changed
-- ai-parser package: new regex construction with CH (Chinese) constants
-- zh-CN.json: 503 keys covering all UI, teacher, quiz, and chart text
-- CenterPanel.tsx: fixed experiment icon unicode
+- Experiment card grid: larger cards, icons, descriptions, difficulty badges
+- i18n: en-US 397 keys, zh-CN 553 keys
+
+## [V2.1] Sprint S17 — 2026-06-27
+### Fixed
+- Rule parser rewritten with unicode escapes
+- zh-CN.json rebuilt: 503 keys, zero corruption
+- Experiment icons in CenterPanel
 
 ## [V2.0] Sprint S16 — Formula + Pendulum
 ### Added
-- FormulaHTML overlay (replaces broken 3D SDF Text)
-- Pendulum plugin (6th experiment)
-- ErrorBoundary crash protection
-
+- FormulaHTML overlay, Pendulum plugin, ErrorBoundary
 ### Fixed
-- Free-fall timeline: corrected to 1.6s, 3 phases only
-- Trail GPU crash: throttled to 20fps, 200pt limit
-- Zustand tickCounter moved outside store to prevent hook error
+- Free-fall timeline: 1.6s, 3 phases. Trail GPU crash.

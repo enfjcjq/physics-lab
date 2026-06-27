@@ -4,13 +4,26 @@ import { useTeaching } from "../../core/teaching.store";
 import { useSimulation } from "../../features/experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
 import type { InputMethod } from "../../stores/ui.store";
-// INPUT_TABS kept for future use
 import { CollapseHandle } from "../layout/CollapseHandle";
 import { pluginRegistry } from "../../core/plugin-registry";
 
-const INPUT_TABS: { id: InputMethod; label: string }[] = [
-  { id: "text", label: "Text" }, { id: "ocr", label: "OCR" }, { id: "image", label: "Image" }, { id: "pdf", label: "PDF" },
-];
+const EXP_ICONS: Record<string, string> = {
+  "free-fall": "\u2B07\uFE0F",
+  "projectile-motion": "\u2197\uFE0F",
+  "inclined-plane": "\u25B3",
+  "collision": "\u25CF\u25CB",
+  "spring-mass": "\u223C\uFE0F",
+  "pendulum": "\u23F0",
+};
+
+const EXP_META: Record<string, { desc: string; difficulty: string }> = {
+  "free-fall": { desc: "\u521D\u901F\u5EA6\u4E3A\u96F6\u7684\u5300\u52A0\u901F\u8FD0\u52A8", difficulty: "easy" },
+  "projectile-motion": { desc: "\u6C34\u5E73\u5300\u901F\u4E0E\u7AD6\u76F4\u5300\u52A0\u901F\u7684\u53E0\u52A0", difficulty: "medium" },
+  "inclined-plane": { desc: "\u529B\u7684\u5206\u89E3\u4E0E\u6469\u64E6\u529B\u5206\u6790", difficulty: "medium" },
+  "collision": { desc: "\u52A8\u91CF\u5B88\u6052\u4E0E\u80FD\u91CF\u8F6C\u5316", difficulty: "medium" },
+  "spring-mass": { desc: "\u80E1\u514B\u5B9A\u5F8B\u4E0E\u7B80\u8C10\u632F\u52A8", difficulty: "medium" },
+  "pendulum": { desc: "\u5355\u6446\u7684\u7B80\u8C10\u8FD0\u52A8", difficulty: "medium" },
+};
 
 export function LeftPanel() {
   const leftOpen = usePanelManager((s) => s.panels.problem?.isOpen ?? true);
@@ -54,33 +67,41 @@ export function LeftPanel() {
           <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t("panel.problem")}</h2>
         </div>
 
-        {/* Experiment Selector - Always visible */}
+        {/* Experiment Selector - Improved card grid */}
         <div className="px-3 pb-3">
-          <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-1.5 px-1">{t("panel.experiments")}</div>
+          <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-2 px-1">{t("panel.experiments")}</div>
           <div className="grid grid-cols-2 gap-1.5">
-            {pluginRegistry.list().map((p) => (
-              <button
-                key={p.id}
-                onClick={async () => { if (p.id !== activePluginId) await setActivePlugin(p.id); }}
-                className={`text-left px-2.5 py-2 rounded-lg text-xs transition-all duration-200 border ${
-                  p.id === activePluginId
-                    ? "bg-sky-600/10 border-sky-600/40 text-sky-300 shadow-sm shadow-sky-900/20"
-                    : "bg-slate-800/30 border-slate-700/30 text-slate-400 hover:border-slate-600 hover:text-slate-200"
-                }`}
-              >
-                <div className="text-base mb-0.5">
-                  {p.id === "free-fall" ? "?" : p.id === "projectile-motion" ? "?" : p.id === "inclined-plane" ? "?" : p.id === "collision" ? "?" : "?"}
-                </div>
-                <div className="font-medium truncate">{t(p.name)}</div>
-                <div className={`text-[9px] mt-0.5 ${
-                  p.difficulty === "easy" ? "text-emerald-500" : p.difficulty === "medium" ? "text-amber-500" : "text-red-500"
-                }`}>{p.difficulty}</div>
-              </button>
-            ))}
+            {pluginRegistry.list().map((p) => {
+              const isActive = p.id === activePluginId;
+              const meta = EXP_META[p.id] || { desc: "", difficulty: "medium" };
+              const icon = EXP_ICONS[p.id] || "\u26A1";
+              return (
+                <button
+                  key={p.id}
+                  onClick={async () => { if (p.id !== activePluginId) await setActivePlugin(p.id); }}
+                  className={`text-left px-3 py-2.5 rounded-xl text-xs transition-all duration-200 border-2 ${
+                    isActive
+                      ? "bg-sky-600/10 border-sky-500/40 text-sky-300 shadow-md shadow-sky-900/20 scale-[1.02]"
+                      : "bg-slate-800/40 border-slate-700/40 text-slate-400 hover:border-slate-500/60 hover:text-slate-200 hover:bg-slate-800/60"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="text-lg">{icon}</span>
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
+                      meta.difficulty === "easy" ? "bg-emerald-900/40 text-emerald-400" : "bg-amber-900/40 text-amber-400"
+                    }`}>
+                      {meta.difficulty === "easy" ? "\u7B80\u5355" : meta.difficulty === "medium" ? "\u4E2D\u7B49" : "\u56F0\u96BE"}
+                    </span>
+                  </div>
+                  <div className="font-medium text-[11px] truncate">{t(p.name)}</div>
+                  {meta.desc && <div className="text-[9px] mt-0.5 text-slate-500 leading-tight">{meta.desc}</div>}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Input tabs - only show text in learning mode */}
+        {/* Input tabs */}
         {showFullInput && (
           <div className="px-4 pb-2">
             <div className="flex bg-slate-800/50 rounded-lg p-0.5">
@@ -99,7 +120,7 @@ export function LeftPanel() {
           )}
           {showFullInput && (inputMethod!=="text") && (
             <div className="flex-1 border-2 border-dashed border-slate-700 rounded-lg flex items-center justify-center text-slate-500 text-sm cursor-pointer hover:border-sky-600 hover:text-sky-400 transition-colors min-h-[100px]">
-              <div className="text-center"><div className="text-3xl mb-1">+</div><div>Click or drop file</div></div>
+              <div className="text-center"><div className="text-3xl mb-1">+</div><div>{t("ui.drop_hint")}</div></div>
             </div>
           )}
           {parseError && <div className="mt-2 text-[10px] text-red-400 px-1">{parseError}</div>}
@@ -125,7 +146,7 @@ export function LeftPanel() {
         <div className="flex-1 flex flex-col min-h-0">
           <div className="px-4 py-2 flex items-center justify-between">
             <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t("panel.history")}</h2>
-            <span className="text-[10px] text-slate-600">{history.length} items</span>
+            <span className="text-[10px] text-slate-600">{history.length}</span>
           </div>
           <div className="flex-1 overflow-y-auto px-2 pb-2">
             {history.length===0 && <div className="px-3 py-6 text-center text-xs text-slate-600">{t("ui.no_history")}</div>}

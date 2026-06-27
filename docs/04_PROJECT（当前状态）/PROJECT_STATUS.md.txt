@@ -1,20 +1,22 @@
 # Project Status
 
-**Version:** V2.1 (Sprint S17)
+**Version:** V2.1 (Sprint S18)
 **Branch:** main
-**Status:** Building & Running (666 modules, 6 plugins, 503 i18n keys)
-
-## Recent Fixes (S17)
-- Rule parser rewritten: supports 6 experiment types with proper regex (Chinese + English)
-- zh-CN.json rebuilt: 503 keys, zero corruption, all Chinese text intact
-- Experiment icons fixed in CenterPanel (proper Unicode symbols)
-- All 6 PhysicsScene files verified with proper timeline bounds
+**Status:** Building (666 modules, 6 plugins, 553 zh-CN / 397 en-US keys)
 
 ## Experiments (6)
-- Free Fall (eager) | Projectile Motion (lazy) | Inclined Plane (lazy)
-- Collision (lazy) | Spring-Mass (lazy) | Pendulum (lazy)
+| Plugin | Difficulty | Quiz |
+|--------|-----------|------|
+| Free Fall | Easy | 2 questions |
+| Projectile Motion | Medium | 2 questions |
+| Inclined Plane | Medium | 2 questions |
+| Collision | Medium | 2 questions |
+| Spring-Mass | Medium | 2 questions |
+| Pendulum | Medium | 2 questions |
 
-## Known Issues
-- Electron direct launch unreliable on Windows (use browser mode: npx vite --port 5173)
-- Chinese formula text requires proper i18n key coverage
-- Timeline scrubbing not fully real-time (need FrameCache optimization)
+## Recent Fixes (S17-S18)
+- Rule parser with proper unicode escape patterns
+- zh-CN.json: 553 keys, zero corruption
+- Experiment cards: icons, descriptions, difficulty badges
+- Quiz system: explore mode with answer feedback for all experiments
+- All emoji rendering fixed across components

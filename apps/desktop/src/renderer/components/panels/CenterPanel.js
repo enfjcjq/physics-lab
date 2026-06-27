@@ -46,9 +46,12 @@ export function CenterPanel() {
     const { mode } = useTeaching();
     const currentPhase = phases.find((p) => p.id === currentPhaseId);
     const expIcons = {
-        "free-fall": "⬇", "projectile-motion": "↗",
-        "inclined-plane": "∠", "collision": "●●",
-        "spring-mass": "〰", "pendulum": "⌈"
+        "free-fall": "\u2B07",
+        "projectile-motion": "\u2197",
+        "inclined-plane": "\u2220",
+        "collision": "\u25CF\u25CB",
+        "spring-mass": "\u223C",
+        "pendulum": "\u231A"
     };
     return (_jsxs("div", { className: "flex-1 relative min-w-0", children: [_jsx("div", { className: "absolute top-2 left-2 z-20", children: _jsx("div", { className: "flex gap-0.5 bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-lg p-0.5 shadow-lg", children: pluginRegistry.list().map((p) => (_jsxs("button", { onClick: async () => { if (p.id !== activePluginId)
                             await setActivePlugin(p.id); }, className: `px-2.5 py-1 rounded-md text-[10px] font-medium transition-all duration-200 flex items-center gap-1 ${p.id === activePluginId

@@ -1,16 +1,20 @@
 # Project Status
 
-**Version:** V2.1 (Sprint S16)
+**Version:** V2.1 (Sprint S17)
 **Branch:** main
-**Status:** Building & Running (666 modules, 6 plugins, 347 i18n keys)
+**Status:** Building & Running (666 modules, 6 plugins, 503 i18n keys)
+
+## Recent Fixes (S17)
+- Rule parser rewritten: supports 6 experiment types with proper regex (Chinese + English)
+- zh-CN.json rebuilt: 503 keys, zero corruption, all Chinese text intact
+- Experiment icons fixed in CenterPanel (proper Unicode symbols)
+- All 6 PhysicsScene files verified with proper timeline bounds
 
 ## Experiments (6)
 - Free Fall (eager) | Projectile Motion (lazy) | Inclined Plane (lazy)
 - Collision (lazy) | Spring-Mass (lazy) | Pendulum (lazy)
 
-## Recent Fixes
-- Formula display: HTML overlay instead of buggy 3D SDF Text
-- Free-fall timeline: 1.6s (correct physics), 3 phases, no ghost bounce
-- Trail throttling: 20fps updates, 200pt limit
-- ErrorBoundary: prevents white-screen crashes
-- Experiment switcher tabs always visible at top-left of 3D scene
+## Known Issues
+- Electron direct launch unreliable on Windows (use browser mode: npx vite --port 5173)
+- Chinese formula text requires proper i18n key coverage
+- Timeline scrubbing not fully real-time (need FrameCache optimization)

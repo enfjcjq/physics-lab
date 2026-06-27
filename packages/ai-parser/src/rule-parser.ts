@@ -1,204 +1,256 @@
 import type { PhysicsScene } from "@physics-lab/shared";
-import { FREE_FALL_SCENE } from "@physics-lab/shared";
+import { FREE_FALL_SCENE, PROJECTILE_MOTION_SCENE, INCLINED_PLANE_SCENE, COLLISION_SCENE, SPRING_MASS_SCENE, PENDULUM_SCENE } from "@physics-lab/shared";
 import type { AIProvider, ParseResult } from "./types";
 
 // ============================================================
-// Rule-Based Physics Parser
-// Extracts physical quantities from Chinese/English text.
-// Temporary solution until LLM integration.
+// Rule-Based Physics Parser v2.1
+// Supports Chinese + English input for 6 experiment types.
+// Uses unicode escapes for Chinese chars.
 // ============================================================
 
+type MotionType = "free_fall" | "projectile" | "inclined_plane" | "collision" | "spring" | "pendulum" | "unknown";
+
 interface ExtractedParams {
+  motionType: MotionType;
   height: number;
   mass: number;
   gravity: number;
   velocity: number;
   angle: number;
-  motionType: "free_fall" | "projectile" | "unknown";
+  friction: number;
+  length: number;
+  k: number;
+}
+
+const SCENE_MAP: Record<string, PhysicsScene> = {
+  free_fall: FREE_FALL_SCENE,
+  projectile: PROJECTILE_MOTION_SCENE,
+  inclined_plane: INCLINED_PLANE_SCENE,
+  collision: COLLISION_SCENE,
+  spring: SPRING_MASS_SCENE,
+  pendulum: PENDULUM_SCENE,
+};
+
+// Chinese character constants
+const CH = {
+  meter: "\u7C73",
+  kg: "\u5343\u514B",
+  height: "\u9AD8\u5EA6",
+  mass: "\u8D28\u91CF",
+  gravity: "\u91CD\u529B\u52A0\u901F\u5EA6",
+  velocity: "\u521D\u901F\u5EA6",
+  angle: "\u89D2\u5EA6",
+  length: "\u957F\u5EA6",
+  friction: "\u6469\u64E6\u7CFB\u6570",
+  spring: "\u5F39\u7C27",
+  freefall: "\u81EA\u7531\u843D\u4F53",
+  drop: "\u4E0B\u843D",
+  release: "\u91CA\u653E",
+  projectile: "\u629B\u4F53\u8FD0\u52A8",
+  horizontal: "\u5E73\u629B",
+  oblique: "\u659C\u629B",
+  incline: "\u659C\u9762",
+  block: "\u6ED1\u5757",
+  slide: "\u6ED1\u4E0B",
+  collision: "\u78B0\u649E",
+  elastic: "\u5F39\u6027",
+  pendulum: "\u5355\u6446",
+  swing: "\u6446\u52A8",
+  oscillation: "\u632F\u52A8",
+  hooke: "\u80E1\u514B",
+  degree: "\u00B0",
+};
+
+function detectMotion(text: string): MotionType {
+  const patterns: [MotionType, RegExp[]][] = [
+    ["pendulum", [
+      new RegExp("pendulum|single pendulum|simple pendulum|" + CH.pendulum + "|" + CH.swing, "i"),
+    ]],
+    ["spring", [
+      new RegExp("spring.?mass|" + CH.spring + "|" + CH.oscillation + "|SHM|simple harmonic|" + CH.hooke, "i"),
+    ]],
+    ["collision", [
+      new RegExp("collision|" + CH.collision + "|" + CH.elastic + "|momentum|impact", "i"),
+    ]],
+    ["inclined_plane", [
+      new RegExp("inclined|incline|" + CH.incline + "|" + CH.block + "|" + CH.slide + "|ramp", "i"),
+    ]],
+    ["projectile", [
+      new RegExp("projectile|" + CH.horizontal + "|" + CH.oblique + "|" + CH.projectile + "|trajectory|parabolic|parabola", "i"),
+    ]],
+    ["free_fall", [
+      new RegExp("free.?fall|" + CH.freefall + "|" + CH.drop + "|" + CH.release + "|falling|drop", "i"),
+    ]],
+  ];
+
+  for (const [motionType, regexes] of patterns) {
+    for (const re of regexes) {
+      if (re.test(text)) return motionType;
+    }
+  }
+
+  return "unknown";
 }
 
 function extractParams(text: string): ExtractedParams {
-  const params: ExtractedParams = {
-    height: 10,
-    mass: 2,
-    gravity: 9.8,
-    velocity: 0,
-    angle: 0,
-    motionType: "unknown",
+  const p: ExtractedParams = {
+    motionType: detectMotion(text),
+    height: 10, mass: 2, gravity: 9.8,
+    velocity: 0, angle: 0, friction: 0.3,
+    length: 4.5, k: 10,
   };
 
-  // Detect motion type
-  if (/free.?fall|ziyou luoti|free fall/i.test(text)) {
-    params.motionType = "free_fall";
-  } else if (/projectile|ping pao|projectile motion/i.test(text)) {
-    params.motionType = "projectile";
-  } else if (/luoxia|fall|xia luo|drop/i.test(text)) {
-    params.motionType = "free_fall";
-  }
-
-  // Height: "10m", "10米", "height 10", "h0=10", "从10m", "高度10"
-  const heightPatterns = [
-    /(\d+(?:\.\d+)?)\s*(?:m|米|meter)/i,
-    /height\s*(?:=|:|= )\s*(\d+(?:\.\d+)?)/i,
-    /h0?\s*(?:=|:|= )\s*(\d+(?:\.\d+)?)/i,
-    /(?:从|from)\s*(\d+(?:\.\d+)?)\s*(?:m|米)/i,
-    /(?:高度|gaodu)\s*(?:=|:|= )\s*(\d+(?:\.\d+)?)/i,
+  const heightPatterns: RegExp[] = [
+    new RegExp("(\\d+(?:\\.\\d+)?)\\s*(?:m|" + CH.meter + "|meter)", "i"),
+    /height\s*[=:]\s*(\d+(?:\.\d+)?)/i,
+    /h0?\s*[=:]\s*(\d+(?:\.\d+)?)/i,
+    new RegExp("(?:" + CH.height + "|h)\\s*[=:]\\s*(\\d+(?:\\.\\d+)?)", "i"),
+    new RegExp("(?:" + CH.drop + "|from)\\s*(\\d+(?:\\.\\d+)?)\\s*(?:m|" + CH.meter + ")?", "i"),
   ];
-  for (const p of heightPatterns) {
-    const m = text.match(p);
-    if (m) { params.height = parseFloat(m[1]); break; }
+  for (const re of heightPatterns) {
+    const m = text.match(re); if (m) { p.height = parseFloat(m[1]); break; }
   }
 
-  // Mass: "2kg", "2千克", "mass 2", "质量2", "m=2"
-  const massPatterns = [
-    /(\d+(?:\.\d+)?)\s*(?:kg|千克|kilogram)/i,
-    /mass\s*(?:=|:|= )\s*(\d+(?:\.\d+)?)/i,
-    /(?:质量|zhiliang)\s*(?:=|:|= )\s*(\d+(?:\.\d+)?)/i,
+  const massPatterns: RegExp[] = [
+    new RegExp("(\\d+(?:\\.\\d+)?)\\s*(?:kg|" + CH.kg + "|kilogram)", "i"),
+    /mass\s*[=:]\s*(\d+(?:\.\d+)?)/i,
+    new RegExp("(?:" + CH.mass + "|m)\\s*=\\s*(\\d+(?:\\.\\d+)?)", "i"),
     /m\s*=\s*(\d+(?:\.\d+)?)\s*(?:kg)?/i,
   ];
-  for (const p of massPatterns) {
-    const m = text.match(p);
-    if (m) { params.mass = parseFloat(m[1]); break; }
+  for (const re of massPatterns) {
+    const m = text.match(re); if (m) { p.mass = parseFloat(m[1]); break; }
   }
 
-  // Gravity: "g=10", "g=9.8", "重力加速度10"
-  const gravPatterns = [
+  const gravityPatterns: RegExp[] = [
     /g\s*=\s*(\d+(?:\.\d+)?)/i,
-    /gravity\s*(?:=|:|= )\s*(\d+(?:\.\d+)?)/i,
-    /(?:重力加速度|zhongli)\s*(?:=|:|= )\s*(\d+(?:\.\d+)?)/i,
+    /gravity\s*[=:]\s*(\d+(?:\.\d+)?)/i,
+    new RegExp("(?:" + CH.gravity + "|g)\\s*[=:]\\s*(\\d+(?:\\.\\d+)?)", "i"),
   ];
-  for (const p of gravPatterns) {
-    const m = text.match(p);
-    if (m) { params.gravity = parseFloat(m[1]); break; }
+  for (const re of gravityPatterns) {
+    const m = text.match(re); if (m) { p.gravity = parseFloat(m[1]); break; }
   }
 
-  // Velocity: "v0=5", "初速度5", "initial velocity 5"
-  const velPatterns = [
+  const velocityPatterns: RegExp[] = [
     /v0?\s*=\s*(\d+(?:\.\d+)?)/i,
-    /initial.velocity\s*(?:=|:|= )\s*(\d+(?:\.\d+)?)/i,
-    /(?:初速度|chusudu)\s*(?:=|:|= )\s*(\d+(?:\.\d+)?)/i,
+    /initial\s*velocity\s*[=:]\s*(\d+(?:\.\d+)?)/i,
+    new RegExp("(?:" + CH.velocity + "|v0?)\\s*=\\s*(\\d+(?:\\.\\d+)?)", "i"),
+    /speed\s*[=:]\s*(\d+(?:\.\d+)?)/i,
   ];
-  for (const p of velPatterns) {
-    const m = text.match(p);
-    if (m) { params.velocity = parseFloat(m[1]); break; }
+  for (const re of velocityPatterns) {
+    const m = text.match(re); if (m) { p.velocity = parseFloat(m[1]); break; }
   }
 
-  // Angle: "45度", "angle 30", "角度30"
-  const anglePatterns = [
-    /(\d+(?:\.\d+)?)\s*(?:度|°|deg)/i,
-    /angle\s*(?:=|:|= )\s*(\d+(?:\.\d+)?)/i,
-    /(?:角度|jiaodu)\s*(?:=|:|= )\s*(\d+(?:\.\d+)?)/i,
+  const anglePatterns: RegExp[] = [
+    new RegExp("(\\d+(?:\\.\\d+)?)\\s*(?:" + CH.degree + "|deg|degree)", "i"),
+    /angle\s*[=:]\s*(\d+(?:\.\d+)?)/i,
+    new RegExp("(?:" + CH.angle + ")\\s*[=:]\\s*(\\d+(?:\\.\\d+)?)", "i"),
   ];
-  for (const p of anglePatterns) {
-    const m = text.match(p);
-    if (m) { params.angle = parseFloat(m[1]); break; }
+  for (const re of anglePatterns) {
+    const m = text.match(re); if (m) { p.angle = parseFloat(m[1]); break; }
   }
 
-  return params;
+  const lengthPatterns: RegExp[] = [
+    /[Ll]\s*=\s*(\d+(?:\.\d+)?)/,
+    new RegExp("(?:" + CH.length + "|length|L)\\s*[=:]\\s*(\\d+(?:\\.\\d+)?)", "i"),
+  ];
+  for (const re of lengthPatterns) {
+    const m = text.match(re); if (m) { p.length = parseFloat(m[1]); break; }
+  }
+
+  const frictionPatterns: RegExp[] = [
+    /mu\s*=\s*(\d+(?:\.\d+)?)/i,
+    new RegExp("(?:" + CH.friction + "|friction|mu)\\s*[=:]\\s*(\\d+(?:\\.\\d+)?)", "i"),
+  ];
+  for (const re of frictionPatterns) {
+    const m = text.match(re); if (m) { p.friction = parseFloat(m[1]); break; }
+  }
+
+  const kPatterns: RegExp[] = [
+    /[kK]\s*=\s*(\d+(?:\.\d+)?)/,
+    /spring\s*constant\s*[=:]\s*(\d+(?:\.\d+)?)/i,
+  ];
+  for (const re of kPatterns) {
+    const m = text.match(re); if (m) { p.k = parseFloat(m[1]); break; }
+  }
+
+  return p;
 }
 
-function buildScene(params: ExtractedParams, originalText: string): PhysicsScene {
-  // For free fall, clone and customize the default scene
-  if (params.motionType === "free_fall") {
-    const scene = JSON.parse(JSON.stringify(FREE_FALL_SCENE)) as PhysicsScene;
-    
-    // Update entity position
-    if (scene.entities[0] && scene.entities[0].type === "ball") {
-      scene.entities[0].position[1] = params.height;
-      scene.entities[0].properties.mass = params.mass;
-    }
-    
-    // Update gravity
-    if (scene.environment[0] && scene.environment[0].type === "gravity_field") {
-      scene.environment[0].properties.acceleration = params.gravity;
-    }
-    
-    // Recalculate impact time
-    const g = params.gravity;
-    const h = params.height;
-    const impactTime = Math.sqrt(2 * h / g);
-    const impactVelocity = Math.sqrt(2 * g * h);
-    
-    // Update timeline
-    scene.timeline.total_duration = Math.max(impactTime * 2, 3);
-    scene.timeline.events = [
-      { id: "start", time: 0.0, type: "phase_start", data: { label: "Release" }, description: "Released from rest" },
-      { id: "impact", time: impactTime, type: "collision", target: "ball_1", data: { collision_with: "ground", impact_velocity: impactVelocity }, description: "Impact" },
-    ];
-    
-    // Update phases
-    if (scene.timeline.phases) {
-      scene.timeline.phases = [
-        { id: "release", label: "phase.release", icon: "o", timeRange: [0, 0.05], color: "#22c55e" },
-        { id: "falling", label: "phase.falling", icon: "v", timeRange: [0.05, impactTime - 0.05], color: "#3b82f6" },
-        { id: "impact",  label: "phase.impact",  icon: "O", timeRange: [impactTime - 0.1, impactTime + 0.1], color: "#f59e0b" },
-        { id: "bounce",  label: "phase.bounce",  icon: "^", timeRange: [impactTime + 0.1, scene.timeline.total_duration], color: "#ef4444" },
-      ];
-    }
+function buildScene(params: ExtractedParams, text: string): PhysicsScene {
+  const sceneKey = params.motionType === "unknown" ? "free_fall" : params.motionType;
+  const template = SCENE_MAP[sceneKey] || FREE_FALL_SCENE;
+  const scene = JSON.parse(JSON.stringify(template)) as PhysicsScene;
 
-    // Update metadata
-    scene.metadata.title = originalText.slice(0, 50) || "Free Fall";
-    scene.metadata.generatedAt = new Date().toISOString();
-    scene.metadata.generatedBy = "rule-parser";
-    
-    // Update equation with computed values
-    scene.equations = [
-      {
-        id: "eq_motion", name: "Motion", expression: `y(t) = ${params.height} - (1/2)*${g}*t^2`,
-        variables: { h: { symbol: "h", unit: "m", description: "Height" }, g: { symbol: "g", unit: "m/s2", description: "Gravity" }, t: { symbol: "t", unit: "s", description: "Time" } },
-        type: "motion",
-      },
-      {
-        id: "eq_velocity", name: "Impact velocity",
-        expression: `v = sqrt(2*${g}*${params.height}) = ${impactVelocity.toFixed(1)} m/s`,
-        variables: { v: { symbol: "v", unit: "m/s", description: "Velocity" }, g: { symbol: "g", unit: "m/s2", description: "Gravity" }, h: { symbol: "h", unit: "m", description: "Height" } },
-        type: "target", is_solution: true,
-      },
-    ];
-    
-    // Update UI controls
-    scene.ui_controls = [
-      { id: "ctrl_mass", parameter: "entities[0].properties.mass", type: "slider", label: "Mass", default_value: params.mass, min: 0.1, max: 10.0, step: 0.1, unit: "kg", group: "Physics" },
-      { id: "ctrl_gravity", parameter: "environment[0].properties.acceleration", type: "slider", label: "Gravity", default_value: g, min: 0.1, max: 20.0, step: 0.5, unit: "m/s2", group: "Physics" },
-      { id: "ctrl_height", parameter: "entities[0].position[1]", type: "slider", label: "Height", default_value: params.height, min: 1.0, max: 50.0, step: 0.5, unit: "m", group: "Initial" },
-    ];
+  // Store user's problem in metadata description
+  scene.metadata.description = text;
 
-    return scene;
+  // Apply extracted parameters
+  if (scene.entities && scene.entities.length > 0) {
+    const primaryEntity = scene.entities[0];
+    // Set height (y position) for free-fall
+    if (sceneKey === "free_fall" && primaryEntity.position) {
+      primaryEntity.position[1] = params.height;
+    }
+    // Set velocity for projectile
+    if (sceneKey === "projectile" && primaryEntity.initial_conditions?.velocity) {
+      const rad = params.angle * Math.PI / 180;
+      primaryEntity.initial_conditions.velocity[0] = params.velocity * Math.cos(rad);
+      primaryEntity.initial_conditions.velocity[1] = params.velocity * Math.sin(rad);
+    }
+    // Set mass on all entities with mass > 0
+    for (const entity of scene.entities) {
+      if (entity.properties && typeof entity.properties.mass === "number" && entity.properties.mass > 0) {
+        entity.properties.mass = params.mass;
+      }
+    }
   }
 
-  // Unknown type: fall back to default free-fall
-  return JSON.parse(JSON.stringify(FREE_FALL_SCENE)) as PhysicsScene;
+  // Set gravity on gravity_field environment (type-safe check)
+  if (scene.environment && scene.environment.length > 0) {
+    const env = scene.environment[0];
+    if (env.type === "gravity_field") {
+      env.properties.acceleration = params.gravity;
+    }
+  }
+
+  return scene;
 }
 
 // ============================================================
-// RuleParser Provider
+// RuleBasedParser implements AIProvider
 // ============================================================
-
 export const ruleParser: AIProvider = {
-  id: "rule-parser",
+  id: "rule-based",
   name: "Rule-Based Parser",
 
-  isAvailable: async () => true,
+  isAvailable: async (): Promise<boolean> => {
+    return true; // Always available
+  },
 
-  parseProblem: async (text: string, existingScene?: PhysicsScene): Promise<ParseResult> => {
-    const start = Date.now();
+  async parseProblem(text: string, _existingScene?: PhysicsScene): Promise<ParseResult> {
+    const start = performance.now();
     try {
       const params = extractParams(text);
       const scene = buildScene(params, text);
+      const durationMs = performance.now() - start;
+
       return {
         scene,
         success: true,
-        provider: "rule-parser",
-        durationMs: Date.now() - start,
+        provider: "rule-based",
+        durationMs,
       };
-    } catch (e: any) {
+    } catch (err) {
       return {
-        scene: existingScene ?? null,
+        scene: null,
         success: false,
-        error: e?.message ?? "Unknown parse error",
-        provider: "rule-parser",
-        durationMs: Date.now() - start,
+        error: String(err),
+        provider: "rule-based",
+        durationMs: performance.now() - start,
       };
     }
   },
 };
+
+export { detectMotion, extractParams, buildScene };
+export type { ExtractedParams, MotionType };

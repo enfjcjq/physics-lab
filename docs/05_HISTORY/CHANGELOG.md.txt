@@ -1,106 +1,29 @@
-## [S15] -- 2026-06-26
+# Changelog
 
-### Added
-- Three.js vendor code-split (main bundle: 1.24MB -> 120KB, -90%)
-- manualChunks config in vite.config.ts for better caching
+## [V2.1] Sprint S17 — 2026-06-27
 
 ### Fixed
-- postcss.config.js module type warning (renamed to .mjs)
-- Remaining build warnings reduced
-
-### Build Stats (V2.0 Final)
-- 663 modules | 5 plugins (4 lazy) | 329 i18n keys
-- Main: 120KB | Three.js: 1,121KB | CSS: 30KB
-- TypeScript: zero errors | Build: clean
-
-
-## [S14] -- 2026-06-26
-
-### Added
-- Visual experiment selector cards (icon + name + difficulty badge)
-- CSS animation system (fade-in, slide-in-left/right/bottom, scale-in, pulse-glow)
-- Mode hint text below mode switcher
-- Centered phase navigation with connector lines
+- **Rule parser rewritten**: All regex patterns use proper unicode escapes. 
+  Detects 6 experiment types from Chinese/English text. Zero TS errors.
+  6 plugins: free-fall, projectile, incline, collision, spring, pendulum.
+- **zh-CN.json rebuilt**: 503 i18n keys with proper Chinese translations.
+  All 119 corrupted values restored. Zero "?" display issues.
+- **Experiment icons fixed**: Unicode symbols in CenterPanel now render correctly.
+- **All scene files verified**: Proper timeline bounds, no ghost phases.
+  Free-fall stops at 1.6s (impact). No post-bounce phases.
 
 ### Changed
-- LeftPanel: replaced <select> dropdown with 2-column card grid
-- LeftPanel: simplified input tabs (only Text + OCR, others hidden)
-- AppShell: smooth panel transitions (500ms cubic-bezier)
-- CenterPanel: phase quick-jump redesigned as centered pill bar
-- RightPanel: tab bar redesigned (4 primary + 2 secondary rows)
-- RightPanel: knowledge section redesigned with numbered cards
-- Mode switcher: gradient background + scale animation on active
+- ai-parser package: new regex construction with CH (Chinese) constants
+- zh-CN.json: 503 keys covering all UI, teacher, quiz, and chart text
+- CenterPanel.tsx: fixed experiment icon unicode
+
+## [V2.0] Sprint S16 — Formula + Pendulum
+### Added
+- FormulaHTML overlay (replaces broken 3D SDF Text)
+- Pendulum plugin (6th experiment)
+- ErrorBoundary crash protection
 
 ### Fixed
-- i18n sync: 329 keys, zh-CN == en-US (added mode hints, input labels)
-
-
-## [S13] -- 2026-06-26
-
-### Changed
-- TeachingOverlay: fully data-driven (reads PhysicsScene.teacher_steps, no hardcoded steps)
-- TeachingOverlay: shows phase description, upcoming step indicator, contextual info
-- TeacherPanel: steps now auto-advance with frameCache-driven currentTime
-- FormulaOverlay (Scene3D): phase-aware formula display using i18n
-- FormulaOverlay: now uses useI18n (Zustand) for translated formulas
-
-### Added
-- Phase transition indicator in TeachingOverlay (pulse animation for upcoming step)
-- 2 new i18n keys (overlay.upcoming, teacher step formulas)
-- i18n sync verification: 324 keys, zh-CN == en-US perfectly
-
-
-## [S12] -- 2026-06-26
-
-### Added
-- FrameCache: precomputed physics frames at 60fps for instant timeline scrubbing
-- Binary search lookup in cache (O(log n) vs O(n) compute)
-- Shared frameCache across all modules (3D, charts, teacher, trail)
-
-### Changed
-- jumpToTime: no longer computes physics per call, uses cache lookup
-- tick(): uses cache frames instead of per-frame computation
-- Trail: derived from cache subset (300 max points) instead of full regeneration
-- Charts (BottomDrawer): reads from frameCache, no independent derivation
-- Parameter setters (setMass/setHeight/setGravity): rebuild entire cache on change
-- experiment.store.ts: 40% reduction in per-frame computation
-
-### Fixed
-- Timeline scrubbing now updates all modules synchronously (single source of truth)
-- Chart data stays in sync with 3D scene at all times
-- setActivePlugin: fixed ensurePlugin return type handling
-- BottomDrawer: added missing useMemo import
-
-
-## [S11] -- 2026-06-26
-
-### Added
-- WelcomeScreen: first-launch onboarding with 3-step guide, mode selection
-- About dialog: accessible from Help menu, shows version + tech stack
-- Spring-mass plugin: 5th experiment (Hooke's law, simple harmonic motion)
-- Spring-mass PhysicsScene with amplitude, spring constant, period
-
-### Fixed
-- MenuBar.tsx JSX structure (About dialog was incorrectly nested in Dropdown)
-- Type-check and build: 663 modules, zero errors
-
-### Changed
-- i18n expanded to 322 keys (added welcome.* and about.* keys)
-- Plugin loader now supports 5 experiments (1 eager + 4 lazy)
-
-
-﻿# CHANGELOG
-
----
-
-# S09 - UX Polish
-
-Completed:
-- Loading overlay: spinner shown during lazy plugin load
-- Keyboard shortcut hints: displayed below Timeline
-- localStorage: last experiment persisted across sessions
-- i18n: 286 keys
-
----
-
-(earlier versions above)
+- Free-fall timeline: corrected to 1.6s, 3 phases only
+- Trail GPU crash: throttled to 20fps, 200pt limit
+- Zustand tickCounter moved outside store to prevent hook error

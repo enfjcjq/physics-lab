@@ -1,17 +1,16 @@
-# Next Sprint: S14
+# Next Sprint: S18
 
-## Priority 1: UI Polish (P0)
-- Reduce visual clutter in learning mode
-- More whitespace, fewer buttons
-- Student-friendly defaults
-- Smooth transitions between modes
+## Priority 1: Experiment Switching UX (P0)
+- Make experiment switcher more prominent (currently tiny tabs)
+- Add welcome screen for first-time users
+- Smooth transition animations between experiments
 
-## Priority 2: Visual Consistency (P1)
-- Unified color system across all components
-- Consistent spacing and typography
-- Better empty states and loading indicators
+## Priority 2: Quiz System Completion (P1)
+- Add quiz questions for projectile, incline, collision, spring, pendulum
+- Explore mode: quiz-based step-by-step learning with answer feedback
+- Correct answer shows explanation and loops phase animation
 
-## Priority 3: Accessibility (P2)
-- Keyboard navigation for all interactive elements
-- Focus indicators
-- Screen reader support basics
+## Priority 3: UI Polish (P2)
+- More whitespace in learning mode
+- Reduce button count
+- Consistent color theme across modes

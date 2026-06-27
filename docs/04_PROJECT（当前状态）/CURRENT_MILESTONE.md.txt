@@ -1,13 +1,12 @@
-# Current Milestone: S16 (Completed)
+# Current Milestone: S17 (Completed)
 
-**Goal:** Fix formula display, add pendulum experiment (6th)
+**Goal:** Fix rule parser + i18n corruption + stabilize all 6 experiments
 
 **Completed:**
-- [x] Formula display: replaced broken 3D Text with HTML overlay (supports all Unicode)
-- [x] Pendulum plugin: 6th experiment (simple harmonic motion, period formula)
-- [x] Pendulum PhysicsScene with pivot, string constraint, tension force
-- [x] Plugin loader wired for pendulum (lazy-loaded)
-- [x] i18n: 347 keys (zh-CN + en-US)
+- [x] Rule parser rewritten with proper regex (Chinese + English, 6 types)
+- [x] zh-CN.json full rebuild: 503 keys, zero corruption
+- [x] Experiment icons fixed (proper Unicode in CenterPanel)
+- [x] All 6 scene files verified (proper timeline bounds, no ghost phases)
 - [x] Type-check + build: 666 modules, 6 plugins, zero errors
 
-**Next: S17** -- Problem input parser + student progress
+**Next: S18** — User feedback: experiment switching UX polish, quiz system completion

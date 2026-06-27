@@ -56,9 +56,12 @@ export function CenterPanel() {
   const currentPhase = phases.find((p) => p.id === currentPhaseId);
 
   const expIcons: Record<string, string> = {
-    "free-fall": "⬇", "projectile-motion": "↗",
-    "inclined-plane": "∠", "collision": "●●",
-    "spring-mass": "〰", "pendulum": "⌈"
+    "free-fall": "\u2B07", 
+    "projectile-motion": "\u2197",
+    "inclined-plane": "\u2220", 
+    "collision": "\u25CF\u25CB",
+    "spring-mass": "\u223C", 
+    "pendulum": "\u231A"
   };
 
   return (

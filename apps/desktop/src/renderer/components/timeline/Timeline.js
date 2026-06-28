@@ -92,6 +92,6 @@ export function Timeline() {
                                     jumpToTime(getTime(ev.clientX)); }; const u = () => { dragging.current = false; document.removeEventListener("mousemove", m); document.removeEventListener("mouseup", u); }; document.addEventListener("mousemove", m); document.addEventListener("mouseup", u); }, className: "w-3.5 h-3.5 bg-sky-400 rounded-full cursor-grab active:cursor-grabbing -ml-[5px] shadow-md shadow-sky-900/50 border border-sky-200" })] }), ticks.map((tick) => {
                         const l = (tick / totalDuration) * 100, isMajor = tick % 1 === 0;
                         return _jsxs("div", { className: "absolute pointer-events-none", style: { left: `${l}%`, bottom: 0 }, children: [_jsx("div", { className: `-translate-x-1/2 ${isMajor ? "h-2 w-px bg-slate-600" : "h-1 w-px bg-slate-700"}` }), isMajor && _jsxs("span", { className: "absolute top-0.5 -translate-x-1/2 text-[8px] text-slate-600 tabular-nums", children: [tick, "s"] })] }, `t${tick}`);
-                    })] }), _jsx("div", { className: "h-1 text-[8px] text-slate-600 text-center", children: t("ui.shortcuts") })] }));
+                    })] }), _jsx("div", { className: "h-5 text-[9px] text-slate-500 text-center px-2", children: t("ui.shortcuts") })] }));
 }
 //# sourceMappingURL=Timeline.js.map

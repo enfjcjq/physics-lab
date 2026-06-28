@@ -1,17 +1,16 @@
-# Next Sprint: S21
+# Next Sprint: S22
 
-## Priority 1: Export System (P0)
-- Export experiment report as PDF (with screenshots + parameters + charts + formulas)
-- Export report as Markdown
-- Export chart data as CSV
-- Screenshot capture of 3D viewport
+## Priority 1: AI Teacher Enhancements (P0)
+- Teacher mode with guided step-by-step exploration
+- Auto-advance teacher steps during playback
+- Visual cues for correct quiz answers
 
-## Priority 2: Data Panel (P1)
-- Real-time data table: position, velocity, acceleration, energy per time step
-- CSV download button on data panel
-- Toggle between chart and table view
+## Priority 2: Plugin System Refinement (P1)
+- Ensure all 6 plugins share consistent UX
+- Plugin-specific camera presets
+- Plugin-specific chart configurations
 
-## Priority 3: Final Polish (P2)
-- Reduce LF/CRLF git warnings (add .gitattributes)
-- Responsive layout improvements for smaller windows
-- Better keyboard shortcut discoverability
+## Priority 3: Performance (P2)
+- Optimize Three.js draw calls
+- Reduce unnecessary React re-renders
+- Lazy load non-critical panels

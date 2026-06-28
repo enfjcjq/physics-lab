@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import { usePanelManager } from "../../core/panel-manager.store";
 import { useI18n } from "../../core/i18n";
 import { useTheme } from "../../core/theme.store";
@@ -7,8 +7,9 @@ import { useVisualization } from "../../core/visualization.store";
 import type { Locale } from "../../core/i18n";
 import type { ThemeMode } from "../../core/theme.store";
 import type { TeachingSubMode } from "../../core/teaching.store";
+import { generateCSV, downloadCSV } from "../../lib/csv";
 import { useSimulation } from "../../features/experiment/experiment.store";
-import { generateMarkdownReport, generateHTMLReport, downloadReport, downloadFile } from "../../lib/report";
+import { generateMarkdownReport, generateHTMLReport, downloadReport, downloadFile, downloadPDFReport } from "../../lib/report";
 
 // ===== Dropdown Menu =====
 function Dropdown({ label, children }: { label: string; children: React.ReactNode }) {
@@ -128,6 +129,17 @@ export function MenuBar() {
           const html = generateHTMLReport(data, locale);
           const ts = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
           downloadFile(html, `physics-lab-report-${ts}.html`, "text/html");
+        }} />
+        <MenuItem label={t("menu.file.export") + " (PDF)"} shortcut="Ctrl+P" onClick={async () => {
+          const scene = sim.scene;
+          if (!scene) return;
+          const data = { scene, params: { mass: sim.mass, height: sim.height, gravity: sim.gravity }, currentTime: sim.currentTime, ballY: sim.ballY, ballVelocity: sim.ballVelocity };
+          await downloadPDFReport(data, locale);
+        }} />
+        <MenuItem label={t("menu.file.export") + " (CSV)"} shortcut="Ctrl+D" onClick={() => {
+          if (sim.frameCache.length === 0) return;
+          const csvContent = generateCSV({ frames: sim.frameCache, energyContext: { mass: sim.mass, gravity: sim.gravity }, includeEnergy: true });
+          downloadCSV(csvContent, "physics-lab-data.csv");
         }} />
         <MenuSeparator />
         <MenuItem label={t("menu.file.exit")} />

@@ -50,7 +50,6 @@ function Trail() {
     const t = useSimulation(s => s.trail), pts = useMemo(() => {
         if (!t || t.length === 0)
             return [];
-        // Limit to 200 points max for GPU safety
         const limited = t.length > 200 ? t.slice(t.length - 200) : t;
         return limited.map(p => new THREE.Vector3(p.x, p.y, p.z));
     }, [t]);
@@ -59,17 +58,17 @@ function Trail() {
     return _jsx(Line, { points: pts, color: "#FF6B6B", lineWidth: 1, transparent: true, opacity: 0.5 });
 }
 function Arrow3D({ o, d, len, c }) {
-    if (len < 0.05)
-        return null;
     const e = [o[0] + d[0] * len, o[1] + d[1] * len, o[2] + d[2] * len];
     const pts = useMemo(() => [new THREE.Vector3(...o), new THREE.Vector3(...e)], [o, e]);
+    if (len < 0.05)
+        return null;
     return _jsxs("group", { children: [_jsx(Line, { points: pts, color: c, lineWidth: 2 }), _jsxs("mesh", { position: e, children: [_jsx("coneGeometry", { args: [0.08, 0.2, 8] }), _jsx("meshBasicMaterial", { color: c })] })] });
 }
 function VelocityArrow() { const x = useSimulation(s => s.ballX), y = useSimulation(s => s.ballY), v = useSimulation(s => s.ballVelocity), len = Math.min(Math.abs(v) * 0.2, 4), d = v >= 0 ? [0, 1, 0] : [0, -1, 0]; return _jsx(Arrow3D, { o: [x + 0.5, y, 0], d: d, len: len, c: "#3b82f6" }); }
 function AccelArrow() { const x = useSimulation(s => s.ballX), y = useSimulation(s => s.ballY), a = useSimulation(s => s.ballAcceleration), len = Math.min(Math.abs(a) * 0.2, 3), d = a >= 0 ? [0, 1, 0] : [0, -1, 0]; return _jsx(Arrow3D, { o: [x - 0.5, y, 0], d: d, len: len, c: "#22c55e" }); }
 function ForceArrow() { const x = useSimulation(s => s.ballX), y = useSimulation(s => s.ballY), m = useSimulation(s => s.mass), g = useSimulation(s => s.gravity), len = Math.min(m * g * 0.1, 3); return _jsx(Arrow3D, { o: [x, y + 0.5, 0], d: [0, -1, 0], len: len, c: "#ef4444" }); }
-function HeightRuler() { const bx = useSimulation(s => s.ballX), by = useSimulation(s => s.ballY); if (by <= 0.3)
-    return null; const pts = useMemo(() => [new THREE.Vector3(bx - 0.5, 0.2, 0), new THREE.Vector3(bx - 0.5, by, 0)], [bx, by]); return _jsxs("group", { children: [_jsx(Line, { points: pts, color: "#94a3b8", lineWidth: 1, dashed: true, transparent: true, opacity: 0.4 }), _jsx(Text, { position: [bx - 0.5, by / 2, 0], fontSize: 0.2, color: "#94a3b8", anchorX: "right", children: by.toFixed(1) + "m" })] }); }
+function HeightRuler() { const bx = useSimulation(s => s.ballX), by = useSimulation(s => s.ballY); const pts = useMemo(() => [new THREE.Vector3(bx - 0.5, 0.2, 0), new THREE.Vector3(bx - 0.5, by, 0)], [bx, by]); if (by <= 0.3)
+    return null; return _jsxs("group", { children: [_jsx(Line, { points: pts, color: "#94a3b8", lineWidth: 1, dashed: true, transparent: true, opacity: 0.4 }), _jsx(Text, { position: [bx - 0.5, by / 2, 0], fontSize: 0.2, color: "#94a3b8", anchorX: "right", children: by.toFixed(1) + "m" })] }); }
 function HudLabels() {
     const bx = useSimulation(s => s.ballX), by = useSimulation(s => s.ballY), bv = useSimulation(s => s.ballVelocity), ct = useSimulation(s => s.currentTime);
     if (by < 0.3)

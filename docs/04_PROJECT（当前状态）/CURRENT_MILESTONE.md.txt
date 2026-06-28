@@ -1,12 +1,14 @@
-# Current Milestone: S20 (Completed)
+# Current Milestone: S21 (Completed)
 
-**Goal:** Visual polish — particles, transitions, loading states
+**Goal:** Export system + final polish — particles, transitions, loading states
 
 **Completed:**
 - [x] Removed failing 3D FormulaOverlay (SDF text), HTML overlay is the single source
-- [x] Impact particles: 15-particle burst on ground collision with physics decay
-- [x] Scene transitions: 400ms semi-transparent overlay when switching experiments
-- [x] Skeleton loading: animated placeholder during lazy plugin load
-- [x] Build: 666 modules, 6 plugins, zero errors
+- [x] Export: PDF (html2canvas+jsPDF), Markdown, CSV, Screenshot
+[x] MenuBar: File > Export (MD/HTML/PDF/CSV)
+[x] RightPanel: one-click export buttons
+[x] DataPanel: live/table view + CSV download
+[x] .gitattributes: LF normalization for all text files
+[x] Build: 668 modules, 6 plugins, zero errors
 
-**Next: S21** — Export system + data panel + final polish
+**Next: S22** 鈥?AI Teacher enhancements + plugin system refinement — Export system + data panel + final polish

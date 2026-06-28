@@ -169,7 +169,7 @@ export function Timeline() {
       </div>
     
       {/* Keyboard hints */}
-      <div className="h-1 text-[8px] text-slate-600 text-center">{t("ui.shortcuts")}</div>
+      <div className="h-5 text-[9px] text-slate-500 text-center px-2">{t("ui.shortcuts")}</div>
     </div>
   );
 }

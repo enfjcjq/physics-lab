@@ -9,6 +9,8 @@ import { CenterPanel } from "../panels/CenterPanel";
 import { BottomDrawer } from "../panels/BottomDrawer";
 import { TeacherPanel } from "../teaching/TeacherPanel";
 import { WelcomeScreen } from "./WelcomeScreen";
+import { LearningDashboard } from "../dashboard/LearningDashboard";
+import { useDashboard } from "../../core/dashboard.store";
 
 const MODES = ["learning", "experiment", "analysis"] as const;
 
@@ -16,16 +18,15 @@ export function AppShell() {
   const panels = usePanelManager((s) => s.panels);
   const { mode, setMode } = useTeaching();
   const { t } = useI18n();
+  const { open: showDashboard, toggle: toggleDashboard, closeDashboard } = useDashboard();
 
   const leftOpen = panels.problem?.isOpen || panels.history?.isOpen || panels.parameters?.isOpen;
   const rightOpen = panels.analysis?.isOpen || panels.teaching?.isOpen || panels.properties?.isOpen;
   const bottomOpen = panels.timeline?.isOpen || panels.charts?.isOpen;
 
-  // Mode-based visibility
   const showLeftPanel = leftOpen || mode === "learning";
   const showTeacher = mode === "learning";
   const showRightPanel = (mode === "experiment" || mode === "analysis") && rightOpen;
-  // Show bottom drawer in all modes when toggled on
   const showBottomDrawer = bottomOpen;
 
   return (
@@ -33,40 +34,31 @@ export function AppShell() {
       <WelcomeScreen />
       <MenuBar />
 
-      {/* Mode switcher bar */}
       <div className="h-9 bg-slate-900/80 border-b border-slate-800 flex items-center px-4 gap-3 flex-shrink-0">
         <div className="flex bg-slate-800/40 rounded-lg p-0.5 gap-0.5">
           {MODES.map((m) => (
-            <button
-              key={m}
-              onClick={() => setMode(m)}
-              className={`px-4 py-1 rounded-md text-xs font-medium transition-all duration-300 ${
-                mode === m
-                  ? "bg-gradient-to-r from-sky-600 to-sky-700 text-white shadow-lg shadow-sky-900/30 scale-105"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30"
-              }`}
-            >
-              {t(`mode.${m}`)}
+            <button key={m} onClick={() => setMode(m)}
+              className={"px-4 py-1 rounded-md text-xs font-medium transition-all duration-300 " +
+                (mode === m ? "bg-gradient-to-r from-sky-600 to-sky-700 text-white shadow-lg shadow-sky-900/30 scale-105" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30")}>
+              {t("mode." + m)}
             </button>
           ))}
         </div>
-        {/* Mode hint */}
         <span className="text-[10px] text-slate-600 hidden sm:block">
           {mode === "learning" ? t("mode.learning_hint") : mode === "experiment" ? t("mode.experiment_hint") : t("mode.analysis_hint")}
         </span>
+        <div className="flex-1" />
+        <button onClick={toggleDashboard}
+          className={"px-3 py-1 rounded-lg text-xs font-medium transition-all duration-200 " +
+            (showDashboard ? "bg-violet-600 text-white shadow-lg shadow-violet-900/30" : "text-slate-400 hover:text-white hover:bg-slate-800")}>
+          {String.fromCodePoint(0x1F4CA)} {t("dashboard.title")}
+        </button>
       </div>
 
-      {/* Main content */}
       <div className="flex-1 flex min-h-0">
         {showLeftPanel && (
-          <div
-            className="flex-shrink-0 border-r flex flex-col transition-all duration-500 ease-in-out"
-            style={{
-              width: mode === "learning" ? 260 : 280,
-              borderColor: "var(--border-primary)",
-              background: "var(--bg-primary)",
-            }}
-          >
+          <div className="flex-shrink-0 border-r flex flex-col transition-all duration-500 ease-in-out"
+            style={{ width: mode === "learning" ? 260 : 280, borderColor: "var(--border-primary)", background: "var(--bg-primary)" }}>
             <div className="animate-in fade-in slide-in-from-left duration-300">
               {panels.problem?.isOpen && <LeftPanel />}
             </div>
@@ -76,10 +68,8 @@ export function AppShell() {
         <CenterPanel />
 
         {showTeacher && (
-          <div
-            className="flex-shrink-0 border-l flex flex-col transition-all duration-500 ease-in-out"
-            style={{ width: 320, borderColor: "var(--border-primary)", background: "var(--bg-primary)" }}
-          >
+          <div className="flex-shrink-0 border-l flex flex-col transition-all duration-500 ease-in-out"
+            style={{ width: 320, borderColor: "var(--border-primary)", background: "var(--bg-primary)" }}>
             <div className="animate-in fade-in slide-in-from-right duration-300">
               <TeacherPanel />
             </div>
@@ -87,10 +77,8 @@ export function AppShell() {
         )}
 
         {showRightPanel && (
-          <div
-            className="flex-shrink-0 border-l flex flex-col"
-            style={{ width: 340, borderColor: "var(--border-primary)", background: "var(--bg-primary)" }}
-          >
+          <div className="flex-shrink-0 border-l flex flex-col"
+            style={{ width: 340, borderColor: "var(--border-primary)", background: "var(--bg-primary)" }}>
             {panels.analysis?.isOpen && <RightPanel />}
           </div>
         )}
@@ -98,6 +86,16 @@ export function AppShell() {
 
       {showBottomDrawer && <BottomDrawer />}
       <Timeline />
+
+      {showDashboard && (
+        <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={closeDashboard}>
+          <div className="w-[420px] max-h-[80vh] rounded-2xl shadow-2xl border border-slate-700 overflow-hidden animate-in zoom-in-95 duration-200"
+            style={{ background: "var(--bg-primary)" }}
+            onClick={(e) => e.stopPropagation()}>
+            <LearningDashboard />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

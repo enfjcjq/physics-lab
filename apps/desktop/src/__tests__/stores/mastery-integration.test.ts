@@ -11,23 +11,19 @@ describe("Mastery + Plugin Integration", () => {
     const plugin = pluginRegistry.get("free-fall");
     const kps = plugin?.getKnowledgePoints() || [];
 
-    // Mark all as mastered
     kps.forEach(kp => useMastery.getState().markMastered(kp.id));
 
-    // Verify all marked
     kps.forEach(kp => {
       expect(useMastery.getState().isMastered(kp.id)).toBe(true);
     });
 
-    // Verify percentage
-    expect(useMastery.getState().getPercent()).toBe(100);
+    expect(useMastery.getState().getOverallPercent()).toBe(100);
   });
 
   it("should track partial mastery", () => {
     useMastery.getState().reset();
     useMastery.getState().markMastered("kp1");
     useMastery.getState().markMastered("kp2");
-    // kp3 not mastered
     expect(useMastery.getState().isMastered("kp3")).toBe(false);
   });
 
@@ -35,6 +31,8 @@ describe("Mastery + Plugin Integration", () => {
     useMastery.getState().reset();
     useMastery.getState().markMastered("test_kp");
     const all = useMastery.getState().getAll();
-    expect(all["test_kp"]).toBe(true);
+    expect(all["test_kp"]).toBeDefined();
+    expect(all["test_kp"].mastered).toBe(true);
+    expect(all["test_kp"].score).toBe(100);
   });
 });

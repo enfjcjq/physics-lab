@@ -1,9 +1,10 @@
-﻿import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { usePanelManager } from "../../core/panel-manager.store";
 import { useI18n } from "../../core/i18n";
 import { useTheme } from "../../core/theme.store";
 import { useTeaching } from "../../core/teaching.store";
 import { useVisualization } from "../../core/visualization.store";
+import { useDashboard } from "../../core/dashboard.store";
 import { useAIProviderStore } from "../../stores/ai-provider.store";
 import type { Locale } from "../../core/i18n";
 import type { ThemeMode } from "../../core/theme.store";
@@ -168,7 +169,7 @@ export function MenuBar() {
         <MenuItem label={t("menu.view.grid")} checked={viz.toggles.showGrid} onClick={() => viz.toggle("showGrid")} />
         <MenuItem label={t("menu.view.trail")} checked={viz.toggles.showTrail} onClick={() => viz.toggle("showTrail")} />
         <MenuSeparator />
-        <MenuItem label={t("menu.view.reset_layout")} onClick={() => panelMgr.resetLayout()} />
+        <MenuItem label={t("menu.view.dashboard")} shortcut="Ctrl+D" onClick={() => useDashboard.getState().toggle()} />`n        <MenuSeparator />`n        <MenuItem label={t("menu.view.reset_layout")} onClick={() => panelMgr.resetLayout()} />
       </Dropdown>
 
       {/* Experiment */}

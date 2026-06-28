@@ -4,6 +4,7 @@ import type { TeacherStep } from "@physics-lab/shared";
 import { useI18n } from "../../core/i18n";
 import { useTeaching } from "../../core/teaching.store";
 import { useMastery } from "../../core/mastery.store";
+import { pluginRegistry } from "../../core/plugin-registry";
 import { useState, useRef, useEffect } from "react";
 
 const STEP_ICONS = ["\uD83D\uDC41\uFE0F", "\uD83D\uDCA1", "\uD83D\uDCD0", "\uD83D\uDCC8", "\uD83E\uDDE0", "\u2705", "\uD83C\uDF1F"];
@@ -99,11 +100,15 @@ export function TeacherPanel() {
 
   const handlePhaseQuizAnswer = (idx: number) => {
     setPhaseQuizAnswers((prev) => ({ ...prev, [currentPhaseId]: idx }));
-    if (phaseQuiz && idx === phaseQuiz.correctIndex) {
-      // Loop the current phase animation while showing explanation
-      if (currentPhaseId) {
-        togglePhaseLoop(currentPhaseId);
-      }
+    const correct = phaseQuiz && idx === phaseQuiz.correctIndex;
+    if (phaseQuiz) {
+      const plugin = pluginRegistry.get(activePluginId);
+      const kps = plugin?.getKnowledgePoints() ?? [];
+      const kpId = kps[currentIdx % kps.length]?.id ?? activePluginId + ':step' + currentIdx;
+      useMastery.getState().markAttempt(activePluginId + ':' + kpId, !!correct);
+    }
+    if (correct && currentPhaseId) {
+      togglePhaseLoop(currentPhaseId);
     }
   };
 

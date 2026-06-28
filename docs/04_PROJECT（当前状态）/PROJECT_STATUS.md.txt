@@ -1,28 +1,25 @@
 ﻿# Project Status
 
-**Version:** V2.3 (Sprint S24)
+**Version:** V2.4 (Sprint S26)
 **Status:** Complete
 
 ## Completed Sprints
 | Sprint | Focus | Key Deliverable |
 |--------|-------|----------------|
-| S16 | Formula + Pendulum | HTML formula overlay, 6th experiment |
-| S17 | Parser + i18n | Rule parser rewrite, 553 zh-CN keys |
-| S18 | UX + Quiz | Experiment cards, 12 quiz questions |
-| S19 | Timeline | Phase-loop quiz, FrameCache |
-| S20 | Visual Polish | Impact particles, transitions, skeleton loader |
-| S21 | Export System | PDF/MD/CSV/Screenshot export |
-| S22 | Teacher Polish | FormulaDisplay component, free-fall crash fix, i18n cleanup |
-| S23 | Plugin Consistency | Projectile-motion & inclined-plane phase fixes |
-| S24 | AI Integration | OllamaProvider, AIProvider abstraction, KnowledgeGraph |
+| S16-S20 | Foundation | 6 plugins, formula overlay, quiz, timeline, visual polish |
+| S21 | Export | PDF/MD/CSV/Screenshot export |
+| S22 | Teacher | FormulaDisplay, free-fall fix, i18n cleanup |
+| S23 | Consistency | Plugin phase fixes |
+| S24 | AI Parser | OllamaProvider, AIProvider abstraction |
+| S25 | AI Store | ai-provider.store with provider switching |
+| S26 | AI UI | AI toggle in MenuBar (Rule/Ollama) |
 
 ## Experiments (6)
 Free Fall | Projectile Motion | Inclined Plane | Collision | Spring-Mass | Pendulum
 
 ## Key Architecture
-- AIProvider interface with RuleParser + OllamaProvider backends
-- Swap between local Ollama / OpenAI / Claude without changing business logic
-- PhysicsScene-driven: all modules read from PhysicsScene, not raw problem text
-- Plugin system: add new experiment = add new plugin, no UI changes needed
-- 6 plugins, 409 en-US / 564 zh-CN i18n keys
+- **AI Provider toggle** now visible in MenuBar: Rule-based (instant) / Ollama (local LLM)
+- Switch AI engines without changing any business logic
+- All modules driven by PhysicsScene (single source of truth)
+- 6 plugins, 564 zh-CN keys, 409 en-US keys
 - 3 modes: Learning / Experiment / Analysis

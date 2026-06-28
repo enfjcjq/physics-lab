@@ -1,31 +1,22 @@
-﻿# Next Sprint: S25
+﻿# Next Sprint: S27
 
-## Priority 1: Wire OllamaProvider into UI (P0)
-- Add AI provider selector in MenuBar (Rule-based / Ollama)
-- Show Ollama connection status indicator
-- Handle Ollama not-running gracefully with helpful error messages
-- Add "Retry with Ollama" button when rule parser fails
+## Priority 1: Ollama Deep Integration (P0)
+- Auto-detect Ollama on app startup and show status
+- Test Ollama physics problem parsing end-to-end
+- Graceful fallback from Ollama to Rule parser
+- Show confidence score for AI-generated PhysicsScene
 
-## Priority 2: Enhanced Problem Input (P1)
-- Drag-and-drop image/PDF upload
-- Markdown rendering of parsed problem text
-- Show parsing confidence score
-- Editable extracted parameters before experiment launch
+## Priority 2: Multi-Model Experiments (P1)
+- Side-by-side experiment comparison
+- Save/load experiment states
+- Experiment templates
 
-## Priority 3: Learning Path System (P1)
-- Track which knowledge points student has mastered
-- Suggest next experiment based on prerequisites
-- Show learning progress in KnowledgeGraph
-- Adaptive difficulty based on quiz performance
+## Priority 3: Code Quality (P1)
+- Split Scene3D.tsx (currently large)
+- Add unit tests for ai-provider.store
+- Add unit tests for ollama-provider
 
-## Priority 4: Physics Engine Enhancements (P2)
-- Bounce physics for free-fall/projectile (optional toggle)
-- Air resistance model
-- Energy conservation visualization improvements
-- Multi-object scenarios
-
-## Priority 5: Code Quality (P2)
-- Split large components (>300 lines)
-- Add more unit tests (target: 50+ test cases)
-- ESLint configuration
-- CI pipeline setup
+## Priority 4: Accessibility & Polish (P2)
+- Keyboard navigation for all menus
+- Screen reader support
+- High contrast theme option

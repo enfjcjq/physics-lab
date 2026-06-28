@@ -4,6 +4,7 @@ import { useI18n } from "../../core/i18n";
 import { useTheme } from "../../core/theme.store";
 import { useTeaching } from "../../core/teaching.store";
 import { useVisualization } from "../../core/visualization.store";
+import { useAIProviderStore } from "../../stores/ai-provider.store";
 import type { Locale } from "../../core/i18n";
 import type { ThemeMode } from "../../core/theme.store";
 import type { TeachingSubMode } from "../../core/teaching.store";
@@ -75,6 +76,7 @@ function MenuSeparator() {
 // ===== MenuBar =====
 export function MenuBar() {
   const { t, locale, setLocale } = useI18n();
+  const { activeId: activeAI, setActive: setActiveAI, checkOllama } = useAIProviderStore();
   const { mode, setMode } = useTheme();
   const { mode: appMode, subMode: teachingMode, setSubMode: setTeachingMode } = useTeaching();
   const panelMgr = usePanelManager();
@@ -204,6 +206,21 @@ export function MenuBar() {
 
       {/* Spacer */}
       <div className="flex-1" />
+
+      {/* AI Provider Toggle */}
+      <button
+        onClick={async () => {
+          if (activeAI === "rule-based") { await checkOllama(); setActiveAI("ollama"); }
+          else { setActiveAI("rule-based"); }
+        }}
+        className="px-2.5 py-1 text-xs font-medium rounded transition-colors border mr-2"
+        style={{
+          backgroundColor: activeAI === "ollama" ? "rgba(16,185,129,0.15)" : "rgba(56,189,248,0.15)",
+          borderColor: activeAI === "ollama" ? "rgba(16,185,129,0.3)" : "rgba(56,189,248,0.3)",
+          color: activeAI === "ollama" ? "#34d399" : "#38bdf8"
+        }}
+        title="Toggle AI provider"
+      >{activeAI === "ollama" ? "Ollama" : "Rule"}</button>
 
       {/* Language Quick Toggle */}
       <button

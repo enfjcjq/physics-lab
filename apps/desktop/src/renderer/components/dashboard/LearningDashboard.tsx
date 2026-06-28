@@ -260,7 +260,7 @@ export function LearningDashboard() {
               </div>
             )}
           </>
-        </></>}
+        </>}
         {selectedTab === "experiments" && (
           <div className="space-y-2">
             {pluginStats.map((stat) => (

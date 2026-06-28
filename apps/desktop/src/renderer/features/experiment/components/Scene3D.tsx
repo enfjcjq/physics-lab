@@ -80,14 +80,14 @@ const Trail = memo(function Trail(){
   },[t]);
   if (pts.length < 2) return null;
   return <Line points={pts} color="#FF6B6B" lineWidth={1} transparent opacity={0.5}/>;
-}
+});
 
 const Arrow3D = memo(function Arrow3D({o,d,len,c}:{o:[number,number,number];d:[number,number,number];len:number;c:string}){
   const e:[number,number,number]=[o[0]+d[0]*len,o[1]+d[1]*len,o[2]+d[2]*len];
   const pts=useMemo(()=>[new THREE.Vector3(...o),new THREE.Vector3(...e)],[o,e]);
   if(len<0.05)return null;
   return<group><Line points={pts} color={c} lineWidth={2}/><mesh position={e}><coneGeometry args={[0.08,0.2,8]}/><meshBasicMaterial color={c}/></mesh></group>;
-}
+});
 
 function VelocityArrow(){const x=useSimulation(s=>s.ballX),y=useSimulation(s=>s.ballY),v=useSimulation(s=>s.ballVelocity),len=Math.min(Math.abs(v)*0.2,4),d:[number,number,number]=v>=0?[0,1,0]:[0,-1,0];return<Arrow3D o={[x+0.5,y,0]} d={d} len={len} c="#3b82f6"/>;}
 function AccelArrow(){const x=useSimulation(s=>s.ballX),y=useSimulation(s=>s.ballY),a=useSimulation(s=>s.ballAcceleration),len=Math.min(Math.abs(a)*0.2,3),d:[number,number,number]=a>=0?[0,1,0]:[0,-1,0];return<Arrow3D o={[x-0.5,y,0]} d={d} len={len} c="#22c55e"/>;}
@@ -188,7 +188,7 @@ const Ball2 = memo(function Ball2(){
     <sphereGeometry args={[r,32,32]}/>
     <meshStandardMaterial color="#ef4444" metalness={0.3} roughness={0.4} emissive="#441111" emissiveIntensity={0.2}/>
   </mesh>;
-}
+});
 
 
 // Ghost trajectory comparison overlay

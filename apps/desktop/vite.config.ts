@@ -11,6 +11,16 @@ export default defineConfig({
     electron([
       {
         entry: "src/main/index.ts",
+        onstart({ startup }) {
+          // 🔧 Fix: Remove ELECTRON_RUN_AS_NODE from env before spawning Electron
+          // WorkBuddy sets ELECTRON_RUN_AS_NODE=1 which causes Electron to run in
+          // Node.js script mode instead of browser mode, making require('electron')
+          // return the exe path string instead of the API object.
+          // See: https://github.com/electron/electron/issues/49034
+          const cleanEnv = { ...process.env };
+          delete cleanEnv.ELECTRON_RUN_AS_NODE;
+          startup([".", "--no-sandbox"], { env: cleanEnv });
+        },
         vite: {
           build: {
             outDir: "dist-electron/main",

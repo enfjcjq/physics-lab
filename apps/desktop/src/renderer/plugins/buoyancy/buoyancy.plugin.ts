@@ -1,62 +1,7 @@
 ﻿﻿import type { PhysicsPlugin, PhysicsScene } from "@physics-lab/shared";
+import { BUOYANCY_SCENE } from "@physics-lab/shared";
 
-const BUOYANCY_SCENE = {
-  version: "2.0" as const,
-  metadata: {
-    title: "Buoyancy",
-    description: "Archimedes principle ? buoyant force in fluid",
-    subject: "mechanics" as const,
-    topic: "buoyancy" as const,
-    difficulty: "medium" as const,
-    grade: "junior_high" as const,
-    tags: ["buoyancy", "archimedes", "fluid", "density"],
-  },
-  entities: [
-    {
-      id: "block",
-      type: "block" as const,
-      name: "Object",
-      position: [0, 2, 0] as [number, number, number],
-      properties: { mass: 0.5, dimensions: [0.5, 0.5, 0.5] as [number, number, number] },
-      initial_conditions: { velocity: [0, 0, 0] as [number, number, number] },
-    },
-  ],
-  environment: [
-    { type: "gravity_field" as const, properties: { acceleration: 9.8, direction: [0, -1, 0] as [number, number, number] } },
-  ],
-  forces: [
-    { id: "buoyancy", type: "buoyancy" as const, target_entity: "block", magnitude: "\u03C1_fluid * V * g", direction: [0, 1, 0] as [number, number, number] },
-    { id: "gravity_force", type: "gravity" as const, target_entity: "block", magnitude: "\u03C1_obj * V * g", direction: [0, -1, 0] as [number, number, number] },
-  ],
-  "$schema": "https://physics-lab.app/schemas/physics-scene/2.0.json",
-  constraints: [],
-  camera_script: [],
-  ui_controls: [],
-  timeline: {
-    total_duration: 8,
-    events: [],
-    fps: 60,
-    phases: [
-      { id: "release", label: "Release", icon: "\u25B6", timeRange: [0, 0.3] as [number, number] },
-      { id: "moving", label: "Buoyancy Motion", icon: "\u2B06\uFE0F\u2B07\uFE0F", timeRange: [0.3, 7] as [number, number] },
-      { id: "equilibrium", label: "Equilibrium", icon: "\u2696\uFE0F", timeRange: [7, 8] as [number, number] },
-    ],
-  },
-  equations: [],
-  knowledge_tags: [
-    { id: "kp_buoy_archimedes", name: "Archimedes Principle", category: "mechanics", level: 1, prerequisites: [] },
-    { id: "kp_buoy_force", name: "Buoyant Force Calculation", category: "mechanics", level: 2, prerequisites: ["kp_buoy_archimedes"] },
-    { id: "kp_buoy_density", name: "Density & Floating", category: "mechanics", level: 2, prerequisites: ["kp_buoy_archimedes"] },
-    { id: "kp_buoy_net_force", name: "Net Force in Fluid", category: "mechanics", level: 2, prerequisites: ["kp_buoy_force", "kp_buoy_density"] },
-  ],
-  teacher_steps: [
-    { order: 0, timeStart: 0, timeEnd: 0.3, titleKey: "teacher.buoy.step0", descKey: "teacher.buoy.step0_desc" },
-    { order: 1, timeStart: 0.3, timeEnd: 3, titleKey: "teacher.buoy.step1", descKey: "teacher.buoy.step1_desc", formulaKey: "teacher.buoy.formula1" },
-    { order: 2, timeStart: 3, timeEnd: 5, titleKey: "teacher.buoy.step2", descKey: "teacher.buoy.step2_desc", formulaKey: "teacher.buoy.formula2" },
-    { order: 3, timeStart: 5, timeEnd: 7, titleKey: "teacher.buoy.step3", descKey: "teacher.buoy.step3_desc", formulaKey: "teacher.buoy.formula3" },
-    { order: 4, timeStart: 7, timeEnd: 8, titleKey: "teacher.buoy.step4", descKey: "teacher.buoy.step4_desc" },
-  ],
-};
+// Using shared BUOYANCY_SCENE from @physics-lab/shared
 
 export const buoyancyPlugin: PhysicsPlugin = {
   id: "buoyancy",

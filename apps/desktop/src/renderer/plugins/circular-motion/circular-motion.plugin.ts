@@ -1,61 +1,7 @@
 ﻿﻿import type { PhysicsPlugin, PhysicsScene } from "@physics-lab/shared";
+import { CIRCULAR_MOTION_SCENE } from "@physics-lab/shared";
 
-const CIRCULAR_MOTION_SCENE = {
-  version: "2.0" as const,
-  metadata: {
-    title: "Circular Motion",
-    description: "Uniform circular motion with centripetal force",
-    subject: "mechanics" as const,
-    topic: "circular_motion" as const,
-    difficulty: "medium" as const,
-    grade: "senior_high" as const,
-    tags: ["circular", "centripetal", "angular"],
-  },
-  entities: [
-    {
-      id: "ball_1",
-      type: "ball" as const,
-      name: "Orbiting Ball",
-      position: [2, 3, 0] as [number, number, number],
-      properties: { mass: 1, radius: 0.2 },
-      initial_conditions: { velocity: [0, 0, 2] as [number, number, number] },
-    },
-  ],
-  environment: [
-    { type: "gravity_field" as const, properties: { acceleration: 0, direction: [0, -1, 0] as [number, number, number] } },
-  ],
-  forces: [
-    { id: "centripetal", type: "centripetal_force" as const, target_entity: "ball_1", magnitude: "mv^2/r", direction: [0, 0, 0] as [number, number, number] },
-  ],
-  "$schema": "https://physics-lab.app/schemas/physics-scene/2.0.json",
-  constraints: [],
-  camera_script: [],
-  ui_controls: [],
-  timeline: {
-    total_duration: 6,
-    events: [],
-    fps: 60,
-    phases: [
-      { id: "start", label: "Start", icon: "\u25B6", timeRange: [0, 0.5] as [number, number] },
-      { id: "orbiting", label: "Uniform Circular Motion", icon: "\uD83D\uDD04", timeRange: [0.5, 5.5] as [number, number] },
-      { id: "complete", label: "Full Circle", icon: "\u2705", timeRange: [5.5, 6] as [number, number] },
-    ],
-  },
-  equations: [],
-  knowledge_tags: [
-    { id: "kp_circ_ucm", name: "Uniform Circular Motion", category: "mechanics", level: 1, prerequisites: [] },
-    { id: "kp_circ_centripetal", name: "Centripetal Acceleration", category: "mechanics", level: 2, prerequisites: ["kp_circ_ucm"] },
-    { id: "kp_circ_force", name: "Centripetal Force", category: "mechanics", level: 2, prerequisites: ["kp_circ_centripetal"] },
-    { id: "kp_circ_period", name: "Period & Frequency", category: "mechanics", level: 2, prerequisites: ["kp_circ_ucm"] },
-  ],
-  teacher_steps: [
-    { order: 0, timeStart: 0, timeEnd: 0.5, titleKey: "teacher.circ.step0", descKey: "teacher.circ.step0_desc" },
-    { order: 1, timeStart: 0.5, timeEnd: 2, titleKey: "teacher.circ.step1", descKey: "teacher.circ.step1_desc", formulaKey: "teacher.circ.formula1" },
-    { order: 2, timeStart: 2, timeEnd: 3.5, titleKey: "teacher.circ.step2", descKey: "teacher.circ.step2_desc", formulaKey: "teacher.circ.formula2" },
-    { order: 3, timeStart: 3.5, timeEnd: 5, titleKey: "teacher.circ.step3", descKey: "teacher.circ.step3_desc", formulaKey: "teacher.circ.formula3" },
-    { order: 4, timeStart: 5, timeEnd: 6, titleKey: "teacher.circ.step4", descKey: "teacher.circ.step4_desc" },
-  ],
-};
+// Using shared CIRCULAR_MOTION_SCENE from @physics-lab/shared
 
 export const circularMotionPlugin: PhysicsPlugin = {
   id: "circular-motion",

@@ -39,7 +39,12 @@ function buildFrameCache(
   // Check if scene has simulation block �� use generic engine
   // scene passed as parameter
   if ((scene as any)?.simulation?.equations) {
-    const engine = createEngine(scene as PhysicsSceneV2);
+    // Update simulation params with current slider values for real-time control
+    const simScene = { ...scene, simulation: { ...(scene as any).simulation } };
+    if (simScene.simulation.params) {
+      simScene.simulation.params = { ...simScene.simulation.params, g: gravity, h0: height, m: mass };
+    }
+    const engine = createEngine(simScene as PhysicsSceneV2);
     const allFrames = engine.precomputeAll();
     for (const frame of allFrames) {
       const pos = frame.positions.ball ?? frame.positions[Object.keys(frame.positions)[0]] ?? [0, 0, 0];
@@ -84,7 +89,9 @@ function buildFrameCache(
       case "collision": return { m1: 2, m2: 1, v1: 3, v2: -1, restitution: 0.9 };
       case "projectile-motion": return { g: gravity, h0: height, mass, v0: 10, angle: 30 };
       case "inclined-plane": return { g: gravity, angle: 30, friction: 0.3, mass };
-      case "free-fall":
+      case "free-fall": return { g: gravity, h0: height, mass };
+      case "circular-motion": return { r: 2, omega: Math.PI, y0: 3, mass };
+      case "buoyancy": return { rho_obj: 800, rho_fluid: 1000, V: 0.001, y0: 2, g: gravity, drag: 5 };
       default: return { g: gravity, h0: height, mass };
     }
   };

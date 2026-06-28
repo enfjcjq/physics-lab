@@ -780,5 +780,8 @@
     "ctrl.initial_velocity":  "初速度",
     "ctrl.wavelength":  "波长",
     "ctrl.electric_field":  "电场强度",
-    "ctrl.magnetic_field":  "磁场强度"
+    "ctrl.magnetic_field":  "磁场强度",
+    "difficulty.easy":  "简单",
+    "difficulty.medium":  "中等",
+    "difficulty.hard":  "困难"
 }

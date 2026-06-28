@@ -26,6 +26,8 @@ const EXP_META: Record<string, { desc: string; difficulty: string }> = {
   "collision": { desc: "\u52A8\u91CF\u5B88\u6052\u4E0E\u80FD\u91CF\u8F6C\u5316", difficulty: "medium" },
   "spring-mass": { desc: "\u80E1\u514B\u5B9A\u5F8B\u4E0E\u7B80\u8C10\u632F\u52A8", difficulty: "medium" },
   "pendulum": { desc: "\u5355\u6446\u7684\u7B80\u8C10\u8FD0\u52A8", difficulty: "medium" },
+  "buoyancy": { desc: "\u963F\u57FA\u7C73\u5FB7\u539F\u7406\u4E0E\u6D6E\u529B\u5206\u6790", difficulty: "medium" },
+  "circular-motion": { desc: "\u5300\u901F\u5706\u5468\u8FD0\u52A8\u4E0E\u5411\u5FC3\u529B", difficulty: "medium" },
 };
 
 export function LeftPanel() {
@@ -124,7 +126,7 @@ export function LeftPanel() {
                     <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${
                       meta.difficulty === "easy" ? "bg-emerald-900/40 text-emerald-400" : "bg-amber-900/40 text-amber-400"
                     }`}>
-                      {meta.difficulty === "easy" ? "\u7B80\u5355" : meta.difficulty === "medium" ? "\u4E2D\u7B49" : "\u56F0\u96BE"}
+                      {t("difficulty." + meta.difficulty)}
                     </span>
                   </div>
                   <div className="font-medium text-[11px] truncate">{t(p.name)}</div>

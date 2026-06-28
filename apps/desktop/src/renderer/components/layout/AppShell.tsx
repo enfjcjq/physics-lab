@@ -1,4 +1,6 @@
-import { MenuBar } from "./MenuBar";
+﻿import { MenuBar } from "./MenuBar";
+import { pluginRegistry } from "../../core/plugin-registry";
+import { useSimulation } from "../../features/experiment/experiment.store";
 import { Timeline } from "../timeline/Timeline";
 import { usePanelManager } from "../../core/panel-manager.store";
 import { useTeaching } from "../../core/teaching.store";
@@ -14,9 +16,43 @@ import { useDashboard } from "../../core/dashboard.store";
 import { ToastContainer } from "./ToastContainer";
 import { useAchievements } from "../../core/achievements.store";
 import { useToasts } from "../../core/toast.store";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const MODES = ["learning", "experiment", "analysis"] as const;
+
+function ExperimentSwitcher() {
+  const { t } = useI18n();
+  const activePluginId = useSimulation((s) => s.activePluginId);
+  const setActivePlugin = useSimulation((s) => s.setActivePlugin);
+  const [open, setOpen] = useState(false);
+  const plugins = pluginRegistry.list();
+  const active = plugins.find(p => p.id === activePluginId);
+  
+  return (
+    <div className="relative">
+      <button onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium text-slate-300 hover:bg-slate-800/60 transition-colors">
+        <span>{active ? t(active.name) : "Experiment"}</span>
+        <span className="text-[9px] text-slate-500">{open ? "\u25B2" : "\u25BC"}</span>
+      </button>
+      {open && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute top-full left-0 mt-1 z-50 w-48 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl overflow-hidden">
+            {plugins.map(p => (
+              <button key={p.id}
+                onClick={() => { setActivePlugin(p.id); setOpen(false); }}
+                className={"w-full text-left px-3 py-2 text-xs transition-colors " +
+                  (p.id === activePluginId ? "bg-sky-600/20 text-sky-300" : "text-slate-400 hover:bg-slate-700/50 hover:text-white")}>
+                {t(p.name)}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 export function AppShell() {
   const panels = usePanelManager((s) => s.panels);
@@ -60,6 +96,9 @@ export function AppShell() {
             </button>
           ))}
         </div>
+                <div className="w-px h-4 bg-slate-700/50 mx-1" />
+        <ExperimentSwitcher />
+        <div className="w-px h-4 bg-slate-700/50 mx-1" />
         <span className="text-[10px] text-slate-600 hidden sm:block">
           {mode === "learning" ? t("mode.learning_hint") : mode === "experiment" ? t("mode.experiment_hint") : t("mode.analysis_hint")}
         </span>

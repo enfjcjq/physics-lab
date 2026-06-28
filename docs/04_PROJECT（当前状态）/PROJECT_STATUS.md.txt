@@ -1,46 +1,20 @@
 ﻿# Project Status
 
-**Version:** V3.3 (Sprint S55)
-**Status:** Active Development — Bug Fix & Polish Phase
+**Version:** V3.4 (Sprint S56)
+**Status:** Active Development — UX Polish Phase
 
 ## Architecture
- + "" + "" + "" + 
-Problem → AI Parser (Rule/Ollama) → PhysicsScene
-                                        ↓
-              ┌─────────────────────────┼─────────────────────────┐
-              ↓                         ↓                         ↓
-        3D Scene (Three.js)        Timeline                Teacher Panel
-              ↓                         ↓                         ↓
-        Arrows/Trail            Phase Nodes          24 Quiz Questions
-              ↓                         ↓                    (adaptive difficulty)
-        KnowledgeGraph ←── Mastery Store V2 ←── Quiz Answers
-              ↓                         ↓
-        Achievement Badges        Learning Dashboard
-              ↓                         ↓
-        Toast Notifications      Streak Calendar
- + "" + "" + "" + 
+Problem → AI Parser (Rule/Ollama) → PhysicsScene → Timeline → Experiment → Teacher → Charts → UI
 
 ## Key Metrics
-- 8 experiments | 782 zh-CN | 782 en-US | Zero TS errors
+- 8 experiments | 785 zh-CN | 785 en-US | Zero TS errors
 - 3 modes: Learning / Experiment / Analysis
-- 4 AI sub-modes: Experiment / Teaching / Solving / Explore
-- AI: Rule-based (8 types) + Ollama (local LLM, auto-detect + warmUp)
+- Experiment switcher in toolbar for quick access
 - Formula Engine: Generic physics engine interprets string formulas at runtime
-- All 8 scene constants have simulation blocks
 - Export: PDF / Markdown / HTML / CSV / Screenshot
 
-## Sprint S55 (Current): Bug Fix & Stabilization
-- Fixed experiment.store.ts crash (scene variable not destructured in 4 functions)
-- Fixed buoyancy & circular-motion plugin TypeScript errors
-- Fixed i18n: 782 keys both zh-CN and en-US (closed 154-key gap)
-- Fixed LearningDashboard downloadFile, t() calls, tab types
-- Fixed KnowledgeGraph t() calls
-- Fixed LeftPanel t() calls and compare types
-- Added buoyancy to ForceType union
-- All 8 experiments compile with zero errors
-
-## Recent Sprints
-- S54: Buoyancy experiment (8th plugin) + formula engine for all scenes
-- S53: Circular motion experiment (7th plugin)
-- S48-S52: Learning Dashboard, Mastery V2, Quiz system, Achievements
-- S47: Pendulum, spring-mass, collision plugins
+## Sprint S56 (Current): UX Polish
+- Fixed formula display (replaced ? with proper Unicode)
+- Added experiment switcher dropdown to toolbar
+- Completed experiment metadata for all 8 experiments
+- Difficulty labels now i18n-aware

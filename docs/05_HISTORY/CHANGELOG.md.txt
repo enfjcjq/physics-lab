@@ -1,34 +1,21 @@
 ﻿# CHANGELOG
 
-## V3.3 (S55) — Bug Fix & Stabilization
+## V3.4 (S56) — UX Polish & Formula Display Fix
 
 ### Fixed
-- **Critical**: experiment.store.ts scene not destructured in setMass/setHeight/setGravity/rebuildCache — caused runtime crash when adjusting parameters
-- **TypeScript**: Zero TS errors across entire monorepo (was ~30+ errors)
-- **Plugins**: circular-motion.plugin.ts and buoyancy.plugin.ts now properly typed with $schema, constraints, camera_script, ui_controls, events, knowledge_tags
-- **i18n**: en-US now has 782 keys (was 619, missing 154); zh-CN also 782 keys
-- **Dashboard**: downloadFile call fixed (3 args), tab types include all 5 tabs
-- **Formula evaluator**: MATH_SYMBOLS type correctly allows both functions and constants (PI, E)
-- **PhysicsScene types**: uoyancy added to ForceType union
-- **Scene constants**: All 8 now use PhysicsScene & { simulation?: any } to allow simulation blocks
-- **Virtual plugin**: difficulty cast handles olympiad type
+- **Formula display**: Fixed ? characters in en-US locale replaced with proper Unicode (², ∝, √, ·, ←, →)
+- **Experiment selector**: Added dropdown in top toolbar for quick experiment switching
+- **Experiment metadata**: Added missing entries for buoyancy and circular-motion
+- **Difficulty labels**: Now use i18n keys (difficulty.easy/medium/hard) instead of hardcoded Chinese
+- **i18n**: Both zh-CN and en-US now at 785 keys with proper formula strings
 
-### Changed
-- i18n files now synchronized: zh-CN and en-US both at 782 keys
-- All plugin inline scenes properly typed
+### Added
+- ExperimentSwitcher component in AppShell toolbar
+- Difficulty i18n keys (zh-CN: 简单/中等/困难, en-US: Easy/Medium/Hard)
 
-## V3.2 (S48-S54) — Formula Engine + Experiments
-- 8 experiments: free-fall, projectile-motion, inclined-plane, collision, spring-mass, pendulum, circular-motion, buoyancy
-- Generic physics engine: formula-driven simulation 
-- Learning Dashboard, Quiz system, Achievements
-- Ollama provider with formula output
-
-## V3.1 (S35-S47) — Learning Platform
-- Learning Dashboard + Mastery V2
-- Knowledge Graph, Achievement badges
-- Quiz expansion, Toast notifications, Streak calendar
-
-## V2.0 (S21-S34) — Interactive Teaching
-- Timeline control, Phase Timeline, Teacher Mode
-- Dockable UI panels, i18n system, Theme system
-- Plugin system foundation
+## V3.3 (S55) — Bug Fix & Stabilization
+- Fixed experiment.store.ts crash (scene destructuring)
+- Zero TS errors across entire monorepo
+- i18n: 782 keys both zh-CN and en-US
+- Plugin type fixes for circular-motion and buoyancy
+- Dashboard downloadFile fix

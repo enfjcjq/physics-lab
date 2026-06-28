@@ -683,5 +683,8 @@
   "review.got_it": "已掌握",
   "review.your_answer": "你的答案",
   "review.correct": "正确答案",
-  "dashboard.tab.review": "错题"
+  "dashboard.tab.review": "错题",
+  "dashboard.resume": "继续上次学习",
+  "dashboard.resume_btn": "继续",
+  "dashboard.tip": "每日物理贴士"
 }

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useResume } from "../../core/resume.store";
 import type { PhysicsScene, TimelinePhase, PhysicsState } from "@physics-lab/shared";
 import { useHistory } from "../../core/history.store";
 import { pluginRegistry } from "../../core/plugin-registry";
@@ -559,9 +560,11 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
     const frame = findFrame(s.frameCache, newTime);
     const justBounced = frame.isOnGround && !s.isBouncing;
 
-    // Throttle trail updates: only rebuild every 3 ticks
-    // Use module-level counter to avoid polluting React state
     tickCounter += 1;
+    // Save resume state every 30 ticks (~0.5s)
+    if (tickCounter % 30 === 0) {
+      useResume.getState().saveState(s.activePluginId, { mass: s.mass, height: s.height, gravity: s.gravity }, newTime);
+    }
     const trail = tickCounter % 3 === 0
       ? trailFromCache(s.frameCache, newTime)
       : s.trail;

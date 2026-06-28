@@ -4,6 +4,7 @@ import { useI18n } from "../../core/i18n";
 import { pluginRegistry } from "../../core/plugin-registry";
 import { useAchievements } from "../../core/achievements.store";
 import { useWrongAnswers } from "../../core/wrong-answer.store";
+import { useResume } from "../../core/resume.store";
 import { useState, useMemo, useEffect } from "react";
 
 function RadarChart({ data }: { data: Array<{ label: string; value: number; max: number }> }) {
@@ -133,6 +134,7 @@ export function LearningDashboard() {
   const { entries, getOverallPercent, getRecentActivity } = useMastery();
   const { badges: achievements, check: checkAchievements } = useAchievements();
   const { items: wrongAnswers, markReviewed, remove: removeWrong } = useWrongAnswers();
+  const resumeState = useResume((s) => s.state);
 
   useEffect(function() { checkAchievements(); }, [entries]);
   const plugins = useMemo(() => pluginRegistry.list(), []);

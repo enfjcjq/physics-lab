@@ -528,5 +528,8 @@
   "review.got_it": "Got it",
   "review.your_answer": "Yours",
   "review.correct": "Correct",
-  "dashboard.tab.review": "Review"
+  "dashboard.tab.review": "Review",
+  "dashboard.resume": "Continue where you left off",
+  "dashboard.resume_btn": "Resume",
+  "dashboard.tip": "Daily Physics Tip"
 }

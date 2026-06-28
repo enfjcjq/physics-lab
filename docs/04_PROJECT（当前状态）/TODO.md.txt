@@ -1,90 +1,68 @@
-# Physics Lab TODO
+﻿# Physics Lab TODO
 
-> Current version: V2.1 (S21)
-
----
-
-# Completed (S21) — Export & Testing Sprint
-
-- [x] T21-01: 安装依赖 (jspdf, html2canvas, @testing-library/react, @testing-library/jest-dom, vitest, jsdom)
-- [x] T21-02: 创建 vitest.config.ts (jsdom 环境, 路径别名, coverage 阈值)
-- [x] T21-03: 修复 captureScreenshot 选择器 (#physics-canvas, 参数化, 类型安全)
-- [x] T21-04: 创建 csv.ts 模块 (SAMPLE_RATE, calculateFrameEnergy, generateCSV + BOM, downloadCSV)
-- [x] T21-05: 实现 PDF 导出 (generatePDFReport + downloadPDFReport, html2canvas + jsPDF 图片嵌入)
-- [x] T21-06: DataPanel 重构 (统一采样率, 能量列, csv.ts 模块集成)
-- [x] T21-07: RightPanel 导出按钮组 UI (PDF/MD/CSV/Screenshot 四按钮)
-- [x] T21-08: report 单元测试 (17 tests — Markdown 中英文, HTML, download, screenshot)
-- [x] T21-09: csv 单元测试 (16 tests — energy 计算, CSV 生成/BOM/采样率, download)
-- [x] T21-10: TODO.md 更新到 V2.1/S21
+> Current version: V2.6 (S29)
 
 ---
 
-# Completed (S20)
+# Completed (S16-S29)
 
-- [x] CameraAnimator smooth phase transitions
-- [x] Bounce squash/stretch ball visual
-- [x] Bounce detection in experiment.store
-- [x] MenuBar simplified for learning mode
-- [x] Plugin computeState wired to experiment.store
-
----
-
-# Completed (S01-S02)
-
-- [x] PHASES removal from ui.store
-- [x] Data-driven RightPanel
-- [x] 196 i18n keys (zh-CN + en-US)
-- [x] Code cleanup
-
----
-
-# Phase 5: Enhanced Analytics & Multi-Experiment (S22+)
-
-- [ ] Energy chart visualization (KE/PE/TotalE over time)
-- [ ] Comparative experiment mode (side-by-side)
-- [ ] Experiment template system
-- [ ] Batch export (multiple formats at once)
-- [ ] Report customization (logo, school name, student info)
+- [x] 6 experiment plugins (free-fall, projectile, incline, collision, spring, pendulum)
+- [x] 3-mode system (Learning / Experiment / Analysis)
+- [x] PhysicsScene-driven architecture
+- [x] AI Parser: Rule-based + OllamaProvider
+- [x] AI toggle in MenuBar
+- [x] Timeline with drag/click/keyboard/phase nodes
+- [x] Teacher panel with 7-step guidance + quizzes
+- [x] FormulaDisplay component (styled math notation)
+- [x] KnowledgeGraph visualization
+- [x] Export: PDF / Markdown / HTML / CSV / Screenshot
+- [x] i18n: 571 zh-CN / 416 en-US keys
+- [x] 51 unit tests (6 test files)
+- [x] Ollama auto-detect on startup
 
 ---
 
 # Teaching System
 
-- [ ] Knowledge graph visualization
-- [ ] Adaptive learning path
-- [ ] Adaptive difficulty
-- [ ] Student progress tracking
-- [ ] Interactive quiz between teacher steps
+- [x] Teacher step-by-step guidance
+- [x] Interactive quiz between teacher steps
+- [ ] Knowledge graph mastery tracking
+- [ ] Adaptive learning paths
+- [ ] Student progress persistence
 
 ---
 
 # Visualization
 
-- [x] Camera presets per phase
-- [x] HUD real-time labels
-- [ ] Charts: Canvas-based replacement for SVG
-- [ ] Glowing trails
-- [ ] Dynamic arrow scaling (velocity/acceleration/force)
-- [ ] Collision particle effects
+- [x] 3D scene with axes, grid, ball, arrows
+- [x] Motion trail + height ruler
+- [x] HUD labels (velocity, time)
+- [x] Impact particles
+- [x] Skeleton loader
+- [ ] Glowing/shader trails
+- [x] Dynamic arrow scaling
 
 ---
 
-# Internationalization
+# AI & Parser
 
-- [x] Chinese (zh-CN) - 196 keys
-- [x] English (en-US) - 196 keys
-- [ ] Japanese (ja)
-- [ ] Korean (ko)
-
----
-
-# Future
-
+- [x] Rule-based parser (6 experiment types, zh + en)
+- [x] AIProvider interface abstraction
+- [x] OllamaProvider with local LLM
+- [x] Auto-detect Ollama on startup
+- [ ] End-to-end Ollama physics parsing test
 - [ ] OCR problem input
-- [ ] PDF parsing
-- [ ] Image recognition
-- [ ] AI PhysicsScene generation
-- [ ] Plugin SDK
-- [ ] Teacher dashboard
-- [ ] Student dashboard
+- [ ] PDF/image parsing
+
+---
+
+# Future (Phase 5+)
+
+- [ ] User accounts & cloud sync
+- [ ] School licensing
+- [ ] Plugin marketplace
+- [ ] Electromagnetism experiments
+- [ ] Wave/Optics experiments
+- [ ] Thermodynamics experiments
+- [ ] Mobile/tablet support
 - [ ] Auto-update system

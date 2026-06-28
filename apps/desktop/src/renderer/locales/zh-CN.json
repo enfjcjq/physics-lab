@@ -675,5 +675,6 @@
   "quiz.pendulum.q4.exp": "T=2π√(L/g)=2π√(1/10)≈2π×0.316≈2秒。1米长的摆，周期约为2秒。",
   "quiz.pendulum.q4.hint": "用公式 T=2π√(L/g)，L=1，g≈10，π≈3.14",
   "quiz.pendulum.q1.hint": "单摆往复运动有什么特点？",
-  "quiz.pendulum.q2.hint": "单摆最高点和最低点，哪个位置速度最大？"
+  "quiz.pendulum.q2.hint": "单摆最高点和最低点，哪个位置速度最大？",
+  "dashboard.streak": "学习连续"
 }

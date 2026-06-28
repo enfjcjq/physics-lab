@@ -67,6 +67,66 @@ function ProgressRing({ percent, size = 100, strokeWidth = 6 }: { percent: numbe
   );
 }
 
+
+function StreakCalendar() {
+  const { entries } = useMastery();
+  const days = (function() {
+    const result = [];
+    const now = new Date();
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - i);
+      const ds = d.toDateString();
+      const hasActivity = Object.values(entries).some(function(e) {
+        return e.lastAttempted && new Date(e.lastAttempted).toDateString() === ds;
+      });
+      result.push({ date: d, active: hasActivity });
+    }
+    return result;
+  })();
+  
+  const streak = (function() {
+    let s = 0;
+    const now = new Date().toDateString();
+    for (let i = 0; i < days.length; i++) {
+      const d = days[days.length - 1 - i];
+      if (d.active) s++;
+      else if (d.date.toDateString() !== now) break;
+    }
+    return s;
+  })();
+
+  const weeks = [];
+  for (let i = 0; i < days.length; i += 7) {
+    weeks.push(days.slice(i, i + 7));
+  }
+
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-2xl">{String.fromCodePoint(0x1F525)}</span>
+        <span className="text-lg font-bold text-white">{streak}</span>
+        <span className="text-xs text-slate-400">day streak</span>
+      </div>
+      <div className="flex gap-1">
+        {weeks.map(function(week, wi) {
+          return (
+            <div key={wi} className="flex flex-col gap-1">
+              {week.map(function(d, di) {
+                const title = d.date.toLocaleDateString();
+                return (
+                  <div key={di} title={title}
+                    className={"w-3 h-3 rounded-sm transition-colors " + (d.active ? "bg-emerald-500" : "bg-slate-800")} />
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function LearningDashboard() {
   const { t } = useI18n();
   const { entries, getOverallPercent, getRecentActivity } = useMastery();
@@ -139,6 +199,14 @@ export function LearningDashboard() {
       </div>
       <div className="px-5 pb-6 space-y-4">
         {selectedTab === "overview" && (
+          {/* Streak Calendar */}
+            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
+              <h3 className="text-xs font-medium text-slate-400 mb-3 uppercase tracking-wider">
+                {t("dashboard.streak", { defaultValue: "Learning Streak" })}
+              </h3>
+              <StreakCalendar />
+            </div>
+
           <>
             <div className="flex flex-col items-center py-4">
               <ProgressRing percent={overallPercent} size={120} strokeWidth={8} />

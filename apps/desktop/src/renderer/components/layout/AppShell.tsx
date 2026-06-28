@@ -11,6 +11,10 @@ import { TeacherPanel } from "../teaching/TeacherPanel";
 import { WelcomeScreen } from "./WelcomeScreen";
 import { LearningDashboard } from "../dashboard/LearningDashboard";
 import { useDashboard } from "../../core/dashboard.store";
+import { ToastContainer } from "./ToastContainer";
+import { useAchievements } from "../../core/achievements.store";
+import { useToasts } from "../../core/toast.store";
+import { useEffect, useRef } from "react";
 
 const MODES = ["learning", "experiment", "analysis"] as const;
 
@@ -19,6 +23,18 @@ export function AppShell() {
   const { mode, setMode } = useTeaching();
   const { t } = useI18n();
   const { open: showDashboard, toggle: toggleDashboard, closeDashboard } = useDashboard();
+  const { badges } = useAchievements();
+  const prevBadgeCount = useRef(0);
+
+  // Toast when new achievement unlocks
+  useEffect(function() {
+    const unlocked = badges.filter(function(b) { return b.unlocked; });
+    if (unlocked.length > prevBadgeCount.current && prevBadgeCount.current > 0) {
+      const newest = unlocked[unlocked.length - 1];
+      useToasts.getState().show({ title: newest.title, message: newest.description, icon: newest.icon });
+    }
+    prevBadgeCount.current = unlocked.length;
+  }, [badges]);
 
   const leftOpen = panels.problem?.isOpen || panels.history?.isOpen || panels.parameters?.isOpen;
   const rightOpen = panels.analysis?.isOpen || panels.teaching?.isOpen || panels.properties?.isOpen;
@@ -87,6 +103,7 @@ export function AppShell() {
       {showBottomDrawer && <BottomDrawer />}
       <Timeline />
 
+      <ToastContainer />
       {showDashboard && (
         <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={closeDashboard}>
           <div className="w-[420px] max-h-[80vh] rounded-2xl shadow-2xl border border-slate-700 overflow-hidden animate-in zoom-in-95 duration-200"

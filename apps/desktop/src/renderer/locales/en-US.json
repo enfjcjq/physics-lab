@@ -531,5 +531,6 @@
   "dashboard.tab.review": "Review",
   "dashboard.resume": "Continue where you left off",
   "dashboard.resume_btn": "Resume",
-  "dashboard.tip": "Daily Physics Tip"
+  "dashboard.tip": "Daily Physics Tip",
+  "dashboard.export_summary": "Export"
 }

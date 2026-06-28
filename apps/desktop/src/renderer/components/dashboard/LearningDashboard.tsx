@@ -5,6 +5,8 @@ import { pluginRegistry } from "../../core/plugin-registry";
 import { useAchievements } from "../../core/achievements.store";
 import { useWrongAnswers } from "../../core/wrong-answer.store";
 import { useResume } from "../../core/resume.store";
+import { generateLearningSummary, formatSummaryMarkdown } from "../../core/learning-summary";
+import { downloadFile } from "../../lib/report";
 import { useState, useMemo, useEffect } from "react";
 
 function RadarChart({ data }: { data: Array<{ label: string; value: number; max: number }> }) {
@@ -191,6 +193,14 @@ export function LearningDashboard() {
     <div className="h-full overflow-y-auto bg-slate-950 text-slate-200">
       <div className="sticky top-0 z-10 bg-slate-950/95 backdrop-blur border-b border-slate-800 px-5 py-3">
         <h2 className="text-base font-semibold text-white">{t("dashboard.title", { defaultValue: "Learning Dashboard" })}</h2>
+        <button onClick={function() {
+          const summary = generateLearningSummary("zh-CN");
+          const md = formatSummaryMarkdown(summary, "zh-CN");
+          const blob = new Blob([md], { type: "text/markdown" });
+          downloadFile(blob, "physics-lab-summary-" + new Date().toISOString().slice(0,10) + ".md");
+        }} className="text-[10px] px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors">
+          {t("dashboard.export_summary", { defaultValue: "Export" })}
+        </button>
       </div>
       <div className="flex gap-1 px-5 pt-3 pb-2">
         {(["overview", "experiments", "activity", "achievements", "review"] as const).map((tab) => (

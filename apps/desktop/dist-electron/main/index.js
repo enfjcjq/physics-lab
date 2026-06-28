@@ -44,7 +44,7 @@ function createWindow() {
 }
 function registerIPC() {
   electron.ipcMain.handle("scene:getDefault", async () => {
-    const { FREE_FALL_SCENE } = await Promise.resolve().then(() => require("./index-CUK0k_9Q.js"));
+    const { FREE_FALL_SCENE } = await Promise.resolve().then(() => require("./index-_z3rMSPB.js"));
     return FREE_FALL_SCENE;
   });
 }

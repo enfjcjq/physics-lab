@@ -1,8 +1,10 @@
-import { create } from "zustand";
+﻿import { create } from "zustand";
 import { useResume } from "../../core/resume.store";
 import type { PhysicsScene, TimelinePhase, PhysicsState } from "@physics-lab/shared";
 import { useHistory } from "../../core/history.store";
 import { pluginRegistry } from "../../core/plugin-registry";
+import { createEngine } from "@physics-lab/shared";
+import type { PhysicsSceneV2 } from "@physics-lab/shared";
 import { ensurePlugin } from "../../core/plugin-loader";
 
 export type SpeedLevel = 0.25 | 0.5 | 1 | 2 | 4;
@@ -28,11 +30,33 @@ function buildFrameCache(
   gravity: number,
   mass: number,
   pluginId: string,
-  phases: TimelinePhase[]
+  phases: TimelinePhase[],
+  scene?: PhysicsScene | null
 ): CachedFrame[] {
   const fps = 60;
   const dt = 1 / fps;
   const frames: CachedFrame[] = [];
+  // Check if scene has simulation block — use generic engine
+  // scene passed as parameter
+  if ((scene as any)?.simulation?.equations) {
+    const engine = createEngine(scene as PhysicsSceneV2);
+    const allFrames = engine.precomputeAll();
+    for (const frame of allFrames) {
+      const pos = frame.positions.ball ?? frame.positions[Object.keys(frame.positions)[0]] ?? [0, 0, 0];
+      const vel = frame.velocities.ball ?? frame.velocities[Object.keys(frame.velocities)[0]] ?? [0, 0, 0];
+      const acc = frame.accelerations.ball ?? frame.accelerations[Object.keys(frame.accelerations)[0]] ?? [0, 0, 0];
+      frames.push({
+        time: parseFloat(frame.time.toFixed(4)),
+        ballX: pos[0], ballY: Math.max(pos[1], 0.2),
+        ball2X: 0, ball2Y: 0,
+        ballVelocity: vel[1], ballAcceleration: acc[1],
+        isOnGround: pos[1] <= 0.22 && vel[1] <= 0,
+        phaseId: getPhaseIdFromCache(phases, frame.time),
+      });
+    }
+    return frames;
+  }
+
   const plugin = pluginRegistry.get(pluginId);
   if (!plugin) {
     // Fallback: basic free-fall computation
@@ -252,7 +276,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
   setScene: (scene) => {
     const { height, mass, gravity, duration, phases } = extractParams(scene);
     const pluginId = scene.metadata.topic ?? "free-fall";
-    const cache = buildFrameCache(duration, height, gravity, mass, pluginId, phases);
+    const cache = buildFrameCache(duration, height, gravity, mass, pluginId, phases, scene);
     const frame = cache[0];
     set({
       scene, sceneLoaded: true,
@@ -278,7 +302,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
       if (!plugin) { set({ pluginLoading: false }); return; }
       const scene = plugin.getDefaultScene();
       const { height, mass, gravity, duration, phases } = extractParams(scene);
-      const cache = buildFrameCache(duration, height, gravity, mass, pluginId, phases);
+      const cache = buildFrameCache(duration, height, gravity, mass, pluginId, phases, scene);
       const frame = cache[0];
       set({
         scene, sceneLoaded: true,
@@ -303,7 +327,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
   // ===== Parameter setters (rebuild cache on change) =====
   setMass: (mass) => {
     const { height, gravity, totalDuration, phases, activePluginId, currentTime, playing } = get();
-    const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases);
+    const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases, scene);
     const frame = findFrame(cache, playing ? currentTime : currentTime);
     set({
       mass,
@@ -317,7 +341,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
 
   setHeight: (height) => {
     const { mass, gravity, totalDuration, phases, activePluginId, currentTime } = get();
-    const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases);
+    const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases, scene);
     const frame = findFrame(cache, currentTime);
     set({
       height,
@@ -331,7 +355,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
 
   setGravity: (gravity) => {
     const { mass, height, totalDuration, phases, activePluginId, currentTime } = get();
-    const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases);
+    const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases, scene);
     const frame = findFrame(cache, currentTime);
     set({
       gravity,
@@ -345,7 +369,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
 
   rebuildCache: () => {
     const { mass, height, gravity, totalDuration, phases, activePluginId, currentTime } = get();
-    const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases);
+    const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases, scene);
     const frame = findFrame(cache, currentTime);
     set({
       frameCache: cache,

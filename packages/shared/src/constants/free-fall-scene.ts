@@ -1,6 +1,6 @@
-import type { PhysicsScene } from "../types/physics-scene";
+﻿import type { PhysicsScene } from "../types/physics-scene";
 
-export const FREE_FALL_SCENE: PhysicsScene = {
+export const FREE_FALL_SCENE: PhysicsScene & { simulation?: any } = {
   $schema: "https://physics-lab.app/schemas/physics-scene/2.0.json",
   version: "2.0",
   metadata: {
@@ -128,5 +128,25 @@ export const FREE_FALL_SCENE: PhysicsScene = {
     { id: "ch_ke", type: "kinetic_energy", label: "KE", xAxis: { label: "Time", unit: "s", key: "t" }, yAxis: { label: "Kinetic Energy", unit: "J", key: "ke" }, color: "#f59e0b" },
     { id: "ch_pe", type: "potential_energy", label: "PE", xAxis: { label: "Time", unit: "s", key: "t" }, yAxis: { label: "Potential Energy", unit: "J", key: "pe" }, color: "#22c55e" },
     { id: "ch_me", type: "mechanical_energy", label: "ME", xAxis: { label: "Time", unit: "s", key: "t" }, yAxis: { label: "Mechanical Energy", unit: "J", key: "me" }, color: "#3b82f6" },
-  ],
+  ],  simulation: {
+    params: { h0: 10, g: 9.8, m: 2 },
+    equations: {
+      x: "0",
+      y: "h0 - 0.5 * g * t * t > 0.2 ? h0 - 0.5 * g * t * t : 0.2",
+      z: "0",
+      vx: "0",
+      vy: "t < sqrt(2 * h0 / g) ? -g * t : 0",
+      vz: "0",
+      ax: "0",
+      ay: "t < sqrt(2 * h0 / g) ? -g : 0",
+      az: "0",
+      ke: "0.5 * m * vy * vy",
+      pe: "m * g * y",
+      total_e: "m * g * h0",
+      speed: "abs(vy)",
+    },
+    stopWhen: [
+      { formula: "h0 - 0.5 * g * t * t - 0.2", description: "Ball reaches ground" },
+    ],
+  },
 };

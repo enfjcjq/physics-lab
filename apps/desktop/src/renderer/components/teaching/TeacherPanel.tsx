@@ -15,32 +15,46 @@ interface QuizItem {
   options: string[];
   correctIndex: number;
   explanationKey: string;
+  hintKey?: string;
+  difficulty?: "easy" | "medium" | "hard";
 }
 
-const QUIZ_MAP: Record<string, Record<number, QuizItem>> = {
+const QUIZ_MAP: Record<string, Record<number, QuizItem[]>> = {
   "free-fall": {
-    2: { questionKey: "quiz.freefall.q1", options: ["quiz.freefall.q1.a", "quiz.freefall.q1.b", "quiz.freefall.q1.c"], correctIndex: 0, explanationKey: "quiz.freefall.q1.exp" },
-    4: { questionKey: "quiz.freefall.q2", options: ["quiz.freefall.q2.a", "quiz.freefall.q2.b", "quiz.freefall.q2.c"], correctIndex: 0, explanationKey: "quiz.freefall.q2.exp" },
+    2: [{ questionKey: "quiz.freefall.q1", options: ["quiz.freefall.q1.a", "quiz.freefall.q1.b", "quiz.freefall.q1.c"], correctIndex: 0, explanationKey: "quiz.freefall.q1.exp", hintKey: "quiz.freefall.q1.hint", difficulty: "easy" }],
+    3: [{ questionKey: "quiz.freefall.q3", options: ["quiz.freefall.q3.a", "quiz.freefall.q3.b", "quiz.freefall.q3.c"], correctIndex: 0, explanationKey: "quiz.freefall.q3.exp", hintKey: "quiz.freefall.q3.hint", difficulty: "medium" }],
+    4: [{ questionKey: "quiz.freefall.q2", options: ["quiz.freefall.q2.a", "quiz.freefall.q2.b", "quiz.freefall.q2.c"], correctIndex: 0, explanationKey: "quiz.freefall.q2.exp", hintKey: "quiz.freefall.q2.hint", difficulty: "medium" }],
+    5: [{ questionKey: "quiz.freefall.q4", options: ["quiz.freefall.q4.a", "quiz.freefall.q4.b", "quiz.freefall.q4.c"], correctIndex: 2, explanationKey: "quiz.freefall.q4.exp", hintKey: "quiz.freefall.q4.hint", difficulty: "hard" }],
   },
   "projectile-motion": {
-    2: { questionKey: "quiz.projectile.q1", options: ["quiz.projectile.q1.a", "quiz.projectile.q1.b", "quiz.projectile.q1.c"], correctIndex: 0, explanationKey: "quiz.projectile.q1.exp" },
-    4: { questionKey: "quiz.projectile.q2", options: ["quiz.projectile.q2.a", "quiz.projectile.q2.b", "quiz.projectile.q2.c"], correctIndex: 0, explanationKey: "quiz.projectile.q2.exp" },
+    2: [{ questionKey: "quiz.projectile.q1", options: ["quiz.projectile.q1.a", "quiz.projectile.q1.b", "quiz.projectile.q1.c"], correctIndex: 0, explanationKey: "quiz.projectile.q1.exp", hintKey: "quiz.projectile.q1.hint", difficulty: "easy" }],
+    3: [{ questionKey: "quiz.projectile.q3", options: ["quiz.projectile.q3.a", "quiz.projectile.q3.b", "quiz.projectile.q3.c"], correctIndex: 1, explanationKey: "quiz.projectile.q3.exp", hintKey: "quiz.projectile.q3.hint", difficulty: "medium" }],
+    4: [{ questionKey: "quiz.projectile.q2", options: ["quiz.projectile.q2.a", "quiz.projectile.q2.b", "quiz.projectile.q2.c"], correctIndex: 0, explanationKey: "quiz.projectile.q2.exp", hintKey: "quiz.projectile.q2.hint", difficulty: "medium" }],
+    5: [{ questionKey: "quiz.projectile.q4", options: ["quiz.projectile.q4.a", "quiz.projectile.q4.b", "quiz.projectile.q4.c"], correctIndex: 1, explanationKey: "quiz.projectile.q4.exp", hintKey: "quiz.projectile.q4.hint", difficulty: "hard" }],
   },
   "inclined-plane": {
-    2: { questionKey: "quiz.incline.q1", options: ["quiz.incline.q1.a", "quiz.incline.q1.b", "quiz.incline.q1.c"], correctIndex: 0, explanationKey: "quiz.incline.q1.exp" },
-    4: { questionKey: "quiz.incline.q2", options: ["quiz.incline.q2.a", "quiz.incline.q2.b", "quiz.incline.q2.c"], correctIndex: 0, explanationKey: "quiz.incline.q2.exp" },
+    2: [{ questionKey: "quiz.incline.q1", options: ["quiz.incline.q1.a", "quiz.incline.q1.b", "quiz.incline.q1.c"], correctIndex: 0, explanationKey: "quiz.incline.q1.exp", hintKey: "quiz.incline.q1.hint", difficulty: "easy" }],
+    3: [{ questionKey: "quiz.incline.q3", options: ["quiz.incline.q3.a", "quiz.incline.q3.b", "quiz.incline.q3.c"], correctIndex: 1, explanationKey: "quiz.incline.q3.exp", hintKey: "quiz.incline.q3.hint", difficulty: "medium" }],
+    4: [{ questionKey: "quiz.incline.q2", options: ["quiz.incline.q2.a", "quiz.incline.q2.b", "quiz.incline.q2.c"], correctIndex: 0, explanationKey: "quiz.incline.q2.exp", hintKey: "quiz.incline.q2.hint", difficulty: "medium" }],
+    5: [{ questionKey: "quiz.incline.q4", options: ["quiz.incline.q4.a", "quiz.incline.q4.b", "quiz.incline.q4.c"], correctIndex: 0, explanationKey: "quiz.incline.q4.exp", hintKey: "quiz.incline.q4.hint", difficulty: "hard" }],
   },
   "collision": {
-    2: { questionKey: "quiz.collision.q1", options: ["quiz.collision.q1.a", "quiz.collision.q1.b", "quiz.collision.q1.c"], correctIndex: 0, explanationKey: "quiz.collision.q1.exp" },
-    4: { questionKey: "quiz.collision.q2", options: ["quiz.collision.q2.a", "quiz.collision.q2.b", "quiz.collision.q2.c"], correctIndex: 0, explanationKey: "quiz.collision.q2.exp" },
+    2: [{ questionKey: "quiz.collision.q1", options: ["quiz.collision.q1.a", "quiz.collision.q1.b", "quiz.collision.q1.c"], correctIndex: 0, explanationKey: "quiz.collision.q1.exp", hintKey: "quiz.collision.q1.hint", difficulty: "easy" }],
+    3: [{ questionKey: "quiz.collision.q3", options: ["quiz.collision.q3.a", "quiz.collision.q3.b", "quiz.collision.q3.c"], correctIndex: 0, explanationKey: "quiz.collision.q3.exp", hintKey: "quiz.collision.q3.hint", difficulty: "medium" }],
+    4: [{ questionKey: "quiz.collision.q2", options: ["quiz.collision.q2.a", "quiz.collision.q2.b", "quiz.collision.q2.c"], correctIndex: 0, explanationKey: "quiz.collision.q2.exp", hintKey: "quiz.collision.q2.hint", difficulty: "medium" }],
+    5: [{ questionKey: "quiz.collision.q4", options: ["quiz.collision.q4.a", "quiz.collision.q4.b", "quiz.collision.q4.c"], correctIndex: 1, explanationKey: "quiz.collision.q4.exp", hintKey: "quiz.collision.q4.hint", difficulty: "hard" }],
   },
   "spring-mass": {
-    2: { questionKey: "quiz.spring.q1", options: ["quiz.spring.q1.a", "quiz.spring.q1.b", "quiz.spring.q1.c"], correctIndex: 0, explanationKey: "quiz.spring.q1.exp" },
-    4: { questionKey: "quiz.spring.q2", options: ["quiz.spring.q2.a", "quiz.spring.q2.b", "quiz.spring.q2.c"], correctIndex: 0, explanationKey: "quiz.spring.q2.exp" },
+    2: [{ questionKey: "quiz.spring.q1", options: ["quiz.spring.q1.a", "quiz.spring.q1.b", "quiz.spring.q1.c"], correctIndex: 0, explanationKey: "quiz.spring.q1.exp", hintKey: "quiz.spring.q1.hint", difficulty: "easy" }],
+    3: [{ questionKey: "quiz.spring.q3", options: ["quiz.spring.q3.a", "quiz.spring.q3.b", "quiz.spring.q3.c"], correctIndex: 1, explanationKey: "quiz.spring.q3.exp", hintKey: "quiz.spring.q3.hint", difficulty: "medium" }],
+    4: [{ questionKey: "quiz.spring.q2", options: ["quiz.spring.q2.a", "quiz.spring.q2.b", "quiz.spring.q2.c"], correctIndex: 0, explanationKey: "quiz.spring.q2.exp", hintKey: "quiz.spring.q2.hint", difficulty: "medium" }],
+    5: [{ questionKey: "quiz.spring.q4", options: ["quiz.spring.q4.a", "quiz.spring.q4.b", "quiz.spring.q4.c"], correctIndex: 0, explanationKey: "quiz.spring.q4.exp", hintKey: "quiz.spring.q4.hint", difficulty: "hard" }],
   },
   "pendulum": {
-    2: { questionKey: "quiz.pendulum.q1", options: ["quiz.pendulum.q1.a", "quiz.pendulum.q1.b", "quiz.pendulum.q1.c"], correctIndex: 0, explanationKey: "quiz.pendulum.q1.exp" },
-    4: { questionKey: "quiz.pendulum.q2", options: ["quiz.pendulum.q2.a", "quiz.pendulum.q2.b", "quiz.pendulum.q2.c"], correctIndex: 0, explanationKey: "quiz.pendulum.q2.exp" },
+    2: [{ questionKey: "quiz.pendulum.q1", options: ["quiz.pendulum.q1.a", "quiz.pendulum.q1.b", "quiz.pendulum.q1.c"], correctIndex: 0, explanationKey: "quiz.pendulum.q1.exp", hintKey: "quiz.pendulum.q1.hint", difficulty: "easy" }],
+    3: [{ questionKey: "quiz.pendulum.q3", options: ["quiz.pendulum.q3.a", "quiz.pendulum.q3.b", "quiz.pendulum.q3.c"], correctIndex: 1, explanationKey: "quiz.pendulum.q3.exp", hintKey: "quiz.pendulum.q3.hint", difficulty: "medium" }],
+    4: [{ questionKey: "quiz.pendulum.q2", options: ["quiz.pendulum.q2.a", "quiz.pendulum.q2.b", "quiz.pendulum.q2.c"], correctIndex: 0, explanationKey: "quiz.pendulum.q2.exp", hintKey: "quiz.pendulum.q2.hint", difficulty: "medium" }],
+    5: [{ questionKey: "quiz.pendulum.q4", options: ["quiz.pendulum.q4.a", "quiz.pendulum.q4.b", "quiz.pendulum.q4.c"], correctIndex: 2, explanationKey: "quiz.pendulum.q4.exp", hintKey: "quiz.pendulum.q4.hint", difficulty: "hard" }],
   },
 };
 
@@ -95,7 +109,22 @@ export function TeacherPanel() {
   const [phaseQuizAnswers, setPhaseQuizAnswers] = useState<Record<string, number | null>>({});
   const currentPhaseQuizAnswer = phaseQuizAnswers[currentPhaseId];
   const quizSet = QUIZ_MAP[activePluginId] || QUIZ_MAP["free-fall"] || {};
-  const phaseQuiz = quizSet[currentIdx] ?? null;
+  const phaseQuizzes = quizSet[currentIdx] ?? null;
+  // Adaptive: pick quiz based on mastery. Higher mastery -> harder questions
+  const phaseQuiz = phaseQuizzes ? (function() {
+    if (!phaseQuizzes || phaseQuizzes.length === 0) return null;
+    const plugin = pluginRegistry.get(activePluginId);
+    const kps = plugin?.getKnowledgePoints() ?? [];
+    const entries = useMastery.getState().getAll();
+    const avgScore = kps.length > 0 ? kps.reduce(function(s, kp) {
+      const e = entries[activePluginId + ":" + kp.id] ?? entries[kp.id];
+      return s + (e?.score ?? 0);
+    }, 0) / kps.length : 0;
+    // avgScore 0-33: easy, 34-66: medium, 67+: hard
+    const targetDiff = avgScore < 34 ? "easy" : avgScore < 67 ? "medium" : "hard";
+    const match = phaseQuizzes.find(function(q) { return q.difficulty === targetDiff; });
+    return match || phaseQuizzes[0];
+  })() : null;
   const phaseQuizCorrect = phaseQuiz && currentPhaseQuizAnswer === phaseQuiz.correctIndex;
 
   const handlePhaseQuizAnswer = (idx: number) => {
@@ -183,6 +212,12 @@ export function TeacherPanel() {
                   </h3>
                 </div>
                 <p className="text-xs text-slate-400 leading-relaxed">{t(phaseQuiz.explanationKey)}</p>
+                {!phaseQuizCorrect && phaseQuiz.hintKey && (
+                  <div className="mt-2 pt-2 border-t border-red-800/30">
+                    <span className="text-[10px] text-amber-400">{"\uD83D\uDCA1 " + t("quiz.hint")}</span>
+                    <p className="text-[10px] text-amber-300/80 mt-0.5">{t(phaseQuiz.hintKey)}</p>
+                  </div>
+                )}
                 {phaseQuizCorrect && step?.formulaKey && (
                   <div className="mt-2.5 px-3 py-2 bg-slate-900/80 rounded-lg text-xs font-mono text-sky-300 whitespace-pre-wrap">
                     {t(step.formulaKey)}

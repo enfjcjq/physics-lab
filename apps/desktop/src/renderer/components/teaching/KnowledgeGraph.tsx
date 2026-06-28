@@ -1,6 +1,7 @@
 ﻿import { useMemo, useState } from "react";
 import { pluginRegistry } from "../../core/plugin-registry";
 import { useI18n } from "../../core/i18n";
+import { useMastery } from "../../core/mastery.store";
 
 interface GraphNode {
   id: string;
@@ -42,7 +43,7 @@ function collectKnowledgeGraph() {
         name: kp.name,
         category: kp.category || "Mechanics",
         x: 0, y: 0,
-        mastered: kp.mastered ?? false,
+        mastered: useMastery.getState().isMastered(kp.id) || (kp.mastered ?? false),
       });
     }
   }

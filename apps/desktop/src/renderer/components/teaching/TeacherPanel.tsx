@@ -3,6 +3,7 @@ import { useSimulation } from "../../features/experiment/experiment.store";
 import type { TeacherStep } from "@physics-lab/shared";
 import { useI18n } from "../../core/i18n";
 import { useTeaching } from "../../core/teaching.store";
+import { useMastery } from "../../core/mastery.store";
 import { useState, useRef, useEffect } from "react";
 
 const STEP_ICONS = ["\uD83D\uDC41\uFE0F", "\uD83D\uDCA1", "\uD83D\uDCD0", "\uD83D\uDCC8", "\uD83E\uDDE0", "\u2705", "\uD83C\uDF1F"];

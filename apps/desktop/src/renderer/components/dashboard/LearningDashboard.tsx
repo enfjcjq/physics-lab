@@ -3,6 +3,7 @@ import { useMastery } from "../../core/mastery.store";
 import { useI18n } from "../../core/i18n";
 import { pluginRegistry } from "../../core/plugin-registry";
 import { useAchievements } from "../../core/achievements.store";
+import { useWrongAnswers } from "../../core/wrong-answer.store";
 import { useState, useMemo, useEffect } from "react";
 
 function RadarChart({ data }: { data: Array<{ label: string; value: number; max: number }> }) {
@@ -131,6 +132,7 @@ export function LearningDashboard() {
   const { t } = useI18n();
   const { entries, getOverallPercent, getRecentActivity } = useMastery();
   const { badges: achievements, check: checkAchievements } = useAchievements();
+  const { items: wrongAnswers, markReviewed, remove: removeWrong } = useWrongAnswers();
 
   useEffect(function() { checkAchievements(); }, [entries]);
   const plugins = useMemo(() => pluginRegistry.list(), []);
@@ -189,7 +191,7 @@ export function LearningDashboard() {
         <h2 className="text-base font-semibold text-white">{t("dashboard.title", { defaultValue: "Learning Dashboard" })}</h2>
       </div>
       <div className="flex gap-1 px-5 pt-3 pb-2">
-        {(["overview", "experiments", "activity", "achievements"] as const).map((tab) => (
+        {(["overview", "experiments", "activity", "achievements", "review"] as const).map((tab) => (
           <button key={tab} onClick={() => setSelectedTab(tab)}
             className={"px-3 py-1.5 rounded-lg text-xs font-medium transition-colors " +
               (selectedTab === tab ? "bg-sky-600 text-white" : "text-slate-400 hover:text-white hover:bg-slate-800")}>
@@ -273,6 +275,54 @@ export function LearningDashboard() {
                 </p>
               </div>
             ))}
+          </div>
+        )}
+        {selectedTab === "review" && (
+          <div className="space-y-2">
+            {wrongAnswers.length === 0 ? (
+              <div className="text-center py-6">
+                <span className="text-3xl">{String.fromCodePoint(0x1F389)}</span>
+                <p className="text-sm text-slate-400 mt-2">{t("review.empty", { defaultValue: "No wrong answers! Great job!" })}</p>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-slate-400">
+                    {wrongAnswers.filter(function(w) { return !w.reviewed; }).length} {t("review.unreviewed", { defaultValue: "unreviewed" })}
+                  </span>
+                  <button onClick={function() { useWrongAnswers.getState().clearAll(); }}
+                    className="text-[10px] text-slate-600 hover:text-red-400 transition-colors">
+                    {t("review.clear", { defaultValue: "Clear all" })}
+                  </button>
+                </div>
+                {wrongAnswers.map(function(w) {
+                  return (
+                    <div key={w.id} className={"bg-slate-900/50 border rounded-xl p-3 transition-all " + (w.reviewed ? "border-slate-800 opacity-60" : "border-amber-800/40")}>
+                      <div className="flex items-start justify-between mb-1">
+                        <span className="text-[10px] text-slate-500">{w.pluginId} · {new Date(w.timestamp).toLocaleDateString()}</span>
+                        <div className="flex gap-1">
+                          {!w.reviewed && (
+                            <button onClick={function() { markReviewed(w.id); }}
+                              className="text-[10px] px-2 py-0.5 rounded bg-emerald-900/30 text-emerald-400 hover:bg-emerald-900/50">
+                              {t("review.got_it", { defaultValue: "Got it" })}
+                            </button>
+                          )}
+                          <button onClick={function() { removeWrong(w.id); }}
+                            className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-500 hover:text-slate-300">
+                            ×
+                          </button>
+                        </div>
+                      </div>
+                      <p className="text-xs text-slate-300">{t(w.questionKey, { defaultValue: w.questionKey })}</p>
+                      <div className="flex gap-3 mt-1.5 text-[10px]">
+                        <span className="text-red-400">{t("review.your_answer", { defaultValue: "Yours" })}: {String.fromCharCode(65 + w.userAnswer)}</span>
+                        <span className="text-emerald-400">{t("review.correct", { defaultValue: "Correct" })}: {String.fromCharCode(65 + w.correctAnswer)}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
+            )}
           </div>
         )}
         {selectedTab === "achievements" && (

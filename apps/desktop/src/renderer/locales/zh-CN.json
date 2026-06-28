@@ -676,5 +676,12 @@
   "quiz.pendulum.q4.hint": "用公式 T=2π√(L/g)，L=1，g≈10，π≈3.14",
   "quiz.pendulum.q1.hint": "单摆往复运动有什么特点？",
   "quiz.pendulum.q2.hint": "单摆最高点和最低点，哪个位置速度最大？",
-  "dashboard.streak": "学习连续"
+  "dashboard.streak": "学习连续",
+  "review.empty": "没有错题，表现很棒！",
+  "review.unreviewed": "未复习",
+  "review.clear": "清空",
+  "review.got_it": "已掌握",
+  "review.your_answer": "你的答案",
+  "review.correct": "正确答案",
+  "dashboard.tab.review": "错题"
 }

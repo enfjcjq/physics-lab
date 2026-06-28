@@ -521,5 +521,12 @@
   "quiz.pendulum.q4.hint": "Use T=2π√(L/g), L=1, g≈10, π≈3.14",
   "quiz.pendulum.q1.hint": "What characterizes the back-and-forth motion of a pendulum?",
   "quiz.pendulum.q2.hint": "At the highest vs lowest point, where is speed greatest?",
-  "dashboard.streak": "Learning Streak"
+  "dashboard.streak": "Learning Streak",
+  "review.empty": "No wrong answers! Great job!",
+  "review.unreviewed": "unreviewed",
+  "review.clear": "Clear all",
+  "review.got_it": "Got it",
+  "review.your_answer": "Yours",
+  "review.correct": "Correct",
+  "dashboard.tab.review": "Review"
 }

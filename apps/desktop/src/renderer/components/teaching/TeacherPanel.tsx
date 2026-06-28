@@ -4,6 +4,7 @@ import type { TeacherStep } from "@physics-lab/shared";
 import { useI18n } from "../../core/i18n";
 import { useTeaching } from "../../core/teaching.store";
 import { useMastery } from "../../core/mastery.store";
+import { useWrongAnswers } from "../../core/wrong-answer.store";
 import { pluginRegistry } from "../../core/plugin-registry";
 import { useState, useRef, useEffect } from "react";
 

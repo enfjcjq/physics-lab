@@ -1,6 +1,6 @@
-# Project Status
+﻿# Project Status
 
-**Version:** V3.1 (Sprint S39)
+**Version:** V3.2 (Sprint S48)
 **Status:** Active Development — Learning Experience Phase
 
 ## Architecture
@@ -21,7 +21,7 @@ Problem → AI Parser (Rule/Ollama) → PhysicsScene
 ```
 
 ## Key Metrics
-- 6 experiments | 677 zh-CN | 522 en-US | 66 tests (9 files)
+- 7 experiments | 677 zh-CN | 522 en-US | 66 tests (9 files)
 - 3 modes: Learning / Experiment / Analysis
 - 4 AI sub-modes: Experiment / Teaching / Solving / Explore
 - AI: Rule-based (instant) + Ollama (local LLM, auto-detect + warmUp)
@@ -31,7 +31,9 @@ Problem → AI Parser (Rule/Ollama) → PhysicsScene
 - Knowledge Graph: live mastery coloring, detail cards
 - Zero TypeScript errors | Zero test failures
 
-## Recent Sprints (S35-S39)
+## Recent Sprints
+- S47: Circular motion experiment (7th plugin)
+- S48: Wrong answer recording + quiz-toast integration + Ball memo fix (S35-S39)
 - S35: Learning Dashboard + Mastery V2 (entries with attempts/scores)
 - S36: Knowledge Graph mastery colors + Achievement badges (7 badges)
 - S37: Ollama warmUp + confidence scoring + AI status indicator

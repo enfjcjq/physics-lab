@@ -5,6 +5,7 @@ import { useI18n } from "../../core/i18n";
 import { useTeaching } from "../../core/teaching.store";
 import { useMastery } from "../../core/mastery.store";
 import { useWrongAnswers } from "../../core/wrong-answer.store";
+import { useToasts } from "../../core/toast.store";
 import { pluginRegistry } from "../../core/plugin-registry";
 import { useState, useRef, useEffect } from "react";
 
@@ -142,6 +143,20 @@ export function TeacherPanel() {
       const kps = plugin?.getKnowledgePoints() ?? [];
       const kpId = kps[currentIdx % kps.length]?.id ?? activePluginId + ':step' + currentIdx;
       useMastery.getState().markAttempt(activePluginId + ':' + kpId, !!correct);
+      // Record wrong answers for review
+      if (!correct && phaseQuiz) {
+        useWrongAnswers.getState().record(
+          activePluginId,
+          phaseQuiz.questionKey,
+          idx,
+          phaseQuiz.correctIndex
+        );
+        useToasts.getState().show({
+          title: "Incorrect",
+          message: "Answer saved for review",
+          icon: "\u274C"
+        });
+      }
     }
     if (correct && currentPhaseId) {
       togglePhaseLoop(currentPhaseId);

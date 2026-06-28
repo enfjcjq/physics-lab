@@ -53,7 +53,7 @@ const Axes = memo(function Axes() {
 const Ground = memo(function Ground() {return<mesh rotation={[-Math.PI/2,0,0]} position={[0,0,0]} receiveShadow><planeGeometry args={[20,20]}/><meshStandardMaterial color="#334155" roughness={0.8}/></mesh>;});
 const Grid = memo(function Grid(){return<gridHelper args={[20,20,"#334155","#1e293b"]} position={[0,0.01,0]}/>;});
 
-function Ball(){
+const Ball = memo(function Ball(){
   const x=useSimulation(s=>s.ballX),y=useSimulation(s=>s.ballY),m=useSimulation(s=>s.mass),isBouncing=useSimulation(s=>s.isBouncing);
   const ref=useRef<THREE.Mesh>(null),r=0.15+m*0.05;
   const [squash,setSquash]=useState(1);

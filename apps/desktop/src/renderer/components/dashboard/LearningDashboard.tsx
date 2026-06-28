@@ -212,9 +212,8 @@ export function LearningDashboard() {
         ))}
       </div>
       <div className="px-5 pb-6 space-y-4">
-        {selectedTab === "overview" && (
-          {/* Streak Calendar */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
+        {selectedTab === "overview" && <>
+          <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
               <h3 className="text-xs font-medium text-slate-400 mb-3 uppercase tracking-wider">
                 {t("dashboard.streak", { defaultValue: "Learning Streak" })}
               </h3>
@@ -261,7 +260,7 @@ export function LearningDashboard() {
               </div>
             )}
           </>
-        )}
+        </></>}
         {selectedTab === "experiments" && (
           <div className="space-y-2">
             {pluginStats.map((stat) => (

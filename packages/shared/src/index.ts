@@ -6,3 +6,5 @@ export { COLLISION_SCENE } from "./constants/collision-scene";
 export { SPRING_MASS_SCENE } from "./constants/spring-mass-scene";
 export { PENDULUM_SCENE } from "./constants/pendulum-scene";
 export * from "./plugin/types";
+
+export * from './engine';

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { AppShell } from "./components/layout/AppShell";
 import { ErrorBoundary } from "./components/layout/ErrorBoundary";
 import { useSimulation } from "./features/experiment/experiment.store";
@@ -10,6 +10,9 @@ import { FREE_FALL_SCENE } from "@physics-lab/shared";
 // Eagerly register only free-fall. Other plugins load lazily on switch.
 // Register all plugins so the experiment switcher shows all 6
 pluginRegistry.register(freeFallPlugin);
+// Dynamic engine test: formula-driven free-fall (compare with hand-coded plugin)
+import { createFreeFallScene, createVirtualPlugin } from "@physics-lab/shared";
+pluginRegistry.register(createVirtualPlugin(createFreeFallScene(10, 9.8, 2) as any));
 // Lazy-register the rest on first access via ensurePlugin in plugin-loader.ts
 // They appear in the list because pluginRegistry.list() only shows registered plugins.
 // We eagerly register them here for the UI, but their scenes load lazily.

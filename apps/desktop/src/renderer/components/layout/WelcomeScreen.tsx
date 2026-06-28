@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useI18n } from "../../core/i18n";
 import { useTeaching, type AppMode } from "../../core/teaching.store";
+import { useSimulation } from "../../features/experiment/experiment.store";
 
 export function WelcomeScreen() {
   const { t } = useI18n();
   const { setMode } = useTeaching();
+  const play = useSimulation((s) => s.play);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -16,12 +18,14 @@ export function WelcomeScreen() {
     localStorage.setItem("physics-lab:welcome-seen", "1");
     setVisible(false);
     setMode("learning");
+    setTimeout(() => play(), 300);
   };
 
   const startInMode = (mode: AppMode) => {
     localStorage.setItem("physics-lab:welcome-seen", "1");
     setVisible(false);
     setMode(mode);
+    setTimeout(() => play(), 300);
   };
 
   if (!visible) return null;

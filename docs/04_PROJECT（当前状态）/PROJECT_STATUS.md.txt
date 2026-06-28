@@ -1,25 +1,19 @@
 ﻿# Project Status
 
-**Version:** V2.4 (Sprint S26)
+**Version:** V2.5 (Sprint S27)
 **Status:** Complete
 
 ## Completed Sprints
 | Sprint | Focus | Key Deliverable |
 |--------|-------|----------------|
-| S16-S20 | Foundation | 6 plugins, formula overlay, quiz, timeline, visual polish |
-| S21 | Export | PDF/MD/CSV/Screenshot export |
-| S22 | Teacher | FormulaDisplay, free-fall fix, i18n cleanup |
-| S23 | Consistency | Plugin phase fixes |
-| S24 | AI Parser | OllamaProvider, AIProvider abstraction |
-| S25 | AI Store | ai-provider.store with provider switching |
-| S26 | AI UI | AI toggle in MenuBar (Rule/Ollama) |
+| S16-S20 | Foundation | 6 plugins, formula, quiz, timeline, visual polish |
+| S21 | Export | PDF/MD/CSV/Screenshot |
+| S22-S23 | Polish | FormulaDisplay, crash fixes, plugin consistency |
+| S24-S25 | AI Engine | OllamaProvider, AIProvider store |
+| S26 | AI UI | MenuBar toggle (Rule/Ollama) |
+| S27 | Integration | Auto-detect Ollama, i18n keys, graceful fallback |
 
-## Experiments (6)
-Free Fall | Projectile Motion | Inclined Plane | Collision | Spring-Mass | Pendulum
-
-## Key Architecture
-- **AI Provider toggle** now visible in MenuBar: Rule-based (instant) / Ollama (local LLM)
-- Switch AI engines without changing any business logic
-- All modules driven by PhysicsScene (single source of truth)
-- 6 plugins, 564 zh-CN keys, 409 en-US keys
-- 3 modes: Learning / Experiment / Analysis
+## Key Metrics
+- **6 experiments** | **571 zh-CN keys** | **416 en-US keys**
+- **Zero TypeScript errors** | **Clean architecture**
+- AI: Rule-based (instant) + Ollama (local LLM) with auto-detect

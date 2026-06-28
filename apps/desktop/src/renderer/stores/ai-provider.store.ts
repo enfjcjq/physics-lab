@@ -33,6 +33,8 @@ interface AIProviderState {
 }
 
 export const useAIProviderStore = create<AIProviderState>((set, get) => ({
+  // Auto-detect Ollama on first access
+  _init: (() => { setTimeout(() => get().checkOllama(), 2000); })(),
   activeId: "rule-based",
   ollamaAvailable: null,
   isChecking: false,

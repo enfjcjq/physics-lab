@@ -562,5 +562,12 @@
   "ui.no_data": "暂无数据",
   "data.table": "表格",
   "data.live": "实时",
-  "analysis.magnitude": "大小"
+  "analysis.magnitude": "大小",
+  "ai.provider.rule": "规则解析器",
+  "ai.provider.ollama": "Ollama（本地大模型）",
+  "ai.status.checking": "正在检测 Ollama...",
+  "ai.status.connected": "Ollama 已连接",
+  "ai.status.not_running": "Ollama 未运行，请从 ollama.com 安装",
+  "ai.status.error": "AI 不可用 — 使用规则解析器备用",
+  "ai.toggle": "切换 AI 引擎"
 }

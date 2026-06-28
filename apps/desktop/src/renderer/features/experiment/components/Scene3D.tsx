@@ -178,10 +178,11 @@ function CameraAnimator(){
 
   return null;
 }
+
 function Ball2(){
   const x=useSimulation(s=>s.ball2X),y=useSimulation(s=>s.ball2Y),activePlugin=useSimulation(s=>s.activePluginId);
-  if(activePlugin!=="collision")return null;
   const ref=useRef<THREE.Mesh>(null),r=0.25;
+  if(activePlugin!=="collision")return null;
   return<mesh ref={ref} position={[x,y,0]} castShadow>
     <sphereGeometry args={[r,32,32]}/>
     <meshStandardMaterial color="#ef4444" metalness={0.3} roughness={0.4} emissive="#441111" emissiveIntensity={0.2}/>
@@ -212,13 +213,13 @@ export function Scene3D() {
       }
 
       // Log GPU info for diagnostics
-      const debugInfo = ctx.getExtension('WEBGL_debug_renderer_info');
+      const debugInfo = ctx.getExtension("WEBGL_debug_renderer_info");
       if (debugInfo) {
         console.log("[Physics Lab] GPU:", ctx.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL));
       }
-      console.log("[Physics Lab] WebGL version:", ctx instanceof WebGL2RenderingContext ? 'WebGL 2.0' : 'WebGL 1.0');
+      console.log("[Physics Lab] WebGL version:", ctx instanceof WebGL2RenderingContext ? "WebGL 2.0" : "WebGL 1.0");
       console.log("[Physics Lab] Max texture size:", ctx.getParameter(ctx.MAX_TEXTURE_SIZE));
-      console.log("[Physics Lab] Canvas size:", gl.domElement.width, 'x', gl.domElement.height);
+      console.log("[Physics Lab] Canvas size:", gl.domElement.width, "x", gl.domElement.height);
 
       gl.setClearColor(new THREE.Color("#0f172a"));
       console.log("[Physics Lab] Scene3D Canvas initialized successfully ✅");
@@ -247,17 +248,17 @@ export function Scene3D() {
 
   // Fallback UI when Canvas fails to render
   if (canvasError) {
-    return <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)' }}>
-      <div style={{ textAlign: 'center', color: '#94a3b8', padding: 32 }}>
+    return <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)" }}>
+      <div style={{ textAlign: "center", color: "#94a3b8", padding: 32 }}>
         <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
-        <h3 style={{ color: '#f1f5f9', fontSize: 16, marginBottom: 8 }}>3D Render Error</h3>
-        <p style={{ fontSize: 12, color: '#ef4444', maxWidth: 300 }}>{canvasError}</p>
-        <button onClick={() => window.location.reload()} style={{ marginTop: 16, padding: '8px 20px', borderRadius: 8, background: '#0ea5e9', color: 'white', border: 'none', cursor: 'pointer', fontSize: 13 }}>Reload App</button>
+        <h3 style={{ color: "#f1f5f9", fontSize: 16, marginBottom: 8 }}>3D Render Error</h3>
+        <p style={{ fontSize: 12, color: "#ef4444", maxWidth: 300 }}>{canvasError}</p>
+        <button onClick={() => window.location.reload()} style={{ marginTop: 16, padding: "8px 20px", borderRadius: 8, background: "#0ea5e9", color: "white", border: "none", cursor: "pointer", fontSize: 13 }}>Reload App</button>
       </div>
     </div>;
   }
 
-  return <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+  return <div style={{ position: "relative", width: "100%", height: "100%" }}>
     <Canvas
       camera={{position:[8,6,8],fov:55,near:0.1,far:100}}
       gl={{antialias:true,alpha:false,preserveDrawingBuffer:true,failIfMajorPerformanceCaveat:false}}
@@ -280,7 +281,7 @@ export function Scene3D() {
     </Canvas>
     {/* Transition overlay */}
     {transitioning && (
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.3)', zIndex: 10, pointerEvents: 'none', transition: 'opacity 300ms' }} />
+      <div style={{ position: "absolute", inset: 0, background: "rgba(15,23,42,0.3)", zIndex: 10, pointerEvents: "none", transition: "opacity 300ms" }} />
     )}
   </div>;
 }

@@ -1,19 +1,26 @@
 ﻿# Project Status
 
-**Version:** V2.5 (Sprint S27)
+**Version:** V2.6 (Sprint S28)
 **Status:** Complete
 
+## Test Coverage
+- **40 tests passing** across 4 test files
+- ai-provider.store: 5 tests (provider switching, parsing, empty input)
+- csv.test: 16 tests (energy calculation, CSV generation, encoding)
+- report.test: 17 tests (markdown, HTML, download, screenshot)
+- smoke.test: 2 tests (vitest + jsdom environment)
+
 ## Completed Sprints
-| Sprint | Focus | Key Deliverable |
-|--------|-------|----------------|
-| S16-S20 | Foundation | 6 plugins, formula, quiz, timeline, visual polish |
-| S21 | Export | PDF/MD/CSV/Screenshot |
-| S22-S23 | Polish | FormulaDisplay, crash fixes, plugin consistency |
-| S24-S25 | AI Engine | OllamaProvider, AIProvider store |
-| S26 | AI UI | MenuBar toggle (Rule/Ollama) |
-| S27 | Integration | Auto-detect Ollama, i18n keys, graceful fallback |
+| Sprint | Focus |
+|--------|-------|
+| S16-S20 | Foundation: 6 plugins, formula, quiz, timeline |
+| S21 | Export: PDF/MD/CSV/Screenshot |
+| S22-S23 | Polish: FormulaDisplay, crash fixes |
+| S24-S25 | AI Engine: OllamaProvider, AI store |
+| S26 | AI UI: MenuBar toggle |
+| S27 | Integration: Auto-detect, i18n |
+| S28 | Quality: 40 tests, performance |
 
 ## Key Metrics
-- **6 experiments** | **571 zh-CN keys** | **416 en-US keys**
-- **Zero TypeScript errors** | **Clean architecture**
-- AI: Rule-based (instant) + Ollama (local LLM) with auto-detect
+- 6 experiments | 571 zh-CN | 416 en-US | 40 tests
+- Zero TypeScript errors | Zero test failures

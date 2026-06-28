@@ -1,18 +1,27 @@
 ﻿# Project Status
 
-**Version:** V2.9 (Sprint S33)
-**Status:** Complete
+**Version:** V3.0 (Sprint S34)
+**Status:** Complete — MVP+ Ready
 
 ## Test Coverage
-- **64 tests across 9 files**, all passing
-- mastery.store (5), mastery-integration (3), ai-provider (5), teaching (5), plugin-registry (6), i18n (5), csv (16), report (17), smoke (2)
+- **64 tests across 9 files**, all passing, zero failures
 
-## S33 New Features
-- Quiz correct answers auto-mark knowledge points as mastered
-- KnowledgeGraph reads live mastery from store
-- localStorage persistence for learning progress
+## Architecture Summary
+```
+Problem Input → AI Parser (Rule/Ollama) → PhysicsScene
+                                              ↓
+                    ┌─────────────────────────┼─────────────────────────┐
+                    ↓                         ↓                         ↓
+              3D Scene (Three.js)        Timeline                Teacher Panel
+                    ↓                         ↓                         ↓
+              Arrows/Trail            Phase Nodes              Steps + Quiz
+                    ↓                         ↓                         ↓
+              KnowledgeGraph ←── Mastery Store (localStorage) ←── Correct Answers
+```
 
 ## Key Metrics
 - 6 experiments | 571 zh-CN | 416 en-US | 64 tests
+- 3 modes: Learning / Experiment / Analysis
+- AI: Rule-based (instant) + Ollama (local LLM)
+- Export: PDF / Markdown / HTML / CSV / Screenshot
 - Zero TypeScript errors | Zero test failures
-- Mastery tracking with localStorage persistence

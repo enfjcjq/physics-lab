@@ -59,6 +59,13 @@ const QUIZ_MAP: Record<string, Record<number, QuizItem[]>> = {
     5: [{ questionKey: "quiz.pendulum.q4", options: ["quiz.pendulum.q4.a", "quiz.pendulum.q4.b", "quiz.pendulum.q4.c"], correctIndex: 2, explanationKey: "quiz.pendulum.q4.exp", hintKey: "quiz.pendulum.q4.hint", difficulty: "hard" }],
   },
 
+
+  "buoyancy": {
+    2: [{ questionKey: "quiz.buoy.q1", options: ["quiz.buoy.q1.a", "quiz.buoy.q1.b", "quiz.buoy.q1.c"], correctIndex: 0, explanationKey: "quiz.buoy.q1.exp", hintKey: "quiz.buoy.q1.hint", difficulty: "easy" }],
+    3: [{ questionKey: "quiz.buoy.q3", options: ["quiz.buoy.q3.a", "quiz.buoy.q3.b", "quiz.buoy.q3.c"], correctIndex: 1, explanationKey: "quiz.buoy.q3.exp", hintKey: "quiz.buoy.q3.hint", difficulty: "medium" }],
+    4: [{ questionKey: "quiz.buoy.q2", options: ["quiz.buoy.q2.a", "quiz.buoy.q2.b", "quiz.buoy.q2.c"], correctIndex: 0, explanationKey: "quiz.buoy.q2.exp", hintKey: "quiz.buoy.q2.hint", difficulty: "medium" }],
+    5: [{ questionKey: "quiz.buoy.q4", options: ["quiz.buoy.q4.a", "quiz.buoy.q4.b", "quiz.buoy.q4.c"], correctIndex: 0, explanationKey: "quiz.buoy.q4.exp", hintKey: "quiz.buoy.q4.hint", difficulty: "hard" }],
+  },
   "circular-motion": {
     2: [{ questionKey: "quiz.circ.q1", options: ["quiz.circ.q1.a", "quiz.circ.q1.b", "quiz.circ.q1.c"], correctIndex: 0, explanationKey: "quiz.circ.q1.exp", hintKey: "quiz.circ.q1.hint", difficulty: "easy" }],
     3: [{ questionKey: "quiz.circ.q3", options: ["quiz.circ.q3.a", "quiz.circ.q3.b", "quiz.circ.q3.c"], correctIndex: 0, explanationKey: "quiz.circ.q3.exp", hintKey: "quiz.circ.q3.hint", difficulty: "medium" }],

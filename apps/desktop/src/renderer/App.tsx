@@ -18,6 +18,7 @@ import("./plugins/inclined-plane/inclined-plane.plugin").then(m => pluginRegistr
 import("./plugins/collision/collision.plugin").then(m => pluginRegistry.register(m.collisionPlugin));
 import("./plugins/spring-mass/spring-mass.plugin").then(m => pluginRegistry.register(m.springMassPlugin));
 import("./plugins/pendulum/pendulum.plugin").then(m => pluginRegistry.register(m.pendulumPlugin));
+import("./plugins/buoyancy/buoyancy.plugin").then(m => pluginRegistry.register(m.buoyancyPlugin));
 import("./plugins/circular-motion/circular-motion.plugin").then(m => pluginRegistry.register(m.circularMotionPlugin));
 
 export function App() {

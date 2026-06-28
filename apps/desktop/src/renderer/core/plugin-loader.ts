@@ -21,6 +21,11 @@ const pluginLoaders: Record<string, () => Promise<void>> = {
     const { collisionPlugin } = await import("../plugins/collision/collision.plugin");
     pluginRegistry.register(collisionPlugin);
   },
+
+  "buoyancy": async () => {
+    const { buoyancyPlugin } = await import("../plugins/buoyancy/buoyancy.plugin");
+    pluginRegistry.register(buoyancyPlugin);
+  },
   "circular-motion": async () => {
     const { circularMotionPlugin } = await import("../plugins/circular-motion/circular-motion.plugin");
     pluginRegistry.register(circularMotionPlugin);

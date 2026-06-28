@@ -1,6 +1,6 @@
 ﻿# Project Status
 
-**Version:** V2.2 (Sprint S22)
+**Version:** V2.3 (Sprint S24)
 **Status:** Complete
 
 ## Completed Sprints
@@ -11,23 +11,18 @@
 | S18 | UX + Quiz | Experiment cards, 12 quiz questions |
 | S19 | Timeline | Phase-loop quiz, FrameCache |
 | S20 | Visual Polish | Impact particles, transitions, skeleton loader |
-| S21 | Export System | PDF/MD/CSV/Screenshot export, MenuBar integration |
-| S22 | Teacher + Polish | FormulaDisplay component, free-fall crash fix, i18n cleanup |
+| S21 | Export System | PDF/MD/CSV/Screenshot export |
+| S22 | Teacher Polish | FormulaDisplay component, free-fall crash fix, i18n cleanup |
+| S23 | Plugin Consistency | Projectile-motion & inclined-plane phase fixes |
+| S24 | AI Integration | OllamaProvider, AIProvider abstraction, KnowledgeGraph |
 
 ## Experiments (6)
 Free Fall | Projectile Motion | Inclined Plane | Collision | Spring-Mass | Pendulum
 
-## Key Changes in S22
-- Fixed free-fall plugin: ball stops at impact (no broken bounce physics)
-- Created FormulaDisplay component for styled math notation
-- Fixed en-US.json formula encoding (removed broken unicode)
-- Fixed zh-CN.json formula encoding consistency
-- Both i18n files: BOM stripped, valid JSON validated
-- Added FormulaDisplay import to TeacherPanel
-
-## Architecture Notes
-- 6 plugins remain; free-fall is the reference implementation
-- Scene3D frame cache runs at 60fps precomputed
-- Timeline supports drag, click, wheel, keyboard shortcuts
-- Export: PDF (html2canvas+jspdf), MD, HTML, CSV, Screenshot
-- 3 modes: Learning, Experiment, Analysis
+## Key Architecture
+- AIProvider interface with RuleParser + OllamaProvider backends
+- Swap between local Ollama / OpenAI / Claude without changing business logic
+- PhysicsScene-driven: all modules read from PhysicsScene, not raw problem text
+- Plugin system: add new experiment = add new plugin, no UI changes needed
+- 6 plugins, 409 en-US / 564 zh-CN i18n keys
+- 3 modes: Learning / Experiment / Analysis

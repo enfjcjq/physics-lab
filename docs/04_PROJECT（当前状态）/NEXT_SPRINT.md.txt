@@ -1,28 +1,31 @@
-﻿# Next Sprint: S23
+﻿# Next Sprint: S25
 
-## Priority 1: Plugin Physics Consistency (P0)
-- Fix projectile-motion: remove bounce/aftermath phase, stop at impact
-- Fix inclined-plane: remove ground_slide phase, stop at bottom
-- Audit all 6 plugins for proper phase definitions matching computeState
-- Ensure all plugins have consistent fallback behavior at end of simulation
+## Priority 1: Wire OllamaProvider into UI (P0)
+- Add AI provider selector in MenuBar (Rule-based / Ollama)
+- Show Ollama connection status indicator
+- Handle Ollama not-running gracefully with helpful error messages
+- Add "Retry with Ollama" button when rule parser fails
 
-## Priority 2: Teacher Auto-Advance (P0)
-- Teacher steps auto-advance during playback
-- Visual indicator for current step progression
-- Smooth scroll with animation
+## Priority 2: Enhanced Problem Input (P1)
+- Drag-and-drop image/PDF upload
+- Markdown rendering of parsed problem text
+- Show parsing confidence score
+- Editable extracted parameters before experiment launch
 
-## Priority 3: Experiment Switcher UX (P1)
-- Prominent experiment cards with icons
-- Recent/favorites quick access
-- Visual category grouping (Mechanics, Waves, EM, etc.)
+## Priority 3: Learning Path System (P1)
+- Track which knowledge points student has mastered
+- Suggest next experiment based on prerequisites
+- Show learning progress in KnowledgeGraph
+- Adaptive difficulty based on quiz performance
 
-## Priority 4: Ollama AI Integration (P2)
-- Abstract AIProvider interface
-- Rule-based parser as default
-- Ollama provider with local LLM support
-- PhysicsScene schema validation
+## Priority 4: Physics Engine Enhancements (P2)
+- Bounce physics for free-fall/projectile (optional toggle)
+- Air resistance model
+- Energy conservation visualization improvements
+- Multi-object scenarios
 
-## Priority 5: Performance (P2)
-- Lazy load non-critical panels
-- Reduce Three.js draw calls via instancing
-- Memoize frame cache lookups
+## Priority 5: Code Quality (P2)
+- Split large components (>300 lines)
+- Add more unit tests (target: 50+ test cases)
+- ESLint configuration
+- CI pipeline setup

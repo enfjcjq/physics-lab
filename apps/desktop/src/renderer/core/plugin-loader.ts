@@ -1,4 +1,4 @@
-﻿import { pluginRegistry } from "../core/plugin-registry";
+import { pluginRegistry } from "../core/plugin-registry";
 
 const pluginLoaders: Record<string, () => Promise<void>> = {
   "pendulum": async () => {
@@ -21,25 +21,8 @@ const pluginLoaders: Record<string, () => Promise<void>> = {
     const { collisionPlugin } = await import("../plugins/collision/collision.plugin");
     pluginRegistry.register(collisionPlugin);
   },
+  "circular-motion": async () => {
+    const { circularMotionPlugin } = await import("../plugins/circular-motion/circular-motion.plugin");
+    pluginRegistry.register(circularMotionPlugin);
+  },
 };
-
-const loadingPlugins = new Set<string>();
-
-export async function ensurePlugin(pluginId: string): Promise<boolean> {
-  if (pluginRegistry.get(pluginId)) return true;
-  if (loadingPlugins.has(pluginId)) return false;
-
-  const loader = pluginLoaders[pluginId];
-  if (!loader) return false;
-
-  loadingPlugins.add(pluginId);
-  try {
-    await loader();
-    return true;
-  } catch (err) {
-    console.error("Failed to load plugin: " + pluginId, err);
-    return false;
-  } finally {
-    loadingPlugins.delete(pluginId);
-  }
-}

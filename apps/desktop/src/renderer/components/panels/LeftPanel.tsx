@@ -15,6 +15,7 @@ const EXP_ICONS: Record<string, string> = {
   "collision": "\u25CF\u25CB",
   "spring-mass": "\u223C\uFE0F",
   "pendulum": "\u23F0",
+  "circular-motion": "\uD83D\uDD04",
 };
 
 const EXP_META: Record<string, { desc: string; difficulty: string }> = {

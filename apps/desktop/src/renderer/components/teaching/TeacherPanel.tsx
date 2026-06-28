@@ -1,4 +1,4 @@
-﻿import { FormulaDisplay } from "./FormulaDisplay";
+import { FormulaDisplay } from "./FormulaDisplay";
 import { useSimulation } from "../../features/experiment/experiment.store";
 import type { TeacherStep } from "@physics-lab/shared";
 import { useI18n } from "../../core/i18n";
@@ -57,6 +57,13 @@ const QUIZ_MAP: Record<string, Record<number, QuizItem[]>> = {
     4: [{ questionKey: "quiz.pendulum.q2", options: ["quiz.pendulum.q2.a", "quiz.pendulum.q2.b", "quiz.pendulum.q2.c"], correctIndex: 0, explanationKey: "quiz.pendulum.q2.exp", hintKey: "quiz.pendulum.q2.hint", difficulty: "medium" }],
     5: [{ questionKey: "quiz.pendulum.q4", options: ["quiz.pendulum.q4.a", "quiz.pendulum.q4.b", "quiz.pendulum.q4.c"], correctIndex: 2, explanationKey: "quiz.pendulum.q4.exp", hintKey: "quiz.pendulum.q4.hint", difficulty: "hard" }],
   },
+
+  "circular-motion": {
+    2: [{ questionKey: "quiz.circ.q1", options: ["quiz.circ.q1.a", "quiz.circ.q1.b", "quiz.circ.q1.c"], correctIndex: 0, explanationKey: "quiz.circ.q1.exp", hintKey: "quiz.circ.q1.hint", difficulty: "easy" }],
+    3: [{ questionKey: "quiz.circ.q3", options: ["quiz.circ.q3.a", "quiz.circ.q3.b", "quiz.circ.q3.c"], correctIndex: 0, explanationKey: "quiz.circ.q3.exp", hintKey: "quiz.circ.q3.hint", difficulty: "medium" }],
+    4: [{ questionKey: "quiz.circ.q2", options: ["quiz.circ.q2.a", "quiz.circ.q2.b", "quiz.circ.q2.c"], correctIndex: 0, explanationKey: "quiz.circ.q2.exp", hintKey: "quiz.circ.q2.hint", difficulty: "medium" }],
+    5: [{ questionKey: "quiz.circ.q4", options: ["quiz.circ.q4.a", "quiz.circ.q4.b", "quiz.circ.q4.c"], correctIndex: 1, explanationKey: "quiz.circ.q4.exp", hintKey: "quiz.circ.q4.hint", difficulty: "hard" }],
+  },
 };
 
 export function TeacherPanel() {
@@ -96,8 +103,7 @@ export function TeacherPanel() {
   useEffect(() => {
     if (currentStepRef.current) {
       currentStepRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }
-  }, [currentIdx]);
+    }}, [currentIdx]);
 
   const ke = 0.5 * mass * ballVelocity * ballVelocity;
   const pe = mass * gravity * ballY;

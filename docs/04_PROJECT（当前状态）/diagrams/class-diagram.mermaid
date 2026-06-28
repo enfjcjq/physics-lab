@@ -1,0 +1,228 @@
+# Class Diagram — Physics Lab S21
+
+```mermaid
+classDiagram
+    %% ========== Data Models ==========
+
+    class ReportData {
+        +string experimentType
+        +Record~string, string|number~ params
+        +Array~TrajectoryPoint~ trajectory
+        +Array~PhaseInfo~ phases
+        +string conclusion
+    }
+
+    class TrajectoryPoint {
+        +number time
+        +number x
+        +number y
+        +number vx
+        +number vy
+    }
+
+    class PhaseInfo {
+        +string id
+        +string name
+        +number startTime
+        +number endTime
+    }
+
+    class CachedFrame {
+        +number time
+        +number ballX
+        +number ballY
+        +number ball2X
+        +number ball2Y
+        +number ballVelocity
+        +number ballAcceleration
+        +boolean isOnGround
+        +string phaseId
+    }
+
+    class CSVRow {
+        +number time
+        +number ballX
+        +number ballY
+        +number velocity
+        +number acceleration
+        +number kineticEnergy
+        +number potentialEnergy
+        +number totalEnergy
+        +string phaseId
+        +string phaseName
+    }
+
+    class CaptureResult {
+        +boolean success
+        +string dataUrl
+        +CaptureError error
+        +string details
+    }
+
+    <<enumeration>> CaptureResult_CaptureError {
+        NO_CANVAS_FOUND
+        CAPTURE_FAILED
+    }
+
+    %% ========== Export Options ==========
+
+    class PDFExportOptions {
+        +ReportData data
+        +boolean includeScreenshot
+        +string filenamePrefix
+        +PDFOrientation orientation
+        +boolean useTextMode
+    }
+
+    <<enumeration>> PDFExportOptions_PDFOrientation {
+        portrait
+        landscape
+    }
+
+    class PDFExportResult {
+        +boolean success
+        +string blobUrl
+        +string error
+        +PDFMode mode
+    }
+
+    <<enumeration>> PDFExportResult_PDFMode {
+        text
+        image
+    }
+
+    class CSVExportOptions {
+        +CachedFrame[] frames
+        +PhysicsParams physicsParams
+        +number sampleInterval
+        +number|null maxRows
+        +string filename
+        +boolean addBOM
+        +Record~string,string~ phaseNames
+    }
+
+    class PhysicsParams {
+        +number mass
+        +number gravity
+        +number groundY
+    }
+
+    class ExportButtonGroupProps {
+        +ReportData reportData
+        +boolean exporting
+        +ButtonSize size
+        +string className
+    }
+
+    <<enumeration>> ExportButtonGroupProps_ButtonSize {
+        small
+        medium
+        large
+    }
+
+    %% ========== Service Classes (New in S21) ==========
+
+    class PDFExporter {
+        -jsPDF doc
+        -boolean fontLoaded
+        +exportToPDF(options: PDFExportOptions) Promise~PDFExportResult~
+        +generatePDFBlob(options: PDFExportOptions) Promise~Blob|null~
+        -loadChineseFont(doc: jsPDF) boolean
+        -htmlToCanvas(html: string, width: number) HTMLCanvasElement
+        -addImagePages(doc, imgData, w, h) void
+        -buildTextModePDF(doc, hasFont, data, screenshot) void
+    }
+
+    class CSVExporter {
+        +downloadCSV(options: CSVExportOptions) void
+        +framesToCSVRows(frames, params, phaseNames?, interval?) CSVRow[]
+        +generateCSVContent(rows: CSVRow[], addBOM?: boolean) string
+        -computeEnergies(frame, mass, gravity, groundY) EnergyValues
+    }
+
+    class ScreenshotCapture {
+        +captureScreenshot() CaptureResult
+        -findCanvas() HTMLCanvasElement|null
+    }
+
+    class EnergyCalculator {
+        +computeKE(frame: CachedFrame, mass: number) number
+        +computePE(frame: CachedFrame, mass: number, gravity: number, groundY: number) number
+        +computeTotal(ke: number, pe: number) number
+    }
+
+    class ExportButtonGroup {
+        -ReportData reportData
+        -boolean isExporting
+        -handleExportPDF() void
+        -handleExportMarkdown() void
+        -handleExportCSV() void
+        -handleScreenshot() void
+        +render() JSX.Element
+    }
+
+    %% ========== Existing Classes (Modified in S21) ==========
+
+    class ReportModule {
+        +generateMarkdownReport(data: ReportData) string
+        +downloadReport(data: ReportData, format?) void
+        +generateHTMLReport(markdown: string) string
+        +downloadFile(content, filename, mimeType?) void
+    }
+
+    class DataPanel {
+        -CachedFrame[] frameCache
+        -number currentTime
+        -PhysicsParams physicsParams
+        -Record~string,string~ phaseNames
+        -ColumnDef[] columns
+        +renderLiveView() JSX.Element
+        +renderTableView() JSX.Element
+        -enrichFrames(frames) EnrichedRow[]
+        -getCurrentHighlightTolerance() number
+        -handleExportCSV() void
+    }
+
+    class RightPanel {
+        -ReportData reportData
+        -boolean isExporting
+        +render() JSX.Element
+    }
+
+    class Scene3D {
+        +React$RefObject canvasRef
+        +render() JSX.Element  %% modified: adds data-canvas attribute
+    }
+
+    %% ========== Relationships ==========
+
+    ReportData *-- TrajectoryPoint : contains
+    ReportData *-- PhaseInfo : contains
+    CSVRow ..> CachedFrame : computed from
+    CSVRow ..> PhysicsParams : uses for energy calc
+
+    PDFExporter --> PDFExportOptions : accepts
+    PDFExporter --> PDFExportResult : returns
+    PDFExporter --> ReportModule : reuses generateHTMLReport
+    PDFExporter --> ScreenshotCapture : calls for image
+    PDFExporter --> jsPDF : depends on
+
+    CSVExporter --> CSVExportOptions : accepts
+    CSVExporter --> CSVRow : produces
+    CSVExporter --> EnergyCalculator : delegates to
+
+    ScreenshotCapture --> CaptureResult : returns
+    ScreenshotCapture --> Scene3D : queries DOM of
+
+    ExportButtonGroup --> ExportButtonGroupProps : receives
+    ExportButtonGroup --> PDFExporter : delegates
+    ExportButtonGroup --> ReportModule : delegates MD export
+    ExportButtonGroup --> CSVExporter : delegates
+    ExportButtonGroup --> ScreenshotCapture : delegates
+
+    DataPanel --> CSVExporter : calls downloadCSV
+    DataPanel --> EnergyCalculator : computes display values
+    DataPanel --> CachedFrame : reads from store
+
+    RightPanel --> ExportButtonGroup : composes
+    RightPanel --> ReportData : passes down

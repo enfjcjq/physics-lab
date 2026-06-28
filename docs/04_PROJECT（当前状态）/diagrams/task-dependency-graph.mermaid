@@ -1,0 +1,27 @@
+# Task Dependency Graph — Physics Lab S21
+
+```mermaid
+graph TD
+    T01[T01: 项目基础设施<br/>依赖安装 + Vitest 框架 + i18n<br/>优先级: P2 | 估时: 1h]
+
+    T02[T02: 导出系统核心<br/>截图修复 + CSV 提取 + PDF 导出<br/>优先级: P0 | 估时: 4h]
+
+    T03[T03: UI 集成<br/>导出按钮组 + RightPanel + DataPanel 增强<br/>优先级: P0/P1 | 估时: 3h]
+
+    T04[T04: 测试编写<br/>核心模块单测 + 组件测试<br/>优先级: P1/P2 | 估时: 3h]
+
+    T05[T05: 收尾验证<br/>TODO 更新 + 冒烟测试<br/>优先级: P2 | 估时: 1h]
+
+    %% Dependencies
+    T01 -->|依赖: npm 包可用| T02
+    T02 -->|依赖: 导出 API 就绪| T03
+    T03 -->|依赖: UI 组件完成| T04
+    T04 -->|依赖: 测试覆盖完整| T05
+
+    %% Styling
+    style T01 fill:#e1f5fe,#0288d1,color:#000
+    style T02 fill:#fff3e0,#ef6c00,color:#000,stroke:#ef6c00,stroke-width:3px
+    style T03 fill:#fff3e0,#ef6c00,color:#000,stroke:#ef6c00,stroke-width:3px
+    style T04 fill:#e8f5e9,#2e7d32,color:#000
+    style T05 fill:#f3e5f5,#7b1fa2,color:#000
+```

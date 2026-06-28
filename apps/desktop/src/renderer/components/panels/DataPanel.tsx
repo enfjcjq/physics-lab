@@ -1,6 +1,7 @@
 import { useSimulation } from "../../features/experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
 import { useState } from "react";
+import { generateCSV, downloadCSV, SAMPLE_RATE, calculateFrameEnergy } from "../../lib/csv";
 
 export function DataPanel() {
   const currentTime = useSimulation(s => s.currentTime);
@@ -12,6 +13,7 @@ export function DataPanel() {
   const mass = useSimulation(s => s.mass);
   const gravity = useSimulation(s => s.gravity);
   const frameCache = useSimulation(s => s.frameCache);
+  const phases = useSimulation(s => s.phases);
   const { t } = useI18n();
   const [viewMode, setViewMode] = useState<"live" | "table">("live");
 
@@ -19,21 +21,22 @@ export function DataPanel() {
   const pe = mass * gravity * Math.max(0, ballY);
   const totalE = ke + pe;
 
+  /** 根据 phaseId 查找相位名称 */
+  const getPhaseName = (phaseId: string): string => {
+    const phase = phases.find(p => p.id === phaseId);
+    return phase?.label ?? phaseId;
+  };
+
+  /** CSV 导出：统一调用 csv.ts 模块 */
   const exportCSV = () => {
     if (frameCache.length === 0) return;
-    // Sample every 10th frame for reasonable CSV size
-    const sampled = frameCache.filter((_, i) => i % 10 === 0);
-    const header = "time,ballX,ballY,velocity,acceleration,phaseId";
-    const rows = sampled.map(f =>
-      `${f.time.toFixed(3)},${f.ballX.toFixed(3)},${f.ballY.toFixed(3)},${f.ballVelocity.toFixed(3)},${f.ballAcceleration.toFixed(3)},${f.phaseId}`
-    );
-    const csv = [header, ...rows].join("\n");
-    const blob = new Blob([csv], { type: "text/csv" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url; a.download = "physics-lab-data.csv";
-    document.body.appendChild(a); a.click();
-    document.body.removeChild(a); URL.revokeObjectURL(url);
+    const csvContent = generateCSV({
+      frames: frameCache,
+      energyContext: { mass, gravity },
+      sampleRate: SAMPLE_RATE,
+      includeEnergy: true,
+    });
+    downloadCSV(csvContent, `physics-lab-data.csv`);
   };
 
   return (
@@ -101,17 +104,28 @@ export function DataPanel() {
                   <th className="text-right py-1.5 px-2 font-medium">y (m)</th>
                   <th className="text-right py-1.5 px-2 font-medium">v (m/s)</th>
                   <th className="text-right py-1.5 px-2 font-medium">a (m/s\u00B2)</th>
+                  <th className="text-left py-1.5 px-2 font-medium">Phase</th>
+                  <th className="text-right py-1.5 px-2 font-medium">KE (J)</th>
+                  <th className="text-right py-1.5 px-2 font-medium">PE (J)</th>
+                  <th className="text-right py-1.5 px-2 font-medium">TotalE (J)</th>
                 </tr>
               </thead>
               <tbody>
-                {frameCache.filter((_, i) => i % 6 === 0).slice(0, 50).map((f, i) => (
-                  <tr key={i} className={`border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors ${Math.abs(f.time - currentTime) < 0.02 ? "bg-sky-900/20" : ""}`}>
-                    <td className="py-1 px-2 font-mono text-slate-400">{f.time.toFixed(2)}</td>
-                    <td className="py-1 px-2 font-mono text-right text-emerald-400">{f.ballY.toFixed(2)}</td>
-                    <td className="py-1 px-2 font-mono text-right text-sky-400">{f.ballVelocity.toFixed(2)}</td>
-                    <td className="py-1 px-2 font-mono text-right text-amber-400">{f.ballAcceleration.toFixed(2)}</td>
-                  </tr>
-                ))}
+                {frameCache.filter((_, i) => i % SAMPLE_RATE === 0).slice(0, 50).map((f, i) => {
+                  const e = calculateFrameEnergy(f, { mass, gravity });
+                  return (
+                    <tr key={i} className={`border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors ${Math.abs(f.time - currentTime) < 0.05 ? "bg-sky-900/20" : ""}`}>
+                      <td className="py-1 px-2 font-mono text-slate-400">{f.time.toFixed(2)}</td>
+                      <td className="py-1 px-2 font-mono text-right text-emerald-400">{f.ballY.toFixed(2)}</td>
+                      <td className="py-1 px-2 font-mono text-right text-sky-400">{f.ballVelocity.toFixed(2)}</td>
+                      <td className="py-1 px-2 font-mono text-right text-amber-400">{f.ballAcceleration.toFixed(2)}</td>
+                      <td className="py-1 px-2 font-mono text-slate-500">{getPhaseName(f.phaseId)}</td>
+                      <td className="py-1 px-2 font-mono text-right text-amber-400">{e.ke.toFixed(2)}</td>
+                      <td className="py-1 px-2 font-mono text-right text-emerald-400">{e.pe.toFixed(2)}</td>
+                      <td className="py-1 px-2 font-mono text-right text-violet-400">{e.totalE.toFixed(2)}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
             {frameCache.length === 0 && (

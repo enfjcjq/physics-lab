@@ -4,6 +4,14 @@ import { useSimulation } from "../../features/experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
 import { CollapseHandle } from "../layout/CollapseHandle";
 import { KnowledgeGraph } from "../teaching/KnowledgeGraph";
+import {
+  generateMarkdownReport,
+  downloadReport,
+  downloadPDFReport,
+  captureScreenshot,
+  type ReportData,
+} from "../../lib/report";
+import { generateCSV, downloadCSV } from "../../lib/csv";
 
 type AnalysisTab = "force" | "motion" | "formula" | "knowledge" | "tips" | "graph";
 
@@ -11,6 +19,12 @@ export function RightPanel() {
   const rightOpen = usePanelManager((s) => s.panels.analysis?.isOpen ?? true);
   const toggleRight = () => usePanelManager.getState().toggle("analysis");
   const scene = useSimulation((s) => s.scene);
+  const mass = useSimulation((s) => s.mass);
+  const gravity = useSimulation((s) => s.gravity);
+  const currentTime = useSimulation((s) => s.currentTime);
+  const ballY = useSimulation((s) => s.ballY);
+  const ballVelocity = useSimulation((s) => s.ballVelocity);
+  const frameCache = useSimulation((s) => s.frameCache);
   const { t } = useI18n();
   const [activeTab, setActiveTab] = useState<AnalysisTab>("force");
 
@@ -26,6 +40,53 @@ export function RightPanel() {
   const forces = scene?.forces ?? [];
   const equations = scene?.equations ?? [];
   const knowledgeTags = scene?.knowledge_tags ?? [];
+
+  /** 构建当前实验的 ReportData */
+  const buildReportData = (): ReportData | null => {
+    if (!scene) return null;
+    return {
+      scene,
+      params: { mass, gravity },
+      currentTime,
+      ballY,
+      ballVelocity,
+    };
+  };
+
+  // 导出按钮处理函数
+  const handleExportPDF = async () => {
+    const data = buildReportData();
+    if (!data) return;
+    await downloadPDFReport(data, "zh-CN");
+  };
+
+  const handleExportMD = () => {
+    const data = buildReportData();
+    if (!data) return;
+    const md = generateMarkdownReport(data, "zh-CN");
+    downloadReport(md, `${scene?.metadata?.title || "report"}.md`);
+  };
+
+  const handleExportCSV = () => {
+    if (frameCache.length === 0) return;
+    const csvContent = generateCSV({
+      frames: frameCache,
+      energyContext: { mass, gravity },
+      includeEnergy: true,
+    });
+    downloadCSV(csvContent, `physics-lab-data.csv`);
+  };
+
+  const handleScreenshot = () => {
+    const dataUrl = captureScreenshot();
+    if (!dataUrl) return;
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = `screenshot-${Date.now()}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
   return (
     <div className={`relative flex-shrink-0 transition-all duration-300 ease-in-out overflow-hidden ${rightOpen ? "w-[340px]" : "w-0"}`}>
@@ -60,6 +121,26 @@ export function RightPanel() {
             ))}
           </div>
         </div>
+        {/* Export Button Group — 仅当 scene 存在时显示 */}
+        {scene && (
+          <div className="px-3 py-2 border-t border-slate-800">
+            <div className="text-[9px] text-slate-600 uppercase tracking-wider mb-1.5">Export</div>
+            <div className="grid grid-cols-4 gap-1">
+              <button onClick={handleExportPDF} className="px-1.5 py-1 rounded text-[9px] text-slate-300 hover:text-white hover:bg-slate-700 transition-colors flex items-center justify-center gap-0.5">
+                <span>PDF</span>
+              </button>
+              <button onClick={handleExportMD} className="px-1.5 py-1 rounded text-[9px] text-slate-300 hover:text-white hover:bg-slate-700 transition-colors flex items-center justify-center gap-0.5">
+                <span>MD</span>
+              </button>
+              <button onClick={handleExportCSV} className="px-1.5 py-1 rounded text-[9px] text-slate-300 hover:text-white hover:bg-slate-700 transition-colors flex items-center justify-center gap-0.5">
+                <span>CSV</span>
+              </button>
+              <button onClick={handleScreenshot} className="px-1.5 py-1 rounded text-[9px] text-slate-300 hover:text-white hover:bg-slate-700 transition-colors flex items-center justify-center gap-0.5">
+                <span>Screenshot</span>
+              </button>
+            </div>
+          </div>
+        )}
         <div className="border-t border-slate-800" />
         <div className="flex-1 overflow-y-auto px-4 py-3">
           {activeTab === "force" && (

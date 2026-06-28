@@ -5,6 +5,8 @@ import renderer from "vite-plugin-electron-renderer";
 import path from "path";
 
 export default defineConfig({
+  build: { modulePreload: { polyfill: false } },
+  base: './',
   plugins: [
     react(),
     electron([

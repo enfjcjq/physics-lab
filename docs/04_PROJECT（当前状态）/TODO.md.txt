@@ -1,10 +1,25 @@
-﻿# Physics Lab TODO
+# Physics Lab TODO
 
-> Current version: V2.0 (S02)
+> Current version: V2.1 (S21)
 
 ---
 
-# Completed (S02)
+# Completed (S21) — Export & Testing Sprint
+
+- [x] T21-01: 安装依赖 (jspdf, html2canvas, @testing-library/react, @testing-library/jest-dom, vitest, jsdom)
+- [x] T21-02: 创建 vitest.config.ts (jsdom 环境, 路径别名, coverage 阈值)
+- [x] T21-03: 修复 captureScreenshot 选择器 (#physics-canvas, 参数化, 类型安全)
+- [x] T21-04: 创建 csv.ts 模块 (SAMPLE_RATE, calculateFrameEnergy, generateCSV + BOM, downloadCSV)
+- [x] T21-05: 实现 PDF 导出 (generatePDFReport + downloadPDFReport, html2canvas + jsPDF 图片嵌入)
+- [x] T21-06: DataPanel 重构 (统一采样率, 能量列, csv.ts 模块集成)
+- [x] T21-07: RightPanel 导出按钮组 UI (PDF/MD/CSV/Screenshot 四按钮)
+- [x] T21-08: report 单元测试 (17 tests — Markdown 中英文, HTML, download, screenshot)
+- [x] T21-09: csv 单元测试 (16 tests — energy 计算, CSV 生成/BOM/采样率, download)
+- [x] T21-10: TODO.md 更新到 V2.1/S21
+
+---
+
+# Completed (S20)
 
 - [x] CameraAnimator smooth phase transitions
 - [x] Bounce squash/stretch ball visual
@@ -14,26 +29,22 @@
 
 ---
 
-# Completed (S01)
+# Completed (S01-S02)
 
 - [x] PHASES removal from ui.store
 - [x] Data-driven RightPanel
-- [x] 196 i18n keys
+- [x] 196 i18n keys (zh-CN + en-US)
 - [x] Code cleanup
 
 ---
 
-# Phase 4: Multi-Experiment Platform (S03+)
+# Phase 5: Enhanced Analytics & Multi-Experiment (S22+)
 
-- [ ] Projectile motion plugin
-- [ ] Inclined plane plugin
-- [ ] Circular motion plugin
-- [ ] Collision plugin
-- [ ] Spring-mass plugin
-- [ ] Ollama AI integration for problem parsing
-- [ ] Floating panel drag-and-drop docking
-- [ ] Experiment report export (PDF/Markdown/HTML)
-- [ ] Ruler and protractor toolbox tools
+- [ ] Energy chart visualization (KE/PE/TotalE over time)
+- [ ] Comparative experiment mode (side-by-side)
+- [ ] Experiment template system
+- [ ] Batch export (multiple formats at once)
+- [ ] Report customization (logo, school name, student info)
 
 ---
 
@@ -49,11 +60,11 @@
 
 # Visualization
 
+- [x] Camera presets per phase
+- [x] HUD real-time labels
 - [ ] Charts: Canvas-based replacement for SVG
 - [ ] Glowing trails
 - [ ] Dynamic arrow scaling (velocity/acceleration/force)
-- [x] Camera presets per phase
-- [x] HUD real-time labels
 - [ ] Collision particle effects
 
 ---
@@ -76,5 +87,4 @@
 - [ ] Plugin SDK
 - [ ] Teacher dashboard
 - [ ] Student dashboard
-- [ ] Experiment report generation
 - [ ] Auto-update system

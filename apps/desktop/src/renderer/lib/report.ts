@@ -1,4 +1,6 @@
 ﻿import type { PhysicsScene } from "@physics-lab/shared";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
 export interface ReportData {
   scene: PhysicsScene;
@@ -110,11 +112,24 @@ export function downloadReport(content: string, filename: string) {
 }
 
 
-/** Capture Three.js canvas as PNG data URL */
-export function captureScreenshot(): string | null {
-  const canvas = document.querySelector("canvas");
+/** Three.js Canvas 的默认 CSS 选择器 */
+const CANVAS_SELECTOR = "#physics-canvas";
+
+/**
+ * 捕获 Three.js 画布为 PNG data URL
+ * @param selector - 目标 canvas 的 CSS 选择器，默认 #physics-canvas
+ * @returns PNG data URL 字符串；canvas 不存在或 tainted 时返回 null
+ */
+export function captureScreenshot(selector: string = CANVAS_SELECTOR): string | null {
+  const canvas = document.querySelector<HTMLCanvasElement>(selector);
   if (!canvas) return null;
-  try { return canvas.toDataURL("image/png"); } catch { return null; }
+  try {
+    return canvas.toDataURL("image/png");
+  } catch {
+    // CORS / taint 导致 toDataURL 失败时静默降级
+    console.warn("[report] Canvas tainted, screenshot unavailable");
+    return null;
+  }
 }
 
 /** Generate HTML report with embedded screenshot */
@@ -153,4 +168,106 @@ export function downloadFile(content: string, filename: string, mimeType: string
   a.href = url; a.download = filename;
   document.body.appendChild(a); a.click();
   document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+// ==================== PDF 导出（html2canvas + jsPDF 图片嵌入法）====================
+
+/** PDF 渲染目标容器 ID */
+const PDF_RENDER_TARGET_ID = "pdf-render-target";
+
+/**
+ * 使用 html2canvas + jsPDF 生成 PDF 报告
+ * 采用图片嵌入法：将 HTML 渲染为 Canvas 再插入 PDF，解决 CJK 字体问题
+ *
+ * @param data - 报告数据
+ * @param locale - 语言标识 ("zh-CN" | "en")
+ * @param options - 可选配置
+ * @returns Promise<Blob> — PDF 文件的 Blob 对象
+ */
+export async function generatePDFReport(
+  data: ReportData,
+  locale: string,
+  options?: {
+    canvasSelector?: string;
+    quality?: number;
+  }
+): Promise<Blob> {
+  const { canvasSelector, quality = 2 } = options ?? {};
+
+  // 1. 构建 HTML 内容
+  const htmlContent = generateHTMLReport(data, locale);
+
+  // 2. 将 HTML 注入隐藏 div
+  const container = document.createElement("div");
+  container.id = PDF_RENDER_TARGET_ID;
+  container.style.position = "fixed";
+  container.style.left = "-9999px";
+  container.style.top = "0";
+  container.style.width = "860px";
+  container.style.background = "#ffffff";
+  container.innerHTML = htmlContent;
+  document.body.appendChild(container);
+
+  try {
+    // 3. 用 html2canvas 渲染为高分辨率 Canvas
+    const canvas = await html2canvas(container, {
+      scale: quality,
+      useCORS: true,
+      logging: false,
+    });
+
+    // 4. 创建 A4 尺寸 PDF，逐页插入图片
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
+    const imgWidth = pageWidth;
+    // 按比例缩放图片高度
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    // 第一页
+    pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+
+    // 超出一页时自动分页
+    while (heightLeft > 0) {
+      position -= pageHeight;
+      pdf.addPage();
+      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+
+    // 5. 返回 Blob
+    return pdf.output("blob");
+  } finally {
+    // 清理隐藏容器
+    if (document.body.contains(container)) {
+      document.body.removeChild(container);
+    }
+  }
+}
+
+/**
+ * 生成 PDF 并触发下载
+ * @param data - 报告数据
+ * @param locale - 语言标识
+ * @param filename - 文件名，默认 "{实验名}_{timestamp}.pdf"
+ */
+export async function downloadPDFReport(
+  data: ReportData,
+  locale: string,
+  filename?: string
+): Promise<void> {
+  const name = filename ?? `${data.scene.metadata.title || "experiment"}_${Date.now()}.pdf`;
+  const blob = await generatePDFReport(data, locale);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }

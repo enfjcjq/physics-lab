@@ -8,9 +8,14 @@
   "scripts": {
     "dev": "npm -w @physics-lab/desktop run dev",
     "build": "npm -w @physics-lab/desktop run build",
-    "typecheck": "npm -w @physics-lab/shared run typecheck"
+    "typecheck": "npm -w @physics-lab/shared run typecheck",
+    "test": "vitest --run"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.0",
+    "jsdom": "^25.0.0"
   }
 }

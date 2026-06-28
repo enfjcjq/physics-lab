@@ -1,5 +1,12 @@
-﻿import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
+
+// Fix Windows sandbox permission issues
+app.commandLine.appendSwitch("no-sandbox");
+app.commandLine.appendSwitch("disable-gpu-sandbox");
+
+// Use temp directory for cache to avoid permission errors
+app.setPath("userData", path.join(app.getPath("temp"), "physics-lab-electron"));
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -16,25 +23,31 @@ function createWindow() {
       preload: path.join(__dirname, "../preload/index.js"),
       contextIsolation: true,
       nodeIntegration: false,
+      sandbox: false,
     },
   });
 
   mainWindow.once("ready-to-show", () => {
     mainWindow?.show();
+    mainWindow?.webContents.openDevTools({ mode: "bottom" });
+  });
+
+  mainWindow.on("closed", () => {
+    mainWindow = null;
   });
 
   // Dev: Vite dev server; Prod: built files
   if (process.env.VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
+    console.log("Loading dev server:", process.env.VITE_DEV_SERVER_URL);
   } else {
-    mainWindow.loadFile(path.join(__dirname, "../renderer/index.html"));
+    const rendererPath = path.join(__dirname, "../renderer/index.html");
+    console.log("Loading file:", rendererPath);
+    mainWindow.loadFile(rendererPath);
   }
 }
 
-// ---- IPC Handlers ----
-
 function registerIPC() {
-  // Get current scene data for initial load
   ipcMain.handle("scene:getDefault", async () => {
     const { FREE_FALL_SCENE } = await import("@physics-lab/shared");
     return FREE_FALL_SCENE;

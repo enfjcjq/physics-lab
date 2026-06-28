@@ -1,0 +1,158 @@
+# Sequence Diagram — Physics Lab S21 Key Operations
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant RG as RightPanel
+    participant EBG as ExportButtonGroup
+    participant RM as report.ts (主入口)
+    participant PDF as pdf.ts
+    participant CSV as csv.ts
+    participant SS as screenshot.ts
+    participant Store as useSimulation Store
+    participant DP as DataPanel
+
+    %% ========== PDF Export Flow ==========
+    Note over User,PDF: === P0: PDF 导出操作 ===
+
+    User->>EBG: 点击 [PDF 导出] 按钮
+    EBG->>RG: setExporting(true)
+    EBG->>RM: exportToPDF({ data: reportData })
+
+    RM->>RM: generateMarkdownReport(data)
+    RM-->>EBG: markdown: string
+
+    RM->>RM: generateHTMLReport(markdown)
+    RM-->>EBG: html: string
+
+    RM->>SS: captureScreenshot()
+    SS->>SS: findCanvas() → data-canvas="scene-3d"
+    alt Canvas found
+        SS-->>RM: { success: true, dataUrl }
+    else Fallback to broad selector
+        SS-->>RM: { success: true, dataUrl } + warn log
+    else No canvas
+        SS-->>RM: { success: null, error: NO_CANVAS_FOUND }
+    end
+
+    RM->>PDF: exportToPDF({ data, includeScreenshot })
+    PDF->>PDF: new jsPDF()
+    PDF->>PDF: loadChineseFont(doc)
+    alt Font loaded
+        PDF->>PDF: buildTextModePDF(doc, true, data, screenshot)
+        PDF-->>RM: { success: true, mode: 'text' }
+    else Font unavailable
+        PDF->>PDF: html2canvas(htmlElement)
+        PDF->>PDF: addImagePages(doc, imgData, w, h)
+        PDF-->>RM: { success: true, mode: 'image' }
+    end
+
+    RM->>RM: downloadFile(blob, 'report.pdf')
+    RM-->>User: 触发 .pdf 文件下载
+    EBG->>RG: setExporting(false)
+
+    %% ========== CSV Export Flow ==========
+    Note over User,CSV: === P0/P1: CSV 导出操作（从 DataPanel 或按钮组）===
+
+    User->>DP: 点击 [导出CSV]
+    DP->>Store: 读取 frameCache
+    Store-->>DP: CachedFrame[]
+    DP->>Store: 读取 physicsParams { mass, gravity }
+    Store-->>DP: physicsParams
+    DP->>Store: 读取 phases[]
+    Store-->>DP: phases[]
+
+    DP->>CSV: downloadCSV({ frames, physicsParams, phaseNames })
+    CSV->>CSV: framesToCSVRows(frames, params, phaseNames, interval=10)
+    loop 每一帧
+        CSV->>CSV: computeEnergies(frame, mass, gravity, groundY)
+        Note right of CSV: KE = 0.5 * m * v²<br/>PE = m * g * h<br/>E_total = KE + PE
+    end
+    CSV-->>CSV: CSVRow[]
+
+    CSV->>CSV: generateCSVContent(rows, addBOM=true)
+    Note right of CSV: 添加 UTF-8 BOM \xEF\xBB\xBF<br/>+ Header 行<br>+ 数据行
+    CSV-->>CSV: csvString with BOM
+
+    CSV->>CSV: downloadFile(csvBlob, filename.csv)
+    CSV-->>User: 触发 .csv 文件下载
+
+    %% ========== Markdown Export Flow (Existing, Unchanged) ==========
+    Note over User,RM: === P0: Markdown 导出操作（已有功能，不变）===
+
+    User->>EBG: 点击 [Markdown 导出]
+    EBG->>RM: downloadReport(data, 'markdown')
+    RM->>RM: generateMarkdownReport(data)
+    RM->>RM: generateHTMLReport(md) — 仅用于内部转换
+    RM->>RM: downloadFile(mdContent, 'report.md', 'text/markdown')
+    RM-->>User: 触发 .md 文件下载
+
+    %% ========== Screenshot-Only Flow ==========
+    Note over User,SS: === P0: 单独截图操作 ===
+
+    User->>EBG: 点击 [截图]
+    EBG->>SS: captureScreenshot()
+    SS->>SS: querySelector([data-canvas="scene-3d"] canvas)
+    SS->>SS: canvas.toDataURL('image/png')
+    SS-->>EBG: CaptureResult
+
+    alt Success
+        EBG->>EBG: downloadFile(dataUrl, 'screenshot.png')
+        EBG-->>User: 触发 PNG 下载
+    else Failed
+        EBG->>User: Toast 提示 "截图失败"
+    end
+
+    %% ========== DataPanel Render Flow (Enhanced) ==========
+    Note over User,DP: === P1: 数据面板渲染流程（增强后）===
+
+    User->>Store: 播放动画 / 停在某一帧
+    Store-->>DP: currentTime 更新
+    Store-->>DP: frameCache[] 不变
+
+    DP->>DP: enrichFrames(sampledFrames)
+    loop 每一行
+        DP->>DP: computeKE(frame, mass)
+        DP->>DP: computePE(frame, mass, gravity, groundY)
+        DP->>DP: phaseNames[frame.phaseId]
+    end
+
+    DP->>DP: renderTableView(enrichedRows)
+    Note right of DP: 渲染 8 列表格:<br/>t | y | v | a | KE | PE | E | Phase<br/>当前行蓝色高亮 (动态容差)
+
+    DP->>DP: renderLiveView(currentFrame)
+    Note right of DP: Live 视图底部显示:<br/>KE: xx J | PE: xx J | E: xx J
+
+    %% ========== Test Execution Flow ==========
+    Note over User,Store: === P2: 测试执行流程（Vitest）===
+
+    participant VT as Vitest Runner
+    participant TR as report.test.ts
+    participant TS as store.test.ts
+    participant TP as parser.test.ts
+    participant TD as DataPanel.test.tsx
+
+    User->>VT: npm run test
+    VT->>VT: 加载 vitest.config.ts
+    VT->>VT: 初始化 jsdom environment
+
+    VT->>TR: 执行 report.test.ts
+    TR->>RM: generateMarkdownReport(mockData)
+    RM-->>TR: markdown string
+    TR->>TR: assert 包含 expected content ✅
+
+    VT->>TS: 执行 experiment.store.test.ts
+    TS->>Store: buildFrameCache(mockParams) [mocked]
+    Store-->>TS: CachedFrame[]
+    TS->>TS: assert 帧数和数值正确 ✅
+
+    VT->>TP: 执行 rule-parser.test.ts
+    TP->>TP: detectMotion("一个物体从10米高处自由下落")
+    TP->>TP: assert returns 'free_fall' ✅
+
+    VT->>TD: 执行 DataPanel.test.tsx
+    TD->>@testing-library/react: render(<DataPanel />)
+    TD->>TD: assert table has 8 columns ✅
+    TD->>TD: assert energy cells not NaN ✅
+
+    VT-->>User: All tests passed! (20+ cases, coverage ≥60%)

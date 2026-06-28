@@ -1,44 +1,33 @@
-## [V2.1] Sprint S19 — 2026-06-27
+﻿# Changelog
 
-### Added
-- Phase-loop system: togglePhaseLoop locks playback within phase bounds
-- Explore mode: correct quiz answer → phase animation loops with explanation
-- Loop indicator (animated arrow) in TeacherPanel header
-- Quiz retry button properly resets phase state and stops loop
+## V2.2 (S22) — Teacher Polish Sprint
+- fix: free-fall plugin stops at impact (removed incorrect bounce physics)
+- feat: FormulaDisplay component for styled math notation
+- fix: en-US.json formula encoding (removed broken unicode characters)
+- fix: zh-CN.json formula encoding consistency
+- fix: i18n files BOM stripped, valid JSON validated
+- refactor: extracted formula keys with proper Unicode math (h₀, ½, √, ²)
+- docs: updated PROJECT_STATUS, NEXT_SPRINT
 
-### Changed
-- TeacherPanel: quiz answer handler uses togglePhaseLoop
-- experiment.store: SimulationState includes loopPhaseActive, loopPhaseId
-- Timeline architecture: FrameCache + binary search confirmed working
+## V2.1 (S21) — Export & Testing Sprint
+- feat: PDF export (html2canvas + jspdf)
+- feat: CSV export with energy columns
+- feat: DataPanel with KE/PE/TotalE
+- feat: Export buttons in RightPanel (PDF/MD/CSV/Screenshot)
+- feat: Vitest test framework (17 report tests, 16 csv tests)
+- docs: S21_PRD, S21_DESIGN
 
-# Changelog
+## V2.0 (S20) — Visual Polish
+- feat: impact particles
+- feat: skeleton loader
+- feat: scene transitions
+- feat: phase-loop quiz
+- feat: timeline scrubbing
 
-## [V2.1] Sprint S18 — 2026-06-27
-
-### Added
-- Quiz questions for all 6 experiments (12 total, zh + en)
-- Quiz map supports per-plugin question sets in TeacherPanel
-- Experiment descriptions in Chinese on card grid
-- Difficulty badges (简单/中等/困难) on experiment cards
-
-### Fixed
-- LeftPanel experiment icons: replaced corrupted Unicode with proper emoji
-- TeacherPanel STEP_ICONS: proper emoji rendering
-- WelcomeScreen emoji: fixed corrupted characters
-- All components use unicode escapes for reliable cross-platform rendering
-
-### Changed
-- Experiment card grid: larger cards, icons, descriptions, difficulty badges
-- i18n: en-US 397 keys, zh-CN 553 keys
-
-## [V2.1] Sprint S17 — 2026-06-27
-### Fixed
-- Rule parser rewritten with unicode escapes
-- zh-CN.json rebuilt: 503 keys, zero corruption
-- Experiment icons in CenterPanel
-
-## [V2.0] Sprint S16 — Formula + Pendulum
-### Added
-- FormulaHTML overlay, Pendulum plugin, ErrorBoundary
-### Fixed
-- Free-fall timeline: 1.6s, 3 phases. Trail GPU crash.
+## V1.0 — Foundation
+- Electron + React + Three.js framework
+- 6 experiment plugins
+- 3-mode system (Learning/Experiment/Analysis)
+- Full i18n (zh-CN + en-US)
+- Timeline with transport controls
+- AI Parser (rule-based)

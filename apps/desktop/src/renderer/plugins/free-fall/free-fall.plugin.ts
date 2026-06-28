@@ -1,10 +1,10 @@
-import type { PhysicsPlugin } from "@physics-lab/shared";
+﻿import type { PhysicsPlugin } from "@physics-lab/shared";
 import { FREE_FALL_SCENE } from "@physics-lab/shared";
 
 export const freeFallPlugin: PhysicsPlugin = {
   id: "free-fall",
   name: "plugin.free-fall.name",
-  version: "1.0.0",
+  version: "1.1.0",
   category: "mechanics",
   difficulty: "easy",
 
@@ -12,24 +12,29 @@ export const freeFallPlugin: PhysicsPlugin = {
 
   computeState: (t: number, params: Record<string, number>) => {
     const { g, h0, mass } = params;
-    const y = h0 - 0.5 * g * t * t;
-    const vy = -g * t;
+    // Ideal free-fall kinematics: ball falls, stops at ground (no bounce)
+    const impactTime = Math.sqrt(2 * h0 / g);
     const groundY = 0.2;
-    if (y <= groundY && vy < 0) {
-      const reboundVy = -vy * 0.6;
+
+    if (t >= impactTime) {
+      // Ball has landed — hold at rest on ground
       return {
         time: t,
         positions: { ball: [0, groundY, 0] },
-        velocities: { ball: [0, reboundVy, 0] },
-        accelerations: { ball: [0, -g, 0] },
+        velocities: { ball: [0, 0, 0] },
+        accelerations: { ball: [0, 0, 0] },
         energies: {
-          kinetic: 0.5 * mass * reboundVy * reboundVy,
+          kinetic: 0,
           potential: mass * g * groundY,
-          total: 0.5 * mass * reboundVy * reboundVy + mass * g * groundY,
+          total: mass * g * groundY,
         },
       };
     }
+
+    const y = h0 - 0.5 * g * t * t;
+    const vy = -g * t;
     const speed = Math.abs(vy);
+
     return {
       time: t,
       positions: { ball: [0, Math.max(y, groundY), 0] },
@@ -45,14 +50,14 @@ export const freeFallPlugin: PhysicsPlugin = {
 
   getControls: () => [
     { id: "h0", label: "ctrl.height", type: "slider", defaultValue: 10, min: 1, max: 50, step: 0.5, unit: "m", group: "initial" },
-    { id: "g", label: "ctrl.gravity", type: "slider", defaultValue: 9.8, min: 0.1, max: 30, step: 0.1, unit: "m/s2", group: "physics" },
+    { id: "g", label: "ctrl.gravity", type: "slider", defaultValue: 9.8, min: 0.1, max: 30, step: 0.1, unit: "m/s²", group: "physics" },
     { id: "mass", label: "ctrl.mass", type: "slider", defaultValue: 2, min: 0.1, max: 10, step: 0.1, unit: "kg", group: "physics" },
   ],
 
   getKnowledgePoints: () => [
     { id: "kp1", name: "Free Fall", category: "Kinematics", mastered: true },
     { id: "kp2", name: "Constant Acceleration", category: "Kinematics", mastered: true },
-    { id: "kp3", name: "Newton 2nd Law", category: "Dynamics", mastered: false },
+    { id: "kp3", name: "Newton''s 2nd Law", category: "Dynamics", mastered: false },
     { id: "kp4", name: "Energy Conservation", category: "Energy", mastered: false },
   ],
 
@@ -68,23 +73,23 @@ export const freeFallPlugin: PhysicsPlugin = {
 
   getMotionAnalysis: () => [
     { title: "Motion Type", content: "Constant acceleration motion. Initial velocity is zero.", formula: "a = g (downward)" },
-    { title: "Displacement", content: "From release point, displacement follows quadratic law.", formula: "h = 1/2 * g * t^2" },
-    { title: "Velocity", content: "Velocity increases linearly with time.", formula: "v = g * t" },
-    { title: "Impact", content: "Impact occurs when h equals initial height.", formula: "t_impact = sqrt(2h0/g)" },
+    { title: "Displacement", content: "From release point, displacement follows quadratic law.", formula: "h = ½gt²" },
+    { title: "Velocity", content: "Velocity increases linearly with time.", formula: "v = gt" },
+    { title: "Impact Time", content: "Time to reach ground from height h₀.", formula: "t = √(2h₀/g)" },
+    { title: "Impact Velocity", content: "Maximum velocity at ground.", formula: "vₘₐₓ = √(2gh₀)" },
   ],
 
   getDerivation: () => [
-    { step: 1, title: "Given", formula: "h0, g, v0 = 0", explanation: "Known physical quantities." },
-    { step: 2, title: "Kinematic equation", formula: "v^2 = 2g(h0 - h)", explanation: "Velocity-displacement relation." },
-    { step: 3, title: "At impact (h = 0)", formula: "v = sqrt(2*g*h0)", explanation: "Substitute h = 0." },
-    { step: 4, title: "Result", formula: "v = sqrt(2*9.8*10) = 14 m/s", explanation: "Final answer." },
+    { step: 1, title: "Known Quantities", formula: "h₀, g, v₀ = 0", explanation: "Initial height, gravity, initial velocity." },
+    { step: 2, title: "Kinematic Equation", formula: "v² = 2g(h₀ − h)", explanation: "Velocity-displacement relation from constant acceleration." },
+    { step: 3, title: "At Impact (h = 0)", formula: "v = √(2gh₀)", explanation: "Substitute h = 0 to find impact velocity." },
+    { step: 4, title: "Numerical Result", formula: "v = √(2 × 9.8 × 10) ≈ 14 m/s", explanation: "Plug in typical values." },
   ],
 
   getPhases: () => [
-    { id: "release", label: "phase.release", icon: "o", timeRange: [0, 0.05] },
-    { id: "falling", label: "phase.falling", icon: "v", timeRange: [0.05, 1.4] },
-    { id: "impact", label: "phase.impact", icon: "O", timeRange: [1.35, 1.5] },
-    { id: "bounce", label: "phase.bounce", icon: "^", timeRange: [1.5, 4.0] },
+    { id: "release", label: "phase.release", icon: "●", timeRange: [0, 0.05], color: "#22c55e", description: "Initial state: ball is held at rest" },
+    { id: "falling", label: "phase.falling", icon: "↓", timeRange: [0.05, 1.4], color: "#3b82f6", description: "Ball accelerates downward under gravity" },
+    { id: "impact", label: "phase.impact", icon: "▼", timeRange: [1.3, 1.6], color: "#f59e0b", description: "Ball reaches ground, experiment complete" },
   ],
 
   getCameraPresets: () => [

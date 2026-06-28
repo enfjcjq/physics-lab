@@ -8,7 +8,16 @@ import type { PhysicsScene } from "@physics-lab/shared";
 import { FREE_FALL_SCENE } from "@physics-lab/shared";
 
 // Eagerly register only free-fall. Other plugins load lazily on switch.
+// Register all plugins so the experiment switcher shows all 6
 pluginRegistry.register(freeFallPlugin);
+// Lazy-register the rest on first access via ensurePlugin in plugin-loader.ts
+// They appear in the list because pluginRegistry.list() only shows registered plugins.
+// We eagerly register them here for the UI, but their scenes load lazily.
+import("./plugins/projectile-motion/projectile-motion.plugin").then(m => pluginRegistry.register(m.projectileMotionPlugin));
+import("./plugins/inclined-plane/inclined-plane.plugin").then(m => pluginRegistry.register(m.inclinedPlanePlugin));
+import("./plugins/collision/collision.plugin").then(m => pluginRegistry.register(m.collisionPlugin));
+import("./plugins/spring-mass/spring-mass.plugin").then(m => pluginRegistry.register(m.springMassPlugin));
+import("./plugins/pendulum/pendulum.plugin").then(m => pluginRegistry.register(m.pendulumPlugin));
 
 export function App() {
   const setScene = useSimulation((s) => s.setScene);

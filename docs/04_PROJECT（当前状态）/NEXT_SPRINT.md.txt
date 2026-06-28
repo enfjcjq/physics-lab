@@ -1,16 +1,28 @@
-# Next Sprint: S22
+﻿# Next Sprint: S23
 
-## Priority 1: AI Teacher Enhancements (P0)
-- Teacher mode with guided step-by-step exploration
-- Auto-advance teacher steps during playback
-- Visual cues for correct quiz answers
+## Priority 1: Plugin Physics Consistency (P0)
+- Fix projectile-motion: remove bounce/aftermath phase, stop at impact
+- Fix inclined-plane: remove ground_slide phase, stop at bottom
+- Audit all 6 plugins for proper phase definitions matching computeState
+- Ensure all plugins have consistent fallback behavior at end of simulation
 
-## Priority 2: Plugin System Refinement (P1)
-- Ensure all 6 plugins share consistent UX
-- Plugin-specific camera presets
-- Plugin-specific chart configurations
+## Priority 2: Teacher Auto-Advance (P0)
+- Teacher steps auto-advance during playback
+- Visual indicator for current step progression
+- Smooth scroll with animation
 
-## Priority 3: Performance (P2)
-- Optimize Three.js draw calls
-- Reduce unnecessary React re-renders
+## Priority 3: Experiment Switcher UX (P1)
+- Prominent experiment cards with icons
+- Recent/favorites quick access
+- Visual category grouping (Mechanics, Waves, EM, etc.)
+
+## Priority 4: Ollama AI Integration (P2)
+- Abstract AIProvider interface
+- Rule-based parser as default
+- Ollama provider with local LLM support
+- PhysicsScene schema validation
+
+## Priority 5: Performance (P2)
 - Lazy load non-critical panels
+- Reduce Three.js draw calls via instancing
+- Memoize frame cache lookups

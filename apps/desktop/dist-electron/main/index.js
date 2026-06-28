@@ -1,1 +1,66 @@
-"use strict";const e=require("electron"),i=require("path");let n=null;function s(){if(n=new e.BrowserWindow({width:1280,height:800,minWidth:900,minHeight:600,title:"Physics Lab",backgroundColor:"#020617",show:!1,webPreferences:{preload:i.join(__dirname,"../preload/index.js"),contextIsolation:!0,nodeIntegration:!1,sandbox:!1}}),n.once("ready-to-show",()=>{n==null||n.show()}),n.on("closed",()=>{n=null}),process.env.VITE_DEV_SERVER_URL)n.loadURL(process.env.VITE_DEV_SERVER_URL),console.log("Loading dev server:",process.env.VITE_DEV_SERVER_URL);else{const o=i.join(__dirname,"../renderer/index.html");console.log("Loading file:",o),n.loadFile(o)}n.webContents.on("console-message",(o,t,a)=>{console.log("[Renderer]",a)}),n.webContents.on("did-fail-load",(o,t,a,r)=>{console.error("[FAIL-LOAD]",r,a)}),n.webContents.on("did-finish-load",()=>{console.log("[FINISH-LOAD] Page loaded successfully")})}function d(){e.ipcMain.handle("scene:getDefault",async()=>{const{FREE_FALL_SCENE:o}=await Promise.resolve().then(()=>require("./index-CUHG0PTY.js"));return o})}e.app.whenReady().then(()=>{e.app.commandLine.appendSwitch("no-sandbox"),e.app.commandLine.appendSwitch("disable-gpu-sandbox"),e.app.commandLine.appendSwitch("enable-features","VaapiVideoDecoder"),e.app.commandLine.appendSwitch("disable-renderer-backgrounding"),e.app.commandLine.appendSwitch("ignore-gpu-blocklist"),e.app.setPath("userData",i.join(e.app.getPath("temp"),"physics-lab-electron")),d(),s(),e.app.on("activate",()=>{e.BrowserWindow.getAllWindows().length===0&&s()})});e.app.on("window-all-closed",()=>{process.platform!=="darwin"&&e.app.quit()});
+"use strict";
+const electron = require("electron");
+const path = require("path");
+let mainWindow = null;
+function createWindow() {
+  mainWindow = new electron.BrowserWindow({
+    width: 1280,
+    height: 800,
+    minWidth: 900,
+    minHeight: 600,
+    title: "Physics Lab",
+    backgroundColor: "#020617",
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, "../preload/index.js"),
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: false
+    }
+  });
+  mainWindow.once("ready-to-show", () => {
+    mainWindow == null ? void 0 : mainWindow.show();
+  });
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
+  if (process.env.VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
+    console.log("Loading dev server:", process.env.VITE_DEV_SERVER_URL);
+  } else {
+    const rendererPath = path.join(__dirname, "../renderer/index.html");
+    console.log("Loading file:", rendererPath);
+    mainWindow.loadFile(rendererPath);
+  }
+  mainWindow.webContents.on("console-message", (_e, _level, msg) => {
+    console.log("[Renderer]", msg);
+  });
+  mainWindow.webContents.on("did-fail-load", (_event, _code, desc, url) => {
+    console.error("[FAIL-LOAD]", url, desc);
+  });
+  mainWindow.webContents.on("did-finish-load", () => {
+    console.log("[FINISH-LOAD] Page loaded successfully");
+  });
+}
+function registerIPC() {
+  electron.ipcMain.handle("scene:getDefault", async () => {
+    const { FREE_FALL_SCENE } = await Promise.resolve().then(() => require("./index-CUK0k_9Q.js"));
+    return FREE_FALL_SCENE;
+  });
+}
+electron.app.whenReady().then(() => {
+  electron.app.commandLine.appendSwitch("no-sandbox");
+  electron.app.commandLine.appendSwitch("disable-gpu-sandbox");
+  electron.app.commandLine.appendSwitch("enable-features", "VaapiVideoDecoder");
+  electron.app.commandLine.appendSwitch("disable-renderer-backgrounding");
+  electron.app.commandLine.appendSwitch("ignore-gpu-blocklist");
+  electron.app.setPath("userData", path.join(electron.app.getPath("temp"), "physics-lab-electron"));
+  registerIPC();
+  createWindow();
+  electron.app.on("activate", () => {
+    if (electron.BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
+electron.app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") electron.app.quit();
+});

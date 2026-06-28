@@ -122,7 +122,7 @@
   "teacher.step3.formula": "F = ma  →  a = g",
   "teacher.step4.title": "推导公式",
   "teacher.step4.desc": "由运动学公式：y=h₀−½gt²，v=gt。",
-  "teacher.step4.formula": "y = h₀ − ½gt²\nv = −gt",
+  "teacher.step4.formula": "y = h₀ - ½gt²\nv = -gt",
   "teacher.step5.title": "计算结果",
   "teacher.step5.desc": "代入数值，求出落地时间和速度。",
   "teacher.step5.formula": "v = √(2gh₀)",

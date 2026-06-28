@@ -1,3 +1,4 @@
+﻿import { FormulaDisplay } from "./FormulaDisplay";
 import { useSimulation } from "../../features/experiment/experiment.store";
 import type { TeacherStep } from "@physics-lab/shared";
 import { useI18n } from "../../core/i18n";
@@ -202,7 +203,7 @@ export function TeacherPanel() {
             <p className="text-xs text-slate-300 leading-relaxed">{t(step.descKey)}</p>
             {step.formulaKey && (
               <div className="mt-2.5 px-3 py-2 bg-slate-800 rounded-lg">
-                <div className="text-xs font-mono text-sky-300 whitespace-pre-wrap">{t(step.formulaKey)}</div>
+                <FormulaDisplay formula={t(step.formulaKey)} className="text-xs" />
               </div>
             )}
           </div>

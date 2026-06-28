@@ -1,9 +1,9 @@
-# Project Status
+﻿# Project Status
 
-**Version:** V2.1 (Sprint S21)
-**Status:** Complete (668 modules, 6 plugins)
+**Version:** V2.2 (Sprint S22)
+**Status:** Complete
 
-## Completed Sprints (V2.1)
+## Completed Sprints
 | Sprint | Focus | Key Deliverable |
 |--------|-------|----------------|
 | S16 | Formula + Pendulum | HTML formula overlay, 6th experiment |
@@ -11,8 +11,23 @@
 | S18 | UX + Quiz | Experiment cards, 12 quiz questions |
 | S19 | Timeline | Phase-loop quiz, FrameCache |
 | S20 | Visual Polish | Impact particles, transitions, skeleton loader |
+| S21 | Export System | PDF/MD/CSV/Screenshot export, MenuBar integration |
+| S22 | Teacher + Polish | FormulaDisplay component, free-fall crash fix, i18n cleanup |
 
 ## Experiments (6)
 Free Fall | Projectile Motion | Inclined Plane | Collision | Spring-Mass | Pendulum
 
-| S21 | Export System | PDF/MD/CSV/Screenshot export, MenuBar integration |
+## Key Changes in S22
+- Fixed free-fall plugin: ball stops at impact (no broken bounce physics)
+- Created FormulaDisplay component for styled math notation
+- Fixed en-US.json formula encoding (removed broken unicode)
+- Fixed zh-CN.json formula encoding consistency
+- Both i18n files: BOM stripped, valid JSON validated
+- Added FormulaDisplay import to TeacherPanel
+
+## Architecture Notes
+- 6 plugins remain; free-fall is the reference implementation
+- Scene3D frame cache runs at 60fps precomputed
+- Timeline supports drag, click, wheel, keyboard shortcuts
+- Export: PDF (html2canvas+jspdf), MD, HTML, CSV, Screenshot
+- 3 modes: Learning, Experiment, Analysis

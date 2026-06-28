@@ -1,4 +1,4 @@
-import { useRef, useMemo, useEffect, useState } from "react";
+import { useRef, useMemo, useEffect, useState, useCallback } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Text } from "@react-three/drei";
 import * as THREE from "three";
@@ -160,7 +160,21 @@ function Ball2(){
 
 export function Scene3D() {
   const [transitioning, setTransitioning] = useState(false);
+  const [canvasError, setCanvasError] = useState<string | null>(null);
   const activePluginId = useSimulation(s => s.activePluginId);
+
+  const handleCreated = useCallback((state: { gl: THREE.WebGLRenderer }) => {
+    // Verify WebGL context is healthy
+    const gl = state.gl;
+    const ctx = gl.getContext();
+    if (!ctx || ctx.isContextLost()) {
+      setCanvasError("WebGL context lost or unavailable");
+      console.error("[Physics Lab] WebGL context error");
+      return;
+    }
+    gl.setClearColor(new THREE.Color("#0f172a"));
+    console.log("[Physics Lab] Scene3D Canvas initialized successfully");
+  }, []);
 
   useEffect(() => {
     setTransitioning(true);
@@ -178,8 +192,21 @@ export function Scene3D() {
     const preset=scene.camera_script.find(c=>c.id===phase.cameraPresetId);
     return preset?preset.target as [number,number,number]:[0,5,0] as [number,number,number];
   },[currentPhaseId,phases,scene]);
+
+  // Fallback UI when Canvas fails to render
+  if (canvasError) {
+    return <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)' }}>
+      <div style={{ textAlign: 'center', color: '#94a3b8', padding: 32 }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
+        <h3 style={{ color: '#f1f5f9', fontSize: 16, marginBottom: 8 }}>3D Render Error</h3>
+        <p style={{ fontSize: 12, color: '#ef4444', maxWidth: 300 }}>{canvasError}</p>
+        <button onClick={() => window.location.reload()} style={{ marginTop: 16, padding: '8px 20px', borderRadius: 8, background: '#0ea5e9', color: 'white', border: 'none', cursor: 'pointer', fontSize: 13 }}>Reload App</button>
+      </div>
+    </div>;
+  }
+
   return <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-    <Canvas camera={{position:[8,6,8],fov:55,near:0.1,far:100}} gl={{antialias:true,alpha:false,preserveDrawingBuffer:true}} style={{background:"linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)"}} onCreated={({gl})=>{gl.setClearColor(new THREE.Color("#0f172a"))}}>
+    <Canvas camera={{position:[8,6,8],fov:55,near:0.1,far:100}} gl={{antialias:true,alpha:false,preserveDrawingBuffer:true}} style={{background:"linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)"}} onCreated={handleCreated}>
     <ambientLight intensity={0.7}/>
     <directionalLight position={[10,15,5]} intensity={1.2} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024}/>
     <pointLight position={[0,8,0]} intensity={0.5} color="#FF6B6B"/>

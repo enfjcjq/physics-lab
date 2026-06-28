@@ -2,7 +2,7 @@ import { useSimulation } from "../../features/experiment/experiment.store";
 import type { TeacherStep } from "@physics-lab/shared";
 import { useI18n } from "../../core/i18n";
 import { useTeaching } from "../../core/teaching.store";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 const STEP_ICONS = ["\uD83D\uDC41\uFE0F", "\uD83D\uDCA1", "\uD83D\uDCD0", "\uD83D\uDCC8", "\uD83E\uDDE0", "\u2705", "\uD83C\uDF1F"];
 
@@ -72,6 +72,14 @@ export function TeacherPanel() {
   })();
   const step = sortedSteps[currentIdx] ?? null;
   const phase = phases.find((p) => p.id === currentPhaseId);
+  // Auto-scroll step list to current step
+  const stepListRef = useRef<HTMLDivElement>(null);
+  const currentStepRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (currentStepRef.current) {
+      currentStepRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [currentIdx]);
 
   const ke = 0.5 * mass * ballVelocity * ballVelocity;
   const pe = mass * gravity * ballY;
@@ -218,10 +226,11 @@ export function TeacherPanel() {
         {sortedSteps.length > 0 && (
           <div className="bg-slate-800/40 border border-slate-700/40 rounded-xl p-3">
             <h3 className="text-[10px] text-slate-500 uppercase tracking-wider mb-2">{t("teacher.steps")}</h3>
-            <div className="space-y-0.5">
+            <div ref={stepListRef} className="space-y-0.5 max-h-[200px] overflow-y-auto scroll-smooth">
               {sortedSteps.map((s, i) => (
                 <button key={s.id} onClick={() => { jumpToTime(s.timeStart); }}
-                  className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-left transition-colors ${isCurrent(i)?"bg-emerald-900/30 border border-emerald-700/30":"hover:bg-slate-800/60"}`}>
+                  ref={isCurrent(i) ? currentStepRef : undefined}
+                  className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-left transition-all duration-500 ${isCurrent(i)?"bg-emerald-900/30 border border-emerald-700/30 scale-[1.02]":"hover:bg-slate-800/60"}`}>
                   <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs flex-shrink-0 ${isPast(i)?"bg-emerald-600 text-white":isCurrent(i)?"bg-emerald-900/50 border border-emerald-600 text-emerald-400":"bg-slate-800 border border-slate-700 text-slate-600"}`}>
                     {isPast(i)?"\u2713":i+1}
                   </span>

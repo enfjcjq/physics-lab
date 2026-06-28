@@ -281,7 +281,23 @@ export const Scene3D = memo(function Scene3D() {
     </Canvas>
     {/* Transition overlay */}
     {transitioning && (
-      <div style={{ position: "absolute", inset: 0, background: "rgba(15,23,42,0.3)", zIndex: 10, pointerEvents: "none", transition: "opacity 300ms" }} />
+      <div style={{
+        position: "absolute", inset: 0,
+        background: "linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(30,27,75,0.95) 100%)",
+        zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center",
+        animation: "fadeIn 150ms ease-out"
+      }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{
+            width: 32, height: 32, borderRadius: "50%",
+            border: "3px solid rgba(14,165,233,0.2)",
+            borderTopColor: "#0ea5e9",
+            animation: "spin 0.6s linear infinite",
+            margin: "0 auto 12px"
+          }} />
+          <span style={{ color: "#94a3b8", fontSize: 12 }}>Loading...</span>
+        </div>
+      </div>
     )}
   </div>;
 });

@@ -5,7 +5,6 @@ import renderer from "vite-plugin-electron-renderer";
 import path from "path";
 
 export default defineConfig({
-  build: { modulePreload: { polyfill: false } },
   base: './',
   plugins: [
     react(),
@@ -39,6 +38,7 @@ export default defineConfig({
     renderer(),
   ],
   build: {
+    modulePreload: { polyfill: false },
     rollupOptions: {
       output: {
         manualChunks: {

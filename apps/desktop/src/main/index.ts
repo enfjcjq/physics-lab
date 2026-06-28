@@ -5,6 +5,11 @@ import path from "path";
 app.commandLine.appendSwitch("no-sandbox");
 app.commandLine.appendSwitch("disable-gpu-sandbox");
 
+// WebGL / GPU compatibility fixes for Windows
+app.commandLine.appendSwitch("enable-features", "VaapiVideoDecoder");
+app.commandLine.appendSwitch("disable-renderer-backgrounding"); // Keep GPU awake
+app.commandLine.appendSwitch("ignore-gpu-blocklist"); // Force-enable WebGL on older GPUs
+
 // Use temp directory for cache to avoid permission errors
 app.setPath("userData", path.join(app.getPath("temp"), "physics-lab-electron"));
 

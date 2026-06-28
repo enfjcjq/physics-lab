@@ -1,9 +1,40 @@
-import { useRef, useMemo, useEffect, useState, useCallback } from "react";
+import { useRef, useMemo, useEffect, useState, useCallback, Component, ReactNode } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useSimulation } from "../experiment.store";
 import { useVisualization } from "../../../core/visualization.store";
+
+// ---- Inner Error Boundary for 3D scene children ----
+interface SceneErrorBoundaryState { hasError: boolean; error: string | null }
+class SceneErrorBoundary extends Component<{children: ReactNode}, SceneErrorBoundaryState> {
+  constructor(props: {children: ReactNode}) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error: Error): SceneErrorBoundaryState {
+    return { hasError: true, error: error.message };
+  }
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error("[Physics Lab] Scene3D inner error:", error.message, info.componentStack);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <group>
+          <mesh position={[0, 2.5, -5]}>
+            <boxGeometry args={[4, 2, 0.1]} />
+            <meshBasicMaterial color="#7f1d1d" transparent opacity={0.8} />
+          </mesh>
+          <Text position={[0, 2.5, -4.9]} fontSize={0.2} color="#fca5a5" anchorX="center">
+            {"Scene Error: " + (this.state.error || "unknown")}
+          </Text>
+        </group>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 function Axes() {
   const pts = useMemo(() => ({
@@ -166,14 +197,36 @@ export function Scene3D() {
   const handleCreated = useCallback((state: { gl: THREE.WebGLRenderer }) => {
     // Verify WebGL context is healthy
     const gl = state.gl;
-    const ctx = gl.getContext();
-    if (!ctx || ctx.isContextLost()) {
-      setCanvasError("WebGL context lost or unavailable");
-      console.error("[Physics Lab] WebGL context error");
-      return;
+    console.log("[Physics Lab] Scene3D onCreated triggered, renderer:", gl.constructor.name);
+
+    try {
+      const ctx = gl.getContext();
+      if (!ctx) {
+        setCanvasError("WebGL context is null (GPU/driver issue?)");
+        console.error("[Physics Lab] WebGL context is null");
+        return;
+      }
+      if (ctx.isContextLost()) {
+        setCanvasError("WebGL context lost (try restarting app)");
+        console.error("[Physics Lab] WebGL context lost");
+        return;
+      }
+
+      // Log GPU info for diagnostics
+      const debugInfo = ctx.getExtension('WEBGL_debug_renderer_info');
+      if (debugInfo) {
+        console.log("[Physics Lab] GPU:", ctx.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL));
+      }
+      console.log("[Physics Lab] WebGL version:", ctx instanceof WebGL2RenderingContext ? 'WebGL 2.0' : 'WebGL 1.0');
+      console.log("[Physics Lab] Max texture size:", ctx.getParameter(ctx.MAX_TEXTURE_SIZE));
+      console.log("[Physics Lab] Canvas size:", gl.domElement.width, 'x', gl.domElement.height);
+
+      gl.setClearColor(new THREE.Color("#0f172a"));
+      console.log("[Physics Lab] Scene3D Canvas initialized successfully ✅");
+    } catch (err) {
+      setCanvasError(err instanceof Error ? err.message : String(err));
+      console.error("[Physics Lab] handleCreated error:", err);
     }
-    gl.setClearColor(new THREE.Color("#0f172a"));
-    console.log("[Physics Lab] Scene3D Canvas initialized successfully");
   }, []);
 
   useEffect(() => {
@@ -206,17 +259,26 @@ export function Scene3D() {
   }
 
   return <div style={{ position: 'relative', width: '100%', height: '100%' }}>
-    <Canvas camera={{position:[8,6,8],fov:55,near:0.1,far:100}} gl={{antialias:true,alpha:false,preserveDrawingBuffer:true}} style={{background:"linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)"}} onCreated={handleCreated}>
-    <ambientLight intensity={0.7}/>
-    <directionalLight position={[10,15,5]} intensity={1.2} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024}/>
-    <pointLight position={[0,8,0]} intensity={0.5} color="#FF6B6B"/>
-    {viz.showAxes&&<Axes/>}{viz.showGrid&&<Grid/>}<Ground/><Ball/>
-    {viz.showTrail&&<Trail/>}<Ball2/>{viz.showDataLabels&&<HeightRuler/>}
-    {viz.showVelocityArrow&&<VelocityArrow/>}{viz.showAccelArrow&&<AccelArrow/>}{viz.showGravityArrow&&<ForceArrow/>}
-    {viz.showDataLabels&&<HudLabels/>}
-    <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>
-    <Animator/>
-  </Canvas>
+    <Canvas
+      camera={{position:[8,6,8],fov:55,near:0.1,far:100}}
+      gl={{antialias:true,alpha:false,preserveDrawingBuffer:true,failIfMajorPerformanceCaveat:false}}
+      style={{background:"linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)"}}
+      onCreated={handleCreated}
+      dpr={[1, 2]}
+    >
+      <color attach="background" args={["#0f172a"]} />
+      <ambientLight intensity={0.7}/>
+      <directionalLight position={[10,15,5]} intensity={1.2} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024}/>
+      <pointLight position={[0,8,0]} intensity={0.5} color="#FF6B6B"/>
+      <SceneErrorBoundary>
+        {viz.showAxes&&<Axes/>}{viz.showGrid&&<Grid/>}<Ground/><Ball/>
+        {viz.showTrail&&<Trail/>}<Ball2/>{viz.showDataLabels&&<HeightRuler/>}
+        {viz.showVelocityArrow&&<VelocityArrow/>}{viz.showAccelArrow&&<AccelArrow/>}{viz.showGravityArrow&&<ForceArrow/>}
+        {viz.showDataLabels&&<HudLabels/>}
+        <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>
+        <Animator/>
+      </SceneErrorBoundary>
+    </Canvas>
     {/* Transition overlay */}
     {transitioning && (
       <div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.3)', zIndex: 10, pointerEvents: 'none', transition: 'opacity 300ms' }} />

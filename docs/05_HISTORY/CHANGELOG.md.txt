@@ -1,14 +1,27 @@
-﻿# Changelog
+# Changelog
+
+## V3.1 (S35-S39) — Learning Experience Phase
+- feat: Learning Dashboard (radar chart, progress ring, experiment cards, recommendations)
+- feat: Mastery V2 (attempt tracking, scores, timestamps, auto-migration)
+- feat: Knowledge Graph live mastery coloring + detail cards
+- feat: Achievement system (7 badges with auto-detection)
+- feat: Quiz expansion (12→24 questions, 4 per experiment)
+- feat: Adaptive quiz difficulty (easy/medium/hard based on mastery)
+- feat: Quiz hints (shown after wrong answer)
+- feat: Ollama warmUp + confidence scoring
+- feat: AI status indicator (green/red dot in MenuBar)
+- feat: Toast notifications for achievement unlocks
+- feat: Streak calendar heatmap (30-day GitHub-style)
+- i18n: 677 zh-CN / 522 en-US keys
 
 ## V2.6 (S28-S29) — Quality Sprint
 - test: 11 new tests (51 total): plugin-registry, teaching store, ai-provider
 - perf: React.memo investigation for Scene3D components
 - docs: ROADMAP updated for AI-driven learning phase
-- docs: PROJECT_STATUS updated to V2.6
 
 ## V2.5 (S27) — AI Integration
 - feat: Ollama auto-detect on startup
-- feat: AI i18n keys (7 new per language, 571 zh / 416 en)
+- feat: AI i18n keys (7 new per language)
 - feat: Graceful fallback when Ollama unavailable
 
 ## V2.4 (S26) — AI UI
@@ -17,12 +30,10 @@
 ## V2.3 (S24-S25) — AI Engine
 - feat: OllamaProvider with local LLM support
 - feat: AIProvider store with provider switching
-- feat: AIProvider abstraction (swap backends without code changes)
 
 ## V2.2 (S22-S23) — Teacher Polish
 - fix: Free-fall crash at impact
-- feat: FormulaDisplay component (styled math notation)
-- fix: i18n formula encoding (removed broken unicode)
+- feat: FormulaDisplay component
 
 ## V2.1 (S21) — Export
 - feat: PDF/MD/HTML/CSV/Screenshot export

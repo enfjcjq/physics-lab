@@ -1,25 +1,32 @@
-﻿# Next Sprint: S32+
+# Next Sprint: S40+
 
-## Priority 1: Ollama End-to-End (P0)
-- Test Ollama with actual physics problems
-- Parse output into valid PhysicsScene
-- Show Ollama response time + confidence
-- Graceful fallback chain: Ollama -> Rule -> Cached
+## Completed (S35-S39): Learning Experience Phase
+- [x] Learning Dashboard + Mastery V2
+- [x] Knowledge Graph mastery colors
+- [x] Achievement badges (7)
+- [x] Quiz expansion 24Q + adaptive difficulty
+- [x] Ollama warmUp + confidence
+- [x] Toast notifications + streak calendar
 
-## Priority 2: Learning Path System (P1)
-- Track mastery per knowledge point
-- Suggest next experiment based on gaps
-- Adaptive quiz difficulty
-- Learning progress visualization
+## Priority 1: Performance & Polish (P0)
+- React.memo for Scene3D child components
+- Timeline scrubbing at 60fps (debounce trail updates)
+- Reduce unnecessary re-renders
+- Bundle size analysis
 
-## Priority 3: New Physics Models (P2)
+## Priority 2: Learning Path (P1)
+- Experiment comparison view (side-by-side)
+- Personalized learning recommendations (ML-based)
+- Wrong answer review system
+- Learning goal setting
+
+## Priority 3: Content Expansion (P2)
 - Circular motion plugin
 - Electromagnetic experiments
 - Wave/optics visualization
-- Thermodynamics simulation
+- Problem OCR input
 
-## Priority 4: Commercial Readiness (P3)
-- User accounts + preferences
-- Cloud sync for experiments
-- School/institution licensing
-- Analytics dashboard
+## Priority 4: Platform (P3)
+- User accounts + cloud sync
+- School dashboard
+- Plugin marketplace

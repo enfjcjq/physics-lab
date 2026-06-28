@@ -1,6 +1,9 @@
-import { create } from "zustand";
+﻿import { create } from "zustand";
 import type { InputMethod } from "./ui.store";
 import { aiRegistry, ruleParser } from "@physics-lab/ai-parser";
+import { createVirtualPlugin, hasSimulation } from "@physics-lab/shared";
+import { pluginRegistry } from "../core/plugin-registry";
+import { useSimulation } from "../features/experiment/experiment.store";
 
 // Register the rule parser on first import
 if (!aiRegistry.get("rule-based")) {
@@ -65,6 +68,16 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
           inputMethod: "text",
           timestamp: Date.now(),
         });
+        // If scene has simulation block, register as virtual plugin
+        if (hasSimulation(result.scene)) {
+          const virtualPlugin = createVirtualPlugin(result.scene);
+          const pluginId = result.scene.metadata.topic ?? "ai-generated";
+          // Override the plugin id for registration
+          (virtualPlugin as any).id = pluginId;
+          pluginRegistry.register(virtualPlugin);
+          // Switch to the generated experiment
+          useSimulation.getState().setActivePlugin(pluginId);
+        }
         return result.scene;
       } else {
         set({ parseError: result.error || "Failed to parse problem" });

@@ -153,5 +153,23 @@ export const COLLISION_SCENE: PhysicsScene = {
     { "id": "ch_v_t", "type": "velocity_time", "label": "v-t", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Velocity", "unit": "m/s", "key": "v" }, "color": "#f59e0b" },
     { "id": "ch_p_t", "type": "momentum", "label": "p-t", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Momentum", "unit": "kg.m/s", "key": "p" }, "color": "#a78bfa" },
     { "id": "ch_ke", "type": "kinetic_energy", "label": "KE", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Kinetic Energy", "unit": "J", "key": "ke" }, "color": "#f59e0b" }
-  ]
+  ],
+  simulation: {
+    params: { m1: 2, m2: 1, v1: 3, v2: -1, g: 9.8 },
+    equations: {
+      x: "0",
+      y: "3",
+      z: "t < abs(6 / (v1 - v2)) ? v1 * t : v1 * abs(6 / (v1 - v2)) + ((m1 - m2) / (m1 + m2) * v1 + 2 * m2 / (m1 + m2) * v2) * (t - abs(6 / (v1 - v2)))",
+      vx: "0",
+      vy: "0",
+      vz: "0",
+      ax: "0",
+      ay: "0",
+      az: "0",
+      ke: "0.5 * m1 * v1 * v1",
+      pe: "m1 * g * 3",
+      total_e: "0.5 * m1 * v1 * v1 + m1 * g * 3",
+    },
+    stopWhen: [],
+  }
 };

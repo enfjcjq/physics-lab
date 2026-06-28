@@ -163,5 +163,24 @@ export const SPRING_MASS_SCENE: PhysicsScene = {
     { "id": "ch_s_t", "type": "position_time", "label": "x-t", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Displacement", "unit": "m", "key": "x" }, "color": "#a78bfa" },
     { "id": "ch_v_t", "type": "velocity_time", "label": "v-t", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Velocity", "unit": "m/s", "key": "v" }, "color": "#f59e0b" },
     { "id": "ch_ke", "type": "kinetic_energy", "label": "KE", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Energy", "unit": "J", "key": "ke" }, "color": "#f59e0b" }
-  ]
+  ],
+  simulation: {
+    params: { k: 10, m: 2, A: 2, g: 9.8 },
+    equations: {
+      x: "0",
+      y: "3 + A * cos(sqrt(k / m) * t)",
+      z: "0",
+      vx: "0",
+      vy: "-A * sqrt(k / m) * sin(sqrt(k / m) * t)",
+      vz: "0",
+      ax: "0",
+      ay: "-A * (k / m) * cos(sqrt(k / m) * t)",
+      az: "0",
+      ke: "0.5 * m * vy * vy",
+      pe: "0.5 * k * (y - 3) * (y - 3)",
+      total_e: "0.5 * k * A * A",
+      speed: "abs(vy)",
+    },
+    stopWhen: [],
+  }
 };

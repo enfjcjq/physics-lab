@@ -200,5 +200,26 @@ export const PROJECTILE_MOTION_SCENE: PhysicsScene = {
     { "id": "ch_ke", "type": "kinetic_energy", "label": "KE", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Kinetic Energy", "unit": "J", "key": "ke" }, "color": "#f59e0b" },
     { "id": "ch_pe", "type": "potential_energy", "label": "PE", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Potential Energy", "unit": "J", "key": "pe" }, "color": "#22c55e" },
     { "id": "ch_me", "type": "mechanical_energy", "label": "ME", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Mechanical Energy", "unit": "J", "key": "me" }, "color": "#3b82f6" }
-  ]
+  ],
+  simulation: {
+    params: { v0: 10, angle: 30, h0: 5, g: 9.8, m: 1 },
+    equations: {
+      x: "v0 * cos(angle * PI / 180) * t",
+      y: "h0 + v0 * sin(angle * PI / 180) * t - 0.5 * g * t * t > 0.2 ? h0 + v0 * sin(angle * PI / 180) * t - 0.5 * g * t * t : 0.2",
+      z: "0",
+      vx: "v0 * cos(angle * PI / 180)",
+      vy: "v0 * sin(angle * PI / 180) - g * t",
+      vz: "0",
+      ax: "0",
+      ay: "-g",
+      az: "0",
+      ke: "0.5 * m * (vx * vx + vy * vy)",
+      pe: "m * g * y",
+      total_e: "0.5 * m * v0 * v0 + m * g * h0",
+      speed: "sqrt(vx * vx + vy * vy)",
+    },
+    stopWhen: [
+      { formula: "h0 + v0 * sin(angle * PI / 180) * t - 0.5 * g * t * t - 0.2", description: "Projectile hits ground" },
+    ],
+  }
 };

@@ -1,4 +1,4 @@
-import type { PhysicsScene } from "../types/physics-scene";
+﻿import type { PhysicsScene } from "../types/physics-scene";
 
 export const PENDULUM_SCENE: PhysicsScene = {
   $schema: "https://physics-lab.app/schemas/physics-scene/2.0.json",
@@ -121,4 +121,23 @@ export const PENDULUM_SCENE: PhysicsScene = {
     { id: "ch_v_t", type: "velocity_time", label: "v-t", xAxis: { label: "Time", unit: "s", key: "t" }, yAxis: { label: "Velocity", unit: "m/s", key: "v" }, color: "#f59e0b" },
     { id: "ch_energy", type: "kinetic_energy", label: "Energy", xAxis: { label: "Time", unit: "s", key: "t" }, yAxis: { label: "Energy", unit: "J", key: "E" }, color: "#f59e0b" },
   ],
+  simulation: {
+    params: { L: 4.5, theta0: 20, g: 9.8, m: 1 },
+    equations: {
+      x: "L * sin(theta0 * PI / 180 * cos(sqrt(g / L) * t))",
+      y: "L * (1 - cos(theta0 * PI / 180 * cos(sqrt(g / L) * t)))",
+      z: "0",
+      vx: "-L * theta0 * PI / 180 * sqrt(g / L) * sin(sqrt(g / L) * t) * cos(theta0 * PI / 180 * cos(sqrt(g / L) * t))",
+      vy: "L * theta0 * PI / 180 * sqrt(g / L) * sin(sqrt(g / L) * t) * sin(theta0 * PI / 180 * cos(sqrt(g / L) * t))",
+      vz: "0",
+      ax: "0",
+      ay: "0",
+      az: "0",
+      ke: "0.5 * m * (vx * vx + vy * vy)",
+      pe: "m * g * y",
+      total_e: "m * g * L * (1 - cos(theta0 * PI / 180))",
+      speed: "sqrt(vx * vx + vy * vy)",
+    },
+    stopWhen: [],
+  }
 };

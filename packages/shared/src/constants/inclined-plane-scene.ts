@@ -197,5 +197,26 @@ export const INCLINED_PLANE_SCENE: PhysicsScene = {
     { "id": "ch_ke", "type": "kinetic_energy", "label": "KE", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Kinetic Energy", "unit": "J", "key": "ke" }, "color": "#f59e0b" },
     { "id": "ch_pe", "type": "potential_energy", "label": "PE", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Potential Energy", "unit": "J", "key": "pe" }, "color": "#22c55e" },
     { "id": "ch_me", "type": "mechanical_energy", "label": "ME", "xAxis": { "label": "Time", "unit": "s", "key": "t" }, "yAxis": { "label": "Mechanical Energy", "unit": "J", "key": "me" }, "color": "#3b82f6" }
-  ]
+  ],
+  simulation: {
+    params: { L: 5, angle: 30, mu: 0.3, g: 9.8, m: 2 },
+    equations: {
+      x: "0.5 * g * (sin(angle * PI / 180) - mu * cos(angle * PI / 180)) * t * t > L ? L : 0.5 * g * (sin(angle * PI / 180) - mu * cos(angle * PI / 180)) * t * t",
+      y: "L - 0.5 * g * (sin(angle * PI / 180) - mu * cos(angle * PI / 180)) * t * t * sin(angle * PI / 180) > 0.2 ? L - 0.5 * g * (sin(angle * PI / 180) - mu * cos(angle * PI / 180)) * t * t * sin(angle * PI / 180) : 0.2",
+      z: "0",
+      vx: "g * (sin(angle * PI / 180) - mu * cos(angle * PI / 180)) * t",
+      vy: "-g * (sin(angle * PI / 180) - mu * cos(angle * PI / 180)) * t * sin(angle * PI / 180)",
+      vz: "0",
+      ax: "g * (sin(angle * PI / 180) - mu * cos(angle * PI / 180))",
+      ay: "-g * (sin(angle * PI / 180) - mu * cos(angle * PI / 180)) * sin(angle * PI / 180)",
+      az: "0",
+      ke: "0.5 * m * (vx * vx + vy * vy)",
+      pe: "m * g * y",
+      total_e: "m * g * L",
+      speed: "sqrt(vx * vx + vy * vy)",
+    },
+    stopWhen: [
+      { formula: "0.5 * g * (sin(angle * PI / 180) - mu * cos(angle * PI / 180)) * t * t - L + 0.01", description: "Block reaches end of incline" },
+    ],
+  }
 };

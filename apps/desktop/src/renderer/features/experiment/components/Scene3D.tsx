@@ -1,4 +1,4 @@
-﻿import { useRef, useMemo, useEffect, useState, useCallback, Component, ReactNode } from "react";
+﻿import { useRef, useMemo, useEffect, useState, useCallback, Component, ReactNode, memo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Text } from "@react-three/drei";
 import * as THREE from "three";
@@ -36,7 +36,7 @@ class SceneErrorBoundary extends Component<{children: ReactNode}, SceneErrorBoun
   }
 }
 
-function Axes() {
+const Axes = memo(function Axes() {
   const pts = useMemo(() => ({
     x: [new THREE.Vector3(0,0,0), new THREE.Vector3(15,0,0)],
     y: [new THREE.Vector3(0,0,0), new THREE.Vector3(0,15,0)],
@@ -47,10 +47,10 @@ function Axes() {
     {Array.from({length:8},(_,i)=>{const y=i*2;return<group key={y}><mesh position={[0,y,0]}><boxGeometry args={[0.3,0.02,0.02]}/><meshBasicMaterial color="#22c55e"/></mesh><Text position={[-0.5,y,0]} fontSize={0.25} color="#4ade80" anchorX="right">{y+"m"}</Text></group>;})}
     <Text position={[15.5,0,0]} fontSize={0.4} color="#ef4444">X</Text><Text position={[0,15.5,0]} fontSize={0.4} color="#22c55e">Y</Text><Text position={[0,0,15.5]} fontSize={0.4} color="#3b82f6">Z</Text>
   </group>;
-}
+});
 
-function Ground(){return<mesh rotation={[-Math.PI/2,0,0]} position={[0,0,0]} receiveShadow><planeGeometry args={[20,20]}/><meshStandardMaterial color="#334155" roughness={0.8}/></mesh>;}
-function Grid(){return<gridHelper args={[20,20,"#334155","#1e293b"]} position={[0,0.01,0]}/>;}
+const Ground = memo(function Ground() {return<mesh rotation={[-Math.PI/2,0,0]} position={[0,0,0]} receiveShadow><planeGeometry args={[20,20]}/><meshStandardMaterial color="#334155" roughness={0.8}/></mesh>;});
+const Grid = memo(function Grid(){return<gridHelper args={[20,20,"#334155","#1e293b"]} position={[0,0.01,0]}/>;});
 
 function Ball(){
   const x=useSimulation(s=>s.ballX),y=useSimulation(s=>s.ballY),m=useSimulation(s=>s.mass),isBouncing=useSimulation(s=>s.isBouncing);
@@ -69,9 +69,9 @@ function Ball(){
     <sphereGeometry args={[r,32,32]}/>
     <meshStandardMaterial color="#FF6B6B" metalness={0.3} roughness={0.4} emissive={isBouncing?"#661111":"#331111"} emissiveIntensity={isBouncing?0.6:0.2}/>
   </mesh>;
-}
+});
 
-function Trail(){
+const Trail = memo(function Trail(){
   const t=useSimulation(s=>s.trail),pts=useMemo(()=>{
     if (!t || t.length === 0) return [];
     const limited = t.length > 200 ? t.slice(t.length - 200) : t;
@@ -81,7 +81,7 @@ function Trail(){
   return <Line points={pts} color="#FF6B6B" lineWidth={1} transparent opacity={0.5}/>;
 }
 
-function Arrow3D({o,d,len,c}:{o:[number,number,number];d:[number,number,number];len:number;c:string}){
+const Arrow3D = memo(function Arrow3D({o,d,len,c}:{o:[number,number,number];d:[number,number,number];len:number;c:string}){
   const e:[number,number,number]=[o[0]+d[0]*len,o[1]+d[1]*len,o[2]+d[2]*len];
   const pts=useMemo(()=>[new THREE.Vector3(...o),new THREE.Vector3(...e)],[o,e]);
   if(len<0.05)return null;
@@ -179,7 +179,7 @@ function CameraAnimator(){
   return null;
 }
 
-function Ball2(){
+const Ball2 = memo(function Ball2(){
   const x=useSimulation(s=>s.ball2X),y=useSimulation(s=>s.ball2Y),activePlugin=useSimulation(s=>s.activePluginId);
   const ref=useRef<THREE.Mesh>(null),r=0.25;
   if(activePlugin!=="collision")return null;
@@ -189,7 +189,7 @@ function Ball2(){
   </mesh>;
 }
 
-export function Scene3D() {
+export const Scene3D = memo(function Scene3D() {
   const [transitioning, setTransitioning] = useState(false);
   const [canvasError, setCanvasError] = useState<string | null>(null);
   const activePluginId = useSimulation(s => s.activePluginId);
@@ -284,4 +284,4 @@ export function Scene3D() {
       <div style={{ position: "absolute", inset: 0, background: "rgba(15,23,42,0.3)", zIndex: 10, pointerEvents: "none", transition: "opacity 300ms" }} />
     )}
   </div>;
-}
+});

@@ -3,9 +3,9 @@ import type { InputMethod } from "./ui.store";
 import { aiRegistry, ruleParser } from "@physics-lab/ai-parser";
 
 // Register the rule parser on first import
-if (!aiRegistry.get("rule-parser")) {
+if (!aiRegistry.get("rule-based")) {
   aiRegistry.register(ruleParser);
-  aiRegistry.setActive("rule-parser");
+  aiRegistry.setActive("rule-based");
 }
 
 interface HistoryItem {

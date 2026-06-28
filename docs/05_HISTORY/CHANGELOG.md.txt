@@ -1,33 +1,34 @@
 ﻿# Changelog
 
-## V2.2 (S22) — Teacher Polish Sprint
-- fix: free-fall plugin stops at impact (removed incorrect bounce physics)
-- feat: FormulaDisplay component for styled math notation
-- fix: en-US.json formula encoding (removed broken unicode characters)
-- fix: zh-CN.json formula encoding consistency
-- fix: i18n files BOM stripped, valid JSON validated
-- refactor: extracted formula keys with proper Unicode math (h₀, ½, √, ²)
-- docs: updated PROJECT_STATUS, NEXT_SPRINT
+## V2.6 (S28-S29) — Quality Sprint
+- test: 11 new tests (51 total): plugin-registry, teaching store, ai-provider
+- perf: React.memo investigation for Scene3D components
+- docs: ROADMAP updated for AI-driven learning phase
+- docs: PROJECT_STATUS updated to V2.6
 
-## V2.1 (S21) — Export & Testing Sprint
-- feat: PDF export (html2canvas + jspdf)
-- feat: CSV export with energy columns
-- feat: DataPanel with KE/PE/TotalE
-- feat: Export buttons in RightPanel (PDF/MD/CSV/Screenshot)
-- feat: Vitest test framework (17 report tests, 16 csv tests)
-- docs: S21_PRD, S21_DESIGN
+## V2.5 (S27) — AI Integration
+- feat: Ollama auto-detect on startup
+- feat: AI i18n keys (7 new per language, 571 zh / 416 en)
+- feat: Graceful fallback when Ollama unavailable
+
+## V2.4 (S26) — AI UI
+- feat: AI provider toggle in MenuBar (Rule/Ollama)
+
+## V2.3 (S24-S25) — AI Engine
+- feat: OllamaProvider with local LLM support
+- feat: AIProvider store with provider switching
+- feat: AIProvider abstraction (swap backends without code changes)
+
+## V2.2 (S22-S23) — Teacher Polish
+- fix: Free-fall crash at impact
+- feat: FormulaDisplay component (styled math notation)
+- fix: i18n formula encoding (removed broken unicode)
+
+## V2.1 (S21) — Export
+- feat: PDF/MD/HTML/CSV/Screenshot export
 
 ## V2.0 (S20) — Visual Polish
-- feat: impact particles
-- feat: skeleton loader
-- feat: scene transitions
-- feat: phase-loop quiz
-- feat: timeline scrubbing
+- feat: Impact particles, skeleton loader, scene transitions
 
 ## V1.0 — Foundation
-- Electron + React + Three.js framework
-- 6 experiment plugins
-- 3-mode system (Learning/Experiment/Analysis)
-- Full i18n (zh-CN + en-US)
-- Timeline with transport controls
-- AI Parser (rule-based)
+- Electron + React + Three.js + 6 plugins + 3 modes + i18n

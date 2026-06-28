@@ -432,5 +432,8 @@
   "category.thermodynamics": "Thermodynamics",
   "category.waves": "Waves",
   "category.modern": "Modern Physics",
-  "menu.view.dashboard": "Learning Dashboard"
+  "menu.view.dashboard": "Learning Dashboard",
+  "achievements.none_yet": "Complete quizzes to earn badges!",
+  "knowledge.empty": "No knowledge points yet",
+  "knowledge.not_attempted": "Not yet attempted"
 }

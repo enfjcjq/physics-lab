@@ -587,5 +587,8 @@
   "category.thermodynamics": "热学",
   "category.waves": "波动",
   "category.modern": "近代物理",
-  "menu.view.dashboard": "学习仪表盘"
+  "menu.view.dashboard": "学习仪表盘",
+  "achievements.none_yet": "完成测验获取成就徽章！",
+  "knowledge.empty": "暂无知识点",
+  "knowledge.not_attempted": "尚未练习"
 }

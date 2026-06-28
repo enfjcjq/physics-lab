@@ -2,7 +2,8 @@
 import { useMastery } from "../../core/mastery.store";
 import { useI18n } from "../../core/i18n";
 import { pluginRegistry } from "../../core/plugin-registry";
-import { useState, useMemo } from "react";
+import { useAchievements } from "../../core/achievements.store";
+import { useState, useMemo, useEffect } from "react";
 
 function RadarChart({ data }: { data: Array<{ label: string; value: number; max: number }> }) {
   const size = 140; const cx = size / 2; const cy = size / 2; const r = 55;
@@ -69,6 +70,9 @@ function ProgressRing({ percent, size = 100, strokeWidth = 6 }: { percent: numbe
 export function LearningDashboard() {
   const { t } = useI18n();
   const { entries, getOverallPercent, getRecentActivity } = useMastery();
+  const { badges: achievements, check: checkAchievements } = useAchievements();
+
+  useEffect(function() { checkAchievements(); }, [entries]);
   const plugins = useMemo(() => pluginRegistry.list(), []);
   const [selectedTab, setSelectedTab] = useState<"overview" | "experiments" | "activity">("overview");
 
@@ -125,7 +129,7 @@ export function LearningDashboard() {
         <h2 className="text-base font-semibold text-white">{t("dashboard.title", { defaultValue: "Learning Dashboard" })}</h2>
       </div>
       <div className="flex gap-1 px-5 pt-3 pb-2">
-        {(["overview", "experiments", "activity"] as const).map((tab) => (
+        {(["overview", "experiments", "activity", "achievements"] as const).map((tab) => (
           <button key={tab} onClick={() => setSelectedTab(tab)}
             className={"px-3 py-1.5 rounded-lg text-xs font-medium transition-colors " +
               (selectedTab === tab ? "bg-sky-600 text-white" : "text-slate-400 hover:text-white hover:bg-slate-800")}>
@@ -201,6 +205,29 @@ export function LearningDashboard() {
                 </p>
               </div>
             ))}
+          </div>
+        )}
+        {selectedTab === "achievements" && (
+          <div className="space-y-2">
+            {achievements.filter(function(a) { return a.unlocked; }).length === 0 ? (
+              <p className="text-center text-slate-500 text-sm py-6">
+                {t("achievements.none_yet", { defaultValue: "Complete quizzes to earn badges!" })}
+              </p>
+            ) : null}
+            {achievements.map(function(a) {
+              return (
+                <div key={a.id} className={"bg-slate-900/50 border rounded-xl p-3 flex items-center gap-3 transition-all " + (a.unlocked ? "border-emerald-800/50" : "border-slate-800 opacity-40")}>
+                  <span className="text-2xl">{a.unlocked ? a.icon : "🔒"}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className={"text-xs font-medium " + (a.unlocked ? "text-white" : "text-slate-600")}>{a.title}</p>
+                    <p className="text-[10px] text-slate-500">{a.description}</p>
+                  </div>
+                  {a.unlocked && a.unlockedAt && (
+                    <span className="text-[9px] text-emerald-500">{new Date(a.unlockedAt).toLocaleDateString()}</span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
         {selectedTab === "activity" && (

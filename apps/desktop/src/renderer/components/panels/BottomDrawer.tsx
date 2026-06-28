@@ -1,4 +1,4 @@
-﻿import { useRef, useCallback, useEffect, useState, useMemo } from "react";
+import { useRef, useCallback, useEffect, useState, useMemo } from "react";
 import { usePanelManager } from "../../core/panel-manager.store";
 import { useUIStore } from "../../stores/ui.store";
 import type { ChartTab } from "../../stores/ui.store";

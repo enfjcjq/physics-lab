@@ -67,21 +67,21 @@ export function CenterPanel() {
   return (
     <div className="flex-1 relative min-w-0">
       {/* Experiment switcher - always visible */}
-      <div className="absolute top-2 left-2 z-20">
-        <div className="flex gap-0.5 bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-lg p-0.5 shadow-lg">
+      <div className="absolute top-3 left-4 z-20">
+        <div className="flex gap-1 bg-slate-900/90 backdrop-blur-md border border-slate-600/50 rounded-xl p-1 shadow-xl">
           {pluginRegistry.list().map((p) => (
             <button
               key={p.id}
               onClick={async () => { if (p.id !== activePluginId) await setActivePlugin(p.id); }}
-              className={`px-2.5 py-1 rounded-md text-[10px] font-medium transition-all duration-200 flex items-center gap-1 ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 ${
                 p.id === activePluginId
-                  ? "bg-sky-600 text-white shadow-sm"
+                  ? "bg-sky-600 text-white shadow-md shadow-sky-900/40"
                   : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
               }`}
               title={t(p.name)}
             >
-              <span className="text-xs">{expIcons[p.id] || "?"}</span>
-              <span className="hidden sm:inline">{t(p.name)}</span>
+              <span className="text-xs">{expIcons[p.id] || "⚡"}</span>
+              <span className="inline">{t(p.name)}</span>
             </button>
           ))}
         </div>
@@ -120,7 +120,7 @@ export function CenterPanel() {
             <div key={p.id} className="flex items-center">
               <button
                 onClick={() => jumpToPhase(p.id)}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-medium transition-all duration-300 ${
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
                   currentPhaseId === p.id
                     ? "bg-sky-600 text-white shadow-md shadow-sky-900/30 scale-105"
                     : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"
@@ -128,7 +128,7 @@ export function CenterPanel() {
                 title={p.description || t(p.label)}
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${currentPhaseId===p.id ? "bg-white" : "bg-slate-600"}`} />
-                <span className="hidden sm:inline">{t(p.label)}</span>
+                <span className="inline">{t(p.label)}</span>
               </button>
               {i < phases.length - 1 && (
                 <div className="w-3 h-px bg-slate-700" />

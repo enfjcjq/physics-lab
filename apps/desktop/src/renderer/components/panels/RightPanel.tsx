@@ -124,7 +124,7 @@ export function RightPanel() {
         {/* Export Button Group — 仅当 scene 存在时显示 */}
         {scene && (
           <div className="px-3 py-2 border-t border-slate-800">
-            <div className="text-[9px] text-slate-600 uppercase tracking-wider mb-1.5">Export</div>
+            <div className="text-[9px] text-slate-600 uppercase tracking-wider mb-1.5">{t("export.label")}</div>
             <div className="grid grid-cols-4 gap-1">
               <button onClick={handleExportPDF} className="px-1.5 py-1 rounded text-[9px] text-slate-300 hover:text-white hover:bg-slate-700 transition-colors flex items-center justify-center gap-0.5">
                 <span>PDF</span>

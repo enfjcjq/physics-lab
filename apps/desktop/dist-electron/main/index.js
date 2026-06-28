@@ -1,9 +1,6 @@
 "use strict";
 const electron = require("electron");
 const path = require("path");
-electron.app.commandLine.appendSwitch("no-sandbox");
-electron.app.commandLine.appendSwitch("disable-gpu-sandbox");
-electron.app.setPath("userData", path.join(electron.app.getPath("temp"), "physics-lab-electron"));
 let mainWindow = null;
 function createWindow() {
   mainWindow = new electron.BrowserWindow({
@@ -35,6 +32,15 @@ function createWindow() {
     console.log("Loading file:", rendererPath);
     mainWindow.loadFile(rendererPath);
   }
+  mainWindow.webContents.on("console-message", (_e, _level, msg) => {
+    console.log("[Renderer]", msg);
+  });
+  mainWindow.webContents.on("did-fail-load", (_event, _code, desc, url) => {
+    console.error("[FAIL-LOAD]", url, desc);
+  });
+  mainWindow.webContents.on("did-finish-load", () => {
+    console.log("[FINISH-LOAD] Page loaded successfully");
+  });
 }
 function registerIPC() {
   electron.ipcMain.handle("scene:getDefault", async () => {
@@ -43,6 +49,12 @@ function registerIPC() {
   });
 }
 electron.app.whenReady().then(() => {
+  electron.app.commandLine.appendSwitch("no-sandbox");
+  electron.app.commandLine.appendSwitch("disable-gpu-sandbox");
+  electron.app.commandLine.appendSwitch("enable-features", "VaapiVideoDecoder");
+  electron.app.commandLine.appendSwitch("disable-renderer-backgrounding");
+  electron.app.commandLine.appendSwitch("ignore-gpu-blocklist");
+  electron.app.setPath("userData", path.join(electron.app.getPath("temp"), "physics-lab-electron"));
   registerIPC();
   createWindow();
   electron.app.on("activate", () => {

@@ -1,10 +1,28 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useRef, useMemo, useEffect, useState } from "react";
+import { useRef, useMemo, useEffect, useState, useCallback, Component } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, Line, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useSimulation } from "../experiment.store";
 import { useVisualization } from "../../../core/visualization.store";
+class SceneErrorBoundary extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false, error: null };
+    }
+    static getDerivedStateFromError(error) {
+        return { hasError: true, error: error.message };
+    }
+    componentDidCatch(error, info) {
+        console.error("[Physics Lab] Scene3D inner error:", error.message, info.componentStack);
+    }
+    render() {
+        if (this.state.hasError) {
+            return (_jsxs("group", { children: [_jsxs("mesh", { position: [0, 2.5, -5], children: [_jsx("boxGeometry", { args: [4, 2, 0.1] }), _jsx("meshBasicMaterial", { color: "#7f1d1d", transparent: true, opacity: 0.8 })] }), _jsx(Text, { position: [0, 2.5, -4.9], fontSize: 0.2, color: "#fca5a5", anchorX: "center", children: "Scene Error: " + (this.state.error || "unknown") })] }));
+        }
+        return this.props.children;
+    }
+}
 function Axes() {
     const pts = useMemo(() => ({
         x: [new THREE.Vector3(0, 0, 0), new THREE.Vector3(15, 0, 0)],
@@ -13,7 +31,7 @@ function Axes() {
     }), []);
     return _jsxs("group", { children: [_jsx(Line, { points: pts.x, color: "#ef4444", lineWidth: 2 }), _jsx(Line, { points: pts.y, color: "#22c55e", lineWidth: 2 }), _jsx(Line, { points: pts.z, color: "#3b82f6", lineWidth: 2 }), Array.from({ length: 8 }, (_, i) => { const y = i * 2; return _jsxs("group", { children: [_jsxs("mesh", { position: [0, y, 0], children: [_jsx("boxGeometry", { args: [0.3, 0.02, 0.02] }), _jsx("meshBasicMaterial", { color: "#22c55e" })] }), _jsx(Text, { position: [-0.5, y, 0], fontSize: 0.25, color: "#4ade80", anchorX: "right", children: y + "m" })] }, y); }), _jsx(Text, { position: [15.5, 0, 0], fontSize: 0.4, color: "#ef4444", children: "X" }), _jsx(Text, { position: [0, 15.5, 0], fontSize: 0.4, color: "#22c55e", children: "Y" }), _jsx(Text, { position: [0, 0, 15.5], fontSize: 0.4, color: "#3b82f6", children: "Z" })] });
 }
-function Ground() { return _jsxs("mesh", { rotation: [-Math.PI / 2, 0, 0], position: [0, 0, 0], receiveShadow: true, children: [_jsx("planeGeometry", { args: [20, 20] }), _jsx("meshStandardMaterial", { color: "#1e293b" })] }); }
+function Ground() { return _jsxs("mesh", { rotation: [-Math.PI / 2, 0, 0], position: [0, 0, 0], receiveShadow: true, children: [_jsx("planeGeometry", { args: [20, 20] }), _jsx("meshStandardMaterial", { color: "#334155", roughness: 0.8 })] }); }
 function Grid() { return _jsx("gridHelper", { args: [20, 20, "#334155", "#1e293b"], position: [0, 0.01, 0] }); }
 function Ball() {
     const x = useSimulation(s => s.ballX), y = useSimulation(s => s.ballY), m = useSimulation(s => s.mass), isBouncing = useSimulation(s => s.isBouncing);
@@ -129,7 +147,40 @@ function Ball2() {
 }
 export function Scene3D() {
     const [transitioning, setTransitioning] = useState(false);
+    const [canvasError, setCanvasError] = useState(null);
     const activePluginId = useSimulation(s => s.activePluginId);
+    const handleCreated = useCallback((state) => {
+        // Verify WebGL context is healthy
+        const gl = state.gl;
+        console.log("[Physics Lab] Scene3D onCreated triggered, renderer:", gl.constructor.name);
+        try {
+            const ctx = gl.getContext();
+            if (!ctx) {
+                setCanvasError("WebGL context is null (GPU/driver issue?)");
+                console.error("[Physics Lab] WebGL context is null");
+                return;
+            }
+            if (ctx.isContextLost()) {
+                setCanvasError("WebGL context lost (try restarting app)");
+                console.error("[Physics Lab] WebGL context lost");
+                return;
+            }
+            // Log GPU info for diagnostics
+            const debugInfo = ctx.getExtension('WEBGL_debug_renderer_info');
+            if (debugInfo) {
+                console.log("[Physics Lab] GPU:", ctx.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL));
+            }
+            console.log("[Physics Lab] WebGL version:", ctx instanceof WebGL2RenderingContext ? 'WebGL 2.0' : 'WebGL 1.0');
+            console.log("[Physics Lab] Max texture size:", ctx.getParameter(ctx.MAX_TEXTURE_SIZE));
+            console.log("[Physics Lab] Canvas size:", gl.domElement.width, 'x', gl.domElement.height);
+            gl.setClearColor(new THREE.Color("#0f172a"));
+            console.log("[Physics Lab] Scene3D Canvas initialized successfully ✅");
+        }
+        catch (err) {
+            setCanvasError(err instanceof Error ? err.message : String(err));
+            console.error("[Physics Lab] handleCreated error:", err);
+        }
+    }, []);
     useEffect(() => {
         setTransitioning(true);
         const t = setTimeout(() => setTransitioning(false), 400);
@@ -148,6 +199,10 @@ export function Scene3D() {
         const preset = scene.camera_script.find(c => c.id === phase.cameraPresetId);
         return preset ? preset.target : [0, 5, 0];
     }, [currentPhaseId, phases, scene]);
-    return _jsxs("div", { style: { position: 'relative', width: '100%', height: '100%' }, children: [_jsxs(Canvas, { camera: { position: [8, 6, 8], fov: 55, near: 0.1, far: 100 }, gl: { antialias: true, alpha: false, preserveDrawingBuffer: true }, style: { background: "linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)" }, onCreated: ({ gl }) => { gl.setClearColor(new THREE.Color("#0f172a")); }, children: [_jsx("ambientLight", { intensity: 0.4 }), _jsx("directionalLight", { position: [10, 15, 5], intensity: 0.8, castShadow: true, "shadow-mapSize-width": 1024, "shadow-mapSize-height": 1024 }), _jsx("pointLight", { position: [0, 8, 0], intensity: 0.3, color: "#FF6B6B" }), viz.showAxes && _jsx(Axes, {}), viz.showGrid && _jsx(Grid, {}), _jsx(Ground, {}), _jsx(Ball, {}), viz.showTrail && _jsx(Trail, {}), _jsx(Ball2, {}), viz.showDataLabels && _jsx(HeightRuler, {}), viz.showVelocityArrow && _jsx(VelocityArrow, {}), viz.showAccelArrow && _jsx(AccelArrow, {}), viz.showGravityArrow && _jsx(ForceArrow, {}), viz.showDataLabels && _jsx(HudLabels, {}), _jsx(CameraAnimator, {}), _jsx(OrbitControls, { enableDamping: true, dampingFactor: 0.1, target: targetVec, maxPolarAngle: Math.PI * 0.8 }), _jsx(Animator, {})] }), transitioning && (_jsx("div", { style: { position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.3)', zIndex: 10, pointerEvents: 'none', transition: 'opacity 300ms' } }))] });
+    // Fallback UI when Canvas fails to render
+    if (canvasError) {
+        return _jsx("div", { style: { position: 'relative', width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)' }, children: _jsxs("div", { style: { textAlign: 'center', color: '#94a3b8', padding: 32 }, children: [_jsx("div", { style: { fontSize: 48, marginBottom: 16 }, children: "\u26A0\uFE0F" }), _jsx("h3", { style: { color: '#f1f5f9', fontSize: 16, marginBottom: 8 }, children: "3D Render Error" }), _jsx("p", { style: { fontSize: 12, color: '#ef4444', maxWidth: 300 }, children: canvasError }), _jsx("button", { onClick: () => window.location.reload(), style: { marginTop: 16, padding: '8px 20px', borderRadius: 8, background: '#0ea5e9', color: 'white', border: 'none', cursor: 'pointer', fontSize: 13 }, children: "Reload App" })] }) });
+    }
+    return _jsxs("div", { style: { position: 'relative', width: '100%', height: '100%' }, children: [_jsxs(Canvas, { camera: { position: [8, 6, 8], fov: 55, near: 0.1, far: 100 }, gl: { antialias: true, alpha: false, preserveDrawingBuffer: true, failIfMajorPerformanceCaveat: false }, style: { background: "linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)" }, onCreated: handleCreated, dpr: [1, 2], children: [_jsx("color", { attach: "background", args: ["#0f172a"] }), _jsx("ambientLight", { intensity: 0.7 }), _jsx("directionalLight", { position: [10, 15, 5], intensity: 1.2, castShadow: true, "shadow-mapSize-width": 1024, "shadow-mapSize-height": 1024 }), _jsx("pointLight", { position: [0, 8, 0], intensity: 0.5, color: "#FF6B6B" }), _jsxs(SceneErrorBoundary, { children: [viz.showAxes && _jsx(Axes, {}), viz.showGrid && _jsx(Grid, {}), _jsx(Ground, {}), _jsx(Ball, {}), viz.showTrail && _jsx(Trail, {}), _jsx(Ball2, {}), viz.showDataLabels && _jsx(HeightRuler, {}), viz.showVelocityArrow && _jsx(VelocityArrow, {}), viz.showAccelArrow && _jsx(AccelArrow, {}), viz.showGravityArrow && _jsx(ForceArrow, {}), viz.showDataLabels && _jsx(HudLabels, {}), _jsx(CameraAnimator, {}), _jsx(OrbitControls, { enableDamping: true, dampingFactor: 0.1, target: targetVec, maxPolarAngle: Math.PI * 0.8 }), _jsx(Animator, {})] })] }), transitioning && (_jsx("div", { style: { position: 'absolute', inset: 0, background: 'rgba(15,23,42,0.3)', zIndex: 10, pointerEvents: 'none', transition: 'opacity 300ms' } }))] });
 }
 //# sourceMappingURL=Scene3D.js.map

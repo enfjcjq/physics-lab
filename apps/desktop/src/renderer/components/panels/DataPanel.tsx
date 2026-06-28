@@ -129,7 +129,7 @@ export function DataPanel() {
               </tbody>
             </table>
             {frameCache.length === 0 && (
-              <div className="text-center py-8 text-xs text-slate-600">No data</div>
+              <div className="text-center py-8 text-xs text-slate-600">{t("ui.no_data")}</div>
             )}
           </div>
         )}

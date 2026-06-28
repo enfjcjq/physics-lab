@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { aiRegistry, ruleParser } from "@physics-lab/ai-parser";
 // Register the rule parser on first import
-if (!aiRegistry.get("rule-parser")) {
+if (!aiRegistry.get("rule-based")) {
     aiRegistry.register(ruleParser);
-    aiRegistry.setActive("rule-parser");
+    aiRegistry.setActive("rule-based");
 }
 const MOCK_HISTORY = [
     { id: "h1", title: "Free Fall (10m)", inputMethod: "text", timestamp: Date.now() - 86400000 },

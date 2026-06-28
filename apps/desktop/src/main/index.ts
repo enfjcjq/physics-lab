@@ -1,18 +1,6 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 
-// Fix Windows sandbox permission issues
-app.commandLine.appendSwitch("no-sandbox");
-app.commandLine.appendSwitch("disable-gpu-sandbox");
-
-// WebGL / GPU compatibility fixes for Windows
-app.commandLine.appendSwitch("enable-features", "VaapiVideoDecoder");
-app.commandLine.appendSwitch("disable-renderer-backgrounding"); // Keep GPU awake
-app.commandLine.appendSwitch("ignore-gpu-blocklist"); // Force-enable WebGL on older GPUs
-
-// Use temp directory for cache to avoid permission errors
-app.setPath("userData", path.join(app.getPath("temp"), "physics-lab-electron"));
-
 let mainWindow: BrowserWindow | null = null;
 
 function createWindow() {
@@ -50,6 +38,17 @@ function createWindow() {
     console.log("Loading file:", rendererPath);
     mainWindow.loadFile(rendererPath);
   }
+
+  // 🔍 Diagnostic: log renderer process console & errors
+  mainWindow.webContents.on("console-message", (_e, _level, msg) => {
+    console.log("[Renderer]", msg);
+  });
+  mainWindow.webContents.on("did-fail-load", (_event, _code, desc, url) => {
+    console.error("[FAIL-LOAD]", url, desc);
+  });
+  mainWindow.webContents.on("did-finish-load", () => {
+    console.log("[FINISH-LOAD] Page loaded successfully");
+  });
 }
 
 function registerIPC() {
@@ -60,6 +59,16 @@ function registerIPC() {
 }
 
 app.whenReady().then(() => {
+  // GPU / sandbox switches must be inside whenReady — app is not fully initialized at module scope
+  app.commandLine.appendSwitch("no-sandbox");
+  app.commandLine.appendSwitch("disable-gpu-sandbox");
+  app.commandLine.appendSwitch("enable-features", "VaapiVideoDecoder");
+  app.commandLine.appendSwitch("disable-renderer-backgrounding"); // Keep GPU awake
+  app.commandLine.appendSwitch("ignore-gpu-blocklist"); // Force-enable WebGL on older GPUs
+
+  // Use temp directory for cache to avoid permission errors (also requires ready app)
+  app.setPath("userData", path.join(app.getPath("temp"), "physics-lab-electron"));
+
   registerIPC();
   createWindow();
 

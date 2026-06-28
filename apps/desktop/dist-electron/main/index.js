@@ -23,7 +23,9 @@ function createWindow() {
   });
   mainWindow.once("ready-to-show", () => {
     mainWindow == null ? void 0 : mainWindow.show();
-    mainWindow == null ? void 0 : mainWindow.webContents.openDevTools({ mode: "bottom" });
+    if (!electron.app.isPackaged) {
+      mainWindow == null ? void 0 : mainWindow.webContents.openDevTools({ mode: "bottom" });
+    }
   });
   mainWindow.on("closed", () => {
     mainWindow = null;

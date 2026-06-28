@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AppShell } from "./components/layout/AppShell";
 import { ErrorBoundary } from "./components/layout/ErrorBoundary";
 import { useSimulation } from "./features/experiment/experiment.store";
@@ -13,24 +13,35 @@ pluginRegistry.register(freeFallPlugin);
 export function App() {
   const setScene = useSimulation((s) => s.setScene);
   const sceneLoaded = useSimulation((s) => s.sceneLoaded);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
-    const savedPlugin = localStorage.getItem("physics-lab:lastPlugin");
-    const pluginId = savedPlugin || "free-fall";
-    const plugin = pluginRegistry.get(pluginId);
-    const scene = plugin?.getDefaultScene() ?? FREE_FALL_SCENE;
-
+    let cancelled = false;
     async function loadScene() {
       try {
+        const savedPlugin = localStorage.getItem("physics-lab:lastPlugin");
+        const pluginId = savedPlugin || "free-fall";
+        const plugin = pluginRegistry.get(pluginId);
+        const fallback = plugin?.getDefaultScene() ?? FREE_FALL_SCENE;
+
+        // Try IPC first (Electron packaged mode)
         if (window.physicsLab?.scene) {
-          const data: PhysicsScene = await window.physicsLab.scene.getDefault();
-          setScene(data);
-          return;
+          try {
+            const data: PhysicsScene = await window.physicsLab.scene.getDefault();
+            if (!cancelled && data) { setScene(data); return; }
+          } catch { /* IPC failed, fall through */ }
         }
-      } catch {}
-      setScene(scene as PhysicsScene);
+        // Fallback: use bundled scene
+        if (!cancelled) { setScene(fallback as PhysicsScene); }
+      } catch (err) {
+        if (!cancelled) {
+          setLoadError(err instanceof Error ? err.message : String(err));
+          console.error("[Physics Lab] Scene load failed:", err);
+        }
+      }
     }
     loadScene();
+    return () => { cancelled = true; };
   }, [setScene]);
 
   const activePluginId = useSimulation((s) => s.activePluginId);
@@ -40,12 +51,18 @@ export function App() {
     }
   }, [activePluginId]);
 
+  // Loading state with error display
   if (!sceneLoaded) {
     return (
       <div className="w-full h-full flex items-center justify-center" style={{ background: "var(--bg-root)" }}>
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-slate-400 text-lg">Physics Lab</p>
+          {loadError && (
+            <p className="text-red-400 text-xs mt-3 max-w-md mx-auto px-4" style={{ wordBreak: "break-word" }}>
+              Load error: {loadError}
+            </p>
+          )}
         </div>
       </div>
     );

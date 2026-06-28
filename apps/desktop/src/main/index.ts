@@ -29,10 +29,7 @@ function createWindow() {
 
   mainWindow.once("ready-to-show", () => {
     mainWindow?.show();
-    // Only auto-open DevTools in development mode
-    if (!app.isPackaged) {
-      mainWindow?.webContents.openDevTools({ mode: "bottom" });
-    }
+    // DevTools is available via F12 / Ctrl+Shift+I; do not auto-open
   });
 
   mainWindow.on("closed", () => {

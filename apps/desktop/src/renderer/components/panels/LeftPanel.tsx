@@ -1,4 +1,4 @@
-import { useProblemStore } from "../../stores/problem.store";
+﻿import { useProblemStore } from "../../stores/problem.store";
 import { usePanelManager } from "../../core/panel-manager.store";
 import { useTeaching } from "../../core/teaching.store";
 import { useSimulation } from "../../features/experiment/experiment.store";
@@ -76,11 +76,11 @@ export function LeftPanel() {
         <div className="px-3 pb-2">
           <button onClick={function() { toggleCompare(); if (!compareEnabled) { computeGhosts(activePluginId, { mass, height, gravity }); } }}
             className={"w-full py-1.5 rounded-lg text-xs font-medium transition-all " + (compareEnabled ? "bg-violet-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white")}>
-            {compareEnabled ? t("compare.on", { defaultValue: "Compare: ON" }) : t("compare.off", { defaultValue: "Compare Mode" })}
+            {compareEnabled ? t("compare.on", "Compare: ON") : t("compare.off", "Compare Mode")}
           </button>
           {compareEnabled && (
             <div className="mt-2 space-y-1.5">
-              <select value={varyParam} onChange={function(e) { setVaryParam(e.target.value); computeGhosts(activePluginId, { mass, height, gravity }); }}
+              <select value={varyParam} onChange={function(e) { setVaryParam(e.target.value as "mass"|"height"|"gravity"); computeGhosts(activePluginId, { mass, height, gravity }); }}
                 className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-[10px] text-slate-300">
                 <option value="mass">{t("param.mass")}</option>
                 <option value="height">{t("param.height")}</option>

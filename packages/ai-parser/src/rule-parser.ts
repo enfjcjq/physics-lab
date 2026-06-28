@@ -1,5 +1,5 @@
 import type { PhysicsScene } from "@physics-lab/shared";
-import { FREE_FALL_SCENE, PROJECTILE_MOTION_SCENE, INCLINED_PLANE_SCENE, COLLISION_SCENE, SPRING_MASS_SCENE, PENDULUM_SCENE } from "@physics-lab/shared";
+import { FREE_FALL_SCENE, PROJECTILE_MOTION_SCENE, INCLINED_PLANE_SCENE, COLLISION_SCENE, SPRING_MASS_SCENE, PENDULUM_SCENE, CIRCULAR_MOTION_SCENE, BUOYANCY_SCENE } from "@physics-lab/shared";
 import type { AIProvider, ParseResult } from "./types";
 
 // ============================================================
@@ -8,7 +8,7 @@ import type { AIProvider, ParseResult } from "./types";
 // Uses unicode escapes for Chinese chars.
 // ============================================================
 
-type MotionType = "free_fall" | "projectile" | "inclined_plane" | "collision" | "spring" | "pendulum" | "unknown";
+type MotionType = "free_fall" | "projectile" | "inclined_plane" | "collision" | "spring" | "pendulum" | "circular_motion" | "buoyancy" | "unknown";
 
 interface ExtractedParams {
   motionType: MotionType;
@@ -29,6 +29,8 @@ const SCENE_MAP: Record<string, PhysicsScene> = {
   collision: COLLISION_SCENE,
   spring: SPRING_MASS_SCENE,
   pendulum: PENDULUM_SCENE,
+  circular_motion: CIRCULAR_MOTION_SCENE,
+  buoyancy: BUOYANCY_SCENE,
 };
 
 // Chinese character constants

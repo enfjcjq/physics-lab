@@ -5,7 +5,7 @@
  * with a given set of variable bindings.
  */
 
-const MATH_SYMBOLS: Record<string, (...args: number[]) => number> = {
+const MATH_SYMBOLS: Record<string, number | ((...args: number[]) => number)> = {
   sin: Math.sin, cos: Math.cos, tan: Math.tan,
   asin: Math.asin, acos: Math.acos, atan: Math.atan, atan2: Math.atan2,
   sqrt: Math.sqrt, abs: Math.abs, min: Math.min, max: Math.max,

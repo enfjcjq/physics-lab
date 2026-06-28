@@ -140,7 +140,7 @@ export function LearningDashboard() {
 
   useEffect(function() { checkAchievements(); }, [entries]);
   const plugins = useMemo(() => pluginRegistry.list(), []);
-  const [selectedTab, setSelectedTab] = useState<"overview" | "experiments" | "activity">("overview");
+  const [selectedTab, setSelectedTab] = useState<"overview" | "experiments" | "activity" | "achievements" | "review">("overview");
 
   const overallPercent = getOverallPercent();
   const recentActivity = getRecentActivity(10);
@@ -166,7 +166,7 @@ export function LearningDashboard() {
       kps.forEach((kp) => { c.total++; if (entries[kp.id]?.mastered) c.mastered++; });
     });
     return Array.from(cats.entries()).map(([label, v]) => ({
-      label: t("category." + label, { defaultValue: label }),
+      label: t("category." + label, label),
       value: v.total > 0 ? Math.round((v.mastered / v.total) * 100) : 0, max: 100,
     }));
   }, [plugins, entries, t]);
@@ -192,14 +192,14 @@ export function LearningDashboard() {
   return (
     <div className="h-full overflow-y-auto bg-slate-950 text-slate-200">
       <div className="sticky top-0 z-10 bg-slate-950/95 backdrop-blur border-b border-slate-800 px-5 py-3">
-        <h2 className="text-base font-semibold text-white">{t("dashboard.title", { defaultValue: "Learning Dashboard" })}</h2>
+        <h2 className="text-base font-semibold text-white">{t("dashboard.title", "Learning Dashboard")}</h2>
         <button onClick={function() {
           const summary = generateLearningSummary("zh-CN");
           const md = formatSummaryMarkdown(summary, "zh-CN");
-          const blob = new Blob([md], { type: "text/markdown" });
-          downloadFile(blob, "physics-lab-summary-" + new Date().toISOString().slice(0,10) + ".md");
+          // blob removed
+          downloadFile(md, "physics-lab-summary-" + new Date().toISOString().slice(0,10) + ".md", "text/markdown");
         }} className="text-[10px] px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-colors">
-          {t("dashboard.export_summary", { defaultValue: "Export" })}
+          {t("dashboard.export_summary", "Export")}
         </button>
       </div>
       <div className="flex gap-1 px-5 pt-3 pb-2">
@@ -207,7 +207,7 @@ export function LearningDashboard() {
           <button key={tab} onClick={() => setSelectedTab(tab)}
             className={"px-3 py-1.5 rounded-lg text-xs font-medium transition-colors " +
               (selectedTab === tab ? "bg-sky-600 text-white" : "text-slate-400 hover:text-white hover:bg-slate-800")}>
-            {t("dashboard.tab." + tab, { defaultValue: tab })}
+            {t("dashboard.tab." + tab, tab)}
           </button>
         ))}
       </div>
@@ -215,7 +215,7 @@ export function LearningDashboard() {
         {selectedTab === "overview" && <>
           <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
               <h3 className="text-xs font-medium text-slate-400 mb-3 uppercase tracking-wider">
-                {t("dashboard.streak", { defaultValue: "Learning Streak" })}
+                {t("dashboard.streak", "Learning Streak")}
               </h3>
               <StreakCalendar />
             </div>
@@ -223,12 +223,12 @@ export function LearningDashboard() {
           <>
             <div className="flex flex-col items-center py-4">
               <ProgressRing percent={overallPercent} size={120} strokeWidth={8} />
-              <p className="text-xs text-slate-400 mt-3">{t("dashboard.overall_progress", { defaultValue: "Overall Mastery" })}</p>
+              <p className="text-xs text-slate-400 mt-3">{t("dashboard.overall_progress", "Overall Mastery")}</p>
             </div>
             {radarData.length > 0 && (
               <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-4">
                 <h3 className="text-xs font-medium text-slate-400 mb-3 uppercase tracking-wider">
-                  {t("dashboard.knowledge_areas", { defaultValue: "Knowledge Areas" })}
+                  {t("dashboard.knowledge_areas", "Knowledge Areas")}
                 </h3>
                 <RadarChart data={radarData} />
               </div>
@@ -238,19 +238,19 @@ export function LearningDashboard() {
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-sm">{String.fromCodePoint(0x1F3AF)}</span>
                   <h3 className="text-xs font-medium text-sky-400 uppercase tracking-wider">
-                    {t("dashboard.recommended", { defaultValue: "Recommended Next" })}
+                    {t("dashboard.recommended", "Recommended Next")}
                   </h3>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-semibold text-white">{recommendation.name}</p>
                     <p className="text-xs text-slate-400 mt-0.5">
-                      {recommendation.mastered}/{recommendation.total} {t("dashboard.kps_mastered", { defaultValue: "mastered" })}
+                      {recommendation.mastered}/{recommendation.total} {t("dashboard.kps_mastered", "mastered")}
                     </p>
                   </div>
                   <button onClick={() => jumpToExperiment(recommendation.id)}
                     className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-medium transition-colors">
-                    {t("dashboard.start", { defaultValue: "Start" })}
+                    {t("dashboard.start", "Start")}
                   </button>
                 </div>
                 <div className="mt-3 h-1.5 bg-slate-800 rounded-full overflow-hidden">
@@ -282,7 +282,7 @@ export function LearningDashboard() {
                     style={{ width: stat.percent + "%" }} />
                 </div>
                 <p className="text-[10px] text-slate-600 mt-1">
-                  {stat.mastered}/{stat.total} {t("dashboard.kps_mastered", { defaultValue: "mastered" })}
+                  {stat.mastered}/{stat.total} {t("dashboard.kps_mastered", "mastered")}
                 </p>
               </div>
             ))}
@@ -293,17 +293,17 @@ export function LearningDashboard() {
             {wrongAnswers.length === 0 ? (
               <div className="text-center py-6">
                 <span className="text-3xl">{String.fromCodePoint(0x1F389)}</span>
-                <p className="text-sm text-slate-400 mt-2">{t("review.empty", { defaultValue: "No wrong answers! Great job!" })}</p>
+                <p className="text-sm text-slate-400 mt-2">{t("review.empty", "No wrong answers! Great job!")}</p>
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs text-slate-400">
-                    {wrongAnswers.filter(function(w) { return !w.reviewed; }).length} {t("review.unreviewed", { defaultValue: "unreviewed" })}
+                    {wrongAnswers.filter(function(w) { return !w.reviewed; }).length} {t("review.unreviewed", "unreviewed")}
                   </span>
                   <button onClick={function() { useWrongAnswers.getState().clearAll(); }}
                     className="text-[10px] text-slate-600 hover:text-red-400 transition-colors">
-                    {t("review.clear", { defaultValue: "Clear all" })}
+                    {t("review.clear", "Clear all")}
                   </button>
                 </div>
                 {wrongAnswers.map(function(w) {
@@ -315,7 +315,7 @@ export function LearningDashboard() {
                           {!w.reviewed && (
                             <button onClick={function() { markReviewed(w.id); }}
                               className="text-[10px] px-2 py-0.5 rounded bg-emerald-900/30 text-emerald-400 hover:bg-emerald-900/50">
-                              {t("review.got_it", { defaultValue: "Got it" })}
+                              {t("review.got_it", "Got it")}
                             </button>
                           )}
                           <button onClick={function() { removeWrong(w.id); }}
@@ -324,10 +324,10 @@ export function LearningDashboard() {
                           </button>
                         </div>
                       </div>
-                      <p className="text-xs text-slate-300">{t(w.questionKey, { defaultValue: w.questionKey })}</p>
+                      <p className="text-xs text-slate-300">{t(w.questionKey, w.questionKey)}</p>
                       <div className="flex gap-3 mt-1.5 text-[10px]">
-                        <span className="text-red-400">{t("review.your_answer", { defaultValue: "Yours" })}: {String.fromCharCode(65 + w.userAnswer)}</span>
-                        <span className="text-emerald-400">{t("review.correct", { defaultValue: "Correct" })}: {String.fromCharCode(65 + w.correctAnswer)}</span>
+                        <span className="text-red-400">{t("review.your_answer", "Yours")}: {String.fromCharCode(65 + w.userAnswer)}</span>
+                        <span className="text-emerald-400">{t("review.correct", "Correct")}: {String.fromCharCode(65 + w.correctAnswer)}</span>
                       </div>
                     </div>
                   );
@@ -340,7 +340,7 @@ export function LearningDashboard() {
           <div className="space-y-2">
             {achievements.filter(function(a) { return a.unlocked; }).length === 0 ? (
               <p className="text-center text-slate-500 text-sm py-6">
-                {t("achievements.none_yet", { defaultValue: "Complete quizzes to earn badges!" })}
+                {t("achievements.none_yet", "Complete quizzes to earn badges!")}
               </p>
             ) : null}
             {achievements.map(function(a) {
@@ -363,7 +363,7 @@ export function LearningDashboard() {
           <div className="space-y-2">
             {recentActivity.length === 0 ? (
               <p className="text-center text-slate-500 text-sm py-6">
-                {t("dashboard.no_activity", { defaultValue: "No activity yet. Start learning!" })}
+                {t("dashboard.no_activity", "No activity yet. Start learning!")}
               </p>
             ) : (
               recentActivity.map(({ kpId, entry }) => (

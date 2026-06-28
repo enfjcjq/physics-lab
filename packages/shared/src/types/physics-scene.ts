@@ -106,7 +106,7 @@ export type Environment = GravityField | InclinePlane;
 // ---- Forces ----
 
 export type ForceType = "gravity" | "normal" | "friction" | "tension" | "spring_force"
-  | "applied_force" | "drag_force" | "centripetal_force";
+  | "applied_force" | "drag_force" | "centripetal_force" | "buoyancy";
 
 export interface Force {
   id: string;

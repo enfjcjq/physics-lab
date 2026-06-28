@@ -36,9 +36,9 @@ export function App() {
         const fallback = plugin?.getDefaultScene() ?? FREE_FALL_SCENE;
 
         // Try IPC first (Electron packaged mode)
-        if (window.physicsLab?.scene) {
+        if ((window as any).physicsLab?.scene) {
           try {
-            const data: PhysicsScene = await window.physicsLab.scene.getDefault();
+            const data: PhysicsScene = await (window as any).physicsLab.scene.getDefault();
             if (!cancelled && data) { setScene(data); return; }
           } catch { /* IPC failed, fall through */ }
         }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { pluginRegistry } from "../../core/plugin-registry";
 import { useI18n } from "../../core/i18n";
 import { useMastery, type MasteryEntry } from "../../core/mastery.store";
@@ -122,7 +122,7 @@ export function KnowledgeGraph() {
       <div className="flex-1 overflow-auto px-2">
         {nodes.length === 0 ? (
           <div className="flex items-center justify-center h-40 text-slate-600 text-xs">
-            {t("knowledge.empty", { defaultValue: "No knowledge points yet" })}
+            {t("knowledge.empty", "No knowledge points yet")}
           </div>
         ) : (
           <svg viewBox={"0 0 " + w + " " + h} className="w-full" style={{ minHeight: h }}>
@@ -216,7 +216,7 @@ export function KnowledgeGraph() {
             <div className="grid grid-cols-3 gap-2 text-center">
               <div className="bg-slate-800/50 rounded-lg p-1.5">
                 <div className="text-xs font-bold text-white">{selectedNode.mastery.score}%</div>
-                <div className="text-[8px] text-slate-500">{t("dashboard.kps_mastered", { defaultValue: "score" })}</div>
+                <div className="text-[8px] text-slate-500">{t("dashboard.kps_mastered", "score")}</div>
               </div>
               <div className="bg-slate-800/50 rounded-lg p-1.5">
                 <div className="text-xs font-bold text-white">{selectedNode.mastery.correct}/{selectedNode.mastery.attempts}</div>
@@ -230,7 +230,7 @@ export function KnowledgeGraph() {
               </div>
             </div>
           ) : (
-            <p className="text-[10px] text-slate-600">{t("knowledge.not_attempted", { defaultValue: "Not yet attempted" })}</p>
+            <p className="text-[10px] text-slate-600">{t("knowledge.not_attempted", "Not yet attempted")}</p>
           )}
           {selectedEdges.filter((e) => e.target === selectedNode.id).length > 0 && (
             <div className="text-[9px] text-slate-500">

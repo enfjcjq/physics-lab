@@ -1,4 +1,4 @@
-import type { PhysicsPlugin } from "@physics-lab/shared";
+﻿﻿import type { PhysicsPlugin, PhysicsScene } from "@physics-lab/shared";
 
 const CIRCULAR_MOTION_SCENE = {
   version: "2.0" as const,
@@ -25,23 +25,28 @@ const CIRCULAR_MOTION_SCENE = {
     { type: "gravity_field" as const, properties: { acceleration: 0, direction: [0, -1, 0] as [number, number, number] } },
   ],
   forces: [
-    { id: "centripetal", type: "centripetal" as const, target_entity: "ball_1", magnitude: "mv^2/r", direction: [0, 0, 0] as [number, number, number] },
+    { id: "centripetal", type: "centripetal_force" as const, target_entity: "ball_1", magnitude: "mv^2/r", direction: [0, 0, 0] as [number, number, number] },
   ],
+  "$schema": "https://physics-lab.app/schemas/physics-scene/2.0.json",
+  constraints: [],
+  camera_script: [],
+  ui_controls: [],
   timeline: {
     total_duration: 6,
+    events: [],
     fps: 60,
     phases: [
-      { id: "start", label: "Start", timeRange: [0, 0.5] as [number, number] },
-      { id: "orbiting", label: "Uniform Circular Motion", timeRange: [0.5, 5.5] as [number, number] },
-      { id: "complete", label: "Full Circle", timeRange: [5.5, 6] as [number, number] },
+      { id: "start", label: "Start", icon: "\u25B6", timeRange: [0, 0.5] as [number, number] },
+      { id: "orbiting", label: "Uniform Circular Motion", icon: "\uD83D\uDD04", timeRange: [0.5, 5.5] as [number, number] },
+      { id: "complete", label: "Full Circle", icon: "\u2705", timeRange: [5.5, 6] as [number, number] },
     ],
   },
   equations: [],
   knowledge_tags: [
-    { id: "kp_circ_ucm", name: "Uniform Circular Motion", prerequisites: [] },
-    { id: "kp_circ_centripetal", name: "Centripetal Acceleration", prerequisites: ["kp_circ_ucm"] },
-    { id: "kp_circ_force", name: "Centripetal Force", prerequisites: ["kp_circ_centripetal"] },
-    { id: "kp_circ_period", name: "Period & Frequency", prerequisites: ["kp_circ_ucm"] },
+    { id: "kp_circ_ucm", name: "Uniform Circular Motion", category: "mechanics", level: 1, prerequisites: [] },
+    { id: "kp_circ_centripetal", name: "Centripetal Acceleration", category: "mechanics", level: 2, prerequisites: ["kp_circ_ucm"] },
+    { id: "kp_circ_force", name: "Centripetal Force", category: "mechanics", level: 2, prerequisites: ["kp_circ_centripetal"] },
+    { id: "kp_circ_period", name: "Period & Frequency", category: "mechanics", level: 2, prerequisites: ["kp_circ_ucm"] },
   ],
   teacher_steps: [
     { order: 0, timeStart: 0, timeEnd: 0.5, titleKey: "teacher.circ.step0", descKey: "teacher.circ.step0_desc" },
@@ -59,7 +64,7 @@ export const circularMotionPlugin: PhysicsPlugin = {
   category: "mechanics",
   difficulty: "medium",
 
-  getDefaultScene: () => CIRCULAR_MOTION_SCENE,
+  getDefaultScene: () => CIRCULAR_MOTION_SCENE as unknown as PhysicsScene,
 
   computeState: (t: number, params: Record<string, number>) => {
     const r = params.r ?? 2;

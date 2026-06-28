@@ -1,10 +1,10 @@
 ﻿# Project Status
 
-**Version:** V3.2 (Sprint S48)
-**Status:** Active Development — Learning Experience Phase
+**Version:** V3.3 (Sprint S55)
+**Status:** Active Development — Bug Fix & Polish Phase
 
 ## Architecture
-```
+ + "" + "" + "" + 
 Problem → AI Parser (Rule/Ollama) → PhysicsScene
                                         ↓
               ┌─────────────────────────┼─────────────────────────┐
@@ -18,24 +18,29 @@ Problem → AI Parser (Rule/Ollama) → PhysicsScene
         Achievement Badges        Learning Dashboard
               ↓                         ↓
         Toast Notifications      Streak Calendar
-```
+ + "" + "" + "" + 
 
 ## Key Metrics
-- 7 experiments | 677 zh-CN | 522 en-US | 66 tests (9 files)
+- 8 experiments | 782 zh-CN | 782 en-US | Zero TS errors
 - 3 modes: Learning / Experiment / Analysis
 - 4 AI sub-modes: Experiment / Teaching / Solving / Explore
-- AI: Rule-based (instant) + Ollama (local LLM, auto-detect + warmUp)
+- AI: Rule-based (8 types) + Ollama (local LLM, auto-detect + warmUp)
+- Formula Engine: Generic physics engine interprets string formulas at runtime
+- All 8 scene constants have simulation blocks
 - Export: PDF / Markdown / HTML / CSV / Screenshot
-- 7 achievement badges | 24 quiz questions (4/experiment, adaptive)
-- Learning Dashboard: radar chart, progress ring, streak calendar
-- Knowledge Graph: live mastery coloring, detail cards
-- Zero TypeScript errors | Zero test failures
+
+## Sprint S55 (Current): Bug Fix & Stabilization
+- Fixed experiment.store.ts crash (scene variable not destructured in 4 functions)
+- Fixed buoyancy & circular-motion plugin TypeScript errors
+- Fixed i18n: 782 keys both zh-CN and en-US (closed 154-key gap)
+- Fixed LearningDashboard downloadFile, t() calls, tab types
+- Fixed KnowledgeGraph t() calls
+- Fixed LeftPanel t() calls and compare types
+- Added buoyancy to ForceType union
+- All 8 experiments compile with zero errors
 
 ## Recent Sprints
-- S47: Circular motion experiment (7th plugin)
-- S48: Wrong answer recording + quiz-toast integration + Ball memo fix (S35-S39)
-- S35: Learning Dashboard + Mastery V2 (entries with attempts/scores)
-- S36: Knowledge Graph mastery colors + Achievement badges (7 badges)
-- S37: Ollama warmUp + confidence scoring + AI status indicator
-- S38: Quiz expansion 24Q + adaptive difficulty + hints system
-- S39: Toast notifications + streak calendar heatmap
+- S54: Buoyancy experiment (8th plugin) + formula engine for all scenes
+- S53: Circular motion experiment (7th plugin)
+- S48-S52: Learning Dashboard, Mastery V2, Quiz system, Achievements
+- S47: Pendulum, spring-mass, collision plugins

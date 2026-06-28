@@ -1,4 +1,4 @@
-import type { PhysicsPlugin } from "@physics-lab/shared";
+﻿﻿import type { PhysicsPlugin, PhysicsScene } from "@physics-lab/shared";
 
 const BUOYANCY_SCENE = {
   version: "2.0" as const,
@@ -14,7 +14,7 @@ const BUOYANCY_SCENE = {
   entities: [
     {
       id: "block",
-      type: "box" as const,
+      type: "block" as const,
       name: "Object",
       position: [0, 2, 0] as [number, number, number],
       properties: { mass: 0.5, dimensions: [0.5, 0.5, 0.5] as [number, number, number] },
@@ -28,21 +28,26 @@ const BUOYANCY_SCENE = {
     { id: "buoyancy", type: "buoyancy" as const, target_entity: "block", magnitude: "\u03C1_fluid * V * g", direction: [0, 1, 0] as [number, number, number] },
     { id: "gravity_force", type: "gravity" as const, target_entity: "block", magnitude: "\u03C1_obj * V * g", direction: [0, -1, 0] as [number, number, number] },
   ],
+  "$schema": "https://physics-lab.app/schemas/physics-scene/2.0.json",
+  constraints: [],
+  camera_script: [],
+  ui_controls: [],
   timeline: {
     total_duration: 8,
+    events: [],
     fps: 60,
     phases: [
-      { id: "release", label: "Release", timeRange: [0, 0.3] as [number, number] },
-      { id: "moving", label: "Buoyancy Motion", timeRange: [0.3, 7] as [number, number] },
-      { id: "equilibrium", label: "Equilibrium", timeRange: [7, 8] as [number, number] },
+      { id: "release", label: "Release", icon: "\u25B6", timeRange: [0, 0.3] as [number, number] },
+      { id: "moving", label: "Buoyancy Motion", icon: "\u2B06\uFE0F\u2B07\uFE0F", timeRange: [0.3, 7] as [number, number] },
+      { id: "equilibrium", label: "Equilibrium", icon: "\u2696\uFE0F", timeRange: [7, 8] as [number, number] },
     ],
   },
   equations: [],
   knowledge_tags: [
-    { id: "kp_buoy_archimedes", name: "Archimedes Principle", prerequisites: [] },
-    { id: "kp_buoy_force", name: "Buoyant Force Calculation", prerequisites: ["kp_buoy_archimedes"] },
-    { id: "kp_buoy_density", name: "Density & Floating", prerequisites: ["kp_buoy_archimedes"] },
-    { id: "kp_buoy_net_force", name: "Net Force in Fluid", prerequisites: ["kp_buoy_force", "kp_buoy_density"] },
+    { id: "kp_buoy_archimedes", name: "Archimedes Principle", category: "mechanics", level: 1, prerequisites: [] },
+    { id: "kp_buoy_force", name: "Buoyant Force Calculation", category: "mechanics", level: 2, prerequisites: ["kp_buoy_archimedes"] },
+    { id: "kp_buoy_density", name: "Density & Floating", category: "mechanics", level: 2, prerequisites: ["kp_buoy_archimedes"] },
+    { id: "kp_buoy_net_force", name: "Net Force in Fluid", category: "mechanics", level: 2, prerequisites: ["kp_buoy_force", "kp_buoy_density"] },
   ],
   teacher_steps: [
     { order: 0, timeStart: 0, timeEnd: 0.3, titleKey: "teacher.buoy.step0", descKey: "teacher.buoy.step0_desc" },
@@ -60,7 +65,7 @@ export const buoyancyPlugin: PhysicsPlugin = {
   category: "mechanics",
   difficulty: "medium",
 
-  getDefaultScene: () => BUOYANCY_SCENE,
+  getDefaultScene: () => BUOYANCY_SCENE as unknown as PhysicsScene,
 
   computeState: (t: number, params: Record<string, number>) => {
     const rhoObj = params.rhoObj ?? 800;

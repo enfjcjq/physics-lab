@@ -8,3 +8,6 @@ export { PENDULUM_SCENE } from "./constants/pendulum-scene";
 export * from "./plugin/types";
 
 export * from './engine';
+
+export { CIRCULAR_MOTION_SCENE } from "./constants/circular-motion-scene";
+export { BUOYANCY_SCENE } from "./constants/buoyancy-scene";

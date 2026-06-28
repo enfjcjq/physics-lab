@@ -36,7 +36,7 @@ function buildFrameCache(
   const fps = 60;
   const dt = 1 / fps;
   const frames: CachedFrame[] = [];
-  // Check if scene has simulation block — use generic engine
+  // Check if scene has simulation block �� use generic engine
   // scene passed as parameter
   if ((scene as any)?.simulation?.equations) {
     const engine = createEngine(scene as PhysicsSceneV2);
@@ -326,7 +326,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
 
   // ===== Parameter setters (rebuild cache on change) =====
   setMass: (mass) => {
-    const { height, gravity, totalDuration, phases, activePluginId, currentTime, playing } = get();
+    const { height, gravity, totalDuration, phases, activePluginId, currentTime, playing, scene } = get();
     const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases, scene);
     const frame = findFrame(cache, playing ? currentTime : currentTime);
     set({
@@ -340,7 +340,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
   },
 
   setHeight: (height) => {
-    const { mass, gravity, totalDuration, phases, activePluginId, currentTime } = get();
+    const { mass, gravity, totalDuration, phases, activePluginId, currentTime, scene } = get();
     const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases, scene);
     const frame = findFrame(cache, currentTime);
     set({
@@ -354,7 +354,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
   },
 
   setGravity: (gravity) => {
-    const { mass, height, totalDuration, phases, activePluginId, currentTime } = get();
+    const { mass, height, totalDuration, phases, activePluginId, currentTime, scene } = get();
     const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases, scene);
     const frame = findFrame(cache, currentTime);
     set({
@@ -368,7 +368,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
   },
 
   rebuildCache: () => {
-    const { mass, height, gravity, totalDuration, phases, activePluginId, currentTime } = get();
+    const { mass, height, gravity, totalDuration, phases, activePluginId, currentTime, scene } = get();
     const cache = buildFrameCache(totalDuration, height, gravity, mass, activePluginId, phases, scene);
     const frame = findFrame(cache, currentTime);
     set({

@@ -1,32 +1,31 @@
-# Next Sprint: S40+
+﻿# Next Sprint: S56+
 
-## Completed (S35-S39): Learning Experience Phase
-- [x] Learning Dashboard + Mastery V2
-- [x] Knowledge Graph mastery colors
-- [x] Achievement badges (7)
-- [x] Quiz expansion 24Q + adaptive difficulty
-- [x] Ollama warmUp + confidence
-- [x] Toast notifications + streak calendar
+## Completed (S55): Bug Fix & Stabilization
+- [x] Fixed experiment.store.ts crash (scene destructuring)
+- [x] Fixed all TypeScript errors (0 errors)
+- [x] Closed i18n gap (782 keys both zh-CN and en-US)
+- [x] Fixed dashboard, plugins, formula evaluator types
 
-## Priority 1: Performance & Polish (P0)
-- React.memo for Scene3D child components
-- Timeline scrubbing at 60fps (debounce trail updates)
-- Reduce unnecessary re-renders
-- Bundle size analysis
+## Priority 1: User Experience (P0)
+- Experiment selector: make more prominent and intuitive
+- Formula display: ensure all formulas use proper notation (no question marks)
+- Mode switching: ensure always visible and clear
+- First-run experience: welcome screen + guided tour
 
-## Priority 2: Learning Path (P1)
-- Experiment comparison view (side-by-side)
-- Personalized learning recommendations (ML-based)
-- Wrong answer review system
-- Learning goal setting
+## Priority 2: Content & Interactivity (P1)
+- Add more interactive elements to existing experiments
+- Improve trail/arrow/overlay visualization
+- Add experiment comparison side-by-side view
+- Personalized learning recommendations
 
-## Priority 3: Content Expansion (P2)
-- Circular motion plugin
+## Priority 3: Platform (P2)
+- User accounts (local first, cloud sync later)
+- School/classroom dashboard
+- Plugin marketplace
+- OCR input for problem images
+
+## Priority 4: Content Expansion (P3)
 - Electromagnetic experiments
 - Wave/optics visualization
-- Problem OCR input
-
-## Priority 4: Platform (P3)
-- User accounts + cloud sync
-- School dashboard
-- Plugin marketplace
+- Thermodynamics
+- Modern physics (relativity, quantum basics)

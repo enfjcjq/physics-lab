@@ -33,7 +33,7 @@ export function createVirtualPlugin(scene: PhysicsSceneV2): PhysicsPlugin {
     name: "plugin." + (scene.metadata.topic ?? "dynamic") + ".name",
     version: scene.version,
     category: scene.metadata.subject,
-    difficulty: scene.metadata.difficulty ?? "medium",
+    difficulty: (scene.metadata.difficulty ?? "medium") as "easy" | "medium" | "hard",
 
     getDefaultScene: () => scene,
 

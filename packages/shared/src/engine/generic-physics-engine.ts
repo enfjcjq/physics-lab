@@ -101,7 +101,7 @@ export function createEngine(scene: PhysicsSceneV2): PhysicsEngine {
 export function createFreeFallScene(h0: number = 10, g: number = 9.8, mass: number = 2): PhysicsSceneV2 {
   const impactTime = Math.sqrt(2 * h0 / g);
   return {
-    " + '$' + schema": "physics-scene-v2",
+    "$schema": "physics-scene-v2",
     version: "2.0",
     metadata: {
       title: "Free Fall", description: "Auto-generated free-fall simulation",

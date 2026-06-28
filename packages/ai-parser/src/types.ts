@@ -1,4 +1,4 @@
-import type { PhysicsScene } from "@physics-lab/shared";
+﻿import type { PhysicsScene } from "@physics-lab/shared";
 
 // ============================================================
 // AI Provider Interface
@@ -17,6 +17,8 @@ export interface ParseResult {
   provider: string;
   /** Time taken in ms */
   durationMs: number;
+  /** Confidence score 0-1 */
+  confidence?: number;
 }
 
 export interface AIProvider {

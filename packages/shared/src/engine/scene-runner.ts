@@ -61,6 +61,6 @@ export function createSceneRunner(scene: PhysicsScene): SceneRunner | null {
 /**
  * Check if a PhysicsScene has a simulation block.
  */
-export function hasSimulation(scene: PhysicsScene): scene is PhysicsSceneV2 {
+export function hasSimulation(scene: PhysicsScene): scene is PhysicsScene & PhysicsSceneV2 {
   return !!(scene as PhysicsSceneV2).simulation?.equations;
 }

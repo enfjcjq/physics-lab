@@ -1,6 +1,6 @@
 ﻿import type { PhysicsScene } from "../types/physics-scene";
 
-export const PENDULUM_SCENE: PhysicsScene = {
+export const PENDULUM_SCENE: PhysicsScene & { simulation?: any } = {
   $schema: "https://physics-lab.app/schemas/physics-scene/2.0.json",
   version: "2.0",
   metadata: {

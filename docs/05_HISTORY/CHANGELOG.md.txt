@@ -1,99 +1,34 @@
-﻿# Changelog
+﻿# CHANGELOG
 
+## V3.3 (S55) — Bug Fix & Stabilization
 
-## V3.2 (S47-S48)
-- feat: s47 — Circular motion experiment (7th plugin)
-- fix: s48 — Wrong answer recording connected to quiz system
-- fix: s48 — Ball component memo wrapper restored (Scene3D.tsx)
-- feat: s48 — Toast notification on incorrect quiz answers
-## V3.1 (S35-S39) — Learning Experience Phase
-- feat: Learning Dashboard (radar chart, progress ring, experiment cards, recommendations)
-- feat: Mastery V2 (attempt tracking, scores, timestamps, auto-migration)
-- feat: Knowledge Graph live mastery coloring + detail cards
-- feat: Achievement system (7 badges with auto-detection)
-- feat: Quiz expansion (12→24 questions, 4 per experiment)
-- feat: Adaptive quiz difficulty (easy/medium/hard based on mastery)
-- feat: Quiz hints (shown after wrong answer)
-- feat: Ollama warmUp + confidence scoring
-- feat: AI status indicator (green/red dot in MenuBar)
-- feat: Toast notifications for achievement unlocks
-- feat: Streak calendar heatmap (30-day GitHub-style)
-- i18n: 677 zh-CN / 522 en-US keys
+### Fixed
+- **Critical**: experiment.store.ts scene not destructured in setMass/setHeight/setGravity/rebuildCache — caused runtime crash when adjusting parameters
+- **TypeScript**: Zero TS errors across entire monorepo (was ~30+ errors)
+- **Plugins**: circular-motion.plugin.ts and buoyancy.plugin.ts now properly typed with $schema, constraints, camera_script, ui_controls, events, knowledge_tags
+- **i18n**: en-US now has 782 keys (was 619, missing 154); zh-CN also 782 keys
+- **Dashboard**: downloadFile call fixed (3 args), tab types include all 5 tabs
+- **Formula evaluator**: MATH_SYMBOLS type correctly allows both functions and constants (PI, E)
+- **PhysicsScene types**: uoyancy added to ForceType union
+- **Scene constants**: All 8 now use PhysicsScene & { simulation?: any } to allow simulation blocks
+- **Virtual plugin**: difficulty cast handles olympiad type
 
+### Changed
+- i18n files now synchronized: zh-CN and en-US both at 782 keys
+- All plugin inline scenes properly typed
 
-## V3.2 (S47-S48)
-- feat: s47 — Circular motion experiment (7th plugin)
-- fix: s48 — Wrong answer recording connected to quiz system
-- fix: s48 — Ball component memo wrapper restored (Scene3D.tsx)
-- feat: s48 — Toast notification on incorrect quiz answers
-## V2.6 (S28-S29) — Quality Sprint
-- test: 11 new tests (51 total): plugin-registry, teaching store, ai-provider
-- perf: React.memo investigation for Scene3D components
-- docs: ROADMAP updated for AI-driven learning phase
+## V3.2 (S48-S54) — Formula Engine + Experiments
+- 8 experiments: free-fall, projectile-motion, inclined-plane, collision, spring-mass, pendulum, circular-motion, buoyancy
+- Generic physics engine: formula-driven simulation 
+- Learning Dashboard, Quiz system, Achievements
+- Ollama provider with formula output
 
+## V3.1 (S35-S47) — Learning Platform
+- Learning Dashboard + Mastery V2
+- Knowledge Graph, Achievement badges
+- Quiz expansion, Toast notifications, Streak calendar
 
-## V3.2 (S47-S48)
-- feat: s47 — Circular motion experiment (7th plugin)
-- fix: s48 — Wrong answer recording connected to quiz system
-- fix: s48 — Ball component memo wrapper restored (Scene3D.tsx)
-- feat: s48 — Toast notification on incorrect quiz answers
-## V2.5 (S27) — AI Integration
-- feat: Ollama auto-detect on startup
-- feat: AI i18n keys (7 new per language)
-- feat: Graceful fallback when Ollama unavailable
-
-
-## V3.2 (S47-S48)
-- feat: s47 — Circular motion experiment (7th plugin)
-- fix: s48 — Wrong answer recording connected to quiz system
-- fix: s48 — Ball component memo wrapper restored (Scene3D.tsx)
-- feat: s48 — Toast notification on incorrect quiz answers
-## V2.4 (S26) — AI UI
-- feat: AI provider toggle in MenuBar (Rule/Ollama)
-
-
-## V3.2 (S47-S48)
-- feat: s47 — Circular motion experiment (7th plugin)
-- fix: s48 — Wrong answer recording connected to quiz system
-- fix: s48 — Ball component memo wrapper restored (Scene3D.tsx)
-- feat: s48 — Toast notification on incorrect quiz answers
-## V2.3 (S24-S25) — AI Engine
-- feat: OllamaProvider with local LLM support
-- feat: AIProvider store with provider switching
-
-
-## V3.2 (S47-S48)
-- feat: s47 — Circular motion experiment (7th plugin)
-- fix: s48 — Wrong answer recording connected to quiz system
-- fix: s48 — Ball component memo wrapper restored (Scene3D.tsx)
-- feat: s48 — Toast notification on incorrect quiz answers
-## V2.2 (S22-S23) — Teacher Polish
-- fix: Free-fall crash at impact
-- feat: FormulaDisplay component
-
-
-## V3.2 (S47-S48)
-- feat: s47 — Circular motion experiment (7th plugin)
-- fix: s48 — Wrong answer recording connected to quiz system
-- fix: s48 — Ball component memo wrapper restored (Scene3D.tsx)
-- feat: s48 — Toast notification on incorrect quiz answers
-## V2.1 (S21) — Export
-- feat: PDF/MD/HTML/CSV/Screenshot export
-
-
-## V3.2 (S47-S48)
-- feat: s47 — Circular motion experiment (7th plugin)
-- fix: s48 — Wrong answer recording connected to quiz system
-- fix: s48 — Ball component memo wrapper restored (Scene3D.tsx)
-- feat: s48 — Toast notification on incorrect quiz answers
-## V2.0 (S20) — Visual Polish
-- feat: Impact particles, skeleton loader, scene transitions
-
-
-## V3.2 (S47-S48)
-- feat: s47 — Circular motion experiment (7th plugin)
-- fix: s48 — Wrong answer recording connected to quiz system
-- fix: s48 — Ball component memo wrapper restored (Scene3D.tsx)
-- feat: s48 — Toast notification on incorrect quiz answers
-## V1.0 — Foundation
-- Electron + React + Three.js + 6 plugins + 3 modes + i18n
+## V2.0 (S21-S34) — Interactive Teaching
+- Timeline control, Phase Timeline, Teacher Mode
+- Dockable UI panels, i18n system, Theme system
+- Plugin system foundation

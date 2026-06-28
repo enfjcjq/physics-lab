@@ -24,8 +24,9 @@ export type AIProviderId = "rule-based" | "ollama";
 
 interface AIProviderState {
   activeId: AIProviderId;
-  ollamaAvailable: boolean | null; // null = not checked yet
+  ollamaAvailable: boolean | null;
   isChecking: boolean;
+  lastResult: import("@physics-lab/ai-parser").ParseResult | null;
   setActive: (id: AIProviderId) => void;
   checkOllama: () => Promise<void>;
   getProviders: () => Array<{ id: string; name: string; available: boolean | null }>;
@@ -38,6 +39,7 @@ export const useAIProviderStore = create<AIProviderState>((set, get) => ({
   activeId: "rule-based",
   ollamaAvailable: null,
   isChecking: false,
+  lastResult: null,
 
   setActive: (id) => {
     if (id === "ollama") {
@@ -52,6 +54,9 @@ export const useAIProviderStore = create<AIProviderState>((set, get) => ({
     try {
       const provider = getOllamaProvider();
       const available = await provider.isAvailable();
+      if (available) {
+        provider.warmUp().catch(function() {});
+      }
       set({ ollamaAvailable: available, isChecking: false });
     } catch {
       set({ ollamaAvailable: false, isChecking: false });
@@ -70,8 +75,12 @@ export const useAIProviderStore = create<AIProviderState>((set, get) => ({
   parseWithActive: async (text) => {
     const provider = aiRegistry.getActive();
     if (!provider) {
-      return { scene: null, success: false, error: "No AI provider selected", provider: "none", durationMs: 0 };
+      const r = { scene: null, success: false, error: "No AI provider selected", provider: "none", durationMs: 0 };
+      set({ lastResult: r });
+      return r;
     }
-    return provider.parseProblem(text);
+    const result = await provider.parseProblem(text);
+    set({ lastResult: result });
+    return result;
   },
 }));

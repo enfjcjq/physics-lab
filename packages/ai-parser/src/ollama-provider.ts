@@ -54,7 +54,7 @@ export class OllamaProvider implements AIProvider {
         return {
           scene: null, success: false,
           error: "Ollama is not running. Install from https://ollama.com then run: ollama serve Ollama and try again.",
-          provider: this.id, durationMs: Date.now() - start,
+          provider: this.id, durationMs: Date.now() - start, confidence: 0.85,
         };
       }
 
@@ -176,6 +176,20 @@ Set total_duration based on the physics (e.g., free fall from 10m = sqrt(2*10/9.
     }
   }
 
+  /** Warm up Ollama by loading the model (call on app start) */
+  async warmUp(): Promise<boolean> {
+    try {
+      const available = await this.isAvailable();
+      if (!available) return false;
+      const resp = await fetch(this.baseUrl + '/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: this.model, prompt: 'ok', stream: false, options: { temperature: 0, num_predict: 2 } }),
+        signal: AbortSignal.timeout(10000),
+      });
+      return resp.ok;
+    } catch { return false; }
+  }
   private extractJSON(text: string): string | null {
     // Try to find JSON block
     const jsonMatch = text.match(/\{[\s\S]*\}/);

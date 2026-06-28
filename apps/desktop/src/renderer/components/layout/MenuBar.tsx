@@ -77,7 +77,7 @@ function MenuSeparator() {
 // ===== MenuBar =====
 export function MenuBar() {
   const { t, locale, setLocale } = useI18n();
-  const { activeId: activeAI, setActive: setActiveAI, checkOllama } = useAIProviderStore();
+  const { activeId: activeAI, setActive: setActiveAI, checkOllama, ollamaAvailable } = useAIProviderStore();
   const { mode, setMode } = useTheme();
   const { mode: appMode, subMode: teachingMode, setSubMode: setTeachingMode } = useTeaching();
   const panelMgr = usePanelManager();
@@ -221,7 +221,10 @@ export function MenuBar() {
           color: activeAI === "ollama" ? "#34d399" : "#38bdf8"
         }}
         title="Toggle AI provider"
-      >{activeAI === "ollama" ? "Ollama" : "Rule"}</button>
+      >
+        <span className="inline-block w-1.5 h-1.5 rounded-full mr-1.5" style={{ backgroundColor: activeAI === "ollama" ? (ollamaAvailable ? "#22c55e" : "#ef4444") : "#38bdf8" }} />
+        {activeAI === "ollama" ? "Ollama" : "Rule"}
+      </button>
 
       {/* Language Quick Toggle */}
       <button

@@ -18,7 +18,7 @@ function Axes() {
   </group>;
 }
 
-function Ground(){return<mesh rotation={[-Math.PI/2,0,0]} position={[0,0,0]} receiveShadow><planeGeometry args={[20,20]}/><meshStandardMaterial color="#1e293b"/></mesh>;}
+function Ground(){return<mesh rotation={[-Math.PI/2,0,0]} position={[0,0,0]} receiveShadow><planeGeometry args={[20,20]}/><meshStandardMaterial color="#334155" roughness={0.8}/></mesh>;}
 function Grid(){return<gridHelper args={[20,20,"#334155","#1e293b"]} position={[0,0.01,0]}/>;}
 
 function Ball(){
@@ -180,9 +180,9 @@ export function Scene3D() {
   },[currentPhaseId,phases,scene]);
   return <div style={{ position: 'relative', width: '100%', height: '100%' }}>
     <Canvas camera={{position:[8,6,8],fov:55,near:0.1,far:100}} gl={{antialias:true,alpha:false,preserveDrawingBuffer:true}} style={{background:"linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%)"}} onCreated={({gl})=>{gl.setClearColor(new THREE.Color("#0f172a"))}}>
-    <ambientLight intensity={0.4}/>
-    <directionalLight position={[10,15,5]} intensity={0.8} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024}/>
-    <pointLight position={[0,8,0]} intensity={0.3} color="#FF6B6B"/>
+    <ambientLight intensity={0.7}/>
+    <directionalLight position={[10,15,5]} intensity={1.2} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024}/>
+    <pointLight position={[0,8,0]} intensity={0.5} color="#FF6B6B"/>
     {viz.showAxes&&<Axes/>}{viz.showGrid&&<Grid/>}<Ground/><Ball/>
     {viz.showTrail&&<Trail/>}<Ball2/>{viz.showDataLabels&&<HeightRuler/>}
     {viz.showVelocityArrow&&<VelocityArrow/>}{viz.showAccelArrow&&<AccelArrow/>}{viz.showGravityArrow&&<ForceArrow/>}

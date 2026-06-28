@@ -193,7 +193,16 @@ export function MenuBar() {
       {/* Spacer */}
       <div className="flex-1" />
 
-      {/* Language */}
+      {/* Language Quick Toggle */}
+      <button
+        onClick={() => setLocale(locale === "zh-CN" ? "en-US" : "zh-CN")}
+        className="px-2.5 py-1 text-xs font-medium rounded transition-colors bg-slate-800 text-sky-400 hover:bg-slate-700 hover:text-sky-300 border border-slate-700"
+        title={t("menu.language")}
+      >
+        {locale === "zh-CN" ? "EN" : "中文"}
+      </button>
+
+      {/* Language (dropdown for discovery) */}
       <Dropdown label={t("menu.language")}>
         <MenuItem label="English" checked={locale === "en-US"} onClick={() => setLocale("en-US")} />
         <MenuItem label={"中文"} checked={locale === "zh-CN"} onClick={() => setLocale("zh-CN")} />

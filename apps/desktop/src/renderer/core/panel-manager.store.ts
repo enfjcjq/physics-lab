@@ -21,12 +21,12 @@ export interface PanelState {
 
 // ===== Panel Registry =====
 const PANEL_DEFS: PanelConfig[] = [
-  { id: "problem",   titleKey: "panel.problem",    defaultZone: "left",     defaultOpen: true,  order: 0 },
-  { id: "history",   titleKey: "panel.history",    defaultZone: "left",     defaultOpen: true,  order: 1 },
+  { id: "problem",   titleKey: "panel.problem",    defaultZone: "left",     defaultOpen: false, order: 0 },
+  { id: "history",   titleKey: "panel.history",    defaultZone: "left",     defaultOpen: false, order: 1 },
   { id: "parameters",titleKey: "panel.parameters", defaultZone: "left",     defaultOpen: true,  order: 2 },
-  { id: "timeline",  titleKey: "panel.timeline",   defaultZone: "bottom",   defaultOpen: true,  order: 0 },
-  { id: "charts",    titleKey: "panel.charts",     defaultZone: "bottom",   defaultOpen: true,  order: 1 },
-  { id: "analysis",  titleKey: "panel.analysis",   defaultZone: "right",    defaultOpen: true,  order: 0 },
+  { id: "timeline",  titleKey: "panel.timeline",   defaultZone: "bottom",   defaultOpen: false, order: 0 },
+  { id: "charts",    titleKey: "panel.charts",     defaultZone: "bottom",   defaultOpen: false, order: 1 },
+  { id: "analysis",  titleKey: "panel.analysis",   defaultZone: "right",    defaultOpen: false, order: 0 },
   { id: "teaching",  titleKey: "panel.teaching",   defaultZone: "right",    defaultOpen: false, order: 1 },
   { id: "toolbox",   titleKey: "panel.toolbox",    defaultZone: "floating", defaultOpen: false, order: 0 },
   { id: "properties",titleKey: "panel.properties", defaultZone: "right",    defaultOpen: false, order: 2 },
@@ -47,15 +47,22 @@ interface PanelManagerState {
   resetLayout: () => void;
 }
 
+const LAYOUT_VERSION = 2; // bump to reset cached layouts with old defaults
+
 function loadLayout(): Record<string, PanelState> | null {
   try {
     const saved = localStorage.getItem("physics-lab-layout");
-    return saved ? JSON.parse(saved) : null;
+    if (!saved) return null;
+    const version = localStorage.getItem("physics-lab-layout-version");
+    // Reset layout if version mismatch (defaults changed)
+    if (version && parseInt(version) !== LAYOUT_VERSION) return null;
+    return JSON.parse(saved);
   } catch { return null; }
-}
+  }
 
 function saveLayout(panels: Record<string, PanelState>): void {
   localStorage.setItem("physics-lab-layout", JSON.stringify(panels));
+  localStorage.setItem("physics-lab-layout-version", String(LAYOUT_VERSION));
 }
 
 function getDefaultState(): Record<string, PanelState> {

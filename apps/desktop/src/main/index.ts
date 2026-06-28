@@ -29,7 +29,10 @@ function createWindow() {
 
   mainWindow.once("ready-to-show", () => {
     mainWindow?.show();
-    mainWindow?.webContents.openDevTools({ mode: "bottom" });
+    // Only auto-open DevTools in development mode
+    if (!app.isPackaged) {
+      mainWindow?.webContents.openDevTools({ mode: "bottom" });
+    }
   });
 
   mainWindow.on("closed", () => {

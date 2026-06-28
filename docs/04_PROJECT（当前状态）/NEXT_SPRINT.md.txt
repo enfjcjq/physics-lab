@@ -1,22 +1,25 @@
-﻿# Next Sprint: S27
+﻿# Next Sprint: S32+
 
-## Priority 1: Ollama Deep Integration (P0)
-- Auto-detect Ollama on app startup and show status
-- Test Ollama physics problem parsing end-to-end
-- Graceful fallback from Ollama to Rule parser
-- Show confidence score for AI-generated PhysicsScene
+## Priority 1: Ollama End-to-End (P0)
+- Test Ollama with actual physics problems
+- Parse output into valid PhysicsScene
+- Show Ollama response time + confidence
+- Graceful fallback chain: Ollama -> Rule -> Cached
 
-## Priority 2: Multi-Model Experiments (P1)
-- Side-by-side experiment comparison
-- Save/load experiment states
-- Experiment templates
+## Priority 2: Learning Path System (P1)
+- Track mastery per knowledge point
+- Suggest next experiment based on gaps
+- Adaptive quiz difficulty
+- Learning progress visualization
 
-## Priority 3: Code Quality (P1)
-- Split Scene3D.tsx (currently large)
-- Add unit tests for ai-provider.store
-- Add unit tests for ollama-provider
+## Priority 3: New Physics Models (P2)
+- Circular motion plugin
+- Electromagnetic experiments
+- Wave/optics visualization
+- Thermodynamics simulation
 
-## Priority 4: Accessibility & Polish (P2)
-- Keyboard navigation for all menus
-- Screen reader support
-- High contrast theme option
+## Priority 4: Commercial Readiness (P3)
+- User accounts + preferences
+- Cloud sync for experiments
+- School/institution licensing
+- Analytics dashboard

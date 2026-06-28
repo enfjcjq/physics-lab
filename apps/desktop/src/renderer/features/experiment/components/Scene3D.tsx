@@ -4,6 +4,7 @@ import { OrbitControls, Line, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useSimulation } from "../experiment.store";
 import { useVisualization } from "../../../core/visualization.store";
+import { useCompare } from "../../../core/compare.store";
 
 // ---- Inner Error Boundary for 3D scene children ----
 interface SceneErrorBoundaryState { hasError: boolean; error: string | null }
@@ -189,6 +190,25 @@ const Ball2 = memo(function Ball2(){
   </mesh>;
 }
 
+
+// Ghost trajectory comparison overlay
+function GhostTrails() {
+  const ghostTrails = useCompare((s) => s.ghostTrails);
+  if (ghostTrails.length === 0) return null;
+
+  return (
+    <group>
+      {ghostTrails.map(function(ghost, gi) {
+        if (ghost.points.length < 2) return null;
+        const pts = ghost.points.map(function(p) { return new THREE.Vector3(p.x, p.y, p.z); });
+        return (
+          <Line key={gi} points={pts} color={ghost.color} lineWidth={1.5} transparent opacity={0.4} />
+        );
+      })}
+    </group>
+  );
+}
+
 export const Scene3D = memo(function Scene3D() {
   const [transitioning, setTransitioning] = useState(false);
   const [canvasError, setCanvasError] = useState<string | null>(null);
@@ -272,7 +292,8 @@ export const Scene3D = memo(function Scene3D() {
       <pointLight position={[0,8,0]} intensity={0.5} color="#FF6B6B"/>
       <SceneErrorBoundary>
         {viz.showAxes&&<Axes/>}{viz.showGrid&&<Grid/>}<Ground/><Ball/>
-        {viz.showTrail&&<Trail/>}<Ball2/>{viz.showDataLabels&&<HeightRuler/>}
+        {viz.showTrail&&<Trail/>}
+        <GhostTrails/><Ball2/>{viz.showDataLabels&&<HeightRuler/>}
         {viz.showVelocityArrow&&<VelocityArrow/>}{viz.showAccelArrow&&<AccelArrow/>}{viz.showGravityArrow&&<ForceArrow/>}
         {viz.showDataLabels&&<HudLabels/>}
         <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>

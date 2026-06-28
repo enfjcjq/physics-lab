@@ -532,5 +532,7 @@
   "dashboard.resume": "Continue where you left off",
   "dashboard.resume_btn": "Resume",
   "dashboard.tip": "Daily Physics Tip",
-  "dashboard.export_summary": "Export"
+  "dashboard.export_summary": "Export",
+  "compare.on": "Compare: ON",
+  "compare.off": "Compare Mode"
 }

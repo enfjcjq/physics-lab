@@ -6,6 +6,7 @@ import { useI18n } from "../../core/i18n";
 import type { InputMethod } from "../../stores/ui.store";
 import { CollapseHandle } from "../layout/CollapseHandle";
 import { pluginRegistry } from "../../core/plugin-registry";
+import { useCompare } from "../../core/compare.store";
 
 const EXP_ICONS: Record<string, string> = {
   "free-fall": "\u2B07\uFE0F",
@@ -48,6 +49,7 @@ export function LeftPanel() {
   const setGravity = useSimulation((s) => s.setGravity);
   const jumpToTime = useSimulation((s) => s.jumpToTime);
   const currentTime = useSimulation((s) => s.currentTime);
+  const { enabled: compareEnabled, toggle: toggleCompare, varyParam, setVaryParam, computeGhosts, ghostTrails } = useCompare();
   const activePluginId = useSimulation((s) => s.activePluginId);
   const setActivePlugin = useSimulation((s) => s.setActivePlugin);
 
@@ -67,6 +69,36 @@ export function LeftPanel() {
           <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t("panel.problem")}</h2>
         </div>
 
+
+        {/* Compare Mode */}
+        <div className="px-3 pb-2">
+          <button onClick={function() { toggleCompare(); if (!compareEnabled) { computeGhosts(activePluginId, { mass, height, gravity }); } }}
+            className={"w-full py-1.5 rounded-lg text-xs font-medium transition-all " + (compareEnabled ? "bg-violet-600 text-white" : "bg-slate-800 text-slate-400 hover:text-white")}>
+            {compareEnabled ? t("compare.on", { defaultValue: "Compare: ON" }) : t("compare.off", { defaultValue: "Compare Mode" })}
+          </button>
+          {compareEnabled && (
+            <div className="mt-2 space-y-1.5">
+              <select value={varyParam} onChange={function(e) { setVaryParam(e.target.value); computeGhosts(activePluginId, { mass, height, gravity }); }}
+                className="w-full bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-[10px] text-slate-300">
+                <option value="mass">{t("param.mass")}</option>
+                <option value="height">{t("param.height")}</option>
+                <option value="gravity">{t("param.gravity")}</option>
+              </select>
+              {ghostTrails.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {ghostTrails.map(function(g, i) {
+                    return (
+                      <span key={i} className="text-[9px] px-1.5 py-0.5 rounded flex items-center gap-1" style={{ backgroundColor: g.color + "20", color: g.color }}>
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: g.color }} />
+                        {g.label}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
         {/* Experiment Selector - Improved card grid */}
         <div className="px-3 pb-3">
           <div className="text-[10px] text-slate-500 uppercase tracking-wider mb-2 px-1">{t("panel.experiments")}</div>

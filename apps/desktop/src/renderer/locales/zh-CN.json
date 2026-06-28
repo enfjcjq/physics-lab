@@ -687,5 +687,7 @@
   "dashboard.resume": "继续上次学习",
   "dashboard.resume_btn": "继续",
   "dashboard.tip": "每日物理贴士",
-  "dashboard.export_summary": "导出总结"
+  "dashboard.export_summary": "导出总结",
+  "compare.on": "对比：开",
+  "compare.off": "对比模式"
 }

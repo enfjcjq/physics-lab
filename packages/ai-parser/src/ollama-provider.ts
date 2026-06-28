@@ -53,7 +53,7 @@ export class OllamaProvider implements AIProvider {
       if (!available) {
         return {
           scene: null, success: false,
-          error: "Ollama is not running. Please start Ollama and try again.",
+          error: "Ollama is not running. Install from https://ollama.com then run: ollama serve Ollama and try again.",
           provider: this.id, durationMs: Date.now() - start,
         };
       }
@@ -64,7 +64,7 @@ export class OllamaProvider implements AIProvider {
       if (!response) {
         return {
           scene: null, success: false,
-          error: "Ollama returned empty response.",
+          error: "Ollama returned empty. Try: ollama pull llama3.2 (or mistral, gemma2).",
           provider: this.id, durationMs: Date.now() - start,
         };
       }

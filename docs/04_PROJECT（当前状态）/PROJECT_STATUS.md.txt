@@ -1,23 +1,20 @@
 ﻿# Project Status
 
-**Version:** V2.7 (Sprint S30)
+**Version:** V2.8 (Sprint S32)
 **Status:** Complete
 
 ## Test Coverage
-- **56 tests across 7 files**, all passing, zero failures
-- Stores: ai-provider (5), teaching (5), plugin-registry (6), i18n (5)
-- Lib: csv (16), report (17), smoke (2)
+- **61 tests across 8 files**, all passing, zero failures
+- New: mastery.store (5 tests — mark, percent, reset, persistence)
 
-## Completed Sprints (S16-S30)
-| Phase | Sprints | Deliverables |
-|-------|---------|--------------|
-| Foundation | S16-S20 | 6 plugins, 3 modes, quiz, timeline, visual polish |
-| Export | S21 | PDF/MD/CSV/Screenshot |
-| Polish | S22-S23 | FormulaDisplay, crash fixes |
-| AI Engine | S24-S26 | OllamaProvider, AI store, MenuBar toggle |
-| Integration | S27 | Auto-detect, i18n keys |
-| Quality | S28-S30 | 56 tests, TODO/Roadmap/Changelog |
+## New in S32
+- **Mastery Store** — tracks knowledge point mastery with localStorage persistence
+  - `markMastered(kpId)` — mark a knowledge point as learned
+  - `isMastered(kpId)` — check if a point is mastered
+  - `getPercent()` — overall mastery percentage
+  - `reset()` — clear all progress
+- **Ollama Provider** — improved error messages with install instructions
 
 ## Key Metrics
-- 6 experiments | 571 zh-CN | 416 en-US | 56 tests
+- 6 experiments | 571 zh-CN | 416 en-US | 61 tests
 - Zero TypeScript errors | Zero test failures

@@ -1,10 +1,17 @@
 ﻿# Project Status
 
-**Version:** V3.9 (Sprint S62)
-**Status:** Active Development — Dynamic Controls & Content Expansion
+**Version:** V4.0 (Sprint S63)
+**Status:** Active Development — Visual Enhancement
 
 ## Key Metrics
 - **10 experiments** | 824 zh-CN | 824 en-US | Zero TS errors
-- Dynamic parameter controls: each experiment shows its own sliders
-- Formula Engine: all 10 experiments formula-driven
-- Glow trails & arrows, phase loop indicator, step nav buttons
+- Dynamic parameter controls per experiment
+- Specialized visuals: Wave multi-point rendering, Circuit symbols
+- Glow trails & arrows, phase loop indicator
+- TeacherPanel step nav, TeachingOverlay
+- Formula Engine drives all 10 experiments
+
+## Visual Features
+- ⚡ Ohm's Law: Battery + resistor + wire circuit with live I=V/R display
+- ∼ Wave: 20 particles forming wave pattern, colored gradient
+- 🔴 All experiments: glow trails, arrow vectors, data labels

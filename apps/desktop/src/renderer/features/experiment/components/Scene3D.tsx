@@ -218,6 +218,88 @@ function GhostTrails() {
   );
 }
 
+// Wave visualization: multiple particles showing wave propagation
+const WavePoints = memo(function WavePoints() {
+  const currentTime = useSimulation((s) => s.currentTime);
+  const activePlugin = useSimulation((s) => s.activePluginId);
+  const scene = useSimulation((s) => s.scene);
+  
+  if (activePlugin !== "transverse_wave" && activePlugin !== "waves") return null;
+  
+  const sim = (scene as any)?.simulation;
+  if (!sim) return null;
+  const A = sim.params?.A ?? 1.5;
+  const k = sim.params?.k ?? 1.5;
+  const omega = sim.params?.omega ?? 2;
+  const y0 = sim.params?.y0 ?? 2;
+  
+  const points: Array<[number, number, number]> = [];
+  const numPoints = 20;
+  const spacing = 0.5;
+  
+  for (let i = 0; i < numPoints; i++) {
+    const x = i * spacing;
+    const y = y0 + A * Math.sin(k * x - omega * currentTime);
+    points.push([x, y, 0]);
+  }
+  
+  return (
+    <group>
+      {points.map((pos, i) => (
+        <mesh key={i} position={pos}>
+          <sphereGeometry args={[0.08, 8, 8]} />
+          <meshBasicMaterial color={i === 0 ? "#FF6B6B" : "#" + Math.floor(60 + i * 10).toString(16) + Math.floor(150 - i * 5).toString(16) + Math.floor(200 - i * 5).toString(16)} />
+        </mesh>
+      ))}
+    </group>
+  );
+});
+
+// Circuit visualization for Ohm's Law
+const CircuitViz = memo(function CircuitViz() {
+  const activePlugin = useSimulation((s) => s.activePluginId);
+  const currentTime = useSimulation((s) => s.currentTime);
+  const scene = useSimulation((s) => s.scene);
+  
+  if (activePlugin !== "ohms_law") return null;
+  
+  const sim = (scene as any)?.simulation;
+  const V = sim?.params?.V ?? 12;
+  const R = sim?.params?.R ?? 4;
+  const I = V / R;
+  
+  // Circuit wire path: battery on left, resistor in middle, returning wire
+  const circuitY = 2;
+  const wirePoints = [
+    [0, circuitY + 0.8, 0], [0.8, circuitY + 0.8, 0], // Top wire
+  ];
+  
+  return (
+    <group>
+      {/* Battery symbol (left) */}
+      <mesh position={[0, circuitY, 0]}>
+        <boxGeometry args={[0.6, 1.2, 0.2]} />
+        <meshBasicMaterial color="#4ade80" />
+      </mesh>
+      <Text position={[0, circuitY - 0.8, 0]} fontSize={0.2} color="#4ade80" anchorX="center">{"V=" + V + "V"}</Text>
+      
+      {/* Wire lines */}
+      <Line points={[new THREE.Vector3(0.3, circuitY + 0.6, 0), new THREE.Vector3(3.7, circuitY + 0.6, 0)]} color="#94a3b8" lineWidth={1} transparent opacity={0.4} />
+      <Line points={[new THREE.Vector3(3.7, circuitY - 0.6, 0), new THREE.Vector3(0.3, circuitY - 0.6, 0)]} color="#94a3b8" lineWidth={1} transparent opacity={0.4} />
+      
+      {/* Resistor symbol (right, zigzag) */}
+      <mesh position={[3.7, circuitY, 0]}>
+        <boxGeometry args={[0.4, 1.2, 0.2]} />
+        <meshBasicMaterial color="#f59e0b" />
+      </mesh>
+      <Text position={[3.7, circuitY - 0.8, 0]} fontSize={0.2} color="#f59e0b" anchorX="center">{"R=" + R + "\u03A9"}</Text>
+      
+      {/* Current indicator */}
+      <Text position={[2, circuitY + 1.2, 0]} fontSize={0.25} color="#38bdf8" anchorX="center">{"I=" + I.toFixed(1) + "A"}</Text>
+    </group>
+  );
+});
+
 export const Scene3D = memo(function Scene3D() {
   const [transitioning, setTransitioning] = useState(false);
   const [canvasError, setCanvasError] = useState<string | null>(null);
@@ -305,6 +387,7 @@ export const Scene3D = memo(function Scene3D() {
         <GhostTrails/><Ball2/>{viz.showDataLabels&&<HeightRuler/>}
         {viz.showVelocityArrow&&<VelocityArrow/>}{viz.showAccelArrow&&<AccelArrow/>}{viz.showGravityArrow&&<ForceArrow/>}
         {viz.showDataLabels&&<HudLabels/>}
+        <WavePoints/><CircuitViz/>
         <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>
         <Animator/>
       </SceneErrorBoundary>

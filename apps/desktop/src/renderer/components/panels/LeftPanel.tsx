@@ -174,12 +174,7 @@ export function LeftPanel() {
         </div>
 
         {mode==="experiment" && (
-          <div className="border-t border-slate-800 px-4 py-3 space-y-3">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t("panel.parameters")}</h2>
-            <SliderControl label={t("ctrl.height")} value={height} min={1} max={50} step={0.5} unit="m" onChange={(v)=>{setHeight(v);jumpToTime(currentTime);}}/>
-            <SliderControl label={t("ctrl.gravity")} value={gravity} min={0.1} max={30} step={0.1} unit="m/s^2" onChange={(v)=>{setGravity(v);jumpToTime(currentTime);}}/>
-            <SliderControl label={t("ctrl.mass")} value={mass} min={0.1} max={10} step={0.1} unit="kg" onChange={(v)=>{setMass(v);jumpToTime(currentTime);}}/>
-          </div>
+          <DynamicControls />
         )}
 
         <div className="border-t border-slate-800"/>
@@ -202,6 +197,55 @@ export function LeftPanel() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function DynamicControls() {
+  const { t } = useI18n();
+  const activePluginId = useSimulation((s) => s.activePluginId);
+  const plugin = pluginRegistry.get(activePluginId);
+  const controls = plugin?.getControls() ?? [];
+  const jumpToTime = useSimulation((s) => s.jumpToTime);
+  const currentTime = useSimulation((s) => s.currentTime);
+  const setMass = useSimulation((s) => s.setMass);
+  const setHeight = useSimulation((s) => s.setHeight);
+  const setGravity = useSimulation((s) => s.setGravity);
+  const rebuildCache = useSimulation((s) => s.rebuildCache);
+  
+  if (controls.length === 0) return null;
+  
+  // Map control IDs to simulation setters
+  const setterMap: Record<string, (v: number) => void> = {
+    mass: setMass, h0: setHeight, height: setHeight, g: setGravity, gravity: setGravity,
+  };
+  
+  const getValue = (id: string): number => {
+    const s = useSimulation.getState();
+    if (id === "mass" || id === "m") return s.mass;
+    if (id === "h0" || id === "height") return s.height;
+    if (id === "g" || id === "gravity") return s.gravity;
+    return Number(controls.find(c => c.id === id)?.defaultValue) || 1;
+  };
+  
+  return (
+    <div className="border-t border-slate-800 px-4 py-3 space-y-3">
+      <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">{t("panel.parameters")}</h2>
+      {controls.map((ctrl) => {
+        const setter = setterMap[ctrl.id] ?? ((v: number) => { rebuildCache(); });
+        const val = getValue(ctrl.id);
+        return (
+          <SliderControl key={ctrl.id}
+            label={t(ctrl.label)}
+            value={val}
+            min={ctrl.min ?? 0}
+            max={ctrl.max ?? 100}
+            step={ctrl.step ?? 1}
+            unit={ctrl.unit ?? ''}
+            onChange={(v) => { setter(v); jumpToTime(currentTime); }}
+          />
+        );
+      })}
     </div>
   );
 }

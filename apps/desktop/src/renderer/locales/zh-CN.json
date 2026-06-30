@@ -797,5 +797,6 @@
     "mode.experiment_desc":  "自由调节参数，自主探索物理规律",
     "teacher.prev_step":  "上一步",
     "mode.learning_desc":  "跟随老师逐步学习物理概念",
-    "teacher.skip_to_step":  "跳转到此步骤"
+    "teacher.skip_to_step":  "跳转到此步骤",
+    "timeline.looping_phase":  "阶段循环中"
 }

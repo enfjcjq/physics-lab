@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect, useState } from "react";
+﻿import { useRef, useCallback, useEffect, useState } from "react";
 import { useSimulation } from "../../features/experiment/experiment.store";
 import type { SpeedLevel } from "../../features/experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
@@ -29,6 +29,9 @@ export function Timeline() {
   const phases = useSimulation((s) => s.phases);
   const play = useSimulation((s) => s.play);
   const pause = useSimulation((s) => s.pause);
+  const loopPhaseActive = useSimulation((s) => s.loopPhaseActive);
+  const loopPhaseId = useSimulation((s) => s.loopPhaseId);
+  const togglePhaseLoop = useSimulation((s) => s.togglePhaseLoop);
   const stop = useSimulation((s) => s.stop);
   const replay = useSimulation((s) => s.replay);
   const stepForward = useSimulation((s) => s.stepForward);
@@ -120,6 +123,11 @@ export function Timeline() {
         </TransBtn>
         <div className="w-px h-4 bg-slate-700 mx-0.5"/>
         <span className="text-xs font-mono text-sky-400 w-20 text-right tabular-nums">{currentTime.toFixed(2)} s</span>
+        {loopPhaseActive && loopPhaseId && (
+          <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-purple-900/40 text-purple-300 border border-purple-700/30 animate-pulse">
+            {"\uD83D\uDD01 " + t("timeline.looping_phase")}
+          </span>
+        )}
         <div className="flex gap-0.5 ml-1">
           {SPEEDS.map((s) => (
             <button key={s.value} onClick={() => setSpeed(s.value)}

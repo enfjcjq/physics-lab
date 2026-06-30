@@ -86,7 +86,16 @@ const Arrow3D = memo(function Arrow3D({o,d,len,c}:{o:[number,number,number];d:[n
   const e:[number,number,number]=[o[0]+d[0]*len,o[1]+d[1]*len,o[2]+d[2]*len];
   const pts=useMemo(()=>[new THREE.Vector3(...o),new THREE.Vector3(...e)],[o,e]);
   if(len<0.05)return null;
-  return<group><Line points={pts} color={c} lineWidth={2}/><mesh position={e}><coneGeometry args={[0.08,0.2,8]}/><meshBasicMaterial color={c}/></mesh></group>;
+  return<group>
+    {/* Glow arrow */}
+    <Line points={pts} color={c} lineWidth={4} transparent opacity={0.1}/>
+    {/* Core arrow */}
+    <Line points={pts} color={c} lineWidth={2}/>
+    <mesh position={e}>
+      <coneGeometry args={[0.1,0.25,8]}/>
+      <meshBasicMaterial color={c}/>
+    </mesh>
+  </group>;
 });
 
 function VelocityArrow(){const x=useSimulation(s=>s.ballX),y=useSimulation(s=>s.ballY),v=useSimulation(s=>s.ballVelocity),len=Math.min(Math.abs(v)*0.2,4),d:[number,number,number]=v>=0?[0,1,0]:[0,-1,0];return<Arrow3D o={[x+0.5,y,0]} d={d} len={len} c="#3b82f6"/>;}

@@ -797,5 +797,6 @@
     "mode.experiment_desc":  "Adjust parameters and explore physics freely",
     "teacher.prev_step":  "Previous",
     "mode.learning_desc":  "Learn physics step by step with AI teacher",
-    "teacher.skip_to_step":  "Jump to step"
+    "teacher.skip_to_step":  "Jump to step",
+    "timeline.looping_phase":  "Phase Loop"
 }

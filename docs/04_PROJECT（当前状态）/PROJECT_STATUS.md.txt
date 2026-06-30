@@ -1,12 +1,14 @@
 ﻿# Project Status
 
-**Version:** V3.6 (Sprint S59)
-**Status:** Active Development — Teacher Experience Enhancement
+**Version:** V3.7 (Sprint S60)
+**Status:** Active Development — Visual & Interactive Enhancement
 
 ## Key Metrics
-- 8 experiments | 799 zh-CN | 799 en-US | Zero TS errors
-- 3 modes: Learning / Experiment / Analysis (with icons)
-- TeacherPanel: step prev/next navigation buttons
+- 8 experiments | 800 zh-CN | 800 en-US | Zero TS errors
+- 3 modes with icons: Learning / Experiment / Analysis
+- TeacherPanel: step prev/next navigation
 - TeachingOverlay on 3D scene
 - Visualization toggles in View menu
+- Enhanced 3D trails and arrows with glow effects
+- Timeline: phase loop indicator
 - Formula Engine: all experiments formula-driven with slider sync

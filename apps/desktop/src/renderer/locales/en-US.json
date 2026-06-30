@@ -749,9 +749,7 @@
     "teacher.formula":  "teacher.formula",
     "teacher.hide_answer":  "teacher.hide_answer",
     "teacher.learning_tips":  "teacher.learning_tips",
-    "teacher.next_step":  "teacher.next_step",
     "teacher.phase":  "teacher.phase",
-    "teacher.prev_step":  "teacher.prev_step",
     "teacher.quiz":  "teacher.quiz",
     "teacher.show_answer":  "teacher.show_answer",
     "teacher.summary":  "teacher.summary",
@@ -793,5 +791,11 @@
     "visualization.teaching_labels":  "Teaching Labels",
     "visualization.velocity_arrow":  "Velocity Arrow",
     "overlay.step":  "Step",
-    "overlay.upcoming":  "Upcoming"
+    "overlay.upcoming":  "Upcoming",
+    "mode.analysis_desc":  "View complete derivations and knowledge",
+    "teacher.next_step":  "Next",
+    "mode.experiment_desc":  "Adjust parameters and explore physics freely",
+    "teacher.prev_step":  "Previous",
+    "mode.learning_desc":  "Learn physics step by step with AI teacher",
+    "teacher.skip_to_step":  "Jump to step"
 }

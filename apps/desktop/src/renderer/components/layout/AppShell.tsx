@@ -88,13 +88,18 @@ export function AppShell() {
 
       <div className="h-9 bg-slate-900/80 border-b border-slate-800 flex items-center px-4 gap-3 flex-shrink-0">
         <div className="flex bg-slate-800/40 rounded-lg p-0.5 gap-0.5">
-          {MODES.map((m) => (
-            <button key={m} onClick={() => setMode(m)}
-              className={"px-4 py-1 rounded-md text-xs font-medium transition-all duration-300 " +
-                (mode === m ? "bg-gradient-to-r from-sky-600 to-sky-700 text-white shadow-lg shadow-sky-900/30 scale-105" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30")}>
-              {t("mode." + m)}
-            </button>
-          ))}
+          {MODES.map((m) => {
+            const icons: Record<string,string> = { learning: "\uD83C\uDF93", experiment: "\uD83D\uDD2C", analysis: "\uD83D\uDCCA" };
+            const isActive = mode === m;
+            return (
+              <button key={m} onClick={() => setMode(m)}
+                className={"px-4 py-1.5 rounded-md text-xs font-medium transition-all duration-300 flex items-center gap-1.5 " +
+                  (isActive ? "bg-gradient-to-r from-sky-600 to-sky-700 text-white shadow-lg shadow-sky-900/30 scale-105" : "text-slate-400 hover:text-slate-200 hover:bg-slate-700/30")}>
+                <span className="text-sm">{icons[m]}</span>
+                <span>{t("mode." + m)}</span>
+              </button>
+            );
+          })}
         </div>
                 <div className="w-px h-4 bg-slate-700/50 mx-1" />
         <ExperimentSwitcher />

@@ -1,26 +1,28 @@
-﻿# Next Sprint: S59+
+﻿# Next Sprint: S60+
 
-## Completed (S55-S58): Stabilization & UX Polish
+## Completed (S55-S59)
 - [x] Zero TypeScript errors
-- [x] i18n fully synced (795 keys zh-CN + en-US)
+- [x] i18n synced (799 keys zh-CN + en-US)
 - [x] Experiment switcher in toolbar
 - [x] Formula display fixed (Unicode)
 - [x] TeachingOverlay on 3D scene
 - [x] Visualization toggles in View menu
-- [x] All 8 plugins use shared constants with simulation blocks
+- [x] TeacherPanel step prev/next navigation
+- [x] Mode buttons with icons
 - [x] Slider-Engine real-time sync
 
-## Priority 1: Teacher Experience (P1)
-- TeacherPanel step forward/back navigation buttons
-- Make mode switching more visually distinct
-- Add guided tour for first-time users
+## Priority 1: Interactivity (P1)
+- Interactive quiz feedback improvements
+- Enhanced trail/arrow rendering (glow effects)
+- Experiment comparison side-by-side view
+- Phase loop visualization (highlight current phase)
 
-## Priority 2: Interactivity (P2)
-- Add experiment comparison side-by-side view
-- Enhanced trail/arrow rendering
-- More interactive quiz feedback
-
-## Priority 3: Content (P3)
-- Add more experiments via JSON formula definitions
+## Priority 2: Content (P2)
+- Add more experiments via JSON (Ohm's law, Coulomb's law)
 - Electromagnetic experiments
 - Wave/optics visualization
+
+## Priority 3: Platform (P3)
+- User accounts (local first)
+- OCR input for problem images
+- Plugin marketplace

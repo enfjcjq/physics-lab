@@ -1,4 +1,4 @@
-import { FormulaDisplay } from "./FormulaDisplay";
+﻿import { FormulaDisplay } from "./FormulaDisplay";
 import { useSimulation } from "../../features/experiment/experiment.store";
 import type { TeacherStep } from "@physics-lab/shared";
 import { useI18n } from "../../core/i18n";
@@ -265,7 +265,20 @@ export function TeacherPanel() {
 
         {/* ===== NON-EXPLORE: Current step with formula ===== */}
         {!isExplore && step && (
-          <div className="bg-gradient-to-br from-emerald-900/20 to-sky-900/20 border border-emerald-800/30 rounded-xl p-3.5">
+          <>
+          <div className="flex items-center gap-2 mb-3">
+          <button onClick={() => { const prev = sortedSteps[Math.max(0, currentIdx - 1)]; if (prev) jumpToTime(prev.timeStart); }}
+            disabled={currentIdx <= 0}
+            className="flex-1 py-1.5 px-2 rounded-lg text-xs bg-slate-800/60 hover:bg-slate-700/60 text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+            ← {t("teacher.prev_step")}
+          </button>
+          <button onClick={() => { const next = sortedSteps[Math.min(sortedSteps.length - 1, currentIdx + 1)]; if (next && next !== step) jumpToTime(next.timeStart); }}
+            disabled={currentIdx >= sortedSteps.length - 1}
+            className="flex-1 py-1.5 px-2 rounded-lg text-xs bg-sky-600/30 hover:bg-sky-600/50 text-sky-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+            {t("teacher.next_step")} →
+          </button>
+        </div>
+        <div className="bg-gradient-to-br from-emerald-900/20 to-sky-900/20 border border-emerald-800/30 rounded-xl p-3.5">
             <div className="flex items-center gap-2 mb-2">
               <span className="text-lg">{STEP_ICONS[currentIdx % STEP_ICONS.length]}</span>
               <h3 className="text-sm font-semibold text-white">{t(step.titleKey)}</h3>
@@ -277,6 +290,7 @@ export function TeacherPanel() {
               </div>
             )}
           </div>
+          </>
         )}
 
         {/* Live data */}

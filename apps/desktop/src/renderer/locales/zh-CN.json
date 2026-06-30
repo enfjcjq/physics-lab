@@ -389,8 +389,6 @@
     "teacher.explain":  "讲解",
     "teacher.quiz":  "小测验",
     "teacher.summary":  "总结",
-    "teacher.next_step":  "下一步",
-    "teacher.prev_step":  "上一步",
     "teacher.all_steps":  "全部步骤",
     "teacher.auto_play":  "自动播放",
     "teacher.show_answer":  "显示答案",
@@ -793,5 +791,11 @@
     "visualization.teaching_labels":  "教学标签",
     "visualization.velocity_arrow":  "速度矢量",
     "overlay.step":  "步骤",
-    "overlay.upcoming":  "即将"
+    "overlay.upcoming":  "即将",
+    "mode.analysis_desc":  "查看完整公式推导与知识点",
+    "teacher.next_step":  "下一步",
+    "mode.experiment_desc":  "自由调节参数，自主探索物理规律",
+    "teacher.prev_step":  "上一步",
+    "mode.learning_desc":  "跟随老师逐步学习物理概念",
+    "teacher.skip_to_step":  "跳转到此步骤"
 }

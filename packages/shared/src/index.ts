@@ -11,3 +11,5 @@ export * from './engine';
 
 export { CIRCULAR_MOTION_SCENE } from "./constants/circular-motion-scene";
 export { BUOYANCY_SCENE } from "./constants/buoyancy-scene";
+export { OHMS_LAW_SCENE } from "./constants/ohms-law-scene";
+export { WAVE_SCENE } from "./constants/wave-scene";

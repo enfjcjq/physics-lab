@@ -17,6 +17,8 @@ const EXP_ICONS: Record<string, string> = {
   "pendulum": "\u23F0",
   "buoyancy": "\uD83D\uDCA7",
   "circular-motion": "\uD83D\uDD04",
+  "ohms_law": "\u26A1",
+  "transverse_wave": "\u223C\uFE0F",
 };
 
 const EXP_META: Record<string, { desc: string; difficulty: string }> = {
@@ -28,6 +30,8 @@ const EXP_META: Record<string, { desc: string; difficulty: string }> = {
   "pendulum": { desc: "\u5355\u6446\u7684\u7B80\u8C10\u8FD0\u52A8", difficulty: "medium" },
   "buoyancy": { desc: "\u963F\u57FA\u7C73\u5FB7\u539F\u7406\u4E0E\u6D6E\u529B\u5206\u6790", difficulty: "medium" },
   "circular-motion": { desc: "\u5300\u901F\u5706\u5468\u8FD0\u52A8\u4E0E\u5411\u5FC3\u529B", difficulty: "medium" },
+  "ohms_law": { desc: "\u7535\u538B\u3001\u7535\u6D41\u4E0E\u7535\u963B\u7684\u5173\u7CFB", difficulty: "easy" },
+  "transverse_wave": { desc: "\u6CE2\u7684\u4F20\u64AD\u4E0E\u632F\u52A8\u7279\u6027", difficulty: "medium" },
 };
 
 export function LeftPanel() {

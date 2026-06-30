@@ -1,14 +1,26 @@
 ﻿# Project Status
 
-**Version:** V3.7 (Sprint S60)
-**Status:** Active Development — Visual & Interactive Enhancement
+**Version:** V3.8 (Sprint S61)
+**Status:** Active Development — Content Expansion
 
 ## Key Metrics
-- 8 experiments | 800 zh-CN | 800 en-US | Zero TS errors
+- **10 experiments** | 824 zh-CN | 824 en-US | Zero TS errors
 - 3 modes with icons: Learning / Experiment / Analysis
-- TeacherPanel: step prev/next navigation
+- 8 mechanics + 1 electromagnetism + 1 waves
+- Formula Engine: all 10 experiments formula-driven
 - TeachingOverlay on 3D scene
 - Visualization toggles in View menu
-- Enhanced 3D trails and arrows with glow effects
-- Timeline: phase loop indicator
-- Formula Engine: all experiments formula-driven with slider sync
+- Glow trails & arrows, phase loop indicator
+- TeacherPanel step nav buttons
+
+## Experiments
+1. Free Fall (mechanics)
+2. Projectile Motion (mechanics)
+3. Inclined Plane (mechanics)
+4. Collision (mechanics)
+5. Spring-Mass (mechanics)
+6. Pendulum (mechanics)
+7. Circular Motion (mechanics)
+8. Buoyancy (mechanics)
+9. **Ohm's Law** (electromagnetism) ← NEW
+10. **Transverse Wave** (waves) ← NEW

@@ -1,4 +1,4 @@
-import { pluginRegistry } from "../core/plugin-registry";
+﻿import { pluginRegistry } from "../core/plugin-registry";
 
 const pluginLoaders: Record<string, () => Promise<void>> = {
   "pendulum": async () => {
@@ -30,6 +30,9 @@ const pluginLoaders: Record<string, () => Promise<void>> = {
     const { circularMotionPlugin } = await import("../plugins/circular-motion/circular-motion.plugin");
     pluginRegistry.register(circularMotionPlugin);
   },
+  // Virtual plugins are registered eagerly in App.tsx via createVirtualPlugin
+  "ohms_law": async () => { /* Already registered in App.tsx */ },
+  "transverse_wave": async () => { /* Already registered in App.tsx */ },
 };
 
 const loadingPlugins = new Set<string>();

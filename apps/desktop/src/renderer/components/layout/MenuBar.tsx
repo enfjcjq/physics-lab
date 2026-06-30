@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
 import { usePanelManager } from "../../core/panel-manager.store";
 import { useI18n } from "../../core/i18n";
 import { useTheme } from "../../core/theme.store";

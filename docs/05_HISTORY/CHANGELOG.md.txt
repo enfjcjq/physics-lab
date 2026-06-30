@@ -1,21 +1,23 @@
 ﻿# CHANGELOG
 
-## V3.4 (S56) — UX Polish & Formula Display Fix
-
-### Fixed
-- **Formula display**: Fixed ? characters in en-US locale replaced with proper Unicode (², ∝, √, ·, ←, →)
-- **Experiment selector**: Added dropdown in top toolbar for quick experiment switching
-- **Experiment metadata**: Added missing entries for buoyancy and circular-motion
-- **Difficulty labels**: Now use i18n keys (difficulty.easy/medium/hard) instead of hardcoded Chinese
-- **i18n**: Both zh-CN and en-US now at 785 keys with proper formula strings
+## V3.5 (S58) — Teaching UX Enhancement
 
 ### Added
-- ExperimentSwitcher component in AppShell toolbar
-- Difficulty i18n keys (zh-CN: 简单/中等/困难, en-US: Easy/Medium/Hard)
+- TeachingOverlay: step-by-step teaching overlay on 3D experiment view
+- Visualization toggle checkboxes in View menu dropdown
+- 10 new visualization i18n keys (trail, velocity/accel/gravity arrows, axes, grid, etc.)
+
+### Fixed
+- Circular-motion & buoyancy plugins now import shared constants with simulation blocks
+- buildFrameCache correctly handles circular-motion & buoyancy params
+- Simulation engine params now sync with slider changes in real-time
+
+## V3.4 (S56) — UX Polish & Formula Display Fix
+- Fixed ? characters in en-US formulas → proper Unicode
+- Experiment switcher dropdown in toolbar
+- Difficulty labels use i18n keys
 
 ## V3.3 (S55) — Bug Fix & Stabilization
 - Fixed experiment.store.ts crash (scene destructuring)
 - Zero TS errors across entire monorepo
 - i18n: 782 keys both zh-CN and en-US
-- Plugin type fixes for circular-motion and buoyancy
-- Dashboard downloadFile fix

@@ -1,4 +1,4 @@
-import { Scene3D } from "./components/Scene3D";
+﻿import { Scene3D } from "./components/Scene3D";
 import { useSimulation } from "./experiment.store";
 
 export function ExperimentView() {

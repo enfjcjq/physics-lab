@@ -1,20 +1,23 @@
 ﻿# Project Status
 
-**Version:** V3.4 (Sprint S56)
-**Status:** Active Development — UX Polish Phase
+**Version:** V3.5 (Sprint S58)
+**Status:** Active Development — UX Polish & Teaching Enhancement
 
 ## Architecture
 Problem → AI Parser (Rule/Ollama) → PhysicsScene → Timeline → Experiment → Teacher → Charts → UI
 
 ## Key Metrics
-- 8 experiments | 785 zh-CN | 785 en-US | Zero TS errors
+- 8 experiments | 795 zh-CN | 795 en-US | Zero TS errors
 - 3 modes: Learning / Experiment / Analysis
 - Experiment switcher in toolbar for quick access
 - Formula Engine: Generic physics engine interprets string formulas at runtime
+- TeachingOverlay: Step-by-step overlay on 3D scene
+- Visualization toggles in View menu
 - Export: PDF / Markdown / HTML / CSV / Screenshot
 
-## Sprint S56 (Current): UX Polish
-- Fixed formula display (replaced ? with proper Unicode)
-- Added experiment switcher dropdown to toolbar
-- Completed experiment metadata for all 8 experiments
-- Difficulty labels now i18n-aware
+## Sprint S58 (Current): Teaching UX Enhancement
+- Added TeachingOverlay to 3D experiment view
+- Visualization toggle checkboxes in View menu (trail, arrows, axes, grid, etc.)
+- 10 new i18n keys for visualization labels
+- All 8 experiments use shared constants with simulation blocks
+- Parameter sliders now sync with simulation engine in real-time

@@ -1,31 +1,26 @@
-﻿# Next Sprint: S56+
+﻿# Next Sprint: S59+
 
-## Completed (S55): Bug Fix & Stabilization
-- [x] Fixed experiment.store.ts crash (scene destructuring)
-- [x] Fixed all TypeScript errors (0 errors)
-- [x] Closed i18n gap (782 keys both zh-CN and en-US)
-- [x] Fixed dashboard, plugins, formula evaluator types
+## Completed (S55-S58): Stabilization & UX Polish
+- [x] Zero TypeScript errors
+- [x] i18n fully synced (795 keys zh-CN + en-US)
+- [x] Experiment switcher in toolbar
+- [x] Formula display fixed (Unicode)
+- [x] TeachingOverlay on 3D scene
+- [x] Visualization toggles in View menu
+- [x] All 8 plugins use shared constants with simulation blocks
+- [x] Slider-Engine real-time sync
 
-## Priority 1: User Experience (P0)
-- Experiment selector: make more prominent and intuitive
-- Formula display: ensure all formulas use proper notation (no question marks)
-- Mode switching: ensure always visible and clear
-- First-run experience: welcome screen + guided tour
+## Priority 1: Teacher Experience (P1)
+- TeacherPanel step forward/back navigation buttons
+- Make mode switching more visually distinct
+- Add guided tour for first-time users
 
-## Priority 2: Content & Interactivity (P1)
-- Add more interactive elements to existing experiments
-- Improve trail/arrow/overlay visualization
+## Priority 2: Interactivity (P2)
 - Add experiment comparison side-by-side view
-- Personalized learning recommendations
+- Enhanced trail/arrow rendering
+- More interactive quiz feedback
 
-## Priority 3: Platform (P2)
-- User accounts (local first, cloud sync later)
-- School/classroom dashboard
-- Plugin marketplace
-- OCR input for problem images
-
-## Priority 4: Content Expansion (P3)
+## Priority 3: Content (P3)
+- Add more experiments via JSON formula definitions
 - Electromagnetic experiments
 - Wave/optics visualization
-- Thermodynamics
-- Modern physics (relativity, quantum basics)

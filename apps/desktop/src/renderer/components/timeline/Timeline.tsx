@@ -41,7 +41,15 @@ export function Timeline() {
   const setSpeed = useSimulation((s) => s.setSpeed);
   const { t } = useI18n();
 
-  const [loop, setLoop] = useState(false);
+    const [loop, setLoop] = useState(false);
+
+  // Auto-replay when loop is on and playback reaches end
+  useEffect(() => {
+    if (loop && playing && currentTime >= totalDuration - 0.02) {
+      jumpToTime(0);
+    }
+  }, [loop, playing, currentTime, totalDuration, jumpToTime]);
+  const [hoverTime, setHoverTime] = useState<number | null>(null);
   const barRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
   const progress = totalDuration > 0 ? (currentTime / totalDuration) * 100 : 0;
@@ -143,6 +151,8 @@ export function Timeline() {
       {/* Track row */}
       <div className="h-9 flex items-center relative mx-4" ref={barRef}
         onClick={(e) => jumpToTime(getTime(e.clientX))}
+        onMouseMove={(e) => setHoverTime(getTime(e.clientX))}
+        onMouseLeave={() => setHoverTime(null)}
         onWheel={(e) => { e.preventDefault(); const s = e.shiftKey ? 0.2 : 0.05; jumpToTime(Math.max(0,Math.min(totalDuration,currentTime+(e.deltaY>0?s:-s)))); }}>
         <div className="absolute left-0 right-0 h-1.5 rounded-full bg-slate-800 cursor-pointer" style={{top:4}}/>
         {/* Phase segments */}
@@ -166,6 +176,11 @@ export function Timeline() {
           <div className="w-0.5 h-5 bg-sky-400 rounded-full shadow-sm shadow-sky-500/30"/>
           <div onMouseDown={(e)=>{e.stopPropagation();e.preventDefault();dragging.current=true;const m=(ev:MouseEvent)=>{if(dragging.current)jumpToTime(getTime(ev.clientX));};const u=()=>{dragging.current=false;document.removeEventListener("mousemove",m);document.removeEventListener("mouseup",u);};document.addEventListener("mousemove",m);document.addEventListener("mouseup",u);}} className="w-3.5 h-3.5 bg-sky-400 rounded-full cursor-grab active:cursor-grabbing -ml-[5px] shadow-md shadow-sky-900/50 border border-sky-200"/>
         </div>
+        {hoverTime !== null && (
+          <div className="absolute top-[-20px] -translate-x-1/2 z-20 pointer-events-none" style={{ left: `${(hoverTime/totalDuration)*100}%` }}>
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-sky-400 font-mono">{hoverTime.toFixed(2)}s</span>
+          </div>
+        )}
         {/* Ticks */}
         {ticks.map((tick) => {
           const l = (tick/totalDuration)*100, isMajor = tick%1===0;
@@ -181,3 +196,4 @@ export function Timeline() {
     </div>
   );
 }
+

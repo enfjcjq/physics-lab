@@ -1,20 +1,15 @@
 # Project Status
 
-**Version:** V4.1 (Sprint S64)
-**Status:** Active Development — Content & Stability
+**Version:** V4.2 (Sprint S65)
+**Status:** Active Development — Visual Enhancement
 
 ## Key Metrics
 - **13 experiments** | 869 zh-CN | 869 en-US | Zero TS errors
-- 3 new experiments: Coulomb Law, Refraction, Doppler Effect
-- All scenes now have cameraPresetId for phase-aware camera transitions
-- Formula-driven generic physics engine drives all experiments
+- 3 new experiment-specific 3D visualizations
+- Timeline enhanced with loop replay + hover time tooltip
 
-## New Experiments (S64)
-- ⚡ Coulomb Law: Electrostatic repulsion, inverse-square force
-- 🔍 Refraction: Snell Law, light bending at boundaries
-- 🎵 Doppler Effect: Frequency shift from moving sources
-
-## Visual Features
-- All 13 experiments use the generic formula engine
-- Phase-aware camera presets on all scenes
-- Glow trails, arrow vectors, data labels across all experiments
+## Visual Features (S65)
+- ⚡ Coulomb Field: Radial force lines from fixed charge, moving charge with force arrow
+- 🔍 Refraction Boundary: Medium interface, incident/refracted rays, normal line, photon particle
+- 🎵 Doppler Wavefronts: Expanding compression rings, frequency display, observer marker
+- Timeline: Auto-replay loop, hover time tooltip on track

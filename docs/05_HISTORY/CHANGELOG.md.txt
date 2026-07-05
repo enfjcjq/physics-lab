@@ -1,4 +1,16 @@
-# Changelog
+## V4.2 (S65) — 2026-07-05
+
+### Added
+- Coulomb force field visualization (12 radial field lines from fixed charge)
+- Refraction boundary visualization (medium interface, Snell rays, normal, photon)
+- Doppler wavefront compression rings (expanding + frequency display)
+- Timeline hover time tooltip
+- Timeline auto-replay loop mode
+
+### Changed
+- Extracted specialized visualizations into viz/ subdirectory
+
+---
 
 ## V4.1 (S64) — 2026-06-30
 

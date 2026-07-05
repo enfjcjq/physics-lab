@@ -5,6 +5,9 @@ import * as THREE from "three";
 import { useSimulation } from "../experiment.store";
 import { useVisualization } from "../../../core/visualization.store";
 import { useCompare } from "../../../core/compare.store";
+import CoulombField from "./viz/CoulombField";
+import RefractionBoundary from "./viz/RefractionBoundary";
+import DopplerWavefronts from "./viz/DopplerWavefronts";
 
 // ---- Inner Error Boundary for 3D scene children ----
 interface SceneErrorBoundaryState { hasError: boolean; error: string | null }
@@ -387,7 +390,7 @@ export const Scene3D = memo(function Scene3D() {
         <GhostTrails/><Ball2/>{viz.showDataLabels&&<HeightRuler/>}
         {viz.showVelocityArrow&&<VelocityArrow/>}{viz.showAccelArrow&&<AccelArrow/>}{viz.showGravityArrow&&<ForceArrow/>}
         {viz.showDataLabels&&<HudLabels/>}
-        <WavePoints/><CircuitViz/>
+        <WavePoints/><CircuitViz/><CoulombField/><RefractionBoundary/><DopplerWavefronts/>
         <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>
         <Animator/>
       </SceneErrorBoundary>
@@ -414,3 +417,4 @@ export const Scene3D = memo(function Scene3D() {
     )}
   </div>;
 });
+

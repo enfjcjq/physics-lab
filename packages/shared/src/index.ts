@@ -18,3 +18,8 @@ export { COULOMB_SCENE } from "./constants/coulombs-law-scene";
 export { REFRACTION_SCENE } from "./constants/refraction-scene";
 export { DOPPLER_SCENE } from "./constants/doppler-scene";
 
+
+export { FARADAY_SCENE } from "./constants/faraday-law-scene";
+export { MOTOR_SCENE } from "./constants/electric-motor-scene";
+export { IDEAL_GAS_SCENE } from "./constants/ideal-gas-scene";
+export { LENS_OPTICS_SCENE } from "./constants/lens-optics-scene";

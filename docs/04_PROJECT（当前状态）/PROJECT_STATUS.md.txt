@@ -1,15 +1,14 @@
 # Project Status
 
-**Version:** V4.2 (Sprint S65)
-**Status:** Active Development — Visual Enhancement
+**Version:** V4.3 (Sprint S66)
+**Status:** Active Development — Content Expansion
 
 ## Key Metrics
-- **13 experiments** | 869 zh-CN | 869 en-US | Zero TS errors
-- 3 new experiment-specific 3D visualizations
-- Timeline enhanced with loop replay + hover time tooltip
+- **17 experiments** | 924 zh-CN | 924 en-US | Zero TS errors
+- 4 new experiments: Faraday Law, Electric Motor, Ideal Gas Law, Lens Optics
 
-## Visual Features (S65)
-- ⚡ Coulomb Field: Radial force lines from fixed charge, moving charge with force arrow
-- 🔍 Refraction Boundary: Medium interface, incident/refracted rays, normal line, photon particle
-- 🎵 Doppler Wavefronts: Expanding compression rings, frequency display, observer marker
-- Timeline: Auto-replay loop, hover time tooltip on track
+## New Experiments (S66)
+- 🧲 Faraday Law: Electromagnetic induction, flux change induces EMF
+- ⚙️ Electric Motor: DC motor with torque on current loop
+- 💨 Ideal Gas Law: PV = nRT, piston compression/expansion
+- 🔍 Lens Optics: 1/f = 1/u + 1/v, convex lens image formation

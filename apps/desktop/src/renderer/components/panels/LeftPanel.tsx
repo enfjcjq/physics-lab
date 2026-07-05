@@ -22,6 +22,10 @@ const EXP_ICONS: Record<string, string> = {
 "coulombs_law": "\u26A1",
   "refraction": "\uD83D\uDD0D",
   "doppler_effect": "\uD83C\uDFB5",
+"faraday_law": "\uD83E\uDDF2",
+  "electric_motor": "\u2699\uFE0F",
+  "ideal_gas": "\uD83D\uDCA8",
+  "lens_optics": "\uD83D\uDD0D",
 };
 
 const EXP_META: Record<string, { desc: string; difficulty: string }> = {
@@ -38,6 +42,10 @@ const EXP_META: Record<string, { desc: string; difficulty: string }> = {
 "coulombs_law": { desc: "\u5E93\u4ED1\u5B9A\u5F8B\u4E0E\u9759\u7535\u529B", difficulty: "medium" },
   "refraction": { desc: "\u5149\u7684\u6298\u5C04\u4E0E\u65AF\u6D85\u5C14\u5B9A\u5F8B", difficulty: "medium" },
   "doppler_effect": { desc: "\u591A\u666E\u52D2\u6548\u5E94\u4E0E\u9891\u7387\u53D8\u5316", difficulty: "medium" },
+"faraday_law": { desc: "\u7535\u78C1\u611F\u5E94\u4E0E\u6CD5\u62C9\u7B2C\u5B9A\u5F8B", difficulty: "medium" },
+  "electric_motor": { desc: "\u76F4\u6D41\u7535\u52A8\u673A\u539F\u7406", difficulty: "medium" },
+  "ideal_gas": { desc: "\u7406\u60F3\u6C14\u4F53\u72B6\u6001\u65B9\u7A0B PV=nRT", difficulty: "medium" },
+  "lens_optics": { desc: "\u51F8\u900F\u955C\u6210\u50CF\u4E0E\u900F\u955C\u516C\u5F0F", difficulty: "medium" },
 };
 
 export function LeftPanel() {
@@ -263,3 +271,4 @@ function SliderControl({label,value,min,max,step,unit,onChange}:{label:string;va
       className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-sky-500 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-sky-400"/>
   </div>;
 }
+

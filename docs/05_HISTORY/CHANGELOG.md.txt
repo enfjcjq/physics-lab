@@ -1,35 +1,11 @@
-## V4.2 (S65) — 2026-07-05
+# Changelog
+
+## V4.3 (S66) — 2026-07-05
 
 ### Added
-- Coulomb force field visualization (12 radial field lines from fixed charge)
-- Refraction boundary visualization (medium interface, Snell rays, normal, photon)
-- Doppler wavefront compression rings (expanding + frequency display)
-- Timeline hover time tooltip
-- Timeline auto-replay loop mode
-
-### Changed
-- Extracted specialized visualizations into viz/ subdirectory
+- 4 new experiments: Faraday Law, Electric Motor, Ideal Gas Law, Lens Optics
+- i18n expanded from 869 to 924 keys
+- Total experiments: 17
 
 ---
-
-## V4.1 (S64) — 2026-06-30
-
-### Added
-- 3 new experiments: Coulomb Law, Refraction, Doppler Effect
-- CameraPresetId to all 13 scenes for phase-aware camera transitions
-- Expanded i18n from 824 to 869 keys (zh-CN + en-US)
-
-### Fixed
-- BOM character in en-US.json removed
-- ??? placeholder values fixed in 4 i18n keys
-
-### Changed
-- Project moved from 10 to 13 experiments
-- All scenes now support smooth camera transitions between phases
-
----
-
-## V4.0 (S63)
-- 10 experiments, 824 i18n keys, dynamic parameter controls, specialized visuals (Wave/Circuit)
-- Formula engine drives all experiments, phase loop indicator
 

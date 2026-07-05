@@ -8,6 +8,10 @@ import { useCompare } from "../../../core/compare.store";
 import CoulombField from "./viz/CoulombField";
 import RefractionBoundary from "./viz/RefractionBoundary";
 import DopplerWavefronts from "./viz/DopplerWavefronts";
+import FaradayCoil from "./viz/FaradayCoil";
+import MotorViz from "./viz/MotorViz";
+import GasCylinder from "./viz/GasCylinder";
+import LensViz from "./viz/LensViz";
 
 // ---- Inner Error Boundary for 3D scene children ----
 interface SceneErrorBoundaryState { hasError: boolean; error: string | null }
@@ -390,7 +394,7 @@ export const Scene3D = memo(function Scene3D() {
         <GhostTrails/><Ball2/>{viz.showDataLabels&&<HeightRuler/>}
         {viz.showVelocityArrow&&<VelocityArrow/>}{viz.showAccelArrow&&<AccelArrow/>}{viz.showGravityArrow&&<ForceArrow/>}
         {viz.showDataLabels&&<HudLabels/>}
-        <WavePoints/><CircuitViz/><CoulombField/><RefractionBoundary/><DopplerWavefronts/>
+        <WavePoints/><CircuitViz/><CoulombField/><RefractionBoundary/><DopplerWavefronts/><FaradayCoil/><MotorViz/><GasCylinder/><LensViz/>
         <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>
         <Animator/>
       </SceneErrorBoundary>
@@ -417,4 +421,5 @@ export const Scene3D = memo(function Scene3D() {
     )}
   </div>;
 });
+
 

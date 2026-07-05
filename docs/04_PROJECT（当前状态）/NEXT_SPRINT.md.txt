@@ -1,28 +1,26 @@
-﻿# Next Sprint: S60+
+# Next Sprint: S65+
 
-## Completed (S55-S59)
-- [x] Zero TypeScript errors
-- [x] i18n synced (799 keys zh-CN + en-US)
-- [x] Experiment switcher in toolbar
-- [x] Formula display fixed (Unicode)
-- [x] TeachingOverlay on 3D scene
-- [x] Visualization toggles in View menu
-- [x] TeacherPanel step prev/next navigation
-- [x] Mode buttons with icons
-- [x] Slider-Engine real-time sync
+## Completed (S64)
+- [x] 3 new experiments (Coulomb Law, Refraction, Doppler Effect)
+- [x] CameraPresetId added to all 13 scenes for phase-aware camera
+- [x] i18n synced at 869 keys (zh-CN + en-US)
+- [x] ??? values fixed in both language files
 
 ## Priority 1: Interactivity (P1)
-- Interactive quiz feedback improvements
-- Enhanced trail/arrow rendering (glow effects)
-- Experiment comparison side-by-side view
-- Phase loop visualization (highlight current phase)
+- Experiment-specific 3D visualizations for Coulomb/Refraction/Doppler
+- Coulomb: 3D charge spheres with force field lines
+- Refraction: Refracted ray visualization at boundary
+- Doppler: Wavefront compression rings
+- Enhanced timeline playhead dragging
 
 ## Priority 2: Content (P2)
-- Add more experiments via JSON (Ohm's law, Coulomb's law)
-- Electromagnetic experiments
-- Wave/optics visualization
+- Electromagnetic induction (Faraday Law)
+- Simple electric motor visualization
+- Ideal gas law (PV = nRT)
+- Lens optics (convex/concave)
 
 ## Priority 3: Platform (P3)
 - User accounts (local first)
 - OCR input for problem images
 - Plugin marketplace
+- Export/Share experiments

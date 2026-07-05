@@ -33,9 +33,9 @@ export const WAVE_SCENE: PhysicsScene & { simulation?: any } = {
     fps: 60,
     events: [],
     phases: [
-      { id: "wave_start", label: "Wave Start", icon: "\u25B6", timeRange: [0, 0.5] },
-      { id: "propagating", label: "Propagating", icon: "\u223C\uFE0F", timeRange: [0.5, 7] },
-      { id: "full_period", label: "Full Period", icon: "\u2705", timeRange: [7, 8] },
+      { id: "wave_start", label: "Wave Start", icon: "\u25B6", timeRange: [0, 0.5], cameraPresetId: "overview" },
+      { id: "propagating", label: "Propagating", icon: "\u223C\uFE0F", timeRange: [0.5, 7], cameraPresetId: "overview" },
+      { id: "full_period", label: "Full Period", icon: "\u2705", timeRange: [7, 8], cameraPresetId: "overview" },
     ],
   },
   camera_script: [

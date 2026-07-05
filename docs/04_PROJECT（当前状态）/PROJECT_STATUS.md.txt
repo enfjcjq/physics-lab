@@ -1,17 +1,20 @@
-﻿# Project Status
+# Project Status
 
-**Version:** V4.0 (Sprint S63)
-**Status:** Active Development — Visual Enhancement
+**Version:** V4.1 (Sprint S64)
+**Status:** Active Development — Content & Stability
 
 ## Key Metrics
-- **10 experiments** | 824 zh-CN | 824 en-US | Zero TS errors
-- Dynamic parameter controls per experiment
-- Specialized visuals: Wave multi-point rendering, Circuit symbols
-- Glow trails & arrows, phase loop indicator
-- TeacherPanel step nav, TeachingOverlay
-- Formula Engine drives all 10 experiments
+- **13 experiments** | 869 zh-CN | 869 en-US | Zero TS errors
+- 3 new experiments: Coulomb Law, Refraction, Doppler Effect
+- All scenes now have cameraPresetId for phase-aware camera transitions
+- Formula-driven generic physics engine drives all experiments
+
+## New Experiments (S64)
+- ⚡ Coulomb Law: Electrostatic repulsion, inverse-square force
+- 🔍 Refraction: Snell Law, light bending at boundaries
+- 🎵 Doppler Effect: Frequency shift from moving sources
 
 ## Visual Features
-- ⚡ Ohm's Law: Battery + resistor + wire circuit with live I=V/R display
-- ∼ Wave: 20 particles forming wave pattern, colored gradient
-- 🔴 All experiments: glow trails, arrow vectors, data labels
+- All 13 experiments use the generic formula engine
+- Phase-aware camera presets on all scenes
+- Glow trails, arrow vectors, data labels across all experiments

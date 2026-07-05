@@ -1,4 +1,4 @@
-import type { PhysicsScene } from "../types/physics-scene";
+﻿import type { PhysicsScene } from "../types/physics-scene";
 
 export const CIRCULAR_MOTION_SCENE: PhysicsScene & { simulation?: any } = {
   "$schema": "https://physics-lab.app/schemas/physics-scene/2.0.json",
@@ -33,9 +33,9 @@ export const CIRCULAR_MOTION_SCENE: PhysicsScene & { simulation?: any } = {
     fps: 60,
     events: [],
     phases: [
-      { id: "start", label: "Start", icon: "?", timeRange: [0, 0.5] },
-      { id: "orbiting", label: "Uniform Circular Motion", icon: "??", timeRange: [0.5, 5.8] },
-      { id: "complete", label: "Full Circle", icon: "?", timeRange: [5.8, 6.28] },
+      { id: "start", label: "Start", icon: "?", timeRange: [0, 0.5], cameraPresetId: "overview" },
+      { id: "orbiting", label: "Uniform Circular Motion", icon: "??", timeRange: [0.5, 5.8], cameraPresetId: "overview" },
+      { id: "complete", label: "Full Circle", icon: "?", timeRange: [5.8, 6.28], cameraPresetId: "overview" },
     ],
   },
   camera_script: [
@@ -78,3 +78,4 @@ export const CIRCULAR_MOTION_SCENE: PhysicsScene & { simulation?: any } = {
     stopWhen: [],
   },
 };
+

@@ -19,6 +19,9 @@ const EXP_ICONS: Record<string, string> = {
   "circular-motion": "\uD83D\uDD04",
   "ohms_law": "\u26A1",
   "transverse_wave": "\u223C\uFE0F",
+"coulombs_law": "\u26A1",
+  "refraction": "\uD83D\uDD0D",
+  "doppler_effect": "\uD83C\uDFB5",
 };
 
 const EXP_META: Record<string, { desc: string; difficulty: string }> = {
@@ -32,6 +35,9 @@ const EXP_META: Record<string, { desc: string; difficulty: string }> = {
   "circular-motion": { desc: "\u5300\u901F\u5706\u5468\u8FD0\u52A8\u4E0E\u5411\u5FC3\u529B", difficulty: "medium" },
   "ohms_law": { desc: "\u7535\u538B\u3001\u7535\u6D41\u4E0E\u7535\u963B\u7684\u5173\u7CFB", difficulty: "easy" },
   "transverse_wave": { desc: "\u6CE2\u7684\u4F20\u64AD\u4E0E\u632F\u52A8\u7279\u6027", difficulty: "medium" },
+"coulombs_law": { desc: "\u5E93\u4ED1\u5B9A\u5F8B\u4E0E\u9759\u7535\u529B", difficulty: "medium" },
+  "refraction": { desc: "\u5149\u7684\u6298\u5C04\u4E0E\u65AF\u6D85\u5C14\u5B9A\u5F8B", difficulty: "medium" },
+  "doppler_effect": { desc: "\u591A\u666E\u52D2\u6548\u5E94\u4E0E\u9891\u7387\u53D8\u5316", difficulty: "medium" },
 };
 
 export function LeftPanel() {

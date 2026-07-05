@@ -80,9 +80,9 @@ export const FREE_FALL_SCENE: PhysicsScene & { simulation?: any } = {
       { id: "impact", time: 1.43, type: "collision", target: "ball_1", data: { collision_with: "ground", impact_velocity: 14.0 }, description: "Impact with ground" },
     ],
     phases: [
-      { id: "release", label: "phase.release", icon: "o", timeRange: [0, 0.1], color: "#22c55e", description: "Initial state: ball at rest" },
-      { id: "falling", label: "phase.falling", icon: "v", timeRange: [0.05, 1.35], color: "#3b82f6", description: "Uniformly accelerated motion under gravity" },
-      { id: "impact",  label: "phase.impact",  icon: "O", timeRange: [1.3, 1.6], color: "#f59e0b", description: "Ball reaches ground, experiment ends" },
+      { id: "release", label: "phase.release", icon: "o", timeRange: [0, 0.1], cameraPresetId: "overview", color: "#22c55e", description: "Initial state: ball at rest" },
+      { id: "falling", label: "phase.falling", icon: "v", timeRange: [0.05, 1.35], cameraPresetId: "overview", color: "#3b82f6", description: "Uniformly accelerated motion under gravity" },
+      { id: "impact",  label: "phase.impact",  icon: "O", timeRange: [1.3, 1.6], cameraPresetId: "closeup", color: "#f59e0b", description: "Ball reaches ground, experiment ends" },
     ],
   },
   camera_script: [

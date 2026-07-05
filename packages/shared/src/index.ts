@@ -13,3 +13,8 @@ export { CIRCULAR_MOTION_SCENE } from "./constants/circular-motion-scene";
 export { BUOYANCY_SCENE } from "./constants/buoyancy-scene";
 export { OHMS_LAW_SCENE } from "./constants/ohms-law-scene";
 export { WAVE_SCENE } from "./constants/wave-scene";
+
+export { COULOMB_SCENE } from "./constants/coulombs-law-scene";
+export { REFRACTION_SCENE } from "./constants/refraction-scene";
+export { DOPPLER_SCENE } from "./constants/doppler-scene";
+

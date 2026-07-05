@@ -1,23 +1,23 @@
-﻿# CHANGELOG
+# Changelog
 
-## V3.5 (S58) — Teaching UX Enhancement
+## V4.1 (S64) — 2026-06-30
 
 ### Added
-- TeachingOverlay: step-by-step teaching overlay on 3D experiment view
-- Visualization toggle checkboxes in View menu dropdown
-- 10 new visualization i18n keys (trail, velocity/accel/gravity arrows, axes, grid, etc.)
+- 3 new experiments: Coulomb Law, Refraction, Doppler Effect
+- CameraPresetId to all 13 scenes for phase-aware camera transitions
+- Expanded i18n from 824 to 869 keys (zh-CN + en-US)
 
 ### Fixed
-- Circular-motion & buoyancy plugins now import shared constants with simulation blocks
-- buildFrameCache correctly handles circular-motion & buoyancy params
-- Simulation engine params now sync with slider changes in real-time
+- BOM character in en-US.json removed
+- ??? placeholder values fixed in 4 i18n keys
 
-## V3.4 (S56) — UX Polish & Formula Display Fix
-- Fixed ? characters in en-US formulas → proper Unicode
-- Experiment switcher dropdown in toolbar
-- Difficulty labels use i18n keys
+### Changed
+- Project moved from 10 to 13 experiments
+- All scenes now support smooth camera transitions between phases
 
-## V3.3 (S55) — Bug Fix & Stabilization
-- Fixed experiment.store.ts crash (scene destructuring)
-- Zero TS errors across entire monorepo
-- i18n: 782 keys both zh-CN and en-US
+---
+
+## V4.0 (S63)
+- 10 experiments, 824 i18n keys, dynamic parameter controls, specialized visuals (Wave/Circuit)
+- Formula engine drives all experiments, phase loop indicator
+

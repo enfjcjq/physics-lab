@@ -1,4 +1,4 @@
-import type { PhysicsScene } from "../types/physics-scene";
+﻿import type { PhysicsScene } from "../types/physics-scene";
 
 export const BUOYANCY_SCENE: PhysicsScene & { simulation?: any } = {
   "$schema": "https://physics-lab.app/schemas/physics-scene/2.0.json",
@@ -34,9 +34,9 @@ export const BUOYANCY_SCENE: PhysicsScene & { simulation?: any } = {
     fps: 60,
     events: [],
     phases: [
-      { id: "release", label: "Release", icon: "?", timeRange: [0, 0.3] },
-      { id: "moving", label: "Buoyancy Motion", icon: "????", timeRange: [0.3, 7] },
-      { id: "equilibrium", label: "Equilibrium", icon: "??", timeRange: [7, 8] },
+      { id: "release", label: "Release", icon: "?", timeRange: [0, 0.3], cameraPresetId: "overview" },
+      { id: "moving", label: "Buoyancy Motion", icon: "????", timeRange: [0.3, 7], cameraPresetId: "overview" },
+      { id: "equilibrium", label: "Equilibrium", icon: "??", timeRange: [7, 8], cameraPresetId: "overview" },
     ],
   },
   camera_script: [
@@ -79,3 +79,4 @@ export const BUOYANCY_SCENE: PhysicsScene & { simulation?: any } = {
     stopWhen: [],
   },
 };
+

@@ -34,9 +34,9 @@ export const OHMS_LAW_SCENE: PhysicsScene & { simulation?: any } = {
     fps: 60,
     events: [],
     phases: [
-      { id: "circuit_on", label: "Circuit On", icon: "\u26A1", timeRange: [0, 1] },
-      { id: "steady_current", label: "Steady Current", icon: "\uD83D\uDD0C", timeRange: [1, 5.5] },
-      { id: "complete", label: "Complete", icon: "\u2705", timeRange: [5.5, 6] },
+      { id: "circuit_on", label: "Circuit On", icon: "\u26A1", timeRange: [0, 1], cameraPresetId: "overview" },
+      { id: "steady_current", label: "Steady Current", icon: "\uD83D\uDD0C", timeRange: [1, 5.5], cameraPresetId: "overview" },
+      { id: "complete", label: "Complete", icon: "\u2705", timeRange: [5.5, 6], cameraPresetId: "overview" },
     ],
   },
   camera_script: [

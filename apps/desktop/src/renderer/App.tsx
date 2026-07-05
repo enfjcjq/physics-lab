@@ -5,7 +5,7 @@ import { useSimulation } from "./features/experiment/experiment.store";
 import { pluginRegistry } from "./core/plugin-registry";
 import { freeFallPlugin } from "./plugins";
 import type { PhysicsScene } from "@physics-lab/shared";
-import { FREE_FALL_SCENE, OHMS_LAW_SCENE, WAVE_SCENE, createVirtualPlugin } from "@physics-lab/shared";
+import { FREE_FALL_SCENE, OHMS_LAW_SCENE, WAVE_SCENE, COULOMB_SCENE, REFRACTION_SCENE, DOPPLER_SCENE, createVirtualPlugin } from "@physics-lab/shared";
 
 // Eagerly register only free-fall. Other plugins load lazily on switch.
 // Register all plugins so the experiment switcher shows all 6
@@ -23,6 +23,9 @@ import("./plugins/circular-motion/circular-motion.plugin").then(m => pluginRegis
 // Virtual plugins (formula-driven, no separate plugin file needed)
 pluginRegistry.register(createVirtualPlugin(OHMS_LAW_SCENE as any));
 pluginRegistry.register(createVirtualPlugin(WAVE_SCENE as any));
+pluginRegistry.register(createVirtualPlugin(COULOMB_SCENE as any));
+pluginRegistry.register(createVirtualPlugin(REFRACTION_SCENE as any));
+pluginRegistry.register(createVirtualPlugin(DOPPLER_SCENE as any));
 
 export function App() {
   const setScene = useSimulation((s) => s.setScene);

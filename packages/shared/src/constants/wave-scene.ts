@@ -59,7 +59,7 @@ export const WAVE_SCENE: PhysicsScene & { simulation?: any } = {
     { id: "s4", order: 4, titleKey: "teacher.wave.step4", descKey: "teacher.wave.step4_desc", timeStart: 5 },
   ],
   simulation: {
-    params: { A: 1.5, k: 1.5, omega: 2, y0: 2 },
+    params: { A: 1.5, k: 1.5, omega: 2, y0: 2, v: 340, f: 680 },
     equations: {
       x: "t * 1.5",
       y: "y0 + A * sin(k * x - omega * t)",
@@ -81,3 +81,4 @@ export const WAVE_SCENE: PhysicsScene & { simulation?: any } = {
     stopWhen: [],
   },
 };
+

@@ -1,0 +1,1070 @@
+﻿{
+  "generatedAt": "2026-08-03T11:53:35.737Z",
+  "durationMs": 57,
+  "ruleParser": {
+    "total": 50,
+    "typeHitRate": 1,
+    "typeHits": 50,
+    "paramMatchRate": 1,
+    "paramKeys": 84,
+    "paramMatches": 84,
+    "paramMissing": 0,
+    "byCategory": {
+      "mechanics": {
+        "total": 20,
+        "hits": 20,
+        "paramKeys": 40,
+        "paramMatches": 40,
+        "hitRate": 1,
+        "paramMatchRate": 1
+      },
+      "electromagnetism": {
+        "total": 10,
+        "hits": 10,
+        "paramKeys": 10,
+        "paramMatches": 10,
+        "hitRate": 1,
+        "paramMatchRate": 1
+      },
+      "thermodynamics": {
+        "total": 5,
+        "hits": 5,
+        "paramKeys": 9,
+        "paramMatches": 9,
+        "hitRate": 1,
+        "paramMatchRate": 1
+      },
+      "optics": {
+        "total": 5,
+        "hits": 5,
+        "paramKeys": 7,
+        "paramMatches": 7,
+        "hitRate": 1,
+        "paramMatchRate": 1
+      },
+      "waves": {
+        "total": 5,
+        "hits": 5,
+        "paramKeys": 9,
+        "paramMatches": 9,
+        "hitRate": 1,
+        "paramMatchRate": 1
+      },
+      "mixed": {
+        "total": 5,
+        "hits": 5,
+        "paramKeys": 9,
+        "paramMatches": 9,
+        "hitRate": 1,
+        "paramMatchRate": 1
+      }
+    }
+  },
+  "ollama": {
+    "available": false
+  },
+  "cases": [
+    {
+      "id": "m01",
+      "category": "mechanics",
+      "lang": "zh",
+      "expectedType": "free_fall",
+      "detectedType": "free_fall",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "height",
+          "expected": 20,
+          "found": 20,
+          "match": true
+        },
+        {
+          "key": "gravity",
+          "expected": 10,
+          "found": 10,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m02",
+      "category": "mechanics",
+      "lang": "en",
+      "expectedType": "free_fall",
+      "detectedType": "free_fall",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "height",
+          "expected": 25,
+          "found": 25,
+          "match": true
+        },
+        {
+          "key": "gravity",
+          "expected": 9.8,
+          "found": 9.8,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m03",
+      "category": "mechanics",
+      "lang": "zh",
+      "expectedType": "free_fall",
+      "detectedType": "free_fall",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "mass",
+          "expected": 2,
+          "found": 2,
+          "match": true
+        },
+        {
+          "key": "height",
+          "expected": 15,
+          "found": 15,
+          "match": true
+        },
+        {
+          "key": "gravity",
+          "expected": 9.8,
+          "found": 9.8,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m04",
+      "category": "mechanics",
+      "lang": "en",
+      "expectedType": "free_fall",
+      "detectedType": "free_fall",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "height",
+          "expected": 5,
+          "found": 5,
+          "match": true
+        },
+        {
+          "key": "gravity",
+          "expected": 9.8,
+          "found": 9.8,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m05",
+      "category": "mechanics",
+      "lang": "zh",
+      "expectedType": "projectile_motion",
+      "detectedType": "projectile_motion",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "velocity",
+          "expected": 20,
+          "found": 20,
+          "match": true
+        },
+        {
+          "key": "gravity",
+          "expected": 10,
+          "found": 10,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m06",
+      "category": "mechanics",
+      "lang": "en",
+      "expectedType": "projectile_motion",
+      "detectedType": "projectile_motion",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "velocity",
+          "expected": 30,
+          "found": 30,
+          "match": true
+        },
+        {
+          "key": "angle",
+          "expected": 45,
+          "found": 45,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m07",
+      "category": "mechanics",
+      "lang": "zh",
+      "expectedType": "projectile_motion",
+      "detectedType": "projectile_motion",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "velocity",
+          "expected": 50,
+          "found": 50.00000000000001,
+          "match": true
+        },
+        {
+          "key": "angle",
+          "expected": 37,
+          "found": 37,
+          "match": true
+        },
+        {
+          "key": "gravity",
+          "expected": 9.8,
+          "found": 9.8,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m08",
+      "category": "mechanics",
+      "lang": "zh",
+      "expectedType": "inclined_plane",
+      "detectedType": "inclined_plane",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "mass",
+          "expected": 3,
+          "found": 3,
+          "match": true
+        },
+        {
+          "key": "angle",
+          "expected": 30,
+          "found": 30,
+          "match": true
+        },
+        {
+          "key": "friction",
+          "expected": 0.2,
+          "found": 0.2,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m09",
+      "category": "mechanics",
+      "lang": "en",
+      "expectedType": "inclined_plane",
+      "detectedType": "inclined_plane",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "angle",
+          "expected": 30,
+          "found": 30,
+          "match": true
+        },
+        {
+          "key": "friction",
+          "expected": 0.3,
+          "found": 0.3,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m10",
+      "category": "mechanics",
+      "lang": "zh",
+      "expectedType": "collision",
+      "detectedType": "collision",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "mass",
+          "expected": 1,
+          "found": 1,
+          "match": true
+        },
+        {
+          "key": "velocity",
+          "expected": 4,
+          "found": 4,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m11",
+      "category": "mechanics",
+      "lang": "en",
+      "expectedType": "collision",
+      "detectedType": "collision",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "mass",
+          "expected": 2,
+          "found": 2,
+          "match": true
+        },
+        {
+          "key": "velocity",
+          "expected": 5,
+          "found": 5,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m12",
+      "category": "mechanics",
+      "lang": "zh",
+      "expectedType": "simple_harmonic_motion",
+      "detectedType": "simple_harmonic_motion",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "mass",
+          "expected": 2,
+          "found": 2,
+          "match": true
+        },
+        {
+          "key": "k",
+          "expected": 50,
+          "found": 50,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m13",
+      "category": "mechanics",
+      "lang": "en",
+      "expectedType": "simple_harmonic_motion",
+      "detectedType": "simple_harmonic_motion",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "mass",
+          "expected": 0.5,
+          "found": 0.5,
+          "match": true
+        },
+        {
+          "key": "k",
+          "expected": 100,
+          "found": 100,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m14",
+      "category": "mechanics",
+      "lang": "zh",
+      "expectedType": "pendulum",
+      "detectedType": "pendulum",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "length",
+          "expected": 1,
+          "found": 1,
+          "match": true
+        },
+        {
+          "key": "gravity",
+          "expected": 9.8,
+          "found": 9.8,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m15",
+      "category": "mechanics",
+      "lang": "en",
+      "expectedType": "pendulum",
+      "detectedType": "pendulum",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "length",
+          "expected": 1.5,
+          "found": 1.5,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m16",
+      "category": "mechanics",
+      "lang": "zh",
+      "expectedType": "circular_motion",
+      "detectedType": "circular_motion",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "mass",
+          "expected": 1,
+          "found": 1,
+          "match": true
+        },
+        {
+          "key": "velocity",
+          "expected": 2,
+          "found": 2,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m17",
+      "category": "mechanics",
+      "lang": "en",
+      "expectedType": "circular_motion",
+      "detectedType": "circular_motion",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "mass",
+          "expected": 0.2,
+          "found": 0.2,
+          "match": true
+        },
+        {
+          "key": "velocity",
+          "expected": 4,
+          "found": 4,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m18",
+      "category": "mechanics",
+      "lang": "zh",
+      "expectedType": "buoyancy",
+      "detectedType": "buoyancy",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "mass",
+          "expected": 3,
+          "found": 3,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m19",
+      "category": "mechanics",
+      "lang": "en",
+      "expectedType": "buoyancy",
+      "detectedType": "buoyancy",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "mass",
+          "expected": 2,
+          "found": 2,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "m20",
+      "category": "mechanics",
+      "lang": "zh",
+      "expectedType": "free_fall",
+      "detectedType": "free_fall",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "height",
+          "expected": 10,
+          "found": 10,
+          "match": true
+        },
+        {
+          "key": "gravity",
+          "expected": 9.8,
+          "found": 9.8,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "e01",
+      "category": "electromagnetism",
+      "lang": "zh",
+      "expectedType": "ohms_law",
+      "detectedType": "ohms_law",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "resistance",
+          "expected": 6,
+          "found": 6,
+          "match": true
+        },
+        {
+          "key": "voltage",
+          "expected": 12,
+          "found": 12,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "e02",
+      "category": "electromagnetism",
+      "lang": "en",
+      "expectedType": "ohms_law",
+      "detectedType": "ohms_law",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "resistance",
+          "expected": 10,
+          "found": 10,
+          "match": true
+        },
+        {
+          "key": "voltage",
+          "expected": 5,
+          "found": 5,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "e03",
+      "category": "electromagnetism",
+      "lang": "zh",
+      "expectedType": "coulombs_law",
+      "detectedType": "coulombs_law",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "charge",
+          "expected": 2,
+          "found": 2,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "e04",
+      "category": "electromagnetism",
+      "lang": "en",
+      "expectedType": "coulombs_law",
+      "detectedType": "coulombs_law",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "charge",
+          "expected": 3,
+          "found": 3,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "e05",
+      "category": "electromagnetism",
+      "lang": "zh",
+      "expectedType": "faraday_law",
+      "detectedType": "faraday_law",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "turns",
+          "expected": 100,
+          "found": 100,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "e06",
+      "category": "electromagnetism",
+      "lang": "en",
+      "expectedType": "faraday_law",
+      "detectedType": "faraday_law",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "turns",
+          "expected": 200,
+          "found": 200,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "e07",
+      "category": "electromagnetism",
+      "lang": "zh",
+      "expectedType": "electric_motor",
+      "detectedType": "electric_motor",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "current",
+          "expected": 2,
+          "found": 2,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "e08",
+      "category": "electromagnetism",
+      "lang": "en",
+      "expectedType": "electric_motor",
+      "detectedType": "electric_motor",
+      "typeHit": true,
+      "params": []
+    },
+    {
+      "id": "e09",
+      "category": "electromagnetism",
+      "lang": "zh",
+      "expectedType": "ac_generator",
+      "detectedType": "ac_generator",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "turns",
+          "expected": 10,
+          "found": 10,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "e10",
+      "category": "electromagnetism",
+      "lang": "en",
+      "expectedType": "ac_generator",
+      "detectedType": "ac_generator",
+      "typeHit": true,
+      "params": []
+    },
+    {
+      "id": "t01",
+      "category": "thermodynamics",
+      "lang": "zh",
+      "expectedType": "ideal_gas",
+      "detectedType": "ideal_gas",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "temperature",
+          "expected": 300,
+          "found": 300,
+          "match": true
+        },
+        {
+          "key": "pressure",
+          "expected": 150000,
+          "found": 150000,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "t02",
+      "category": "thermodynamics",
+      "lang": "en",
+      "expectedType": "ideal_gas",
+      "detectedType": "ideal_gas",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "temperature",
+          "expected": 300,
+          "found": 300,
+          "match": true
+        },
+        {
+          "key": "pressure",
+          "expected": 2,
+          "found": 2,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "t03",
+      "category": "thermodynamics",
+      "lang": "zh",
+      "expectedType": "ideal_gas",
+      "detectedType": "ideal_gas",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "temperature",
+          "expected": 350,
+          "found": 350,
+          "match": true
+        },
+        {
+          "key": "pressure",
+          "expected": 100000,
+          "found": 100000,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "t04",
+      "category": "thermodynamics",
+      "lang": "en",
+      "expectedType": "ideal_gas",
+      "detectedType": "ideal_gas",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "temperature",
+          "expected": 400,
+          "found": 400,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "t05",
+      "category": "thermodynamics",
+      "lang": "zh",
+      "expectedType": "ideal_gas",
+      "detectedType": "ideal_gas",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "pressure",
+          "expected": 100000,
+          "found": 100000,
+          "match": true
+        },
+        {
+          "key": "temperature",
+          "expected": 300,
+          "found": 300,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "o01",
+      "category": "optics",
+      "lang": "zh",
+      "expectedType": "refraction",
+      "detectedType": "refraction",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "angle",
+          "expected": 45,
+          "found": 45,
+          "match": true
+        },
+        {
+          "key": "refractive_index",
+          "expected": 1.5,
+          "found": 1.5,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "o02",
+      "category": "optics",
+      "lang": "en",
+      "expectedType": "refraction",
+      "detectedType": "refraction",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "angle",
+          "expected": 45,
+          "found": 45,
+          "match": true
+        },
+        {
+          "key": "refractive_index",
+          "expected": 1.5,
+          "found": 1.5,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "o03",
+      "category": "optics",
+      "lang": "zh",
+      "expectedType": "lens_optics",
+      "detectedType": "lens_optics",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "focal_length",
+          "expected": 10,
+          "found": 10,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "o04",
+      "category": "optics",
+      "lang": "en",
+      "expectedType": "lens_optics",
+      "detectedType": "lens_optics",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "focal_length",
+          "expected": 15,
+          "found": 15,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "o05",
+      "category": "optics",
+      "lang": "zh",
+      "expectedType": "lens_optics",
+      "detectedType": "lens_optics",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "focal_length",
+          "expected": 12,
+          "found": 12,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "w01",
+      "category": "waves",
+      "lang": "zh",
+      "expectedType": "transverse_wave",
+      "detectedType": "transverse_wave",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "wave_speed",
+          "expected": 340,
+          "found": 340,
+          "match": true
+        },
+        {
+          "key": "frequency",
+          "expected": 680,
+          "found": 680,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "w02",
+      "category": "waves",
+      "lang": "en",
+      "expectedType": "transverse_wave",
+      "detectedType": "transverse_wave",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "wave_speed",
+          "expected": 340,
+          "found": 340,
+          "match": true
+        },
+        {
+          "key": "frequency",
+          "expected": 680,
+          "found": 680,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "w03",
+      "category": "waves",
+      "lang": "zh",
+      "expectedType": "doppler_effect",
+      "detectedType": "doppler_effect",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "velocity",
+          "expected": 30,
+          "found": 30,
+          "match": true
+        },
+        {
+          "key": "frequency",
+          "expected": 500,
+          "found": 500,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "w04",
+      "category": "waves",
+      "lang": "en",
+      "expectedType": "doppler_effect",
+      "detectedType": "doppler_effect",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "velocity",
+          "expected": 30,
+          "found": 30,
+          "match": true
+        },
+        {
+          "key": "frequency",
+          "expected": 500,
+          "found": 500,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "w05",
+      "category": "waves",
+      "lang": "zh",
+      "expectedType": "transverse_wave",
+      "detectedType": "transverse_wave",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "wave_speed",
+          "expected": 10,
+          "found": 10,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "x01",
+      "category": "mixed",
+      "lang": "zh",
+      "expectedType": "free_fall",
+      "detectedType": "free_fall",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "height",
+          "expected": 5,
+          "found": 5,
+          "match": true
+        },
+        {
+          "key": "gravity",
+          "expected": 9.8,
+          "found": 9.8,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "x02",
+      "category": "mixed",
+      "lang": "zh",
+      "expectedType": "projectile_motion",
+      "detectedType": "projectile_motion",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "velocity",
+          "expected": 8,
+          "found": 8,
+          "match": true
+        },
+        {
+          "key": "angle",
+          "expected": 45,
+          "found": 45,
+          "match": true
+        },
+        {
+          "key": "gravity",
+          "expected": 10,
+          "found": 10,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "x03",
+      "category": "mixed",
+      "lang": "en",
+      "expectedType": "pendulum",
+      "detectedType": "pendulum",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "length",
+          "expected": 1,
+          "found": 1,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "x04",
+      "category": "mixed",
+      "lang": "zh",
+      "expectedType": "simple_harmonic_motion",
+      "detectedType": "simple_harmonic_motion",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "mass",
+          "expected": 0.2,
+          "found": 0.2,
+          "match": true
+        },
+        {
+          "key": "k",
+          "expected": 40,
+          "found": 40,
+          "match": true
+        }
+      ]
+    },
+    {
+      "id": "x05",
+      "category": "mixed",
+      "lang": "en",
+      "expectedType": "coulombs_law",
+      "detectedType": "coulombs_law",
+      "typeHit": true,
+      "params": [
+        {
+          "key": "charge",
+          "expected": 3,
+          "found": 3,
+          "match": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,14 +1,14 @@
 ﻿# Physics Lab TODO
 
-> Current version: V4.4 (S67)
+> Current version: V4.7 (S70)
 
 ---
 
-# Completed (S16-S66)
+# Completed (S16-S70)
 
-- [x] 17 experiments (free-fall, projectile, incline, collision, spring, pendulum,
+- [x] 18 experiments (free-fall, projectile, incline, collision, spring, pendulum,
       circular-motion, buoyancy, wave, doppler, coulombs-law, ohms-law,
-      faraday-law, electric-motor, ideal-gas, lens-optics, refraction)
+      faraday-law, electric-motor, ac-generator, ideal-gas, lens-optics, refraction)
 - [x] 3-mode system (Learning / Experiment / Analysis)
 - [x] PhysicsScene-driven architecture
 - [x] AI Parser: Rule-based + OllamaProvider
@@ -25,10 +25,23 @@
 
 # S67: New Experiment Visualization (P1) — DONE
 
-- [x] Faraday: coil + flux lines + EMF meter (bar magnet, coupling-driven flux lines, needle gauge)
-- [x] Motor: rotating coil + commutator animation (split ring + brushes + stator magnets)
-- [x] Gas: cylinder + piston + P-V diagram (molecules + isotherm trace)
-- [x] Lens: ray diagram + image formation (3 principal rays, real/virtual/infinity handling)
+- [x] Faraday: coil + flux lines + EMF meter
+- [x] Motor: rotating coil + commutator animation
+- [x] Gas: cylinder + piston + P-V diagram
+- [x] Lens: ray diagram + image formation
+
+# S68: OCR 题目输入 (P1) — DONE
+
+- [x] OCR problem input (tesseract.js, Otsu preprocessing, editable fallback)
+
+# S70: AI 解析质量可度量 (P1 · T310) — DONE
+
+- [x] 50-case e2e test set (zh+en, 6 categories, 18 scene types)
+- [x] Rule parser v3.0: 8 → 18 types + domain params (voltage/resistance/current/charge/
+      turns/frequency/temperature/pressure/focal_length/refractive_index/wave_speed)
+- [x] Parser params now written into simulation.params (data-driven loop)
+- [x] Coverage: type hit 24% → 100%, param match 35.7% → 100%
+- [x] Quality gate test (rule-parser.test.ts, ≥90% thresholds)
 
 ---
 
@@ -56,13 +69,15 @@
 
 # AI & Parser
 
-- [x] Rule-based parser (6 experiment types, zh + en)
+- [x] Rule-based parser (18 experiment types, zh + en)
 - [x] AIProvider interface abstraction
 - [x] OllamaProvider with local LLM
 - [x] Auto-detect Ollama on startup
-- [ ] End-to-end Ollama physics parsing test
-- [ ] OCR problem input
+- [x] AI parse e2e test set + coverage report (T310)
+- [ ] Ollama end-to-end comparison run
+- [x] OCR problem input
 - [ ] PDF/image parsing
+- [ ] Teaching animation generator (PhysicsScene → staged teaching script) — S71 候选
 
 ---
 
@@ -71,8 +86,6 @@
 - [ ] User accounts & cloud sync
 - [ ] School licensing
 - [ ] Plugin marketplace
-- [ ] Electromagnetism experiments
-- [ ] Wave/Optics experiments
-- [ ] Thermodynamics experiments
+- [ ] Wave/Optics/EM follow-ups
 - [ ] Mobile/tablet support
 - [ ] Auto-update system

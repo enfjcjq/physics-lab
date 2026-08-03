@@ -1,20 +1,26 @@
-# Project Status
+﻿# Project Status
 
-**Version:** V4.6 (Sprint S69)
-**Status:** Active Development — Platform Features
+**Version:** V4.7 (Sprint S70)
+**Status:** Active Development — P1 Core Pipeline (AI Parse → PhysicsScene)
 
 ## Key Metrics
-- **18 experiments** | Zero TS errors | 87 tests passed (14 files) | 0 test noise
+- **18 experiments** | Zero TS errors | 112 tests passed (15 files) | AI parse coverage 100%/100%
+
+## S70: AI Parse Quality Measurement + Rule Parser Expansion (Completed)
+- 🎯 50-case e2e test set (T310): mechanics 20 / EM 10 / thermo 5 / optics 5 / waves 5 / mixed 5
+- 🔧 Rule parser v3.0: 8 → 18 scene types, new domain param extraction (zh+en)
+- 📈 Type hit 24% → 100% | Param match 35.7% → 100% | Quality gate test added
+- 🧹 Repo stabilized: S68/S69 completed work committed (was uncommitted since S67)
 
 ## S69: Learning Data + Recommendations (Completed)
 - 📚 Real problem history (mock removed, persisted, correct inputMethod)
-- 🧠 Rule-based recommendation engine (6 rules incl. student-requested compare-pair)
-- 🧹 Unified storage helper; 6 stores refactored (DRY); teardown noise eliminated
+- 🧠 Rule-based recommendation engine (6 rules incl. compare-pair)
+- 🧹 Unified storage helper; 6 stores refactored (DRY)
 
 ## S68: Exploration Sprint (Completed)
 - 🔌 AC Generator experiment (EM trilogy complete)
 - 📷 OCR problem input (tesseract.js, Otsu preprocessing, editable fallback)
 
-## Next (S70)
-- Options: local user accounts / T2 comparison view / Ollama e2e tests / en-US debt
-- Product debt: en-US locale stubs (teacher.*), bundle OCR language data
+## Next (S71)
+- Teaching animation generator (PhysicsScene → staged teaching script) — P1
+- Ollama e2e comparison / en-US locale debt / T2 comparison view / local accounts

@@ -1,24 +1,28 @@
-# Current Milestone: S69 (Completed)
+﻿# Current Milestone: S70 (Completed)
 
-**Goal:** Learning data integrity + adaptive learning recommendations
+**Goal:** P1 解析链路可度量 — AI 解析质量测量 + 规则解析器覆盖扩展（T310）
 
 **Completed:**
-- [x] Unified persistence helper lib/storage.ts (loadJSON/saveJSON/removeKey);
-      refactored 6 stores (resume, mastery, wrong-answer, achievements, panel-manager, problem)
-- [x] Problem history made REAL: removed mock items, persisted to localStorage,
-      inputMethod recorded correctly (OCR submissions no longer mislabeled)
-- [x] Rule-based recommendation engine (pure function, 6 rules):
-      R1 review wrong answers / R2 strengthen weak KP / R3 continue unfinished /
-      R4 compare-pair (student-requested: comparative learning, e.g. motor <-> generator) /
-      R5 fresh start / R6 challenge or all-done
-- [x] Dashboard recommendation card shows type icon + reason + companion pair + progress
-- [x] 7 new engine tests; panel-manager storage fix also eliminated 2 test-teardown noise errors
-- [x] Verified: desktop tsc 0 errors, shared tsc 0 errors, 87/87 tests passed (14 files)
+- [x] Repo 稳定化：提交积压的 S68/S69 完成工作（2 commits：代码 + 2026-08-03 定位文档）
+- [x] 新建 `packages/ai-parser/test-cases/`：50 道中/英物理题（力学20/电磁10/热学5/光学5/波动5/混合5），
+      每题含 expectedType + expectedParams；run-e2e.ts 输出 JSON 覆盖率报告
+- [x] 规则解析器 v2.1 → v3.0：检测类型 8 → 18 种（覆盖全部现有场景），修复 circular_motion/buoyancy 死代码
+- [x] 新增领域参数提取（电压/电阻/电流/电荷/匝数/频率/温度/压强/焦距/折射率/波速）+ 修复
+      高度误吞 m/s、速度/波速分离、45度仰角、摩擦系数无分隔符等缺陷
+- [x] 解析参数写入 simulation.params（数据驱动闭环，解析结果真正驱动仿真）
+- [x] 场景数据补充：wave-scene 增加 v/f，ideal-gas-scene 增加 P（additive）
+- [x] 覆盖率：类型命中 24% → 100%（50/50），参数命中 35.7% → 100%（84/84）
+- [x] 质量门禁固化：新增 rule-parser.test.ts（25 用例，覆盖率 ≥ 90% 门槛）
+- [x] 验证：shared tsc 0 错、ai-parser tsc 0 错、desktop tsc 0 错、vitest 15 文件 112 用例全过
+- [x] 报告：docs/05_HISTORY/AI_PARSE_E2E_REPORT.md
 
 **Deferred (roadmap):**
-- T2 data-level side-by-side comparison view, T3 dual 3D view comparison
-- Local user accounts, plugin marketplace
-- Product debt: en-US locale stubs (teacher.*), bundle OCR language data
+- Ollama 端到端对比（本机未运行 Ollama，runner 已支持自动对比）
+- 教学动画生成器（PhysicsScene → 阶段化动画脚本）— Phase 7 下一项
+- Hybrid 2D 教学渲染层（待 UX 决策 P1 确认）
+- en-US locale stubs（teacher.*）清偿
 
-**Next: S70** — Options: local user accounts (multi-profile) / T2 comparison view /
-Ollama end-to-end parse testing / en-US locale debt payoff
+**并行轨道**：产品/UX Agent 已定稿 P0-P3 决策（DESIGN_STATUS v2.0）：P0 题目输入首页、P1 模板化 Teaching Layer（PhaseCard/FormulaStrip 先行）、P2 信息架构两步走、P3 五色语义系统。相关 UI 工程排期见 NEXT_SPRINT。
+
+**Next: S71** — Options: P0 题目输入首页 + P1 第一批教学模板（UX 决策落地，UI 轨道）/ 教学动画生成器（P1）/ Ollama e2e 对比 / en-US 债务清偿 / T2 对比视图 / 本地用户账户
+

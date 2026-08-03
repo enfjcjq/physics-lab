@@ -1,25 +1,36 @@
-# Next Sprint: S68+
+﻿# Next Sprint: S71+
 
-## Completed (S66)
-- [x] Faraday Law (electromagnetic induction)
-- [x] Electric Motor (DC motor visualization)
-- [x] Ideal Gas Law (PV = nRT)
-- [x] Lens Optics (convex lens)
-- [x] i18n expanded to 924 keys
+## 已定稿 UX 决策（2026-08-03 项目负责人确认，产品/UX Agent 归档于 DESIGN_STATUS v2.0）
+- P0：题目输入页成为启动首页；实验库降为二级入口（能力保留）
+- P1：模板化 Teaching Layer（PhaseCard 阶段卡、FormulaStrip 公式推导条先行；
+      ForceCallout、EventPulse 后续）；AI 选择+组合模板并填参数，不直接生成视觉
+- P2：取消平级三模式，学习模式为默认核心入口（两步走）
+- P3：五色语义系统（红=力 / 青=速度 / 琥珀=能量 / 橙=关键事件 / slate=中性），规则对用户隐藏
 
-## Completed (S67): Visualization (P1)
-- [x] Faraday: coil + flux lines + EMF meter
-- [x] Motor: rotating coil + commutator animation
-- [x] Gas: cylinder + piston + P-V diagram
-- [x] Lens: ray diagram + image formation
+## Completed (S70 · 工程轨道): P1 解析链路可度量（T310）
+- [x] 50-case AI parse e2e test set + runner (coverage JSON report)
+- [x] Rule parser v3.0: 18 types, domain params, 100% type & param hit on test set
+- [x] Quality gate test (≥90% thresholds) — 15 files / 112 tests green
+- [x] S68/S69 积压工作提交（仓库与文档状态一致）
 
-## Priority 2: Platform (P2)
-- User accounts (local first)
-- OCR input for problem images
-- Plugin marketplace
+## UI 轨道（对应 DESIGN_STATUS 建议顺序，待工程实现）
+- [ ] S71：P0 题目输入首页 + P1 第一批模板（PhaseCard、FormulaStrip）
+- [ ] S72：P1 剩余模板（ForceCallout、EventPulse）+ P2 第一步（默认面板组合）
+- [ ] P2 第二步（结构合并）待验证后排期；P3 色表随各提案落地
+- [ ] 待确认：PhysicsScene 是否追加可选 `overlay_hints` 字段（仅追加、向后兼容）
 
-## Priority 3: Content (P3)
-- AC generator
-- Transformer
-- Simple harmonic motion (detailed)
-- Quantum phenomena basics
+## Priority 1: Core Engine Loop (P1)
+- [ ] Teaching animation generator: PhysicsScene → 阶段化动画脚本（镜头/讲解/公式编排）
+- [ ] Hybrid 2D + 3D 教学渲染层（与 P1 模板系统衔接）
+- [ ] Ollama 端到端对比运行（本机启动 Ollama 后重跑 run-e2e）
+- [ ] PDF 题目解析（图片已通过 OCR）
+
+## Priority 2: 教学体验 (P2)
+- [ ] Timeline 阶段化教学节奏（phase 驱动）深化
+- [ ] 受力动态展示 / 公式推导动画 / 数据随时间变化
+
+## Priority 3/4: 扩展 (P3/P4)
+- [ ] 参数实时调整、视角变化、3D 探索
+- [ ] 变压器 + 简谐振动详解实验（AGENT_HANDOFF 任务 B 遗留）
+- [ ] en-US locale stubs (teacher.*) 清偿（AGENT_HANDOFF 任务 A 遗留）
+- [ ] 本地用户账户 / T2 对比视图

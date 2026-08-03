@@ -1,4 +1,4 @@
-import type { PhysicsScene } from "../types/physics-scene";
+﻿import type { PhysicsScene } from "../types/physics-scene";
 
 // Ideal Gas Law: PV = nRT
 // Piston compresses/expands gas, showing P-V relationship
@@ -61,7 +61,7 @@ export const IDEAL_GAS_SCENE: PhysicsScene & { simulation?: any } = {
     { id: "s4", order: 4, titleKey: "teacher.gas.step4", descKey: "teacher.gas.step4_desc", timeStart: 4 },
   ],
   simulation: {
-    params: { n: 1, R: 8.314, T: 300, L0: 4, A_cross: 1, piston_m: 1 },
+    params: { n: 1, R: 8.314, T: 300, P: 101325, L0: 4, A_cross: 1, piston_m: 1 },
     equations: {
       // Piston x-position: oscillates to show compression/expansion
       x: "L0 + 1.5 * sin(0.8 * t)",
@@ -83,3 +83,4 @@ export const IDEAL_GAS_SCENE: PhysicsScene & { simulation?: any } = {
     stopWhen: [],
   },
 };
+

@@ -1,4 +1,23 @@
-# Changelog
+﻿# Changelog
+
+## V4.7 (S70) — 2026-08-03
+
+### Added
+- AI parse e2e test set (50 zh/en cases, 6 categories) + runner + coverage report (T310)
+- Rule parser v3.0: 18 scene types (was 8), domain param extraction (zh+en)
+- Quality gate test: 25 new cases (15 files / 112 tests total)
+- wave-scene sim params v/f; ideal-gas-scene sim param P (additive)
+
+### Changed
+- Parser output now writes extracted params into simulation.params (data-driven loop)
+- Fixed: m/s misread as height; wave speed stolen as velocity; 45度仰角;
+  friction without separator; circular_motion/buoyancy detection dead code
+- Repo stabilized: S68/S69 completed work committed (docs now match git history)
+
+### Metrics
+- Type hit rate 24% → 100% | Param match 35.7% → 100% (50-case set)
+
+---
 
 ## V4.3 (S66) — 2026-07-05
 
@@ -6,6 +25,3 @@
 - 4 new experiments: Faraday Law, Electric Motor, Ideal Gas Law, Lens Optics
 - i18n expanded from 869 to 924 keys
 - Total experiments: 17
-
----
-

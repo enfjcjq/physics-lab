@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { useMastery } from "./mastery.store";
 import { pluginRegistry } from "./plugin-registry";
+import { loadJSON, saveJSON, removeKey } from "../lib/storage";
 
 export interface Achievement {
   id: string;
@@ -32,14 +33,11 @@ const BADGE_DEFS: Omit<Achievement, "unlocked" | "unlockedAt">[] = [
 ];
 
 function load(): Record<string, { unlocked: boolean; unlockedAt: string | null }> {
-  try {
-    const raw = localStorage.getItem(ACHIEVEMENTS_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch { return {}; }
+  return loadJSON(ACHIEVEMENTS_KEY, {});
 }
 
 function save(d: Record<string, unknown>): void {
-  try { localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(d)); } catch { /* quota */ }
+  saveJSON(ACHIEVEMENTS_KEY, d);
 }
 
 function checkAchievements(): Achievement[] {
@@ -147,7 +145,7 @@ export const useAchievements = create<AchievementState>((set, get) => ({
   getAll: () => get().badges,
 
   reset: () => {
-    localStorage.removeItem(ACHIEVEMENTS_KEY);
+    removeKey(ACHIEVEMENTS_KEY);
     set({ badges: BADGE_DEFS.map((d) => ({ ...d, unlocked: false, unlockedAt: null })) });
   },
 }));

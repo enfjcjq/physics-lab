@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { loadJSON, saveJSON } from "../lib/storage";
 
 export type DockZone = "left" | "right" | "bottom" | "center" | "floating";
 
@@ -50,19 +51,17 @@ interface PanelManagerState {
 const LAYOUT_VERSION = 2; // bump to reset cached layouts with old defaults
 
 function loadLayout(): Record<string, PanelState> | null {
-  try {
-    const saved = localStorage.getItem("physics-lab-layout");
-    if (!saved) return null;
-    const version = localStorage.getItem("physics-lab-layout-version");
-    // Reset layout if version mismatch (defaults changed)
-    if (version && parseInt(version) !== LAYOUT_VERSION) return null;
-    return JSON.parse(saved);
-  } catch { return null; }
-  }
+  const saved = loadJSON<Record<string, PanelState> | null>("physics-lab-layout", null);
+  if (!saved) return null;
+  const version = loadJSON<string | number | null>("physics-lab-layout-version", null);
+  // Reset layout if version mismatch (defaults changed)
+  if (version && parseInt(String(version)) !== LAYOUT_VERSION) return null;
+  return saved;
+}
 
 function saveLayout(panels: Record<string, PanelState>): void {
-  localStorage.setItem("physics-lab-layout", JSON.stringify(panels));
-  localStorage.setItem("physics-lab-layout-version", String(LAYOUT_VERSION));
+  saveJSON("physics-lab-layout", panels);
+  saveJSON("physics-lab-layout-version", String(LAYOUT_VERSION));
 }
 
 function getDefaultState(): Record<string, PanelState> {

@@ -7,6 +7,7 @@ import type { InputMethod } from "../../stores/ui.store";
 import { CollapseHandle } from "../layout/CollapseHandle";
 import { pluginRegistry } from "../../core/plugin-registry";
 import { useCompare } from "../../core/compare.store";
+import { OcrPanel } from "../../features/problem-input/OcrPanel";
 
 const EXP_ICONS: Record<string, string> = {
   "free-fall": "\u2B07\uFE0F",
@@ -26,6 +27,7 @@ const EXP_ICONS: Record<string, string> = {
   "electric_motor": "\u2699\uFE0F",
   "ideal_gas": "\uD83D\uDCA8",
   "lens_optics": "\uD83D\uDD0D",
+  "ac_generator": "\uD83D\uDD0C",
 };
 
 const EXP_META: Record<string, { desc: string; difficulty: string }> = {
@@ -46,6 +48,7 @@ const EXP_META: Record<string, { desc: string; difficulty: string }> = {
   "electric_motor": { desc: "\u76F4\u6D41\u7535\u52A8\u673A\u539F\u7406", difficulty: "medium" },
   "ideal_gas": { desc: "\u7406\u60F3\u6C14\u4F53\u72B6\u6001\u65B9\u7A0B PV=nRT", difficulty: "medium" },
   "lens_optics": { desc: "\u51F8\u900F\u955C\u6210\u50CF\u4E0E\u900F\u955C\u516C\u5F0F", difficulty: "medium" },
+  "ac_generator": { desc: "\u7535\u78C1\u611F\u5E94\u4EA7\u751F\u6B63\u5F26\u4EA4\u6D41\u7535", difficulty: "medium" },
 };
 
 export function LeftPanel() {
@@ -159,8 +162,18 @@ export function LeftPanel() {
         {showFullInput && (
           <div className="px-4 pb-2">
             <div className="flex bg-slate-800/50 rounded-lg p-0.5">
-              <button className="flex-1 py-1.5 text-xs rounded-md bg-sky-600 text-white shadow">{t("input.text")}</button>
-              <button className="flex-1 py-1.5 text-xs rounded-md text-slate-500 cursor-not-allowed opacity-50">{t("input.ocr")}</button>
+              <button
+                onClick={() => setInputMethod("text")}
+                className={`flex-1 py-1.5 text-xs rounded-md transition-colors ${inputMethod === "text" ? "bg-sky-600 text-white shadow" : "text-slate-400 hover:text-slate-200"}`}
+              >
+                {t("input.text")}
+              </button>
+              <button
+                onClick={() => setInputMethod("ocr")}
+                className={`flex-1 py-1.5 text-xs rounded-md transition-colors ${inputMethod === "ocr" ? "bg-sky-600 text-white shadow" : "text-slate-400 hover:text-slate-200"}`}
+              >
+                {t("input.ocr")}
+              </button>
             </div>
           </div>
         )}
@@ -172,7 +185,10 @@ export function LeftPanel() {
               className="flex-1 bg-slate-800/50 border border-slate-700 rounded-lg p-3 text-sm text-slate-200 placeholder-slate-500 resize-none focus:outline-none focus:border-sky-600 transition-colors min-h-[100px]"
               spellCheck={false}/>
           )}
-          {showFullInput && (inputMethod!=="text") && (
+          {showFullInput && inputMethod === "ocr" && (
+            <OcrPanel onUseText={(text) => { setInputText(text); handleSubmit(); }} />
+          )}
+          {showFullInput && (inputMethod === "image" || inputMethod === "pdf") && (
             <div className="flex-1 border-2 border-dashed border-slate-700 rounded-lg flex items-center justify-center text-slate-500 text-sm cursor-pointer hover:border-sky-600 hover:text-sky-400 transition-colors min-h-[100px]">
               <div className="text-center"><div className="text-3xl mb-1">+</div><div>{t("ui.drop_hint")}</div></div>
             </div>

@@ -23,3 +23,4 @@ export { FARADAY_SCENE } from "./constants/faraday-law-scene";
 export { MOTOR_SCENE } from "./constants/electric-motor-scene";
 export { IDEAL_GAS_SCENE } from "./constants/ideal-gas-scene";
 export { LENS_OPTICS_SCENE } from "./constants/lens-optics-scene";
+export { AC_GENERATOR_SCENE } from "./constants/ac-generator-scene";

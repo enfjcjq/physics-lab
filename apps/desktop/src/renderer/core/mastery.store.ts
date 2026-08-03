@@ -1,4 +1,5 @@
 ﻿import { create } from "zustand";
+import { loadJSON, saveJSON, removeKey } from "../lib/storage";
 
 const MASTERY_KEY = "physics-lab:mastery-v2";
 
@@ -25,25 +26,21 @@ interface MasteryState {
 }
 
 function load(): Record<string, MasteryEntry> {
-  try {
-    const raw = localStorage.getItem(MASTERY_KEY);
-    if (!raw) return {};
-    const parsed = JSON.parse(raw);
-    // Migrate from v1 (boolean values)
-    const migrated: Record<string, MasteryEntry> = {};
-    for (const [k, v] of Object.entries(parsed)) {
-      if (typeof v === "boolean") {
-        migrated[k] = { mastered: v, attempts: v ? 1 : 0, correct: v ? 1 : 0, lastAttempted: null, lastMastered: null, score: v ? 100 : 0 };
-      } else {
-        migrated[k] = v as MasteryEntry;
-      }
+  const parsed = loadJSON<Record<string, unknown>>(MASTERY_KEY, {});
+  // Migrate from v1 (boolean values)
+  const migrated: Record<string, MasteryEntry> = {};
+  for (const [k, v] of Object.entries(parsed)) {
+    if (typeof v === "boolean") {
+      migrated[k] = { mastered: v, attempts: v ? 1 : 0, correct: v ? 1 : 0, lastAttempted: null, lastMastered: null, score: v ? 100 : 0 };
+    } else {
+      migrated[k] = v as MasteryEntry;
     }
-    return migrated;
-  } catch { return {}; }
+  }
+  return migrated;
 }
 
 function save(m: Record<string, MasteryEntry>): void {
-  try { localStorage.setItem(MASTERY_KEY, JSON.stringify(m)); } catch { /* quota */ }
+  saveJSON(MASTERY_KEY, m);
 }
 
 export const useMastery = create<MasteryState>((set, get) => ({
@@ -94,5 +91,5 @@ export const useMastery = create<MasteryState>((set, get) => ({
 
   getAll: () => get().entries,
 
-  reset: () => { localStorage.removeItem(MASTERY_KEY); set({ entries: {} }); },
+  reset: () => { removeKey(MASTERY_KEY); set({ entries: {} }); },
 }));

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { loadJSON, saveJSON, removeKey } from "../lib/storage";
 
 export interface WrongAnswer {
   id: string;
@@ -13,14 +14,11 @@ export interface WrongAnswer {
 const WRONG_KEY = "physics-lab:wrong-answers";
 
 function load(): WrongAnswer[] {
-  try {
-    const raw = localStorage.getItem(WRONG_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch { return []; }
+  return loadJSON<WrongAnswer[]>(WRONG_KEY, []);
 }
 
 function save(items: WrongAnswer[]): void {
-  try { localStorage.setItem(WRONG_KEY, JSON.stringify(items)); } catch { /* quota */ }
+  saveJSON(WRONG_KEY, items);
 }
 
 interface WrongAnswerState {
@@ -65,7 +63,7 @@ export const useWrongAnswers = create<WrongAnswerState>((set, get) => ({
   }),
 
   clearAll: () => {
-    localStorage.removeItem(WRONG_KEY);
+    removeKey(WRONG_KEY);
     set({ items: [] });
   },
 

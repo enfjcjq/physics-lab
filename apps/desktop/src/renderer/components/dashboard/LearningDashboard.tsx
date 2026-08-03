@@ -7,7 +7,18 @@ import { useWrongAnswers } from "../../core/wrong-answer.store";
 import { useResume } from "../../core/resume.store";
 import { generateLearningSummary, formatSummaryMarkdown } from "../../core/learning-summary";
 import { downloadFile } from "../../lib/report";
+import { generateRecommendations, type RecommendationType } from "../../core/recommendation.engine";
 import { useState, useMemo, useEffect } from "react";
+
+const REC_ICONS: Record<RecommendationType, string> = {
+  review_wrong: "✏️",
+  strengthen: "💪",
+  continue: "▶️",
+  compare_pair: "🔀",
+  new_start: "🌱",
+  challenge: "🏔️",
+  all_done: "🏆",
+};
 
 function RadarChart({ data }: { data: Array<{ label: string; value: number; max: number }> }) {
   const size = 140; const cx = size / 2; const cy = size / 2; const r = 55;
@@ -151,7 +162,7 @@ export function LearningDashboard() {
     const mastered = kpIds.filter((id) => entries[id]?.mastered).length;
     return {
       id: p.id, name: p.name, category: p.category, difficulty: p.difficulty,
-      total: kpIds.length || 1, mastered,
+      total: kpIds.length || 1, mastered, kpIds,
       percent: kpIds.length > 0 ? Math.round((mastered / kpIds.length) * 100) : 0,
     };
   }), [plugins, entries]);
@@ -171,16 +182,18 @@ export function LearningDashboard() {
     }));
   }, [plugins, entries, t]);
 
-  const recommendation = useMemo(() => {
-    const incomplete = pluginStats.filter((s) => s.percent < 100);
-    if (incomplete.length === 0) return pluginStats[0];
-    incomplete.sort((a, b) => {
-      if (a.percent !== b.percent) return a.percent - b.percent;
-      const diffOrder: Record<string, number> = { easy: 0, medium: 1, hard: 2 };
-      return (diffOrder[a.difficulty] ?? 1) - (diffOrder[b.difficulty] ?? 1);
-    });
-    return incomplete[0];
-  }, [pluginStats]);
+  const recommendations = useMemo(() => generateRecommendations({
+    entries,
+    unreviewedWrong: wrongAnswers.filter(function(w) { return !w.reviewed; }).length,
+    plugins: pluginStats.map(function(s) { return { id: s.id, difficulty: s.difficulty, percent: s.percent, kpIds: s.kpIds }; }),
+  }), [entries, wrongAnswers, pluginStats]);
+  const recommendation = recommendations[0];
+  const recPlugin = recommendation?.pluginId
+    ? pluginStats.find(function(p) { return p.id === recommendation.pluginId; })
+    : undefined;
+  const recPair = recommendation?.pairWith
+    ? pluginStats.find(function(p) { return p.id === recommendation.pairWith; })
+    : undefined;
 
   const jumpToExperiment = (pluginId: string) => {
     const store = useSimulation.getState();
@@ -236,27 +249,41 @@ export function LearningDashboard() {
             {recommendation && (
               <div className="bg-gradient-to-br from-sky-950/50 to-violet-950/50 border border-sky-800/30 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm">{String.fromCodePoint(0x1F3AF)}</span>
+                  <span className="text-sm">{REC_ICONS[recommendation.type]}</span>
                   <h3 className="text-xs font-medium text-sky-400 uppercase tracking-wider">
-                    {t("dashboard.recommended", "Recommended Next")}
+                    {t("recommend." + recommendation.type + ".title", "Recommended Next")}
                   </h3>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-semibold text-white">{recommendation.name}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      {recommendation.mastered}/{recommendation.total} {t("dashboard.kps_mastered", "mastered")}
+                    <p className="text-sm font-semibold text-white">
+                      {recPlugin ? recPlugin.name : t("recommend." + recommendation.type + ".title", "")}
+                      {recPair && <span className="text-slate-400 font-normal">{" ⟷ " + recPair.name}</span>}
                     </p>
+                    <p className="text-xs text-slate-400 mt-0.5">
+                      {t("recommend." + recommendation.type + ".reason", "")}
+                    </p>
+                    {recPlugin && (
+                      <p className="text-[10px] text-slate-500 mt-0.5">
+                        {recPlugin.mastered}/{recPlugin.total} {t("dashboard.kps_mastered", "mastered")}
+                      </p>
+                    )}
                   </div>
-                  <button onClick={() => jumpToExperiment(recommendation.id)}
+                  <button
+                    onClick={() => {
+                      if (recommendation.type === "review_wrong") { setSelectedTab("review"); return; }
+                      if (recommendation.pluginId) jumpToExperiment(recommendation.pluginId);
+                    }}
                     className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-medium transition-colors">
                     {t("dashboard.start", "Start")}
                   </button>
                 </div>
-                <div className="mt-3 h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-sky-500 to-violet-500 rounded-full transition-all duration-500"
-                    style={{ width: recommendation.percent + "%" }} />
-                </div>
+                {recPlugin && (
+                  <div className="mt-3 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-sky-500 to-violet-500 rounded-full transition-all duration-500"
+                      style={{ width: recPlugin.percent + "%" }} />
+                  </div>
+                )}
               </div>
             )}
           </>

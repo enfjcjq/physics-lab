@@ -5,7 +5,8 @@ import { useSimulation } from "./features/experiment/experiment.store";
 import { pluginRegistry } from "./core/plugin-registry";
 import { freeFallPlugin } from "./plugins";
 import type { PhysicsScene } from "@physics-lab/shared";
-import { FREE_FALL_SCENE, OHMS_LAW_SCENE, WAVE_SCENE, COULOMB_SCENE, REFRACTION_SCENE, DOPPLER_SCENE, FARADAY_SCENE, MOTOR_SCENE, IDEAL_GAS_SCENE, LENS_OPTICS_SCENE, createVirtualPlugin } from "@physics-lab/shared";
+import { FREE_FALL_SCENE, OHMS_LAW_SCENE, WAVE_SCENE, COULOMB_SCENE, REFRACTION_SCENE, DOPPLER_SCENE, FARADAY_SCENE, MOTOR_SCENE, IDEAL_GAS_SCENE, LENS_OPTICS_SCENE, AC_GENERATOR_SCENE, createVirtualPlugin } from "@physics-lab/shared";
+import { registerExtraScenes } from "./plugins/extra-scenes";
 
 // Eagerly register only free-fall. Other plugins load lazily on switch.
 // Register all plugins so the experiment switcher shows all 6
@@ -30,6 +31,9 @@ pluginRegistry.register(createVirtualPlugin(FARADAY_SCENE as any));
 pluginRegistry.register(createVirtualPlugin(MOTOR_SCENE as any));
 pluginRegistry.register(createVirtualPlugin(IDEAL_GAS_SCENE as any));
 pluginRegistry.register(createVirtualPlugin(LENS_OPTICS_SCENE as any));
+pluginRegistry.register(createVirtualPlugin(AC_GENERATOR_SCENE as any));
+// Scene-only experiments from the extension point (see plugins/extra-scenes.ts)
+registerExtraScenes();
 
 export function App() {
   const setScene = useSimulation((s) => s.setScene);

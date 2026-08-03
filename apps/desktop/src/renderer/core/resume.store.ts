@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { loadJSON, saveJSON, removeKey } from "../lib/storage";
 
 const RESUME_KEY = "physics-lab:resume";
 
@@ -9,14 +10,11 @@ interface ResumeState {
 }
 
 function load(): ResumeState | null {
-  try {
-    const raw = localStorage.getItem(RESUME_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch { return null; }
+  return loadJSON<ResumeState | null>(RESUME_KEY, null);
 }
 
 function save(state: ResumeState): void {
-  try { localStorage.setItem(RESUME_KEY, JSON.stringify(state)); } catch { /* quota */ }
+  saveJSON(RESUME_KEY, state);
 }
 
 interface ResumeStoreState {
@@ -35,6 +33,6 @@ export const useResume = create<ResumeStoreState>(() => ({
   },
   loadState: () => load(),
   clearState: () => {
-    localStorage.removeItem(RESUME_KEY);
+    removeKey(RESUME_KEY);
   },
 }));

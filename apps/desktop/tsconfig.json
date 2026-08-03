@@ -5,7 +5,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/renderer/*"],
-      "@shared/*": ["../../packages/shared/src/*"]
+      "@shared/*": ["../../packages/shared/src/*"],
+      "@physics-lab/shared": ["../../packages/shared/src/index.ts"],
+      "@physics-lab/shared/*": ["../../packages/shared/src/*"],
+      "@physics-lab/ai-parser": ["../../packages/ai-parser/src/index.ts"],
+      "@physics-lab/ai-parser/*": ["../../packages/ai-parser/src/*"]
     }
   },
   "include": ["src/**/*", "../../packages/shared/src/**/*"]

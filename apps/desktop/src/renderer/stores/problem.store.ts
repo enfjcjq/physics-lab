@@ -4,6 +4,9 @@ import { aiRegistry, ruleParser } from "@physics-lab/ai-parser";
 import { createVirtualPlugin, hasSimulation } from "@physics-lab/shared";
 import { pluginRegistry } from "../core/plugin-registry";
 import { useSimulation } from "../features/experiment/experiment.store";
+import { loadJSON, saveJSON, removeKey } from "../lib/storage";
+
+const HISTORY_KEY = "physics-lab:history";
 
 // Register the rule parser on first import
 if (!aiRegistry.get("rule-based")) {
@@ -32,17 +35,12 @@ interface ProblemState {
   clearHistory: () => void;
 }
 
-const MOCK_HISTORY: HistoryItem[] = [
-  { id: "h1", title: "Free Fall (10m)", inputMethod: "text", timestamp: Date.now() - 86400000 },
-  { id: "h2", title: "Free Fall (20m)", inputMethod: "text", timestamp: Date.now() - 172800000 },
-];
-
 export const useProblemStore = create<ProblemState>((set, get) => ({
   inputMethod: "text",
   inputText: "A 2kg ball is dropped from a height of 10m. Ignore air resistance, g=10m/s^2. Find impact time and velocity.",
   isSubmitting: false,
   parseError: null,
-  history: MOCK_HISTORY,
+  history: loadJSON<HistoryItem[]>(HISTORY_KEY, []),
   setInputMethod: (inputMethod) => set({ inputMethod }),
   setInputText: (inputText) => set({ inputText }),
   submit: async () => {
@@ -65,7 +63,7 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
         get().addToHistory({
           id: "h" + Date.now(),
           title,
-          inputMethod: "text",
+          inputMethod: get().inputMethod,
           timestamp: Date.now(),
         });
         // If scene has simulation block, register as virtual plugin
@@ -88,6 +86,13 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
       return null;
     }
   },
-  addToHistory: (item) => set((s) => ({ history: [item, ...s.history].slice(0, 50) })),
-  clearHistory: () => set({ history: [] }),
+  addToHistory: (item) => set((s) => {
+    const history = [item, ...s.history].slice(0, 50);
+    saveJSON(HISTORY_KEY, history);
+    return { history };
+  }),
+  clearHistory: () => {
+    removeKey(HISTORY_KEY);
+    set({ history: [] });
+  },
 }));

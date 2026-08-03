@@ -1,4 +1,4 @@
-# Next Sprint: S67+
+# Next Sprint: S68+
 
 ## Completed (S66)
 - [x] Faraday Law (electromagnetic induction)
@@ -7,11 +7,11 @@
 - [x] Lens Optics (convex lens)
 - [x] i18n expanded to 924 keys
 
-## Priority 1: Visualization (P1)
-- Faraday: coil + flux lines + EMF meter
-- Motor: rotating coil + commutator animation
-- Gas: cylinder + piston + P-V diagram
-- Lens: ray diagram + image formation
+## Completed (S67): Visualization (P1)
+- [x] Faraday: coil + flux lines + EMF meter
+- [x] Motor: rotating coil + commutator animation
+- [x] Gas: cylinder + piston + P-V diagram
+- [x] Lens: ray diagram + image formation
 
 ## Priority 2: Platform (P2)
 - User accounts (local first)

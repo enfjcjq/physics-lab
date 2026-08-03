@@ -1,5 +1,22 @@
 Physics Lab 技术架构文档
 
+【架构定位修正 · 2026-08-03】
+
+项目定位：Physics AI Engine —— AI物理教学动画生成引擎。
+
+整个架构服务于唯一核心 pipeline：
+
+题目输入（文本/图片/OCR/PDF）→ AI解析 → PhysicsScene → 教学动画生成（Hybrid 2D + 3D）→ 学习输出
+
+架构原则修正：
+
+- 教学动画渲染（含2D教学模式视图与Manim风格推导动画）是核心渲染路径，与Three.js 3D渲染并列为一等公民。
+- Hybrid 2D + 3D：3D模式呈现空间结构；教学模式自动切换为清晰2D视角。渲染层需支持同一PhysicsScene的2D/3D双视图输出。
+- 实验插件体系（见PLUGIN_SPEC）保留，定位为P4扩展能力，不是架构主线。
+- 不重新设计整体架构：现有 PhysicsScene 单数据源、Timeline 驱动、插件化结构继续沿用，仅在其上强化“动画生成”环节。
+
+⸻
+
 技术目标
 
 构建可长期维护、可商业化、可扩展的桌面应用。
@@ -56,11 +73,13 @@ Visualization Layer
 
 Physics Engine
 
-Animation Engine
+Animation Engine（教学动画生成器：PhysicsScene → 阶段化动画脚本 → 镜头/讲解编排）
 
-Three.js Renderer
+Three.js Renderer（3D模式：空间结构 + 交互探索）
 
-Manim Renderer
+2D Teaching Renderer（教学模式：清晰2D视角，教材动画风格）
+
+Manim Renderer（公式推导 / 受力分析 / 过程解释动画）
 
 ⸻
 
@@ -137,7 +156,11 @@ PhysicsScene
 
 ↓
 
-实验生成
+教学动画生成（核心：Hybrid 2D + 3D，解释为什么运动/为什么受力/公式如何产生）
+
+↓
+
+交互实验（扩展：参数调整、视角变化、3D探索）
 
 ↓
 

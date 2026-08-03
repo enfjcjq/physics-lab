@@ -16,16 +16,33 @@
 
 ### 1.1 PhysicsScene 是什么
 
-PhysicsScene 是 Physics Lab 的**核心数据结构**，是将物理题目转化为可计算、可渲染、可交互的统一中间表示（Intermediate Representation）。
+PhysicsScene 是 Physics AI Engine 的**核心数据结构**，是将物理题目转化为可计算、可渲染、可交互、可动画教学的统一中间表示（Intermediate Representation）。
 
 它是整个系统的"语言"：
 
 ```
-题目输入 ──→ AI解析 ──→ PhysicsScene ──→ 3D渲染引擎
-                                    ├──→ 动画引擎
+题目输入 ──→ AI解析 ──→ PhysicsScene ──→ 教学动画引擎（核心：Hybrid 2D+3D）
+                                    ├──→ 3D渲染引擎（交互扩展）
                                     ├──→ 学习系统
                                     └──→ 知识图谱
 ```
+
+> 2026-08-03 定位修正：PhysicsScene 的首要消费方从"3D实验渲染器"修正为"教学动画生成器"。Schema 设计必须优先保证教学动画所需信息完整：阶段化 timeline（phases）、教学步骤（teacher_steps）、受力展示（forces.visual）、公式推导（equations.derivation）、镜头脚本（camera_script）。
+
+### 1.1.1 教学动画支持要求（2026-08-03 新增）
+
+为支撑"输入题目 → 自动生成教学动画"核心主线，PhysicsScene 生产者（AI解析器/插件）应尽可能输出：
+
+| 能力 | 依赖字段 | 用途 |
+|------|----------|------|
+| 阶段化讲解 | timeline.phases / phase_start / phase_end | 教学动画分幕 |
+| 过程解释 | teacher_steps（见 v2.1 扩展） | 讲解文本与动画同步 |
+| 受力展示 | forces[].visual（颜色/箭头/标签） | 为什么受力 |
+| 公式推导 | equations[].derivation | 公式如何产生 |
+| 镜头编排 | camera_script | 教学模式视角切换 |
+| 2D/3D视图提示 | （规划）teaching_view 提示字段 | Hybrid 2D+3D：标注各阶段适合的视图（2D讲解 / 3D空间） |
+
+说明：现有 Schema v2.0 不推倒重来；teaching_view 等增量字段按 §13 向前兼容规则作为可选扩展逐步引入。
 
 ### 1.2 设计原则
 
@@ -1364,3 +1381,4 @@ PhysicsScene 是 Physics Lab 的**核心数据结构**，是将物理题目转�
 | 版本 | 日期 | 变更内容 | 作者 |
 |------|------|----------|------|
 | v1.0 | 2026-06-24 | 初始版本，完整Schema规范 | Physics Lab 架构组 |
+| v1.1 | 2026-08-03 | 定位修正：PhysicsScene 首要消费方改为教学动画生成器；新增 §1.1.1 教学动画支持要求（不改动 Schema 本体，增量字段按向前兼容规则引入） | 产品架构审查 Agent |

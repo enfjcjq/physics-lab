@@ -1,5 +1,11 @@
 Physics AI Engine V2
 
+【定位修正 · 2026-08-03】
+
+本引擎即产品核心：AI物理教学动画生成引擎。
+
+Teaching Animation 是核心交付物（Hybrid 2D + 3D：3D呈现空间结构，教学模式自动切换清晰2D视角）；3D Experiment 是其交互扩展层（P3）。动画重点：解释为什么运动、为什么受力、公式如何产生，而非仅展示运动。
+
 核心目标
 
 将任意物理题转换为：
@@ -12,11 +18,11 @@ PhysicsScene
 
 ↓
 
-3D Experiment
+Teaching Animation（核心）
 
 ↓
 
-Teaching Animation
+3D Experiment（交互扩展）
 
 ↓
 

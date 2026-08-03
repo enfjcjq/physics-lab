@@ -1,14 +1,24 @@
-# Current Milestone: S21 (Completed)
+# Current Milestone: S69 (Completed)
 
-**Goal:** Export system + final polish — particles, transitions, loading states
+**Goal:** Learning data integrity + adaptive learning recommendations
 
 **Completed:**
-- [x] Removed failing 3D FormulaOverlay (SDF text), HTML overlay is the single source
-- [x] Export: PDF (html2canvas+jsPDF), Markdown, CSV, Screenshot
-[x] MenuBar: File > Export (MD/HTML/PDF/CSV)
-[x] RightPanel: one-click export buttons
-[x] DataPanel: live/table view + CSV download
-[x] .gitattributes: LF normalization for all text files
-[x] Build: 668 modules, 6 plugins, zero errors
+- [x] Unified persistence helper lib/storage.ts (loadJSON/saveJSON/removeKey);
+      refactored 6 stores (resume, mastery, wrong-answer, achievements, panel-manager, problem)
+- [x] Problem history made REAL: removed mock items, persisted to localStorage,
+      inputMethod recorded correctly (OCR submissions no longer mislabeled)
+- [x] Rule-based recommendation engine (pure function, 6 rules):
+      R1 review wrong answers / R2 strengthen weak KP / R3 continue unfinished /
+      R4 compare-pair (student-requested: comparative learning, e.g. motor <-> generator) /
+      R5 fresh start / R6 challenge or all-done
+- [x] Dashboard recommendation card shows type icon + reason + companion pair + progress
+- [x] 7 new engine tests; panel-manager storage fix also eliminated 2 test-teardown noise errors
+- [x] Verified: desktop tsc 0 errors, shared tsc 0 errors, 87/87 tests passed (14 files)
 
-**Next: S22** 鈥?AI Teacher enhancements + plugin system refinement — Export system + data panel + final polish
+**Deferred (roadmap):**
+- T2 data-level side-by-side comparison view, T3 dual 3D view comparison
+- Local user accounts, plugin marketplace
+- Product debt: en-US locale stubs (teacher.*), bundle OCR language data
+
+**Next: S70** — Options: local user accounts (multi-profile) / T2 comparison view /
+Ollama end-to-end parse testing / en-US locale debt payoff

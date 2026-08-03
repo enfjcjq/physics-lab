@@ -1,12 +1,14 @@
 ﻿# Physics Lab TODO
 
-> Current version: V2.6 (S29)
+> Current version: V4.4 (S67)
 
 ---
 
-# Completed (S16-S29)
+# Completed (S16-S66)
 
-- [x] 6 experiment plugins (free-fall, projectile, incline, collision, spring, pendulum)
+- [x] 17 experiments (free-fall, projectile, incline, collision, spring, pendulum,
+      circular-motion, buoyancy, wave, doppler, coulombs-law, ohms-law,
+      faraday-law, electric-motor, ideal-gas, lens-optics, refraction)
 - [x] 3-mode system (Learning / Experiment / Analysis)
 - [x] PhysicsScene-driven architecture
 - [x] AI Parser: Rule-based + OllamaProvider
@@ -16,9 +18,17 @@
 - [x] FormulaDisplay component (styled math notation)
 - [x] KnowledgeGraph visualization
 - [x] Export: PDF / Markdown / HTML / CSV / Screenshot
-- [x] i18n: 571 zh-CN / 416 en-US keys
-- [x] 51 unit tests (6 test files)
+- [x] i18n: 924 zh-CN / 924 en-US keys
 - [x] Ollama auto-detect on startup
+
+---
+
+# S67: New Experiment Visualization (P1) — DONE
+
+- [x] Faraday: coil + flux lines + EMF meter (bar magnet, coupling-driven flux lines, needle gauge)
+- [x] Motor: rotating coil + commutator animation (split ring + brushes + stator magnets)
+- [x] Gas: cylinder + piston + P-V diagram (molecules + isotherm trace)
+- [x] Lens: ray diagram + image formation (3 principal rays, real/virtual/infinity handling)
 
 ---
 

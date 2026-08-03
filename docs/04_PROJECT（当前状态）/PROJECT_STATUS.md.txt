@@ -1,14 +1,20 @@
 # Project Status
 
-**Version:** V4.3 (Sprint S66)
-**Status:** Active Development — Content Expansion
+**Version:** V4.6 (Sprint S69)
+**Status:** Active Development — Platform Features
 
 ## Key Metrics
-- **17 experiments** | 924 zh-CN | 924 en-US | Zero TS errors
-- 4 new experiments: Faraday Law, Electric Motor, Ideal Gas Law, Lens Optics
+- **18 experiments** | Zero TS errors | 87 tests passed (14 files) | 0 test noise
 
-## New Experiments (S66)
-- 🧲 Faraday Law: Electromagnetic induction, flux change induces EMF
-- ⚙️ Electric Motor: DC motor with torque on current loop
-- 💨 Ideal Gas Law: PV = nRT, piston compression/expansion
-- 🔍 Lens Optics: 1/f = 1/u + 1/v, convex lens image formation
+## S69: Learning Data + Recommendations (Completed)
+- 📚 Real problem history (mock removed, persisted, correct inputMethod)
+- 🧠 Rule-based recommendation engine (6 rules incl. student-requested compare-pair)
+- 🧹 Unified storage helper; 6 stores refactored (DRY); teardown noise eliminated
+
+## S68: Exploration Sprint (Completed)
+- 🔌 AC Generator experiment (EM trilogy complete)
+- 📷 OCR problem input (tesseract.js, Otsu preprocessing, editable fallback)
+
+## Next (S70)
+- Options: local user accounts / T2 comparison view / Ollama e2e tests / en-US debt
+- Product debt: en-US locale stubs (teacher.*), bundle OCR language data

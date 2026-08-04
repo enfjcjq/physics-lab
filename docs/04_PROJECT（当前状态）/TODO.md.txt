@@ -1,47 +1,33 @@
 ﻿# Physics Lab TODO
 
-> Current version: V4.7 (S70)
+> Current version: V4.8 (S71)
 
 ---
 
-# Completed (S16-S70)
+# Completed (S16-S71)
 
 - [x] 18 experiments (free-fall, projectile, incline, collision, spring, pendulum,
       circular-motion, buoyancy, wave, doppler, coulombs-law, ohms-law,
       faraday-law, electric-motor, ac-generator, ideal-gas, lens-optics, refraction)
 - [x] 3-mode system (Learning / Experiment / Analysis)
 - [x] PhysicsScene-driven architecture
-- [x] AI Parser: Rule-based + OllamaProvider
-- [x] AI toggle in MenuBar
+- [x] AI Parser: Rule-based (18 types) + OllamaProvider
+- [x] AI parse e2e test set + coverage report (T310) — 100% type / 100% param
 - [x] Timeline with drag/click/keyboard/phase nodes
-- [x] Teacher panel with 7-step guidance + quizzes
-- [x] FormulaDisplay component (styled math notation)
-- [x] KnowledgeGraph visualization
+- [x] Teacher panel + FormulaDisplay + KnowledgeGraph
 - [x] Export: PDF / Markdown / HTML / CSV / Screenshot
-- [x] i18n: 924 zh-CN / 924 en-US keys
-- [x] Ollama auto-detect on startup
+- [x] i18n: 992 zh-CN / 992 en-US keys
+- [x] OCR problem input (tesseract.js, Otsu preprocessing)
+- [x] S70: rule parser v3.0 (18 types) + quality gate test
 
----
+# S71: P0 题目输入首页 + P1 Teaching Layer — DONE
 
-# S67: New Experiment Visualization (P1) — DONE
-
-- [x] Faraday: coil + flux lines + EMF meter
-- [x] Motor: rotating coil + commutator animation
-- [x] Gas: cylinder + piston + P-V diagram
-- [x] Lens: ray diagram + image formation
-
-# S68: OCR 题目输入 (P1) — DONE
-
-- [x] OCR problem input (tesseract.js, Otsu preprocessing, editable fallback)
-
-# S70: AI 解析质量可度量 (P1 · T310) — DONE
-
-- [x] 50-case e2e test set (zh+en, 6 categories, 18 scene types)
-- [x] Rule parser v3.0: 8 → 18 types + domain params (voltage/resistance/current/charge/
-      turns/frequency/temperature/pressure/focal_length/refractive_index/wave_speed)
-- [x] Parser params now written into simulation.params (data-driven loop)
-- [x] Coverage: type hit 24% → 100%, param match 35.7% → 100%
-- [x] Quality gate test (rule-parser.test.ts, ≥90% thresholds)
+- [x] 首页=启动视图（输入/OCR/进度/失败兜底/成功淡入；最近/示例/实验库折叠；AI 状态）
+- [x] Teaching Layer：PhaseCard + FormulaStrip（确定性 state=f(t)、0.3x 阶段减速、
+      无数据自动隐藏、统一显隐开关）
+- [x] PhysicsScene 可选 overlay_hints（仅追加、向后兼容）
+- [x] MenuBar 视图菜单教学图层开关；修复遗留 `n 文本 bug
+- [x] i18n +26 键（home.* / teaching.overlay.* / menu.view.*）
 
 ---
 
@@ -49,21 +35,10 @@
 
 - [x] Teacher step-by-step guidance
 - [x] Interactive quiz between teacher steps
+- [x] Teaching Layer (PhaseCard / FormulaStrip) — P1 第一批模板
 - [ ] Knowledge graph mastery tracking
 - [ ] Adaptive learning paths
 - [ ] Student progress persistence
-
----
-
-# Visualization
-
-- [x] 3D scene with axes, grid, ball, arrows
-- [x] Motion trail + height ruler
-- [x] HUD labels (velocity, time)
-- [x] Impact particles
-- [x] Skeleton loader
-- [ ] Glowing/shader trails
-- [x] Dynamic arrow scaling
 
 ---
 
@@ -71,13 +46,22 @@
 
 - [x] Rule-based parser (18 experiment types, zh + en)
 - [x] AIProvider interface abstraction
-- [x] OllamaProvider with local LLM
-- [x] Auto-detect Ollama on startup
+- [x] OllamaProvider with local LLM + auto-detect
 - [x] AI parse e2e test set + coverage report (T310)
-- [ ] Ollama end-to-end comparison run
 - [x] OCR problem input
+- [ ] Ollama end-to-end comparison run
 - [ ] PDF/image parsing
-- [ ] Teaching animation generator (PhysicsScene → staged teaching script) — S71 候选
+- [ ] AI 选择+组合教学模板并填 overlay_hints（长期）
+
+---
+
+# Teaching Layer (P1) — 进行中
+
+- [x] PhaseCard 阶段卡
+- [x] FormulaStrip 公式推导条
+- [ ] ForceCallout 受力标注（S72）
+- [ ] EventPulse 关键事件脉冲（S72）
+- [ ] P2 第一步：默认面板组合（学习模式默认核心入口）
 
 ---
 
@@ -86,6 +70,5 @@
 - [ ] User accounts & cloud sync
 - [ ] School licensing
 - [ ] Plugin marketplace
-- [ ] Wave/Optics/EM follow-ups
 - [ ] Mobile/tablet support
 - [ ] Auto-update system

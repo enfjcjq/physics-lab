@@ -1,26 +1,27 @@
 ﻿# Project Status
 
-**Version:** V4.7 (Sprint S70)
-**Status:** Active Development — P1 Core Pipeline (AI Parse → PhysicsScene)
+**Version:** V4.8 (Sprint S71)
+**Status:** Active Development — P0 首页 + P1 Teaching Layer 落地
 
 ## Key Metrics
-- **18 experiments** | Zero TS errors | 112 tests passed (15 files) | AI parse coverage 100%/100%
+- **18 experiments** | Zero TS errors | 124 tests passed (17 files) | AI parse coverage 100%/100%
+- P0 题目输入首页上线 | Teaching Layer（PhaseCard + FormulaStrip）上线
+
+## S71: P0 题目输入首页 + P1 教学图层模板 (Completed)
+- 🏠 首页=启动视图：输入题目（自动聚焦/空态禁用 CTA）→ OCR → 分步进度 → 成功淡入场景页；
+  最近题目/示例题目/实验库折叠；AI 在线状态弱提示
+- 🎬 Teaching Layer：PhaseCard 阶段卡 + FormulaStrip 公式推导条（确定性 state=f(t)，
+  阶段开始 0.3x 减速 1.2s，拖动 Timeline 正确回放，无数据自动隐藏）
+- 📐 PhysicsScene 追加可选 overlay_hints（向后兼容）；统一显隐开关入视图菜单
+- 🌐 i18n +26 键（zh/en 对齐）；修复 MenuBar 遗留 `n 文本 bug
+- ✅ 门禁：tsc ×2 零错、124 用例全过、生产构建成功
 
 ## S70: AI Parse Quality Measurement + Rule Parser Expansion (Completed)
-- 🎯 50-case e2e test set (T310): mechanics 20 / EM 10 / thermo 5 / optics 5 / waves 5 / mixed 5
-- 🔧 Rule parser v3.0: 8 → 18 scene types, new domain param extraction (zh+en)
-- 📈 Type hit 24% → 100% | Param match 35.7% → 100% | Quality gate test added
-- 🧹 Repo stabilized: S68/S69 completed work committed (was uncommitted since S67)
+- 🎯 50-case e2e test set (T310) | Rule parser v3.0 (18 types) | Type hit 24%→100%
 
-## S69: Learning Data + Recommendations (Completed)
-- 📚 Real problem history (mock removed, persisted, correct inputMethod)
-- 🧠 Rule-based recommendation engine (6 rules incl. compare-pair)
-- 🧹 Unified storage helper; 6 stores refactored (DRY)
+## S69 / S68: Learning Data / OCR (Completed)
+- 📚 推荐引擎 + 学习数据 | 📷 OCR 题目输入 + AC 发电机
 
-## S68: Exploration Sprint (Completed)
-- 🔌 AC Generator experiment (EM trilogy complete)
-- 📷 OCR problem input (tesseract.js, Otsu preprocessing, editable fallback)
-
-## Next (S71)
-- Teaching animation generator (PhysicsScene → staged teaching script) — P1
-- Ollama e2e comparison / en-US locale debt / T2 comparison view / local accounts
+## Next (S72)
+- P1 剩余模板（ForceCallout、EventPulse）+ P2 第一步（默认面板组合）
+- 产品/UX Agent 按 TEACHING_LAYER_SPEC §5 验收反馈修复

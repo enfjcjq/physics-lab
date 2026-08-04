@@ -79,7 +79,7 @@ export function MenuBar() {
   const { t, locale, setLocale } = useI18n();
   const { activeId: activeAI, setActive: setActiveAI, checkOllama, ollamaAvailable } = useAIProviderStore();
   const { mode, setMode } = useTheme();
-  const { mode: appMode, subMode: teachingMode, setSubMode: setTeachingMode } = useTeaching();
+  const { mode: appMode, subMode: teachingMode, setSubMode: setTeachingMode, showPhaseCard, showFormulaStrip, teachingLayerEnabled, toggleTeachingElement, setTeachingLayerEnabled } = useTeaching();
   const panelMgr = usePanelManager();
   const viz = useVisualization();
   const [showAbout, setShowAbout] = useState(false);
@@ -169,7 +169,13 @@ export function MenuBar() {
         <MenuItem label={t("menu.view.grid")} checked={viz.toggles.showGrid} onClick={() => viz.toggle("showGrid")} />
         <MenuItem label={t("menu.view.trail")} checked={viz.toggles.showTrail} onClick={() => viz.toggle("showTrail")} />
         <MenuSeparator />
-        <MenuItem label={t("menu.view.dashboard")} shortcut="Ctrl+D" onClick={() => useDashboard.getState().toggle()} />`n        <MenuSeparator />`n        <MenuItem label={t("menu.view.reset_layout")} onClick={() => panelMgr.resetLayout()} />
+        <MenuItem label={t("menu.view.teaching_layer")} checked={teachingLayerEnabled} onClick={() => setTeachingLayerEnabled(!teachingLayerEnabled)} />
+        <MenuItem label={t("menu.view.phase_card")} checked={showPhaseCard} onClick={() => toggleTeachingElement("phaseCard")} />
+        <MenuItem label={t("menu.view.formula_strip")} checked={showFormulaStrip} onClick={() => toggleTeachingElement("formulaStrip")} />
+        <MenuSeparator />
+        <MenuItem label={t("menu.view.dashboard")} shortcut="Ctrl+D" onClick={() => useDashboard.getState().toggle()} />
+        <MenuSeparator />
+        <MenuItem label={t("menu.view.reset_layout")} onClick={() => panelMgr.resetLayout()} />
       </Dropdown>
 
       {/* Experiment */}

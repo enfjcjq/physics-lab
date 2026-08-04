@@ -20,6 +20,7 @@ interface HistoryItem {
   inputMethod: InputMethod;
   timestamp: number;
   sceneId?: string;
+  text?: string;
 }
 
 interface ProblemState {
@@ -37,7 +38,7 @@ interface ProblemState {
 
 export const useProblemStore = create<ProblemState>((set, get) => ({
   inputMethod: "text",
-  inputText: "A 2kg ball is dropped from a height of 10m. Ignore air resistance, g=10m/s^2. Find impact time and velocity.",
+  inputText: "",
   isSubmitting: false,
   parseError: null,
   history: loadJSON<HistoryItem[]>(HISTORY_KEY, []),
@@ -65,6 +66,7 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
           title,
           inputMethod: get().inputMethod,
           timestamp: Date.now(),
+          text: inputText.slice(0, 500),
         });
         // If scene has simulation block, register as virtual plugin
         if (hasSimulation(result.scene)) {

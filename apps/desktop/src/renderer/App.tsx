@@ -1,6 +1,8 @@
 ﻿import { useEffect, useState } from "react";
 import { AppShell } from "./components/layout/AppShell";
 import { ErrorBoundary } from "./components/layout/ErrorBoundary";
+import { HomePage } from "./features/home/HomePage";
+import { useHome } from "./features/home/home.store";
 import { useSimulation } from "./features/experiment/experiment.store";
 import { pluginRegistry } from "./core/plugin-registry";
 import { freeFallPlugin } from "./plugins";
@@ -9,11 +11,7 @@ import { FREE_FALL_SCENE, OHMS_LAW_SCENE, WAVE_SCENE, COULOMB_SCENE, REFRACTION_
 import { registerExtraScenes } from "./plugins/extra-scenes";
 
 // Eagerly register only free-fall. Other plugins load lazily on switch.
-// Register all plugins so the experiment switcher shows all 6
 pluginRegistry.register(freeFallPlugin);
-// Lazy-register the rest on first access via ensurePlugin in plugin-loader.ts
-// They appear in the list because pluginRegistry.list() only shows registered plugins.
-// We eagerly register them here for the UI, but their scenes load lazily.
 import("./plugins/projectile-motion/projectile-motion.plugin").then(m => pluginRegistry.register(m.projectileMotionPlugin));
 import("./plugins/inclined-plane/inclined-plane.plugin").then(m => pluginRegistry.register(m.inclinedPlanePlugin));
 import("./plugins/collision/collision.plugin").then(m => pluginRegistry.register(m.collisionPlugin));
@@ -36,6 +34,7 @@ pluginRegistry.register(createVirtualPlugin(AC_GENERATOR_SCENE as any));
 registerExtraScenes();
 
 export function App() {
+  const view = useHome((s) => s.view);
   const setScene = useSimulation((s) => s.setScene);
   const sceneLoaded = useSimulation((s) => s.sceneLoaded);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -93,6 +92,16 @@ export function App() {
     );
   }
 
-  return <ErrorBoundary><AppShell /></ErrorBoundary>;
+  // P0: problem-input homepage is the startup view; scene page has 300ms fade-in.
+  return (
+    <ErrorBoundary>
+      {view === "home" ? (
+        <HomePage />
+      ) : (
+        <div className="w-full h-full animate-in fade-in duration-300">
+          <AppShell />
+        </div>
+      )}
+    </ErrorBoundary>
+  );
 }
-

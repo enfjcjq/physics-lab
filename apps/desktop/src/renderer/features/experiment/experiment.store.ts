@@ -7,7 +7,7 @@ import { createEngine } from "@physics-lab/shared";
 import type { PhysicsSceneV2 } from "@physics-lab/shared";
 import { ensurePlugin } from "../../core/plugin-loader";
 
-export type SpeedLevel = 0.25 | 0.5 | 1 | 2 | 4;
+export type SpeedLevel = 0.25 | 0.3 | 0.5 | 1 | 2 | 4;
 
 // ---- Frame Cache: precomputed physics data for instant scrubbing ----
 

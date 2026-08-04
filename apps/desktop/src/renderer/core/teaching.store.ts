@@ -1,10 +1,12 @@
-import { create } from "zustand";
+﻿import { create } from "zustand";
 
 /** V1.0 mode system: 3 primary modes */
 export type AppMode = "learning" | "experiment" | "analysis";
 
 /** Legacy teaching sub-mode (used within the old teaching overlay) */
 export type TeachingSubMode = "experiment" | "teaching" | "solving" | "explore";
+
+export type TeachingElementKey = "phaseCard" | "formulaStrip";
 
 export interface TeachingOverlayState {
   showKnowledge: boolean;
@@ -22,10 +24,17 @@ interface TeachingState {
   /** Legacy teaching sub-mode (for overlay behavior) */
   subMode: TeachingSubMode;
   overlay: TeachingOverlayState;
+  /** S71 Teaching Layer (PhaseCard / FormulaStrip) visibility */
+  showPhaseCard: boolean;
+  showFormulaStrip: boolean;
+  /** Master switch for the 2D teaching layer (low-perf / user fallback) */
+  teachingLayerEnabled: boolean;
   setMode: (mode: AppMode) => void;
   setSubMode: (subMode: TeachingSubMode) => void;
   toggleOverlay: (key: keyof TeachingOverlayState) => void;
   getVisibleOverlays: () => (keyof TeachingOverlayState)[];
+  toggleTeachingElement: (key: TeachingElementKey) => void;
+  setTeachingLayerEnabled: (v: boolean) => void;
 }
 
 const SUB_MODE_PRESETS: Record<TeachingSubMode, TeachingOverlayState> = {
@@ -51,6 +60,14 @@ export const useTeaching = create<TeachingState>((set, get) => ({
   mode: "learning",
   subMode: "teaching",
   overlay: { ...SUB_MODE_PRESETS.teaching },
+  showPhaseCard: true,
+  showFormulaStrip: true,
+  teachingLayerEnabled: true,
+
+  toggleTeachingElement: (key) =>
+    set((s) => (key === "phaseCard" ? { showPhaseCard: !s.showPhaseCard } : { showFormulaStrip: !s.showFormulaStrip })),
+
+  setTeachingLayerEnabled: (v) => set({ teachingLayerEnabled: v }),
 
   setMode: (mode) => {
     const subModeMap: Record<AppMode, TeachingSubMode> = {
@@ -84,8 +101,10 @@ export const useTeaching = create<TeachingState>((set, get) => ({
   toggleOverlay: (key) =>
     set((s) => ({ overlay: { ...s.overlay, [key]: !s.overlay[key] } })),
 
+
   getVisibleOverlays: () => {
     const o = get().overlay;
     return (Object.keys(o) as (keyof TeachingOverlayState)[]).filter((k) => o[k]);
   },
 }));
+

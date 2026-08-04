@@ -1,6 +1,7 @@
-import { useSimulation } from "../../features/experiment/experiment.store";
+﻿import { useSimulation } from "../../features/experiment/experiment.store";
 import { Scene3D } from "../../features/experiment/components/Scene3D";
 import { TeachingOverlay } from "../teaching/TeachingOverlay";
+import { TeachingLayer } from "../../features/experiment/components/teaching/TeachingLayer";
 import { useI18n } from "../../core/i18n";
 import { useVisualization } from "../../core/visualization.store";
 import { pluginRegistry } from "../../core/plugin-registry";
@@ -52,6 +53,8 @@ export function CenterPanel() {
   const jumpToPhase = useSimulation((s) => s.jumpToPhase);
   const { t } = useI18n();
   const { mode } = useTeaching();
+  const teachingLayerEnabled = useTeaching((s) => s.teachingLayerEnabled);
+  const showFormulaStrip = useTeaching((s) => s.showFormulaStrip);
 
   const currentPhase = phases.find((p) => p.id === currentPhaseId);
 
@@ -102,8 +105,9 @@ export function CenterPanel() {
         </div>
       )}
       <Scene3D />
+      <TeachingLayer />
       <TeachingOverlay />
-      <FormulaHTML />
+      {!(teachingLayerEnabled && showFormulaStrip) && <FormulaHTML />}
       {/* Phase indicator */}
       <div className="absolute bottom-4 left-4 z-10">
         <div className="bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-lg px-3 py-1.5 flex items-center gap-2">
@@ -140,3 +144,4 @@ export function CenterPanel() {
     </div>
   );
 }
+

@@ -262,6 +262,26 @@ export interface ChartDef {
 
 // ---- PhysicsScene (top level) ----
 
+
+// ============================================================
+// v2.2 (optional): Teaching-layer hints (S71, append-only)
+// Short-term the rule parser may leave this empty; the Teaching
+// Layer derives content from phases/equations by default rules.
+// Long-term the AI composes templates and fills this structure.
+// ============================================================
+
+export interface OverlayHints {
+  phase_cards?: Array<{
+    phase_id: string;   // matches a timeline phase id
+    title?: string;     // falls back to phase label
+    hint?: string;      // falls back to phase description
+  }>;
+  formula_strips?: Array<{
+    phase_id: string;   // phase this formula strip belongs to
+    equation_id: string; // references equations[].id
+  }>;
+}
+
 export interface PhysicsScene {
   $schema: string;
   version: "2.0";
@@ -279,4 +299,7 @@ export interface PhysicsScene {
   teacher_steps?: TeacherStep[];
   /** v2.1: chart definitions */
   charts?: ChartDef[];
+  /** v2.2 (optional): teaching-layer hints (append-only) */
+  overlay_hints?: OverlayHints;
 }
+

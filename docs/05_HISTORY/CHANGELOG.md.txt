@@ -1,21 +1,38 @@
 ﻿# Changelog
 
+## V4.8 (S71) — 2026-08-04
+
+### Added
+- P0 题目输入首页（启动视图）：输入/OCR/分步进度/失败兜底/成功淡入；最近/示例/实验库折叠；AI 状态
+- Teaching Layer：PhaseCard 阶段卡 + FormulaStrip 公式推导条（确定性 state=f(t)，
+  阶段开始 0.3x 减速 1.2s，无数据 phase 自动隐藏，统一显隐开关）
+- PhysicsScene 可选 overlay_hints 字段（仅追加、向后兼容）
+- i18n +26 键（home.* / teaching.overlay.* / menu.view.*，zh/en 对齐至 992）
+- 纯函数教学数据层 + 公式安全求值器（12 个单测）
+
+### Changed
+- App 路由：首页 ↔ 学习场景页（MenuBar 仅场景页出现）
+- SpeedLevel 增加 0.3x（阶段减速）；problem.store 历史记录保存题目原文
+- 修复 MenuBar 视图菜单遗留字面 `n 文本 bug
+
+### Metrics
+- vitest 17 文件 / 124 用例全过；tsc ×2 零错；生产构建成功
+
+---
+
 ## V4.7 (S70) — 2026-08-03
 
 ### Added
-- AI parse e2e test set (50 zh/en cases, 6 categories) + runner + coverage report (T310)
-- Rule parser v3.0: 18 scene types (was 8), domain param extraction (zh+en)
+- AI parse e2e test set (50 zh/en cases) + runner + coverage report (T310)
+- Rule parser v3.0: 18 scene types + domain param extraction (zh+en)
 - Quality gate test: 25 new cases (15 files / 112 tests total)
-- wave-scene sim params v/f; ideal-gas-scene sim param P (additive)
 
 ### Changed
-- Parser output now writes extracted params into simulation.params (data-driven loop)
-- Fixed: m/s misread as height; wave speed stolen as velocity; 45度仰角;
-  friction without separator; circular_motion/buoyancy detection dead code
-- Repo stabilized: S68/S69 completed work committed (docs now match git history)
+- Parser output writes extracted params into simulation.params (data-driven loop)
+- Repo stabilized: S68/S69 completed work committed
 
 ### Metrics
-- Type hit rate 24% → 100% | Param match 35.7% → 100% (50-case set)
+- Type hit rate 24% → 100% | Param match 35.7% → 100%
 
 ---
 

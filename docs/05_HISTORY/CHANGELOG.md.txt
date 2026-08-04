@@ -1,44 +1,42 @@
 ﻿# Changelog
 
-## V4.9 (S72) — 2026-08-04
-
-### Added
-- ForceCallout 受力标注（drei Html 屏幕空间跟随、#EF4444 语义、排序前 3 + "+N"）
-- EventPulse 事件标记（橙色扩散脉冲仅播放态触发、2s 解释文字时间窗、Timeline 事件节点标记+高亮）
-- overlay_hints 扩展：force_callouts / event_pulses（仅追加、向后兼容）
-- P2 信息架构第一步：左缘 4 图标入口（参数/图表/步骤/图谱）、实验库抽屉、布局记忆 v3
-- i18n +7 键（rail.* / menu.view.force_callout / menu.view.event_pulse），两端对齐至 999
+## V5.0 (S73) — 2026-08-04
 
 ### Changed
-- 顶栏三模式切换器 + 顶部实验切换器移除（实验库收进画布抽屉）；默认 = 画布+Timeline+TeacherPanel
-- PhaseCard 归位 top-16px；TeachingLayer 增补事件解释文字层
-- 新增教学层数据纯函数（force/event）+ 7 个单测
+- ForceCallout 偏移判定改按 forces[].type（中文 label 稳健）
+- FormulaDisplay 变量符号着色 #00D4FF（--color-accent-info）
+- 语义色收尾：TEACHING_LAYER_SPEC §3 token → CSS 变量（dark/light 双主题）；
+  IconRail 激活态 sky → 语义橙（#FF6B00 系）
 
 ### Metrics
 - vitest 17 文件 / 131 用例全过；tsc ×2 零错；生产构建成功
 
 ---
 
-## V4.8 (S71) — 2026-08-04
-
+## V4.9 (S72) — 2026-08-04
 ### Added
-- P0 题目输入首页（启动视图）| Teaching Layer：PhaseCard + FormulaStrip
-- PhysicsScene 可选 overlay_hints | i18n +26 键 | 0.3x 阶段减速
-- 门禁：17 文件 / 124 用例；设计侧验收通过（TEACHING_LAYER_SPEC §8）
+- ForceCallout 受力标注 + EventPulse 事件标记（4 模板齐）
+- P2 第一步：实验库抽屉、左缘 4 图标、默认面板组合、布局记忆 v3
+- i18n +7 键（两端对齐 999）
+### Changed
+- 顶栏三模式切换器 + 顶部实验切换器移除；PhaseCard 归位 top-16px
+
+---
+
+## V4.8 (S71) — 2026-08-04
+### Added
+- P0 题目输入首页 | Teaching Layer（PhaseCard/FormulaStrip）| overlay_hints
+- i18n +26 键 | 0.3x 阶段减速
 
 ---
 
 ## V4.7 (S70) — 2026-08-03
-
 ### Added
-- AI parse e2e test set (50 zh/en cases) + runner + coverage (T310)
-- Rule parser v3.0: 18 scene types + domain params | quality gate test
+- AI parse e2e test set + coverage (T310) | Rule parser v3.0 (18 types)
 - Type hit 24% → 100% | Param match 35.7% → 100%
 
 ---
 
 ## V4.3 (S66) — 2026-07-05
-
 ### Added
-- 4 new experiments: Faraday Law, Electric Motor, Ideal Gas Law, Lens Optics
-- i18n expanded from 869 to 924 keys | Total experiments: 17
+- 4 new experiments (Faraday/Motor/Gas/Lens) | i18n 924 keys | 17 experiments

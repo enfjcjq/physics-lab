@@ -44,7 +44,7 @@ export function ForceCalloutLayer() {
     <group>
       {callouts.map((c) => {
         const base = resolveEntityPos(scene, c.entityId, live);
-        const offset = calloutOffset(c.label.toLowerCase().includes("gravity") ? "gravity" : c.label.toLowerCase().includes("normal") ? "normal" : "other");
+        const offset = calloutOffset(c.type);
         return (
           <Html key={c.forceId} position={[base[0] + offset[0], base[1] + offset[1], base[2] + offset[2]]} center zIndexRange={[30, 0]} style={{ pointerEvents: "none" }}>
             <div className="force-callout" style={{ borderColor: "var(--color-force, #EF4444)" }}>
@@ -106,3 +106,4 @@ export function EventPulseLayer() {
     </group>
   );
 }
+

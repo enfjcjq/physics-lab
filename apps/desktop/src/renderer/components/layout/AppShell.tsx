@@ -43,7 +43,7 @@ function IconRail() {
         return (
           <button key={it.id} title={t(it.key)} onClick={() => toggle(it.id)}
             className={"w-9 h-9 rounded-lg flex items-center justify-center text-base transition-all duration-200 " +
-              (open ? "bg-sky-600/20 text-sky-300 ring-1 ring-sky-500/40" : "text-slate-500 hover:text-slate-200 hover:bg-slate-800/60")}>
+              (open ? "bg-orange-600/15 text-orange-400 ring-1 ring-orange-500/40" : "text-slate-500 hover:text-slate-200 hover:bg-slate-800/60")}>
             <span>{it.icon}</span>
           </button>
         );

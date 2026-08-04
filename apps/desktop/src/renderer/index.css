@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -22,6 +22,11 @@
   --warning: #f59e0b;
   --danger: #ef4444;
   --gradient-1: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  /* P3 teaching semantic colors (TEACHING_LAYER_SPEC §3) */
+  --color-accent-action: #FF6B00;
+  --color-accent-info: #00D4FF;
+  --color-force: #EF4444;
+  --color-energy: #F59E0B;
 }
 
 [data-theme="light"] {
@@ -42,6 +47,11 @@
   --warning: #d97706;
   --danger: #dc2626;
   --gradient-1: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  /* P3 teaching semantic colors (TEACHING_LAYER_SPEC §3) */
+  --color-accent-action: #FF6B00;
+  --color-accent-info: #00D4FF;
+  --color-force: #EF4444;
+  --color-energy: #F59E0B;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -159,3 +169,4 @@ body, .bg-slate-900, .bg-slate-950, .bg-slate-800 {
   to { opacity: 1; transform: translateY(0); }
 }
 .event-pulse-text { animation: event-pulse-text-in 200ms ease-out; }
+

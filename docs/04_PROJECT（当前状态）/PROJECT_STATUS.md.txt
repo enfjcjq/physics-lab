@@ -1,25 +1,23 @@
 ﻿# Project Status
 
-**Version:** V4.9 (Sprint S72)
-**Status:** Active Development — Teaching Layer 完整 + P2 信息架构第一步
+**Version:** V5.0 (Sprint S73)
+**Status:** Active Development — Teaching Layer 语义色统一
 
 ## Key Metrics
 - **18 experiments** | Zero TS errors | 131 tests passed (17 files) | AI parse 100%/100%
-- Teaching Layer 4 模板全部上线（PhaseCard / FormulaStrip / ForceCallout / EventPulse）
+- Teaching Layer 4 模板 + P2 信息架构第一步 + 语义色 token 落地
 
-## S72: ForceCallout + EventPulse + P2 信息架构第一步 (Completed)
-- 💪 ForceCallout：受力标注（3D 投影跟随、语义红、前 3 + "+N"）
-- ⚡ EventPulse：事件脉冲 + 2s 解释文字 + Timeline 事件标记（播放态触发，拖动不重复）
-- 🗂️ P2 第一步：移除顶栏三模式切换器；实验切换器收进"实验库"抽屉；
-  左缘 4 图标入口（参数/图表/步骤/图谱）；默认 = 画布+Timeline+TeacherPanel；布局记忆
-- 📍 PhaseCard 归位 top-16px；overlay_hints 扩展 force_callouts/event_pulses
+## S73: S72 验收修复 + 语义色收尾 (Completed)
+- 🎨 ForceCallout 偏移按 forces[].type 判定（中文 label 稳健）
+- 🎨 FormulaDisplay 变量符号 #00D4FF；补齐 §3 语义色 CSS 变量（dark/light）
+- 🎨 IconRail 激活态 sky → 语义橙
 
-## S71: P0 题目输入首页 + P1 教学图层模板 (Completed)
-- 🏠 首页=启动视图（输入/OCR/进度/兜底/淡入）| 🎬 PhaseCard + FormulaStrip | ✅ 设计验收通过
+## S72: ForceCallout + EventPulse + P2 第一步 (Completed) — 设计验收通过
+- 💪 ForceCallout | ⚡ EventPulse | 🗂️ 实验库抽屉 + 左缘 4 图标 + 默认面板组合 | PhaseCard top-16px
 
-## S70: AI Parse Quality (Completed)
-- 🎯 50-case e2e | Rule parser v3.0 (18 types) | 24%→100%
+## S71: P0 首页 + P1 教学图层 (Completed) — 设计验收通过
+## S70: AI 解析质量 (Completed) — 24% → 100%
 
-## Next (S73)
-- 产品/UX Agent 按 §7.3 验收反馈修复；FormulaDisplay 变量符号 #00D4FF 着色（非阻塞）
-- 教学动画生成器（P1 核心）候选
+## Next (S74)
+- TeachingScript Generator：PhysicsScene → 自动生成 overlay_hints 的规则系统
+  （规格：TEACHING_SCRIPT_GENERATOR_SPEC.md；先规则生成、后 AI 接入）

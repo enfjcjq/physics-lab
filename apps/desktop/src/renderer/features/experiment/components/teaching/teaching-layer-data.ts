@@ -135,6 +135,7 @@ export interface ForceCalloutData {
   label: string;
   formula: string;
   entityId: string;
+  type: string;
   color: string;
   direction: [number, number, number] | string;
 }
@@ -163,6 +164,7 @@ export function getForceCalloutData(scene: PhysicsScene, time: number, max = 3):
       label,
       formula,
       entityId: f.target_entity,
+      type: f.type,
       color: "#EF4444",
       direction: f.direction,
     };
@@ -220,3 +222,4 @@ export function getPulsableEvents(scene: PhysicsScene, maxPerPhase = 2): Pulsabl
   }
   return result;
 }
+

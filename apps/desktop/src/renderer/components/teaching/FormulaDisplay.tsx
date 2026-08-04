@@ -87,7 +87,7 @@ export function FormulaDisplay({ formula, className }: FormulaDisplayProps) {
       {segments.map((seg, i) => {
         switch (seg.type) {
           case "var":
-            return <span key={i} className="formula-var text-sky-300 italic">{seg.value}</span>;
+            return <span key={i} className="formula-var italic" style={{ color: "var(--color-accent-info, #00D4FF)" }}>{seg.value}</span>;
           case "num":
             return <span key={i} className="formula-num text-amber-300">{seg.value}</span>;
           case "op":
@@ -113,3 +113,4 @@ export function FormulaBlock({ formula }: { formula: string }) {
     </div>
   );
 }
+

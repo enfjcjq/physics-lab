@@ -4,6 +4,7 @@ import type { PhysicsScene, TimelinePhase, PhysicsState } from "@physics-lab/sha
 import { useHistory } from "../../core/history.store";
 import { pluginRegistry } from "../../core/plugin-registry";
 import { createEngine } from "@physics-lab/shared";
+import { ensureTeachingScript } from "@physics-lab/shared";
 import type { PhysicsSceneV2 } from "@physics-lab/shared";
 import { ensurePlugin } from "../../core/plugin-loader";
 
@@ -281,6 +282,8 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
 
   // ===== Scene management =====
   setScene: (scene) => {
+    // S74: attach generated teaching hints when absent (built-in scenes at runtime)
+    ensureTeachingScript(scene);
     const { height, mass, gravity, duration, phases } = extractParams(scene);
     const pluginId = scene.metadata.topic ?? "free-fall";
     const cache = buildFrameCache(duration, height, gravity, mass, pluginId, phases, scene);

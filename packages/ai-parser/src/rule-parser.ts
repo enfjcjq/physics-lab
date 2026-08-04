@@ -6,6 +6,7 @@ import {
   FARADAY_SCENE, MOTOR_SCENE, IDEAL_GAS_SCENE, LENS_OPTICS_SCENE, AC_GENERATOR_SCENE,
 } from "@physics-lab/shared";
 import type { AIProvider, ParseResult } from "./types";
+import { ensureTeachingScript } from "@physics-lab/shared";
 
 // ============================================================
 // Rule-Based Physics Parser v3.0
@@ -396,6 +397,9 @@ function buildScene(params: ExtractedParams, text: string): PhysicsScene {
 
   applyParams(scene, params, sceneKey);
 
+
+  // S74: attach generated teaching hints (explicit overlay_hints wins)
+  ensureTeachingScript(scene);
   return scene;
 }
 
@@ -436,4 +440,5 @@ export const ruleParser: AIProvider = {
 };
 
 export { detectMotion, extractParams, buildScene };
+
 

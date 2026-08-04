@@ -1,39 +1,43 @@
 ﻿# Changelog
 
-## V5.0 (S73) — 2026-08-04
+## V5.1 (S74) — 2026-08-04
+
+### Added
+- TeachingScript Generator（packages/shared/teaching）：
+  - generateTeachingScript：R1 阶段卡 / R2 公式条（is_solution 归末段、energy 匹配）/ R3 受力 / R4 事件脉冲
+  - validateTeachingScript：引用完整性 / 数量上限 / 文案长度；逐条丢弃不抛错
+  - ensureTeachingScript：显式 overlay_hints 优先，否则运行时生成
+- 接入：规则解析器管线末尾 + experiment.store.setScene（18 内置场景运行时生成，不改场景文件）
 
 ### Changed
-- ForceCallout 偏移判定改按 forces[].type（中文 label 稳健）
-- FormulaDisplay 变量符号着色 #00D4FF（--color-accent-info）
-- 语义色收尾：TEACHING_LAYER_SPEC §3 token → CSS 变量（dark/light 双主题）；
-  IconRail 激活态 sky → 语义橙（#FF6B00 系）
+- 教学图层 4 模板从"渲染层缺省推导"升级为"显式脚本 + 校验"（缺省推导保留为最终兜底）
 
 ### Metrics
-- vitest 17 文件 / 131 用例全过；tsc ×2 零错；生产构建成功
+- vitest 18 文件 / 142 用例全过（+11：生成器/校验器/集成）；tsc ×3 零错；生产构建成功
+
+---
+
+## V5.0 (S73) — 2026-08-04
+### Changed
+- ForceCallout 偏移按 forces[].type | FormulaDisplay 变量符号 #00D4FF | 语义色 token CSS 变量 + IconRail 语义橙
 
 ---
 
 ## V4.9 (S72) — 2026-08-04
 ### Added
-- ForceCallout 受力标注 + EventPulse 事件标记（4 模板齐）
-- P2 第一步：实验库抽屉、左缘 4 图标、默认面板组合、布局记忆 v3
-- i18n +7 键（两端对齐 999）
-### Changed
-- 顶栏三模式切换器 + 顶部实验切换器移除；PhaseCard 归位 top-16px
+- ForceCallout + EventPulse | P2 第一步（实验库抽屉、左缘 4 图标、默认面板组合、布局记忆 v3）
 
 ---
 
 ## V4.8 (S71) — 2026-08-04
 ### Added
 - P0 题目输入首页 | Teaching Layer（PhaseCard/FormulaStrip）| overlay_hints
-- i18n +26 键 | 0.3x 阶段减速
 
 ---
 
 ## V4.7 (S70) — 2026-08-03
 ### Added
-- AI parse e2e test set + coverage (T310) | Rule parser v3.0 (18 types)
-- Type hit 24% → 100% | Param match 35.7% → 100%
+- AI parse e2e test set + coverage (T310) | Rule parser v3.0 (18 types) | 24% → 100%
 
 ---
 

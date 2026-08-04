@@ -1,17 +1,31 @@
-﻿# Current Milestone: S73 (Completed)
+﻿# Current Milestone: S74 (Completed)
 
-**Goal:** S72 验收修复 + FormulaDisplay 变量符号着色 + 语义色收尾（产品/UX Agent 第 3 轮确认范围）
+**Goal:** TeachingScript Generator — PhysicsScene → 自动生成 overlay_hints 的规则系统
+**依据:** TEACHING_SCRIPT_GENERATOR_SPEC.md v1.0 + 产品/UX Agent 第 4 轮确认的 4 项边界
 
 **Completed:**
-- [x] ForceCallout 偏移判定改按 `forces[].type`（不再依赖 label 文本匹配，中文 label 也正确）
-- [x] FormulaDisplay 变量符号着色 #00D4FF（--color-accent-info）
-- [x] 语义色收尾：补齐 TEACHING_LAYER_SPEC §3 视觉 token CSS 变量
-      （--color-accent-action / --color-accent-info / --color-force / --color-energy，dark+light 双主题）；
-      IconRail 激活态 sky → 语义橙（#FF6B00 系）
-- [x] 验证：tsc ×2 零错、vitest 17 文件 131 用例全过、生产构建成功
+- [x] 纯函数生成器 `generateTeachingScript(scene): OverlayHints`（shared 包，可复用）
+      - R1 阶段卡：每 phase 一张（hint 取 description，缺失/超 30 字则不生成）
+      - R2 公式条：phase[i]↔equations[i] 缺省 + is_solution 归末 phase + energy 公式匹配能量 phase
+      - R3 受力标注：全部力列出（渲染层排序取前 3 + "+N"）
+      - R4 事件脉冲：collision 必标 + 每 phase 首个其他事件，每 phase ≤2（半开区间防边界双计）
+- [x] 校验器 `validateTeachingScript`：引用完整性 / 每 phase 1 公式条 / 每 phase ≤2 脉冲 /
+      文案 ≤30 字 / 逐条丢弃不抛错（防御性数组处理）
+- [x] 运行时接入：`ensureTeachingScript`（显式 overlay_hints 优先，否则生成+校验）
+      - 规则解析器管线末尾接入（parseProblem 输出带 overlay_hints）
+      - experiment.store.setScene 接入（18 内置场景运行时生成，不改场景文件）
+- [x] 测试：18 场景确定性 + 不变式（无悬空引用/每 phase 卡片齐全/公式条每 phase ≤1/脉冲 ≤2/
+      solution 归末段）+ 校验器单测（丢弃/去重/超长/超量/垃圾输入不抛错）+ 管线集成
+- [x] 验证：tsc ×3 零错、vitest 18 文件 142 用例全过、生产构建成功
+
+**待产品/UX Agent 验收（TEACHING_SCRIPT_GENERATOR_SPEC §7）：**
+1. 18 内置场景播放时教学图层均有合理内容，无空 phase 卡、无悬空引用
+2. solution 公式只出现在最后一个 phase
+3. 每 phase 元素总量不超上限
+4. 人为非法 overlay_hints 被校验器丢弃并回退
 
 **Deferred:**
-- S74：TeachingScript Generator（PhysicsScene → 自动生成 overlay_hints 的规则系统），
-  产品/UX Agent 已产出规格 TEACHING_SCRIPT_GENERATOR_SPEC.md
+- AI 接入（AI 选择+组合模板并填 overlay_hints，规则系统作为校验与兜底）——长期
+- Ollama e2e 对比 | PDF 输入 | P2 第二步
 
-**Next: S74** — TeachingScript Generator 规则系统（先规则生成、后 AI 接入）
+**Next: S75** — 依 §7 验收反馈修复；或 AI 接入 TeachingScript（AI 输出同结构，走校验器）

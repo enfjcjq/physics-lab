@@ -1,23 +1,23 @@
 ﻿# Project Status
 
-**Version:** V5.0 (Sprint S73)
-**Status:** Active Development — Teaching Layer 语义色统一
+**Version:** V5.1 (Sprint S74)
+**Status:** Active Development — TeachingScript Generator（教学脚本规则系统）
 
 ## Key Metrics
-- **18 experiments** | Zero TS errors | 131 tests passed (17 files) | AI parse 100%/100%
-- Teaching Layer 4 模板 + P2 信息架构第一步 + 语义色 token 落地
+- **18 experiments** | Zero TS errors | 142 tests passed (18 files) | AI parse 100%/100%
+- overlay_hints 有了统一生产者（规则生成 + 校验），教学图层 4 模板全部有显式脚本
 
-## S73: S72 验收修复 + 语义色收尾 (Completed)
-- 🎨 ForceCallout 偏移按 forces[].type 判定（中文 label 稳健）
-- 🎨 FormulaDisplay 变量符号 #00D4FF；补齐 §3 语义色 CSS 变量（dark/light）
-- 🎨 IconRail 激活态 sky → 语义橙
+## S74: TeachingScript Generator (Completed)
+- ⚙️ generateTeachingScript：R1 阶段卡 / R2 公式条（solution 归末段、energy 匹配）/ R3 受力 / R4 事件脉冲
+- 🛡️ validateTeachingScript：引用完整性 + 数量上限 + 文案长度，逐条丢弃不抛错
+- 🔌 接入：规则解析器管线末尾 + experiment.store.setScene 运行时生成（18 场景不改文件）
+- ✅ 边界四项全落实（纯函数确定性 / 不改场景文件 / 显式>生成器>缺省推导 / 仅追加）
+- 🧪 18 场景不变式 + 校验器 + 集成测试（+11 用例）
 
+## S73: 语义色收尾 (Completed) — 设计验收通过
 ## S72: ForceCallout + EventPulse + P2 第一步 (Completed) — 设计验收通过
-- 💪 ForceCallout | ⚡ EventPulse | 🗂️ 实验库抽屉 + 左缘 4 图标 + 默认面板组合 | PhaseCard top-16px
-
 ## S71: P0 首页 + P1 教学图层 (Completed) — 设计验收通过
 ## S70: AI 解析质量 (Completed) — 24% → 100%
 
-## Next (S74)
-- TeachingScript Generator：PhysicsScene → 自动生成 overlay_hints 的规则系统
-  （规格：TEACHING_SCRIPT_GENERATOR_SPEC.md；先规则生成、后 AI 接入）
+## Next (S75)
+- 依 §7 验收反馈修复；或 AI 接入 TeachingScript（AI 输出同结构，规则系统校验兜底）

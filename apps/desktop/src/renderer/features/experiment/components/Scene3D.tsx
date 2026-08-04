@@ -13,6 +13,7 @@ import MotorViz from "./viz/MotorViz";
 import GasCylinder from "./viz/GasCylinder";
 import LensViz from "./viz/LensViz";
 import ACGeneratorViz from "./viz/ACGeneratorViz";
+import { ForceCalloutLayer, EventPulseLayer } from "./teaching/S72CanvasLayers";
 
 // ---- Inner Error Boundary for 3D scene children ----
 interface SceneErrorBoundaryState { hasError: boolean; error: string | null }
@@ -394,6 +395,7 @@ export const Scene3D = memo(function Scene3D() {
         {viz.showTrail&&<Trail/>}
         <GhostTrails/><Ball2/>{viz.showDataLabels&&<HeightRuler/>}
         {viz.showVelocityArrow&&<VelocityArrow/>}{viz.showAccelArrow&&<AccelArrow/>}{viz.showGravityArrow&&<ForceArrow/>}
+        <ForceCalloutLayer /><EventPulseLayer />
         {viz.showDataLabels&&<HudLabels/>}
         <WavePoints/><CircuitViz/><CoulombField/><RefractionBoundary/><DopplerWavefronts/><FaradayCoil/><MotorViz/><GasCylinder/><LensViz/><ACGeneratorViz/>
         <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>

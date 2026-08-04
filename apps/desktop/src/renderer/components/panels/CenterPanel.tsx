@@ -1,4 +1,5 @@
 ﻿import { useSimulation } from "../../features/experiment/experiment.store";
+import { useState } from "react";
 import { Scene3D } from "../../features/experiment/components/Scene3D";
 import { TeachingOverlay } from "../teaching/TeachingOverlay";
 import { TeachingLayer } from "../../features/experiment/components/teaching/TeachingLayer";
@@ -45,6 +46,7 @@ function FormulaHTML() {
 }
 
 export function CenterPanel() {
+  const [libOpen, setLibOpen] = useState(false);
   const pluginLoading = useSimulation((s) => s.pluginLoading);
   const activePluginId = useSimulation((s) => s.activePluginId);
   const setActivePlugin = useSimulation((s) => s.setActivePlugin);
@@ -69,24 +71,35 @@ export function CenterPanel() {
 
   return (
     <div className="flex-1 relative min-w-0">
-      {/* Experiment switcher - always visible */}
+      {/* Experiment library drawer (P2 first step: switcher moved here) */}
       <div className="absolute top-3 left-4 z-20">
-        <div className="flex gap-1 bg-slate-900/90 backdrop-blur-md border border-slate-600/50 rounded-xl p-1 shadow-xl">
-          {pluginRegistry.list().map((p) => (
-            <button
-              key={p.id}
-              onClick={async () => { if (p.id !== activePluginId) await setActivePlugin(p.id); }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 ${
-                p.id === activePluginId
-                  ? "bg-sky-600 text-white shadow-md shadow-sky-900/40"
-                  : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-              }`}
-              title={t(p.name)}
-            >
-              <span className="text-xs">{expIcons[p.id] || "⚡"}</span>
-              <span className="inline">{t(p.name)}</span>
-            </button>
-          ))}
+        <div className="relative">
+          <button
+            onClick={() => setLibOpen(!libOpen)}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1 bg-slate-900/90 backdrop-blur-md border border-slate-600/50 shadow-xl text-slate-200 hover:bg-slate-800/80"
+          >
+            <span className="text-xs">{"\u269B\uFE0F"}</span>
+            <span className="inline">{t("rail.library")}</span>
+            <span className="text-[9px] text-slate-500">{libOpen ? "\u25B2" : "\u25BC"}</span>
+          </button>
+          {libOpen && (
+            <>
+              <div className="fixed inset-0 z-30" onClick={() => setLibOpen(false)} />
+              <div className="absolute top-full left-0 mt-1 z-40 w-56 bg-slate-900/95 backdrop-blur-md border border-slate-700 rounded-xl shadow-2xl overflow-hidden py-1">
+                {pluginRegistry.list().map((p) => (
+                  <button
+                    key={p.id}
+                    onClick={async () => { if (p.id !== activePluginId) await setActivePlugin(p.id); setLibOpen(false); }}
+                    className={"w-full text-left px-3 py-2 text-xs transition-colors flex items-center gap-2 " +
+                      (p.id === activePluginId ? "bg-sky-600/20 text-sky-300" : "text-slate-300 hover:bg-slate-800/60 hover:text-white")}
+                  >
+                    <span className="text-xs">{expIcons[p.id] || "⚡"}</span>
+                    <span className="inline">{t(p.name)}</span>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
       {pluginLoading && (
@@ -144,4 +157,5 @@ export function CenterPanel() {
     </div>
   );
 }
+
 

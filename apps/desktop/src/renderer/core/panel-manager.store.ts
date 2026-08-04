@@ -1,4 +1,4 @@
-import { create } from "zustand";
+﻿import { create } from "zustand";
 import { loadJSON, saveJSON } from "../lib/storage";
 
 export type DockZone = "left" | "right" | "bottom" | "center" | "floating";
@@ -24,11 +24,11 @@ export interface PanelState {
 const PANEL_DEFS: PanelConfig[] = [
   { id: "problem",   titleKey: "panel.problem",    defaultZone: "left",     defaultOpen: false, order: 0 },
   { id: "history",   titleKey: "panel.history",    defaultZone: "left",     defaultOpen: false, order: 1 },
-  { id: "parameters",titleKey: "panel.parameters", defaultZone: "left",     defaultOpen: true,  order: 2 },
+  { id: "parameters",titleKey: "panel.parameters", defaultZone: "left",     defaultOpen: false,  order: 2 },
   { id: "timeline",  titleKey: "panel.timeline",   defaultZone: "bottom",   defaultOpen: false, order: 0 },
   { id: "charts",    titleKey: "panel.charts",     defaultZone: "bottom",   defaultOpen: false, order: 1 },
   { id: "analysis",  titleKey: "panel.analysis",   defaultZone: "right",    defaultOpen: false, order: 0 },
-  { id: "teaching",  titleKey: "panel.teaching",   defaultZone: "right",    defaultOpen: false, order: 1 },
+  { id: "teaching",  titleKey: "panel.teaching",   defaultZone: "right",    defaultOpen: true, order: 1 },
   { id: "toolbox",   titleKey: "panel.toolbox",    defaultZone: "floating", defaultOpen: false, order: 0 },
   { id: "properties",titleKey: "panel.properties", defaultZone: "right",    defaultOpen: false, order: 2 },
 ];
@@ -48,7 +48,7 @@ interface PanelManagerState {
   resetLayout: () => void;
 }
 
-const LAYOUT_VERSION = 2; // bump to reset cached layouts with old defaults
+const LAYOUT_VERSION = 3;
 
 function loadLayout(): Record<string, PanelState> | null {
   const saved = loadJSON<Record<string, PanelState> | null>("physics-lab-layout", null);

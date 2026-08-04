@@ -124,3 +124,38 @@ body, .bg-slate-900, .bg-slate-950, .bg-slate-800 {
   to { opacity: 1; }
 }
 .overlay-fade-in { animation: overlay-fade-in 200ms ease-in; }
+
+/* ===== S72 ForceCallout / EventPulse ===== */
+.force-callout {
+  display: flex; flex-direction: column; gap: 1px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.75);
+  border-left: 2px solid #EF4444;
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+}
+.force-callout-label { color: #fff; font-size: 12px; line-height: 1.2; }
+.force-callout-formula { color: #f87171; font-size: 11px; font-family: ui-monospace, monospace; line-height: 1.2; }
+.force-callout-more {
+  padding: 2px 8px; border-radius: 999px;
+  background: rgba(15, 23, 42, 0.75);
+  color: #94a3b8; font-size: 11px;
+}
+
+@keyframes event-pulse-ring {
+  0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0.9; border-width: 3px; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; border-width: 1px; }
+}
+.event-pulse-ring {
+  width: 80px; height: 80px;
+  border: 3px solid var(--color-accent-action, #FF6B00);
+  border-radius: 999px;
+  animation: event-pulse-ring 600ms ease-out forwards;
+}
+
+@keyframes event-pulse-text-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.event-pulse-text { animation: event-pulse-text-in 200ms ease-out; }

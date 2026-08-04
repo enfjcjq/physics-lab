@@ -1,27 +1,25 @@
 ﻿# Project Status
 
-**Version:** V4.8 (Sprint S71)
-**Status:** Active Development — P0 首页 + P1 Teaching Layer 落地
+**Version:** V4.9 (Sprint S72)
+**Status:** Active Development — Teaching Layer 完整 + P2 信息架构第一步
 
 ## Key Metrics
-- **18 experiments** | Zero TS errors | 124 tests passed (17 files) | AI parse coverage 100%/100%
-- P0 题目输入首页上线 | Teaching Layer（PhaseCard + FormulaStrip）上线
+- **18 experiments** | Zero TS errors | 131 tests passed (17 files) | AI parse 100%/100%
+- Teaching Layer 4 模板全部上线（PhaseCard / FormulaStrip / ForceCallout / EventPulse）
+
+## S72: ForceCallout + EventPulse + P2 信息架构第一步 (Completed)
+- 💪 ForceCallout：受力标注（3D 投影跟随、语义红、前 3 + "+N"）
+- ⚡ EventPulse：事件脉冲 + 2s 解释文字 + Timeline 事件标记（播放态触发，拖动不重复）
+- 🗂️ P2 第一步：移除顶栏三模式切换器；实验切换器收进"实验库"抽屉；
+  左缘 4 图标入口（参数/图表/步骤/图谱）；默认 = 画布+Timeline+TeacherPanel；布局记忆
+- 📍 PhaseCard 归位 top-16px；overlay_hints 扩展 force_callouts/event_pulses
 
 ## S71: P0 题目输入首页 + P1 教学图层模板 (Completed)
-- 🏠 首页=启动视图：输入题目（自动聚焦/空态禁用 CTA）→ OCR → 分步进度 → 成功淡入场景页；
-  最近题目/示例题目/实验库折叠；AI 在线状态弱提示
-- 🎬 Teaching Layer：PhaseCard 阶段卡 + FormulaStrip 公式推导条（确定性 state=f(t)，
-  阶段开始 0.3x 减速 1.2s，拖动 Timeline 正确回放，无数据自动隐藏）
-- 📐 PhysicsScene 追加可选 overlay_hints（向后兼容）；统一显隐开关入视图菜单
-- 🌐 i18n +26 键（zh/en 对齐）；修复 MenuBar 遗留 `n 文本 bug
-- ✅ 门禁：tsc ×2 零错、124 用例全过、生产构建成功
+- 🏠 首页=启动视图（输入/OCR/进度/兜底/淡入）| 🎬 PhaseCard + FormulaStrip | ✅ 设计验收通过
 
-## S70: AI Parse Quality Measurement + Rule Parser Expansion (Completed)
-- 🎯 50-case e2e test set (T310) | Rule parser v3.0 (18 types) | Type hit 24%→100%
+## S70: AI Parse Quality (Completed)
+- 🎯 50-case e2e | Rule parser v3.0 (18 types) | 24%→100%
 
-## S69 / S68: Learning Data / OCR (Completed)
-- 📚 推荐引擎 + 学习数据 | 📷 OCR 题目输入 + AC 发电机
-
-## Next (S72)
-- P1 剩余模板（ForceCallout、EventPulse）+ P2 第一步（默认面板组合）
-- 产品/UX Agent 按 TEACHING_LAYER_SPEC §5 验收反馈修复
+## Next (S73)
+- 产品/UX Agent 按 §7.3 验收反馈修复；FormulaDisplay 变量符号 #00D4FF 着色（非阻塞）
+- 教学动画生成器（P1 核心）候选

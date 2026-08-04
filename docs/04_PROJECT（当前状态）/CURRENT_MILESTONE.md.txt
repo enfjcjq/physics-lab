@@ -1,38 +1,28 @@
-﻿# Current Milestone: S71 (Completed)
+﻿# Current Milestone: S72 (Completed)
 
-**Goal:** P0 题目输入首页 + P1 Teaching Layer 第一批模板（PhaseCard / FormulaStrip）
-**依据:** TEACHING_LAYER_SPEC.md v1.0（产品/UX Agent 交付，第 1 轮问答确认）
+**Goal:** P1 剩余模板（ForceCallout / EventPulse）+ P2 信息架构第一步 + 实验切换器收进实验库抽屉
+**依据:** TEACHING_LAYER_SPEC.md v1.1 §6-7 + 产品/UX Agent 第 2 轮验收批复
 
 **Completed:**
-- [x] P0 题目输入首页：启动即首页（输入框自动聚焦 / 主 CTA 空输入禁用 /
-      拍照识别（复用 OCR）/ 最近题目 5 条 / 示例题目 4 道 / 实验库折叠入口 /
-      AI 在线状态弱提示）；状态机：空态 → 分步解析进度（实体→模型→编排动画）→
-      失败（重试 / 示例场景兜底 FREE_FALL）→ 成功 300ms 淡入学习场景页
-- [x] App 路由：HomePage ↔ AppShell（MenuBar 仅在学习场景页出现）
-- [x] P1 Teaching Layer（2D HTML 覆盖层，pointer-events:none，确定性 state=f(t)）：
-      PhaseCard 阶段卡（左上角、索引/标题/hint、进入 250ms 淡入 + 下移、
-      离开 200ms 淡出、阶段开始自动减速 0.3x×1.2s）
-      FormulaStrip 公式推导条（底部居中、三阶段：原式→代入→结果高亮、
-      按 phase 进度 0/50/80% 切换、无数据 phase 自动隐藏）
-- [x] PhysicsScene 追加可选 `overlay_hints` 字段（仅追加、向后兼容）
-- [x] 统一显隐开关：MenuBar 视图菜单（教学图层总开关 + 阶段卡 + 公式推导条）
-- [x] 低性能/减动效降级：prefers-reduced-motion 或总开关关闭 → 图层整体隐藏，
-      退回既有侧面板教学
-- [x] i18n：zh-CN / en-US 各 +26 键（home.*、teaching.overlay.*、menu.view.*，\uXXXX 规范）
-- [x] 修复 MenuBar 视图菜单中遗留的字面 `n 文本 bug
-- [x] 验证：shared tsc 0 错、desktop tsc 0 错、vitest 17 文件 124 用例全过、
-      `npm run build`（Electron + renderer）成功
+- [x] ForceCallout 受力标注：screen-space 跟随（drei Html 投影）、#EF4444 语义色、
+      排序取前 3 + "+N" 收敛、拖动 Timeline 确定性重建（state=f(t)）
+- [x] EventPulse 事件标记：橙色扩散脉冲（仅播放态越过事件帧触发，拖动/跳转不重复触发）、
+      解释文字 2s 时间窗显隐（f(t)）、Timeline 事件节点标记 + 窗口内高亮、
+      每 phase ≤2（collision 必标 + 首个 other）缺省规则
+- [x] overlay_hints 扩展：force_callouts / event_pulses（仅追加、向后兼容）
+- [x] P2 第一步：顶栏三模式切换器移除；实验切换器收进画布"实验库"抽屉；
+      学习场景默认 = 画布 + Timeline + TeacherPanel；左缘 4 图标竖排入口
+      （参数/图表/步骤/图谱）开关抽屉；面板组合持久化（LAYOUT_VERSION 3）；
+      PhaseCard 归位 top-16px；Dashboard 保留于 MenuBar
+- [x] i18n：zh/en 各 +7 键（rail.*、menu.view.force_callout/event_pulse）
+- [x] 验证：shared/desktop tsc 0 错、vitest 17 文件 131 用例全过、生产构建成功
 
-**待产品/UX Agent 验收（TEACHING_LAYER_SPEC §5）：**
-- 首页仅一个主行动；实验库可达但折叠
-- PhaseCard 阶段切换 + 动画减速可感知；拖动 Timeline 确定性回放
-- FormulaStrip 三阶段同步；无数据 phase 自动隐藏
-- 显隐开关 / 降级路径
-- 五色语义一致且无颜色规则说明文字
+**待产品/UX Agent 验收（TEACHING_LAYER_SPEC §7.3）：**
+1. ForceCallout：力出现/消失同步、镜头旋转跟随稳定、同屏 >3 收敛
+2. EventPulse：仅播放触发、拖动不重复、文字时间窗正确
+3. 默认开合生效、组合可记忆、三模式切换器已移除且原功能全部可达
 
 **Deferred:**
-- P1 剩余模板（ForceCallout、EventPulse）；P2 信息架构第一步（默认面板组合）
-- PDF 题目输入；Ollama e2e 对比；变压器 + 简谐振动实验；en-US teacher.* 债务
+- S73：FormulaStrip 变量符号 #00D4FF 着色（非阻塞建议）；P2 第二步（结构合并，待验证标准达标）
 
-**Next: S72** — P1 剩余模板（ForceCallout、EventPulse）+ P2 第一步（默认面板组合），
-或产品/UX Agent 验收反馈修复
+**Next: S73** — 依验收反馈修复 + FormulaDisplay token 着色；或教学动画生成器（P1）

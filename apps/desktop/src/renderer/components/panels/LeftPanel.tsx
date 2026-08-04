@@ -203,7 +203,7 @@ export function LeftPanel() {
           </button>
         </div>
 
-        {mode==="experiment" && (
+        {mode!=="analysis" && (
           <DynamicControls />
         )}
 
@@ -287,4 +287,5 @@ function SliderControl({label,value,min,max,step,unit,onChange}:{label:string;va
       className="w-full h-1.5 bg-slate-700 rounded-full appearance-none cursor-pointer accent-sky-500 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-sky-400"/>
   </div>;
 }
+
 

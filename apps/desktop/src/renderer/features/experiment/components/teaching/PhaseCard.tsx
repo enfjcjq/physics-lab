@@ -14,7 +14,7 @@ export function PhaseCardView({ data, leaving }: { data: PhaseCardData; leaving?
 
   return (
     <div
-      className="absolute top-16 left-4 z-30 pointer-events-none transition-opacity duration-200"
+      className="absolute top-4 left-4 z-30 pointer-events-none transition-opacity duration-200"
       style={{ opacity: leaving ? 0 : 1 }}
     >
       <div
@@ -28,3 +28,4 @@ export function PhaseCardView({ data, leaving }: { data: PhaseCardData; leaving?
     </div>
   );
 }
+

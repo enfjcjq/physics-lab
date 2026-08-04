@@ -990,5 +990,12 @@
   "teaching.overlay.phase_of": "\u7b2c {current} / {total} \u9636\u6bb5",
   "menu.view.teaching_layer": "\u6559\u5b66\u56fe\u5c42",
   "menu.view.phase_card": "\u9636\u6bb5\u5361",
-  "menu.view.formula_strip": "\u516c\u5f0f\u63a8\u5bfc\u6761"
+  "menu.view.formula_strip": "\u516c\u5f0f\u63a8\u5bfc\u6761",
+  "rail.library": "\u5b9e\u9a8c\u5e93",
+  "rail.parameters": "\u53c2\u6570",
+  "rail.charts": "\u56fe\u8868",
+  "rail.steps": "\u6b65\u9aa4",
+  "rail.graph": "\u77e5\u8bc6\u56fe\u8c31",
+  "menu.view.force_callout": "\u53d7\u529b\u6807\u6ce8",
+  "menu.view.event_pulse": "\u4e8b\u4ef6\u6807\u8bb0"
 }

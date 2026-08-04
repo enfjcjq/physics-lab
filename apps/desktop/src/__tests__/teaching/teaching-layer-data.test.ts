@@ -5,6 +5,9 @@ import {
   getFormulaStripData,
   getActivePhase,
   substituteExpression,
+  getForceCalloutData,
+  getEventPulseText,
+  getPulsableEvents,
 } from "../../renderer/features/experiment/components/teaching/teaching-layer-data";
 
 // Minimal deterministic fixture: 2 phases, 2 equations, sim params
@@ -95,6 +98,108 @@ describe("teaching-layer-data", () => {
     const eq = fixture.equations[0];
     const out = substituteExpression(eq.expression, eq, { h0: 10, g: 9.8 }, 1);
     expect(out).toBe("y(t) = 10 - (1/2) * 9.8 * 1^2");
+  });
+});
+
+
+
+// ---- S72 fixtures & tests ----
+
+const forceEventFixture: PhysicsScene = {
+  $schema: "test",
+  version: "2.0",
+  metadata: { title: "F", subject: "mechanics", topic: "collision" },
+  entities: [],
+  environment: [],
+  constraints: [],
+  equations: [],
+  camera_script: [],
+  ui_controls: [],
+  knowledge_tags: [],
+  teacher_steps: [],
+  charts: [],
+  forces: [
+    { id: "f_gravity", type: "gravity", target_entity: "ball_a", magnitude: "mass * g", direction: [0, -1, 0], description: "Gravity G", visual: { label: "Gravity G" } },
+    { id: "f_normal", type: "normal", target_entity: "ball_a", magnitude: 9.8, direction: [0, 1, 0], description: "Normal" },
+    { id: "f_small", type: "friction", target_entity: "ball_a", magnitude: 0.5, direction: [1, 0, 0], description: "Friction" },
+    { id: "f_fourth", type: "drag_force", target_entity: "ball_a", magnitude: 2, direction: [-1, 0, 0], description: "Drag" },
+  ],
+  timeline: {
+    total_duration: 4,
+    events: [
+      { id: "ev_impact", time: 1.5, type: "collision", data: {}, description: "Balls collide" },
+      { id: "ev_separate", time: 1.6, type: "state_change", data: {}, description: "Balls separate" },
+    ],
+    phases: [
+      { id: "approach", label: "phase.approach", icon: "><", timeRange: [0, 1.5], description: "Approaching" },
+      { id: "collision", label: "phase.collision", icon: "O", timeRange: [1.5, 1.6], description: "Impact" },
+      { id: "separate", label: "phase.separate", icon: "<>", timeRange: [1.6, 4], description: "Separating" },
+    ],
+  },
+};
+
+describe("force callouts", () => {
+  it("caps at max and reports hidden count", () => {
+    const { callouts, hidden } = getForceCalloutData(forceEventFixture, 0, 3);
+    expect(callouts.length).toBe(3);
+    expect(hidden).toBe(1);
+  });
+
+  it("sorts by numeric magnitude desc", () => {
+    const { callouts } = getForceCalloutData(forceEventFixture, 0, 4);
+    // f_normal (9.8) first, f_fourth (2) second, f_small (0.5) third; string magnitude last
+    expect(callouts[0].forceId).toBe("f_normal");
+    expect(callouts[3].forceId).toBe("f_gravity");
+  });
+
+  it("uses force label and magnitude formula", () => {
+    const { callouts } = getForceCalloutData(forceEventFixture, 0, 1);
+    expect(callouts[0].forceId).toBe("f_normal");
+    expect(callouts[0].label).toBe("Normal");
+    expect(callouts[0].formula).toBe("9.8");
+    const all = getForceCalloutData(forceEventFixture, 0, 4).callouts;
+    const gravity = all.find((c) => c.forceId === "f_gravity");
+    expect(gravity?.label).toBe("Gravity G");
+    expect(gravity?.formula).toBe("mass * g");
+  });
+  it("respects overlay_hints force_callouts restriction", () => {
+    const withHints: PhysicsScene = {
+      ...forceEventFixture,
+      overlay_hints: {
+        force_callouts: [{ force_id: "f_gravity", formula_override: "G = mg" }],
+      },
+    };
+    const { callouts } = getForceCalloutData(withHints, 0, 3);
+    expect(callouts.length).toBe(1);
+    expect(callouts[0].formula).toBe("G = mg");
+  });
+});
+
+describe("event pulse data", () => {
+  it("shows explanation text only within the 2s window (deterministic)", () => {
+    expect(getEventPulseText(forceEventFixture, 1.0)).toBeNull();
+    const t = getEventPulseText(forceEventFixture, 1.6);
+    expect(t?.eventId).toBe("ev_impact");
+    expect(t?.text).toBe("Balls collide");
+    expect(getEventPulseText(forceEventFixture, 3.61)).toBeNull();
+    expect(getEventPulseText(forceEventFixture, 1.6 + 2.001)).toBeNull();
+  });
+
+  it("derives pulsable events: collision always + first other per phase", () => {
+    const pulses = getPulsableEvents(forceEventFixture);
+    const ids = pulses.map((p) => p.eventId);
+    // approach phase: no events; collision phase: ev_impact (collision); separate phase: ev_separate (first other)
+    expect(ids).toContain("ev_impact");
+    expect(ids).toContain("ev_separate");
+  });
+
+  it("overlay_hints event_pulses overrides candidates", () => {
+    const withHints: PhysicsScene = {
+      ...forceEventFixture,
+      overlay_hints: { event_pulses: [{ event_id: "ev_separate" }] },
+    };
+    const pulses = getPulsableEvents(withHints);
+    expect(pulses.map((p) => p.eventId)).toEqual(["ev_separate"]);
   });
 });
 

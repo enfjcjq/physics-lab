@@ -2,6 +2,7 @@
 import { useSimulation } from "../../features/experiment/experiment.store";
 import type { SpeedLevel } from "../../features/experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
+import { getEventPulseText } from "../../features/experiment/components/teaching/teaching-layer-data";
 
 const SPEEDS: { label: string; value: SpeedLevel }[] = [
   { label: "0.25x", value: 0.25 }, { label: "0.5x", value: 0.5 },
@@ -40,6 +41,8 @@ export function Timeline() {
   const jumpToPhase = useSimulation((s) => s.jumpToPhase);
   const setSpeed = useSimulation((s) => s.setSpeed);
   const { t } = useI18n();
+  const scene = useSimulation((s) => s.scene);
+  const eventText = scene ? getEventPulseText(scene, currentTime) : null;
 
     const [loop, setLoop] = useState(false);
 
@@ -171,6 +174,16 @@ export function Timeline() {
             <span className={`absolute top-full mt-1 left-1/2 -translate-x-1/2 text-[9px] whitespace-nowrap transition-all duration-200 ${isActive?"text-white font-medium opacity-100":isPast?"text-slate-400 opacity-80":"text-slate-600 opacity-0 group-hover:opacity-60"}`}>{t(p.label)}</span>
           </button>;
         })}
+        {/* Event markers (collision / state_change) */}
+        {(scene?.timeline?.events ?? []).filter((e) => e.type === "collision" || e.type === "state_change").map((e) => {
+          const l = (e.time / totalDuration) * 100;
+          const active = eventText?.eventId === e.id;
+          return (
+            <button key={e.id} onClick={(ev) => { ev.stopPropagation(); jumpToTime(e.time); }} className="absolute -translate-x-1/2 -translate-y-1/2 z-[5] group" style={{ left: `${l}%`, top: 6 }} title={e.description || ""}>
+              <div className={active ? "w-2 h-2 rotate-45 bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.9)]" : "w-2 h-2 rotate-45 bg-slate-600 group-hover:bg-slate-400"} />
+            </button>
+          );
+        })}
         {/* Playhead */}
         <div className="absolute top-[-2px] -translate-x-1/2 z-10" style={{left:`${progress}%`}}>
           <div className="w-0.5 h-5 bg-sky-400 rounded-full shadow-sm shadow-sky-500/30"/>
@@ -196,4 +209,5 @@ export function Timeline() {
     </div>
   );
 }
+
 

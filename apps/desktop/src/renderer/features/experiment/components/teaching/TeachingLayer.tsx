@@ -2,7 +2,7 @@
 import { useSimulation } from "../../experiment.store";
 import type { SpeedLevel } from "../../experiment.store";
 import { useTeaching } from "../../../../core/teaching.store";
-import { getPhaseCardData, getFormulaStripData } from "./teaching-layer-data";
+import { getPhaseCardData, getFormulaStripData, getEventPulseText } from "./teaching-layer-data";
 import type { PhaseCardData } from "./teaching-layer-data";
 import { PhaseCardView } from "./PhaseCard";
 import { FormulaStripView } from "./FormulaStrip";
@@ -24,6 +24,7 @@ export function TeachingLayer() {
   const setSpeed = useSimulation((s) => s.setSpeed);
   const showPhaseCard = useTeaching((s) => s.showPhaseCard);
   const showFormulaStrip = useTeaching((s) => s.showFormulaStrip);
+  const showEventPulse = useTeaching((s) => s.showEventPulse);
   const teachingLayerEnabled = useTeaching((s) => s.teachingLayerEnabled);
 
   // ---- Slow-mo to 0.3x for 1.2s when a phase starts during playback ----
@@ -72,6 +73,7 @@ export function TeachingLayer() {
   }, [cards]);
 
   const formula = scene ? getFormulaStripData(scene, currentTime) : null;
+  const eventText = scene ? getEventPulseText(scene, currentTime) : null;
 
   const reducedMotion =
     typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -84,6 +86,14 @@ export function TeachingLayer() {
         <PhaseCardView key={c.data.id} data={c.data} leaving={c.leaving} />
       ))}
       {showFormulaStrip && formula && <FormulaStripView data={formula} />}
+      {showEventPulse && eventText && (
+        <div className="absolute bottom-[150px] left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+          <div key={eventText.eventId} className="event-pulse-text rounded-lg bg-slate-900/85 backdrop-blur-md border border-slate-700/40 px-4 py-1.5 text-sm text-slate-100 shadow-2xl">
+            {eventText.text}
+          </div>
+        </div>
+      )}
     </>
   );
 }
+

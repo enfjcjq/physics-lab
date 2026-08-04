@@ -272,13 +272,21 @@ export interface ChartDef {
 
 export interface OverlayHints {
   phase_cards?: Array<{
-    phase_id: string;   // matches a timeline phase id
-    title?: string;     // falls back to phase label
-    hint?: string;      // falls back to phase description
+    phase_id: string;    // matches a timeline phase id
+    title?: string;      // falls back to phase label
+    hint?: string;       // falls back to phase description
   }>;
   formula_strips?: Array<{
-    phase_id: string;   // phase this formula strip belongs to
+    phase_id: string;    // phase this formula strip belongs to
     equation_id: string; // references equations[].id
+  }>;
+  force_callouts?: Array<{
+    force_id: string;          // references forces[].id
+    formula_override?: string; // overrides the displayed formula
+  }>;
+  event_pulses?: Array<{
+    event_id: string;      // references timeline.events[].id
+    text_override?: string; // overrides the explanation text
   }>;
 }
 

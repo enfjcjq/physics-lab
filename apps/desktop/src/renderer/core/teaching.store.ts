@@ -6,8 +6,6 @@ export type AppMode = "learning" | "experiment" | "analysis";
 /** Legacy teaching sub-mode (used within the old teaching overlay) */
 export type TeachingSubMode = "experiment" | "teaching" | "solving" | "explore";
 
-export type TeachingElementKey = "phaseCard" | "formulaStrip";
-
 export interface TeachingOverlayState {
   showKnowledge: boolean;
   showForces: boolean;
@@ -18,6 +16,8 @@ export interface TeachingOverlayState {
   showFormulas: boolean;
 }
 
+export type TeachingElementKey = "phaseCard" | "formulaStrip" | "forceCallout" | "eventPulse";
+
 interface TeachingState {
   /** Primary app mode (V1.0) */
   mode: AppMode;
@@ -27,6 +27,9 @@ interface TeachingState {
   /** S71 Teaching Layer (PhaseCard / FormulaStrip) visibility */
   showPhaseCard: boolean;
   showFormulaStrip: boolean;
+  /** S72 Teaching Layer (ForceCallout / EventPulse) visibility */
+  showForceCallout: boolean;
+  showEventPulse: boolean;
   /** Master switch for the 2D teaching layer (low-perf / user fallback) */
   teachingLayerEnabled: boolean;
   setMode: (mode: AppMode) => void;
@@ -62,10 +65,20 @@ export const useTeaching = create<TeachingState>((set, get) => ({
   overlay: { ...SUB_MODE_PRESETS.teaching },
   showPhaseCard: true,
   showFormulaStrip: true,
+  showForceCallout: true,
+  showEventPulse: true,
   teachingLayerEnabled: true,
 
   toggleTeachingElement: (key) =>
-    set((s) => (key === "phaseCard" ? { showPhaseCard: !s.showPhaseCard } : { showFormulaStrip: !s.showFormulaStrip })),
+    set((s) => {
+      switch (key) {
+        case "phaseCard": return { showPhaseCard: !s.showPhaseCard };
+        case "formulaStrip": return { showFormulaStrip: !s.showFormulaStrip };
+        case "forceCallout": return { showForceCallout: !s.showForceCallout };
+        case "eventPulse": return { showEventPulse: !s.showEventPulse };
+        default: return {};
+      }
+    }),
 
   setTeachingLayerEnabled: (v) => set({ teachingLayerEnabled: v }),
 
@@ -76,7 +89,7 @@ export const useTeaching = create<TeachingState>((set, get) => ({
       analysis: "solving",
     };
     const sub = subModeMap[mode];
-    
+
     // Open appropriate panels per mode via dynamic import
     (async () => {
       const { usePanelManager } = await import("./panel-manager.store");
@@ -101,10 +114,8 @@ export const useTeaching = create<TeachingState>((set, get) => ({
   toggleOverlay: (key) =>
     set((s) => ({ overlay: { ...s.overlay, [key]: !s.overlay[key] } })),
 
-
   getVisibleOverlays: () => {
     const o = get().overlay;
     return (Object.keys(o) as (keyof TeachingOverlayState)[]).filter((k) => o[k]);
   },
 }));
-

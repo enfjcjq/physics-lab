@@ -990,5 +990,12 @@
   "teaching.overlay.phase_of": "Phase {current} / {total}",
   "menu.view.teaching_layer": "Teaching layer",
   "menu.view.phase_card": "Phase card",
-  "menu.view.formula_strip": "Formula strip"
+  "menu.view.formula_strip": "Formula strip",
+  "rail.library": "Experiment library",
+  "rail.parameters": "Parameters",
+  "rail.charts": "Charts",
+  "rail.steps": "Teacher steps",
+  "rail.graph": "Knowledge graph",
+  "menu.view.force_callout": "Force callouts",
+  "menu.view.event_pulse": "Event pulses"
 }

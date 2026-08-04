@@ -1,28 +1,24 @@
-﻿# Next Sprint: S72+
+﻿# Next Sprint: S73+
 
-## Completed (S71): P0 首页 + P1 教学图层模板
-- [x] 题目输入首页（启动视图）：输入/OCR/分步进度/失败兜底/成功淡入；最近/示例/实验库折叠
-- [x] Teaching Layer：PhaseCard + FormulaStrip（确定性 state=f(t)，0.3x 阶段减速，自动隐藏）
-- [x] PhysicsScene 可选 overlay_hints；视图菜单显隐开关；i18n +26 键
-- [x] 门禁全绿（tsc ×2 / 124 用例 / 生产构建）
+## Completed (S72): ForceCallout + EventPulse + P2 信息架构第一步
+- [x] ForceCallout（3D 投影跟随、前 3 + "+N" 收敛、state=f(t)）
+- [x] EventPulse（仅播放触发、2s 文字窗、Timeline 事件标记、每 phase ≤2）
+- [x] P2 第一步：移除三模式切换器；实验库抽屉；左缘 4 图标；默认面板组合；布局记忆（V3）
+- [x] PhaseCard 归位 top-16px；overlay_hints 扩展；i18n +7
+- [x] 门禁全绿（tsc ×2 / 131 用例 / 生产构建）
 
-## 待产品/UX Agent 验收（TEACHING_LAYER_SPEC §5）
-- [ ] 首页主行动唯一性；实验库可达但折叠
-- [ ] PhaseCard 切换 + 减速可感知；拖动 Timeline 确定性回放
-- [ ] FormulaStrip 三阶段同步；无数据 phase 自动隐藏
-- [ ] 显隐开关 / 降级路径；五色语义一致性
+## 待产品/UX Agent 验收（TEACHING_LAYER_SPEC §7.3）
+- [ ] ForceCallout 同步/跟随/收敛
+- [ ] EventPulse 触发时机/文字窗
+- [ ] P2 第一步默认开合 + 记忆 + 原功能可达
 
-## S72 候选（按 DESIGN_STATUS 建议顺序）
-- [ ] P1 剩余模板：ForceCallout（受力标注）、EventPulse（关键事件脉冲）
-- [ ] P2 第一步：默认面板组合（学习模式为默认核心入口）
-- [ ] 验收反馈修复（依产品/UX Agent 走查结果）
+## S73 候选
+- [ ] 验收反馈修复（依走查结果）
+- [ ] FormulaDisplay 变量符号 #00D4FF 着色（产品/UX 非阻塞建议）
+- [ ] 教学动画生成器：PhysicsScene → 阶段化动画脚本（P1 核心）
+- [ ] Ollama e2e 对比运行
 
-## Priority 1: Core Engine Loop (P1)
-- [ ] 教学动画生成器：PhysicsScene → 阶段化动画脚本（与 overlay_hints/AI 模板选择衔接）
-- [ ] Ollama 端到端对比运行；PDF 题目输入
-- [ ] AI 解析与 overlay_hints 联动（AI 选择+组合模板并填参数）
-
-## Priority 2/3/4: 扩展
-- [ ] 受力动态展示 / 公式推导动画深化（P2）
-- [ ] 变压器 + 简谐振动详解实验；en-US teacher.* 债务清偿
-- [ ] 本地用户账户 / T2 对比视图
+## P2 第二步（结构合并）启动条件（§7.2 验证标准，未达标不强行合并）
+- [ ] 核心路径 ≤3 次点击
+- [ ] 4 抽屉图标无"零发现"
+- [ ] 无 P0/P1 阻塞反馈

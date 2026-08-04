@@ -79,7 +79,7 @@ export function MenuBar() {
   const { t, locale, setLocale } = useI18n();
   const { activeId: activeAI, setActive: setActiveAI, checkOllama, ollamaAvailable } = useAIProviderStore();
   const { mode, setMode } = useTheme();
-  const { mode: appMode, subMode: teachingMode, setSubMode: setTeachingMode, showPhaseCard, showFormulaStrip, teachingLayerEnabled, toggleTeachingElement, setTeachingLayerEnabled } = useTeaching();
+  const { mode: appMode, subMode: teachingMode, setSubMode: setTeachingMode, showPhaseCard, showFormulaStrip, showForceCallout, showEventPulse, teachingLayerEnabled, toggleTeachingElement, setTeachingLayerEnabled } = useTeaching();
   const panelMgr = usePanelManager();
   const viz = useVisualization();
   const [showAbout, setShowAbout] = useState(false);
@@ -172,6 +172,8 @@ export function MenuBar() {
         <MenuItem label={t("menu.view.teaching_layer")} checked={teachingLayerEnabled} onClick={() => setTeachingLayerEnabled(!teachingLayerEnabled)} />
         <MenuItem label={t("menu.view.phase_card")} checked={showPhaseCard} onClick={() => toggleTeachingElement("phaseCard")} />
         <MenuItem label={t("menu.view.formula_strip")} checked={showFormulaStrip} onClick={() => toggleTeachingElement("formulaStrip")} />
+        <MenuItem label={t("menu.view.force_callout")} checked={showForceCallout} onClick={() => toggleTeachingElement("forceCallout")} />
+        <MenuItem label={t("menu.view.event_pulse")} checked={showEventPulse} onClick={() => toggleTeachingElement("eventPulse")} />
         <MenuSeparator />
         <MenuItem label={t("menu.view.dashboard")} shortcut="Ctrl+D" onClick={() => useDashboard.getState().toggle()} />
         <MenuSeparator />

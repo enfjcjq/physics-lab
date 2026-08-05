@@ -17,10 +17,6 @@ function charLen(s: string): number {
   return Array.from(s).length;
 }
 
-function clip(s: string, max: number): string {
-  return charLen(s) <= max ? s : Array.from(s).slice(0, max).join("");
-}
-
 // ---- R1: phase cards ----
 
 function buildPhaseCards(scene: PhysicsScene): NonNullable<OverlayHints["phase_cards"]> {
@@ -209,4 +205,5 @@ export function ensureTeachingScript(scene: PhysicsScene): PhysicsScene {
   }
   return scene;
 }
+
 

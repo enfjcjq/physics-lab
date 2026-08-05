@@ -1,21 +1,21 @@
-﻿# Next Sprint: S75+
+﻿# Next Sprint: S76+
 
-## Completed (S74): TeachingScript Generator
-- [x] generateTeachingScript（R1-R4 规则集）+ validateTeachingScript（逐条丢弃不抛错）
-- [x] ensureTeachingScript 接入规则解析器 + setScene 运行时生成（18 场景不改文件）
-- [x] 18 场景不变式测试 + 校验器单测 + 管线集成（+11 用例，共 142）
-- [x] 门禁全绿（tsc ×3 / 142 用例 / 生产构建）
+## Completed (S75): AI 接入 TeachingScript
+- [x] OllamaProvider.generate + lib/teaching-script-ai.ts（润色 prompt / 提取 / 合并 / 回退）
+- [x] 硬边界：validate 把关、离线无感知降级、formula_strips 红线
+- [x] 渲染层"空数组=禁用模板"；problem.store.submit 接入 polish
+- [x] 清理 clip() FYI；+14 用例（共 156）；门禁全绿（tsc ×3 / 156 / 构建）
 
-## 待产品/UX Agent 验收（TEACHING_SCRIPT_GENERATOR_SPEC §7）
-- [ ] 18 场景播放时教学图层内容合理、无空卡、无悬空引用
-- [ ] solution 公式仅出现在最后一个 phase
-- [ ] 每 phase 元素总量不超上限
-- [ ] 非法 overlay_hints 正确丢弃并回退
+## 待产品/UX Agent 验收（S75 三要点）
+- [ ] AI 在线：文案口语化、引导式、不剧透答案
+- [ ] AI 离线：无感知回退规则版，图层完整
+- [ ] 非法 AI 输出：校验器拦截回退
 
-## S75 候选
-- [ ] §7 验收反馈修复（如有）
-- [ ] AI 接入 TeachingScript：AI 输出同结构 overlay_hints → 走规则校验器（长期 P1 方向）
-- [ ] Ollama e2e 对比运行 | PDF 输入
+## S76 候选
+- [ ] 验收反馈修复（如有）
+- [ ] Ollama 在线实测：AI 润色效果走查 + 解析 e2e 对比（run-e2e.ts 已支持）
+- [ ] PDF 题目输入
 
 ## 后续
 - [ ] P2 第二步（结构合并，待 §7.2 验证标准达标）
+- [ ] 长期：AI 直接生成场景 + 教学脚本（规则系统作为校验与兜底）

@@ -201,4 +201,19 @@ Set total_duration based on the physics (e.g., free fall from 10m = sqrt(2*10/9.
 
     return null;
   }
+
+  /**
+   * Send an arbitrary prompt and return the raw model response text
+   * (used by the AI teaching-script polish step). Returns null on failure.
+   */
+  async generate(prompt: string): Promise<string | null> {
+    try {
+      const available = await this.isAvailable();
+      if (!available) return null;
+      const response = await this.callOllama(prompt);
+      return response && response.trim().length > 0 ? response : null;
+    } catch {
+      return null;
+    }
+  }
 }

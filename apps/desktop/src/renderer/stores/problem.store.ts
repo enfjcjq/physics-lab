@@ -5,6 +5,7 @@ import { createVirtualPlugin, hasSimulation } from "@physics-lab/shared";
 import { pluginRegistry } from "../core/plugin-registry";
 import { useSimulation } from "../features/experiment/experiment.store";
 import { loadJSON, saveJSON, removeKey } from "../lib/storage";
+import { polishTeachingScriptWithAI } from "../lib/teaching-script-ai";
 
 const HISTORY_KEY = "physics-lab:history";
 
@@ -68,6 +69,8 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
           timestamp: Date.now(),
           text: inputText.slice(0, 500),
         });
+        // S75: AI polish of the teaching script (seamless fallback to rule version)
+        if (result.scene) await polishTeachingScriptWithAI(result.scene);
         // If scene has simulation block, register as virtual plugin
         if (hasSimulation(result.scene)) {
           const virtualPlugin = createVirtualPlugin(result.scene);
@@ -98,3 +101,4 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
     set({ history: [] });
   },
 }));
+

@@ -1,23 +1,24 @@
 ﻿# Project Status
 
-**Version:** V5.1 (Sprint S74)
-**Status:** Active Development — TeachingScript Generator（教学脚本规则系统）
+**Version:** V5.2 (Sprint S75)
+**Status:** Active Development — AI 接入 TeachingScript（规则系统 = 质量关口）
 
 ## Key Metrics
-- **18 experiments** | Zero TS errors | 142 tests passed (18 files) | AI parse 100%/100%
-- overlay_hints 有了统一生产者（规则生成 + 校验），教学图层 4 模板全部有显式脚本
+- **18 experiments** | Zero TS errors | 156 tests passed (19 files) | AI parse 100%/100%
+- 教学脚本闭环：规则生成（S74）→ AI 润色 + 模板开关（S75）→ 校验器把关 → 渲染层消费
 
-## S74: TeachingScript Generator (Completed)
-- ⚙️ generateTeachingScript：R1 阶段卡 / R2 公式条（solution 归末段、energy 匹配）/ R3 受力 / R4 事件脉冲
-- 🛡️ validateTeachingScript：引用完整性 + 数量上限 + 文案长度，逐条丢弃不抛错
-- 🔌 接入：规则解析器管线末尾 + experiment.store.setScene 运行时生成（18 场景不改文件）
-- ✅ 边界四项全落实（纯函数确定性 / 不改场景文件 / 显式>生成器>缺省推导 / 仅追加）
-- 🧪 18 场景不变式 + 校验器 + 集成测试（+11 用例）
+## S75: AI 接入 TeachingScript (Completed)
+- 🤖 polishTeachingScriptWithAI：Ollama 润色 hint/事件文案 + 模板开关（如关闭受力标注）
+- 🛡️ 硬边界：输出必须过 validateTeachingScript；校验丢弃 → 整体回退规则版；
+  Ollama 离线/超时无感知降级；formula_strips 教学红线不可由 AI 编辑
+- 🎚️ 渲染层"空数组=禁用模板"语义（4 模板全支持）
+- 🧪 +14 用例（merge/extract/polish/空数组禁用），共 156
 
+## S74: TeachingScript Generator (Completed) — 设计验收通过
 ## S73: 语义色收尾 (Completed) — 设计验收通过
 ## S72: ForceCallout + EventPulse + P2 第一步 (Completed) — 设计验收通过
 ## S71: P0 首页 + P1 教学图层 (Completed) — 设计验收通过
 ## S70: AI 解析质量 (Completed) — 24% → 100%
 
-## Next (S75)
-- 依 §7 验收反馈修复；或 AI 接入 TeachingScript（AI 输出同结构，规则系统校验兜底）
+## Next (S76)
+- 依 S75 验收反馈修复；Ollama 在线实测（AI 润色效果 + 解析 e2e 对比）

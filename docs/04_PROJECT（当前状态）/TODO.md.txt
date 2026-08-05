@@ -1,10 +1,10 @@
 ﻿# Physics Lab TODO
 
-> Current version: V5.1 (S74)
+> Current version: V5.2 (S75)
 
 ---
 
-# Completed (S16-S74)
+# Completed (S16-S75)
 
 - [x] 18 experiments | P2 第一步（学习模式默认核心入口）| PhysicsScene-driven
 - [x] AI Parser: Rule-based (18 types) + OllamaProvider; e2e coverage 100% (T310)
@@ -14,15 +14,16 @@
 - [x] S71: P0 题目输入首页 + Teaching Layer（PhaseCard/FormulaStrip）+ overlay_hints
 - [x] S72: ForceCallout + EventPulse + P2 第一步（实验库抽屉、左缘 4 图标、默认面板组合、布局记忆）
 - [x] S73: 语义色收尾（token CSS 变量、变量符号 #00D4FF、IconRail 语义橙）
-- [x] S74: TeachingScript Generator（generate/validate/ensure；接入规则解析器 + setScene 运行时生成）
+- [x] S74: TeachingScript Generator（规则生产者 + 校验器 + 运行时接入）
+- [x] S75: AI 接入 TeachingScript（AI 润色 + 模板开关，校验器把关、离线无感知回退）
 
 ---
 
 # Teaching System / Teaching Layer
 
 - [x] PhaseCard / FormulaStrip / ForceCallout / EventPulse（4 模板）+ 统一显隐开关 + 降级
-- [x] overlay_hints（4 类）+ TeachingScript Generator（规则生产者）+ Validator
-- [ ] AI 接入 TeachingScript（AI 输出同结构 overlay_hints，规则系统校验兜底）——长期
+- [x] overlay_hints（4 类）+ TeachingScript Generator + Validator + AI 润色管线
+- [ ] AI 在线实测走查（Ollama 在线时润色效果）
 - [ ] Knowledge graph mastery tracking | Adaptive paths | Progress persistence
 
 ---
@@ -30,8 +31,9 @@
 # AI & Parser
 
 - [x] Rule-based parser (18 types) | AIProvider abstraction | Ollama auto-detect
-- [x] e2e test set + coverage (T310) | OCR input | 解析场景自动生成教学脚本
-- [ ] Ollama e2e comparison | PDF parsing
+- [x] e2e test set + coverage (T310) | OCR input | 解析场景自动生成教学脚本 + AI 润色
+- [ ] Ollama e2e comparison run（在线实测）
+- [ ] PDF parsing
 
 ---
 

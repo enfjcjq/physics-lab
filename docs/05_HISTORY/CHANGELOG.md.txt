@@ -1,25 +1,34 @@
 ﻿# Changelog
 
-## V5.1 (S74) — 2026-08-04
+## V5.2 (S75) — 2026-08-05
 
 ### Added
-- TeachingScript Generator（packages/shared/teaching）：
-  - generateTeachingScript：R1 阶段卡 / R2 公式条（is_solution 归末段、energy 匹配）/ R3 受力 / R4 事件脉冲
-  - validateTeachingScript：引用完整性 / 数量上限 / 文案长度；逐条丢弃不抛错
-  - ensureTeachingScript：显式 overlay_hints 优先，否则运行时生成
-- 接入：规则解析器管线末尾 + experiment.store.setScene（18 内置场景运行时生成，不改场景文件）
+- AI 接入 TeachingScript（lib/teaching-script-ai.ts）：
+  - OllamaProvider.generate（公共 prompt 接口）
+  - polishTeachingScriptWithAI：润色 hint/事件文案 + 模板开关（空数组=禁用）
+  - mergeAiHints（formula_strips 教学红线，AI 不可编辑）
+- 渲染层"空数组=禁用模板"语义（4 模板全支持）
+- problem.store.submit 接入 AI 润色（离线/超时/非法输出无感知回退规则版）
 
 ### Changed
-- 教学图层 4 模板从"渲染层缺省推导"升级为"显式脚本 + 校验"（缺省推导保留为最终兜底）
+- 删除 teaching-script-generator 中未使用的 clip()（产品/UX FYI）
 
 ### Metrics
-- vitest 18 文件 / 142 用例全过（+11：生成器/校验器/集成）；tsc ×3 零错；生产构建成功
+- vitest 19 文件 / 156 用例全过（+14）；tsc ×3 零错；生产构建成功
+
+---
+
+## V5.1 (S74) — 2026-08-04
+### Added
+- TeachingScript Generator（generate/validate/ensure）+ 规则解析器 & setScene 运行时接入
+### Metrics
+- 18 场景不变式 + 校验器单测（+11，共 142）
 
 ---
 
 ## V5.0 (S73) — 2026-08-04
 ### Changed
-- ForceCallout 偏移按 forces[].type | FormulaDisplay 变量符号 #00D4FF | 语义色 token CSS 变量 + IconRail 语义橙
+- ForceCallout 偏移按 forces[].type | FormulaDisplay 变量符号 #00D4FF | 语义色 token + IconRail 语义橙
 
 ---
 
@@ -38,9 +47,3 @@
 ## V4.7 (S70) — 2026-08-03
 ### Added
 - AI parse e2e test set + coverage (T310) | Rule parser v3.0 (18 types) | 24% → 100%
-
----
-
-## V4.3 (S66) — 2026-07-05
-### Added
-- 4 new experiments (Faraday/Motor/Gas/Lens) | i18n 924 keys | 17 experiments

@@ -39,7 +39,9 @@ export function getPhaseCardData(scene: PhysicsScene, time: number): PhaseCardDa
   const phase = getActivePhase(scene, time);
   if (!phase) return null;
   const phases = scene.timeline?.phases ?? [];
-  const hints = scene.overlay_hints?.phase_cards?.find((h) => h.phase_id === phase.id);
+  const phaseCardGroup = scene.overlay_hints?.phase_cards;
+  if (phaseCardGroup !== undefined && phaseCardGroup.length === 0) return null; // AI toggled off
+  const hints = phaseCardGroup?.find((h) => h.phase_id === phase.id);
   return {
     id: phase.id,
     labelKey: hints?.title ?? phase.label,
@@ -68,7 +70,9 @@ export function getFormulaStripData(scene: PhysicsScene, time: number): FormulaS
   const phaseIndex = phases.findIndex((p) => p.id === phase.id);
   if (phaseIndex < 0) return null;
 
-  const mapping = scene.overlay_hints?.formula_strips?.find((m) => m.phase_id === phase.id);
+  const stripGroup = scene.overlay_hints?.formula_strips;
+  if (stripGroup !== undefined && stripGroup.length === 0) return null; // AI toggled off
+  const mapping = stripGroup?.find((m) => m.phase_id === phase.id);
   let equation: Equation | undefined;
   if (mapping) {
     equation = scene.equations.find((e) => e.id === mapping.equation_id);
@@ -147,7 +151,7 @@ export interface ForceCalloutData {
  */
 export function getForceCalloutData(scene: PhysicsScene, time: number, max = 3): { callouts: ForceCalloutData[]; hidden: number } {
   const hints = scene.overlay_hints?.force_callouts;
-  const allowed = hints && hints.length > 0 ? new Set(hints.map((h) => h.force_id)) : null;
+  const allowed = hints !== undefined ? new Set(hints.map((h) => h.force_id)) : null;
   let forces = scene.forces.filter((f) => !allowed || allowed.has(f.id));
   forces = [...forces].sort((a, b) => {
     const na = typeof a.magnitude === "number" ? a.magnitude : -1;
@@ -181,8 +185,11 @@ export interface EventPulseText {
 /** Explanation text: visible for a window after the event time (deterministic f(t)). */
 export function getEventPulseText(scene: PhysicsScene, time: number, windowSec = 2): EventPulseText | null {
   const events = scene.timeline?.events ?? [];
+  const pulses = scene.overlay_hints?.event_pulses;
+  const pulseIds = pulses !== undefined ? new Set(pulses.map((p) => p.event_id)) : null;
   for (const e of events) {
     if (e.type !== "collision" && e.type !== "state_change") continue;
+    if (pulseIds && !pulseIds.has(e.id)) continue; // AI toggled this event off
     if (time >= e.time && time <= e.time + windowSec) {
       const hint = scene.overlay_hints?.event_pulses?.find((h) => h.event_id === e.id);
       return { eventId: e.id, time: e.time, text: hint?.text_override ?? e.description ?? "" };
@@ -207,7 +214,7 @@ export function getPulsableEvents(scene: PhysicsScene, maxPerPhase = 2): Pulsabl
   const phases = scene.timeline?.phases ?? [];
   const all = (scene.timeline?.events ?? []).filter((e) => e.type === "collision" || e.type === "state_change");
   const hintIds = scene.overlay_hints?.event_pulses?.map((h) => h.event_id);
-  if (hintIds && hintIds.length > 0) {
+  if (hintIds !== undefined) {
     return all.filter((e) => hintIds.includes(e.id)).map((e) => ({ eventId: e.id, time: e.time, type: e.type }));
   }
   const result: PulsableEvent[] = [];
@@ -222,4 +229,6 @@ export function getPulsableEvents(scene: PhysicsScene, maxPerPhase = 2): Pulsabl
   }
   return result;
 }
+
+
 

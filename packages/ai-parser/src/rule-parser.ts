@@ -7,6 +7,7 @@ import {
 } from "@physics-lab/shared";
 import type { AIProvider, ParseResult } from "./types";
 import { ensureTeachingScript } from "@physics-lab/shared";
+import { isChinese, localizeScene } from "./localize";
 
 // ============================================================
 // Rule-Based Physics Parser v3.0
@@ -117,7 +118,7 @@ function detectMotion(text: string): MotionType {
 /spring.?mass|弹簧|振动|SHM|simple\s*harmonic|oscillat|spring|胡克/i,
     ]],
     ["collision", [
-      /collision|collide|碰撞|弹性|momentum|impact/i,
+      /collision|collide|碰撞|弹性|momentum/i,
     ]],
     ["inclined_plane", [
       /inclined|incline|斜面|滑块|滑下|ramp/i,
@@ -395,6 +396,9 @@ function buildScene(params: ExtractedParams, text: string): PhysicsScene {
   // Store user's problem in metadata description
   scene.metadata.description = text;
 
+
+  // S77 方案a: Chinese problems -> Chinese teaching text (治本)
+  if (isChinese(text)) localizeScene(scene);
   applyParams(scene, params, sceneKey);
 
 

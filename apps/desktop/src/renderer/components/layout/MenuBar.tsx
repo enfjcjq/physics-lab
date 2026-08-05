@@ -5,6 +5,7 @@ import { useTheme } from "../../core/theme.store";
 import { useTeaching } from "../../core/teaching.store";
 import { useVisualization } from "../../core/visualization.store";
 import { useDashboard } from "../../core/dashboard.store";
+import { useUsage } from "../../core/usage.store";
 import { useAIProviderStore } from "../../stores/ai-provider.store";
 import type { Locale } from "../../core/i18n";
 import type { ThemeMode } from "../../core/theme.store";
@@ -259,6 +260,7 @@ export function MenuBar() {
       {/* Help */}
       <Dropdown label={t("menu.help")}>
         <MenuItem label={t("about.title")} onClick={() => setShowAbout(true)} />
+        <MenuItem label={t("menu.help.export_usage")} onClick={() => useUsage.getState().exportData()} />
         <MenuItem label="Documentation" />
         <MenuSeparator />
         <MenuItem label="Version 2.0.0" />

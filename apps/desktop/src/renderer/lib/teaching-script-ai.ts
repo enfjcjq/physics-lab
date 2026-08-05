@@ -30,59 +30,134 @@ export function mergeAiHints(ruleHints: OverlayHints, aiHints: OverlayHints | nu
   };
 }
 
-/** Try to extract a JSON object from the model response. */
+/**
+ * Extract the intended overlay_hints JSON from the model response.
+ * Strategy:
+ *   1. strip a markdown fence if present;
+ *   2. scan all balanced {...} blocks (brace-depth aware, so nested
+ *      JSON objects are captured whole);
+ *   3. parse each block, preferring the one that carries overlay_hints
+ *      keys (small models often echo the prompt JSON back).
+ */
 export function extractAiHintsJson(text: string): OverlayHints | null {
   if (!text) return null;
-  const fence = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  const fence = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
   const candidate = fence ? fence[1] : text;
-  const obj = candidate.match(/\{[\s\S]*\}/);
-  if (!obj) return null;
-  try {
-    const parsed = JSON.parse(obj[0]) as OverlayHints;
-    return parsed && typeof parsed === "object" ? parsed : null;
-  } catch {
-    return null;
+  const blocks = extractBalancedBlocks(candidate);
+  if (blocks.length === 0) return null;
+  const keyHits = (s: string) =>
+    (s.includes("phase_cards") ? 1 : 0) +
+    (s.includes("event_pulses") ? 1 : 0) +
+    (s.includes("force_callouts") ? 1 : 0) +
+    (s.includes("formula_strips") ? 1 : 0);
+  blocks.sort((a, b) => keyHits(b) - keyHits(a));
+  for (const b of blocks) {
+    const attempts = [b, repairJson(b)];
+    for (const candidate of attempts) {
+      try {
+        const parsed = JSON.parse(candidate) as OverlayHints;
+        if (parsed && typeof parsed === "object") return parsed;
+      } catch {
+        // try the next candidate / block
+      }
+    }
   }
+  return null;
 }
 
-function buildPrompt(scene: PhysicsScene, ruleHints: OverlayHints): string {
+/**
+ * Lightweight repair for common small-model JSON typos:
+ *   - "key:value"  -> "key":value   (missing closing quote before colon)
+ *   - trailing commas before ] or }
+ * Best-effort; callers still fall back when it cannot parse.
+ */
+export function repairJson(text: string): string {
+  return text
+    .replace(/"([a-zA-Z_][a-zA-Z0-9_]*)(?=\s*:)/g, '"$1"')
+    .replace(/,\s*([}\]])/g, "$1");
+}
+
+/** Extract every balanced {...} block (supports nested braces). */
+export function extractBalancedBlocks(text: string): string[] {
+  const out: string[] = [];
+  for (let i = 0; i < text.length; i++) {
+    if (text[i] !== "{") continue;
+    let depth = 0;
+    let inStr = false;
+    for (let j = i; j < text.length; j++) {
+      const ch = text[j];
+      if (ch === '"' && text[j - 1] !== "\\") inStr = !inStr;
+      if (inStr) continue;
+      if (ch === "{") depth++;
+      else if (ch === "}") {
+        depth--;
+        if (depth === 0) {
+          out.push(text.slice(i, j + 1));
+          i = j;
+          break;
+        }
+      }
+    }
+  }
+  return out;
+}
+
+export function buildPrompt(scene: PhysicsScene, ruleHints: OverlayHints): string {
   const editable = {
     phase_cards: ruleHints.phase_cards ?? [],
     event_pulses: ruleHints.event_pulses ?? [],
     force_callouts: ruleHints.force_callouts ?? [],
   };
-  return `你是一名面向中学生的物理教学文案编辑。请润色下面 PhysicsScene 的教学脚本（overlay_hints）中的学生可见文案，并决定模板开关。
-
-只能修改以下三组（保持 id 完全不变）：
-1. phase_cards[].hint —— 一句话阶段提示（≤30 字，口语化、引导式，多用"观察…/注意…"）
-2. event_pulses[].text_override —— 关键事件解释（≤20 字）
-3. force_callouts —— 该题需要标注的受力；若纯运动学题不需要受力标注，返回空数组 []
-禁止：修改 phase_id / event_id / force_id / equation 映射；禁止剧透最终答案数值（最后一个 phase 之前）。
-
-输入 PhysicsScene 关键信息：
-${JSON.stringify({
-  title: scene.metadata.title,
-  description: scene.metadata.description,
-  equations: scene.equations.map((e) => ({ id: e.id, expression: e.expression })),
-  forces: scene.forces.map((f) => ({ id: f.id, type: f.type, description: f.description })),
-  timeline: { phases: scene.timeline?.phases, events: scene.timeline?.events },
-  overlay_hints: editable,
-})}
-
-只输出一个 JSON 对象（不要解释、不要 markdown 代码块之外的文字），形状与上面 overlay_hints 相同。`;
+  const reference = {
+    title: scene.metadata.title,
+    description: scene.metadata.description,
+    equations: scene.equations.map((e) => ({ id: e.id, expression: e.expression })),
+    forces: scene.forces.map((f) => ({ id: f.id, type: f.type, description: f.description })),
+    timeline: { phases: scene.timeline?.phases, events: scene.timeline?.events },
+  };
+  // Few-shot example built from REAL ids only (a model copying the example
+  // must not invent ids that the validator would drop).
+  const samplePhaseId = ruleHints.phase_cards?.[0]?.phase_id ?? "phase";
+  const sampleEventId = ruleHints.event_pulses?.[0]?.event_id ?? "";
+  const hasEvents = (ruleHints.event_pulses?.length ?? 0) > 0;
+  const sampleForceId = (ruleHints.force_callouts?.[0]?.force_id) ?? scene.forces?.[0]?.id ?? "gravity";
+  const eventsExample = hasEvents
+    ? `[{"event_id":"${sampleEventId}","text_override":"小球落地，注意观察"}]`
+    : "[]";
+  const example = `{"phase_cards":[{"phase_id":"${samplePhaseId}","hint":"观察小球下落时速度的变化"}],"event_pulses":${eventsExample},"force_callouts":[{"force_id":"${sampleForceId}"}]}`;
+  return [
+    '你是一名面向中学生的物理教学文案编辑。请把【待编辑对象】中的教学提示润色成更口语、更引导式的学生友好版本，并决定模板开关。',
+    '',
+    '规则：',
+    '- 只输出一个 JSON 对象，形状与【待编辑对象】完全相同；所有 id 必须原样使用【待编辑对象】中真实存在的 id，禁止发明或改写 id；若某类模板为空数组则保持空数组',
+    '- phase_cards[].hint 不超过 30 字；event_pulses[].text_override 不超过 20 字',
+    '- 多用“观察…/注意…”句式；在最后一个 phase 之前不要剧透答案数值',
+    '- force_callouts 若该题不需要受力标注则输出空数组 []',
+    '',
+    '【参考信息】（仅作背景理解，不要回显）：',
+    '' + JSON.stringify(reference),
+    '',
+    '【待编辑对象】：',
+    '' + JSON.stringify(editable),
+    '',
+    '【输出示例】（id 全部来自【待编辑对象】）：',
+    '' + example,
+    '',
+    '请只输出【待编辑对象】的润色版本 JSON，不要输出任何其他文字。',
+  ].join("\n");
 }
 
-/**
- * Polish a scene's teaching script with the local LLM.
- * Returns the scene unchanged (rule version intact) on any failure.
- */
 export async function polishTeachingScriptWithAI(scene: PhysicsScene, provider?: OllamaProvider): Promise<PhysicsScene> {
   const ruleHints = scene.overlay_hints ?? generateTeachingScript(scene);
   const ollama = provider ?? new OllamaProvider();
   try {
-    const raw = await ollama.generate(buildPrompt(scene, ruleHints));
-    if (!raw) return scene;
-    const aiHints = extractAiHintsJson(raw);
+    let raw = await ollama.generate(buildPrompt(scene, ruleHints));
+    let aiHints = raw ? extractAiHintsJson(raw) : null;
+    if (!aiHints) {
+      // Small models are stochastic: retry once before falling back to the rule version.
+      raw = await ollama.generate(buildPrompt(scene, ruleHints));
+      aiHints = raw ? extractAiHintsJson(raw) : null;
+    }
     if (!aiHints) return scene;
 
     const merged = mergeAiHints(ruleHints, aiHints);

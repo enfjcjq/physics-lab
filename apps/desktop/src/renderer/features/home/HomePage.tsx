@@ -3,6 +3,7 @@ import { useHome } from "./home.store";
 import { useProblemStore } from "../../stores/problem.store";
 import { useAIProviderStore } from "../../stores/ai-provider.store";
 import { useTeaching } from "../../core/teaching.store";
+import { useUsage } from "../../core/usage.store";
 import { useSimulation } from "../experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
 import { OcrPanel } from "../problem-input/OcrPanel";
@@ -58,6 +59,7 @@ export function HomePage() {
   }, []);
 
   const enterScene = () => {
+    useUsage.getState().incrementCorePath(); // S77 telemetry: home -> teaching animation
     useTeaching.getState().setMode("learning");
     useHome.getState().setView("scene");
     setTimeout(() => useSimulation.getState().play(), 320); // after 300ms fade-in

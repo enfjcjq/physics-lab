@@ -1,25 +1,33 @@
 ﻿# Changelog
 
-## V5.3 (S76) — 2026-08-05
+## V5.4 (S77) — 2026-08-05
+
+### Fixed
+- AI 教学脚本润色根因：prompt 重构（参考/待编辑分区、overlay_hints 置尾、few-shot 用真实 id）、
+  平衡括号 JSON 提取 + 轻量修复 + 失败重试 → **Ollama 在线实测 3/3 × 3 次 aiApplied=true**
+- 英文自由落体题含 "impact velocity" 误判碰撞（碰撞关键词移除 impact）
 
 ### Added
-- PDF 题目输入（首页「📄 导入 PDF 题目」次级按钮）：
-  - lib/pdf.ts（pdfjs-dist 文本提取，多页拼接）
-  - 提取文字填入可编辑输入框，用户手动点 CTA（不自动提交）
-  - 失败/空 PDF 一行红字 + 引导文字输入
-  - i18n +6 键（home.pdf*），两端对齐 1005
-- scripts/eval-ai-polish.ts：规则版 vs AI 润色版对比脚本（待本机 Ollama 启动后实测）
-- 依赖：pdfjs-dist（worker 由 Vite 打包为独立 asset）
-- apps/desktop/src/vite-env.d.ts（?url 模块类型）
+- OllamaProvider：OLLAMA_MODEL 环境变量覆盖；callOllama 失败输出诊断（产品静默/开发可见）
+- P2 打点：core/usage.store（IconRail 计数 + 核心路径计数，localStorage、MenuBar 导出）
+- 中文提示本地化（方案 a）：packages/ai-parser/localize.ts（isChinese + 42 phase / 17 event 词典），
+  解析器按题目语言输出教学文本
+- i18n +1 键（menu.help.export_usage），两端对齐 1006
 
 ### Metrics
-- vitest 19 文件 / 156 用例全过；tsc ×3 零错；生产构建成功
+- vitest 21 文件 / 162 用例全过（+6：usage 3 + localize 3）；tsc ×3 零错；生产构建成功
+
+---
+
+## V5.3 (S76) — 2026-08-05
+### Added
+- PDF 题目输入（pdfjs 文本提取、可编辑填入、失败红字引导）| scripts/eval-ai-polish.ts
 
 ---
 
 ## V5.2 (S75) — 2026-08-05
 ### Added
-- AI 接入 TeachingScript（润色文案 + 模板开关，校验器把关、离线无感知回退）；OllamaProvider.generate
+- AI 接入 TeachingScript（润色 + 模板开关，校验器把关、离线无感知回退）
 
 ---
 
@@ -31,7 +39,7 @@
 
 ## V5.0 (S73) — 2026-08-04
 ### Changed
-- ForceCallout 偏移按 forces[].type | FormulaDisplay 变量符号 #00D4FF | 语义色 token + IconRail 语义橙
+- 语义色收尾（ForceCallout 按 type / FormulaDisplay #00D4FF / token CSS 变量 / IconRail 语义橙）
 
 ---
 

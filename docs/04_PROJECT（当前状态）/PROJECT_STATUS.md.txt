@@ -1,23 +1,24 @@
 ﻿# Project Status
 
-**Version:** V5.3 (Sprint S76)
-**Status:** Active Development — 题目输入三通道（文字/OCR/PDF）+ AI 教学脚本管线
+**Version:** V5.4 (Sprint S77)
+**Status:** Active Development — AI 润色实测通过 + 中文教学提示本地化
 
 ## Key Metrics
-- **18 experiments** | Zero TS errors | 156 tests passed (19 files) | AI parse 100%/100%
-- 输入通道：文字 / 拍照 OCR / PDF（S76 新增）；教学脚本：规则生成 → AI 润色 → 校验 → 渲染
+- **18 experiments** | Zero TS errors | 162 tests passed (21 files) | AI parse 100%/100%
+- AI 润色在线实测 3/3 通过；中文题目 → 中文教学提示（方案 a 落地）
 
-## S76: PDF 输入 + Ollama 在线实测脚本 (Completed)
-- 📄 PDF 题目输入：次级按钮 + 提取文字填入可编辑输入框 + 失败红字引导（多页拼接）
-- ⚙️ scripts/eval-ai-polish.ts：规则版 vs AI 润色版对比（待本机 Ollama 启动后执行实测）
+## S77: AI 润色根因修复 + P2 打点 + 中文本地化 (Completed)
+- 🤖 AI 润色修复：prompt 重构 + 平衡括号提取 + JSON 修复 + 重试 → 3/3 稳定 aiApplied=true
+- ⚙️ OLLAMA_MODEL 环境变量 + callOllama 诊断（产品静默/开发可见）
+- 📊 P2 打点：IconRail 计数 + 核心路径计数 + MenuBar 导出（localStorage、无 UI 露出）
+- 🀄 中文提示本地化（方案 a）：解析器按题目语言输出教学文本，42 phase + 17 event 词典
+- 🐛 顺带修复：英文题 "impact velocity" 误判碰撞
 
-## S75: AI 接入 TeachingScript (Completed) — 设计验收通过
+## S76: PDF 输入 + Ollama 实测脚本 (Completed) — 设计验收通过
+## S75: AI 接入 TeachingScript (Completed) — 验收点 1 实测部分于 S77 通过
 ## S74: TeachingScript Generator (Completed) — 设计验收通过
-## S73: 语义色收尾 (Completed) — 设计验收通过
-## S72: ForceCallout + EventPulse + P2 第一步 (Completed) — 设计验收通过
-## S71: P0 首页 + P1 教学图层 (Completed) — 设计验收通过
+## S73-S71: 语义色 / 教学模板 / P0 首页 (Completed) — 设计验收通过
 ## S70: AI 解析质量 (Completed) — 24% → 100%
 
-## Next (S77)
-- Ollama 在线实测（本机启动 Ollama 后跑 eval-ai-polish.ts，结果反馈产品/UX 调 prompt）
-- 或 P2 第二步验证走查 / 后续 P1 深化
+## Next (S78)
+- 依反馈修复；P2 第二步新用户走查（打点已就绪）；Ollama 解析 e2e 对比

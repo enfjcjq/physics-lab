@@ -1,25 +1,30 @@
-﻿# Current Milestone: S76 (Completed)
+﻿# Current Milestone: S77 (Completed)
 
-**Goal:** Ollama 在线实测（AI 润色）+ PDF 题目输入
-**依据:** 产品/UX Agent 第 6 轮确认的 S76 范围 + PDF UX 要点
+**Goal:** AI 润色根因修复 + Ollama 在线实测 + P2 打点 + 中文提示本地化（方案 a）
+**依据:** 产品/UX Agent 第 7 轮范围 + 留言 8/9 工程请求与设计观察
 
 **Completed:**
-- [x] PDF 题目输入（首页「📄 导入 PDF 题目」次级按钮，与 OCR 并排，不新增视觉层级）
-      - lib/pdf.ts：pdfjs-dist 文本提取（多页拼接、无逐页预览）
-      - 流程：PDF → 提取文字 → 填入输入框（可编辑）→ 用户手动点 CTA（不自动提交）
-      - 失败态：一行红字 + 引导文字输入，不阻塞首页主流程；空 PDF 单独提示
-      - i18n +6 键（home.pdf*，zh/en 对齐）
-      - 新增依赖：pdfjs-dist（worker 由 Vite 正确打包为独立 asset）
-- [x] Ollama 在线实测脚本：scripts/eval-ai-polish.ts（力学/电学 3 题，规则版 vs AI 版对比输出 JSON）
-      - 本机 Ollama 未运行（localhost:11434 超时）→ 脚本正确跳过并提示，在线实测待 Ollama 启动后执行
-- [x] vite-env.d.ts（?url 模块类型）；修复 artifact 清理误删手写 .d.ts 的问题（已恢复）
-- [x] 验证：tsc ×3 零错、vitest 19 文件 156 用例全过、生产构建成功（pdf.worker 1.26MB asset 正常产出）
+- [x] **AI 润色根因修复 + 在线实测通过（3/3 题 × 3 次，aiApplied=true）**
+      - prompt 重构：参考信息与待编辑对象分区、overlay_hints 置尾、few-shot 骨架用真实 id
+      - 提取器加固：平衡括号扫描 + 轻量 JSON 修复（"key:value"→"key":value、尾逗号）+ 失败重试一次
+      - 实测文案：中文、口语化、引导式（观察…/注意…）、不剧透答案
+- [x] OllamaProvider：`OLLAMA_MODEL` 环境变量覆盖默认模型；callOllama 失败输出诊断
+      （产品静默、开发可见 console.warn HTTP 状态/错误体）
+- [x] P2 第二步打点：core/usage.store（localStorage 持久化、无后端、无 UI 露出）
+      - IconRail 四图标点击计数；核心路径点击计数（首页→动画播放，enterScene 计 1）
+      - MenuBar「导出使用数据」导出 JSON；i18n +1 键
+- [x] **中文提示本地化（方案 a，治本）**：packages/ai-parser/localize.ts
+      - isChinese 检测 + 42 条 phase 描述 / 17 条 event 描述中英词典
+      - 规则解析器按题目语言输出教学文本 → 生成的 overlay_hints 跟随语言
+      - 验证：中文题→中文阶段提示；英文题→英文提示
+- [x] 顺带修复：英文自由落体题含 "impact velocity" 被误判为碰撞（碰撞关键词去掉 impact）
+- [x] 验证：tsc ×3 零错、vitest 21 文件 162 用例全过、生产构建成功
 
-**阻塞/待办：**
-- Ollama 在线实测被本机 Ollama 未运行阻塞：启动 `ollama serve` 并 pull 模型（如 llama3.2）后，
-  运行 `npx vite-node -c vitest.config.ts scripts/eval-ai-polish.ts`，结果回报产品/UX Agent 调 prompt
+**待产品/UX Agent 确认：**
+- S75 验收点 1 实测部分：3/3 aiApplied=true，文案符合风格约束
+- 中文提示本地化（方案 a）落地情况
 
 **Deferred:**
-- PDF 逐页预览（本期不做）；Ollama 解析 e2e 对比（run-e2e.ts 已支持，同样待 Ollama 在线）
+- 解析 e2e Ollama 对比（run-e2e.ts 已支持，可随时跑）；P2 第二步新用户走查（打点已就绪）
 
-**Next: S77** — Ollama 在线实测结果处理（调 prompt / 验收）+ 后续 P1 深化或 P2 第二步验证
+**Next: S78** — 依反馈修复；或 P2 第二步走查组织 / Ollama 解析 e2e 对比

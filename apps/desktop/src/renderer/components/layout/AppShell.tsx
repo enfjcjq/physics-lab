@@ -5,6 +5,7 @@ import { Timeline } from "../timeline/Timeline";
 import { usePanelManager } from "../../core/panel-manager.store";
 import { useTeaching } from "../../core/teaching.store";
 import { useI18n } from "../../core/i18n";
+import { useUsage } from "../../core/usage.store";
 import { LeftPanel } from "../panels/LeftPanel";
 import { RightPanel } from "../panels/RightPanel";
 import { CenterPanel } from "../panels/CenterPanel";

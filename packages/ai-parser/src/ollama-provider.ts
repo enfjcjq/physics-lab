@@ -12,8 +12,8 @@ import type { PhysicsScene } from "@physics-lab/shared";
  */
 
 const OLLAMA_BASE = "http://localhost:11434";
-const DEFAULT_MODEL = "llama3.2";
-
+const DEFAULT_MODEL =
+  typeof process !== "undefined" && process.env?.OLLAMA_MODEL ? process.env.OLLAMA_MODEL : "llama3.2";
 interface OllamaConfig {
   baseUrl?: string;
   model?: string;
@@ -168,10 +168,17 @@ Set total_duration based on the physics (e.g., free fall from 10m = sqrt(2*10/9.
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
+      if (!resp.ok) {
+        const body = await resp.text().catch(() => "");
+        // Product stays silent; developers get a diagnostic.
+        console.warn(`[OllamaProvider] ${this.baseUrl}/api/generate -> HTTP ${resp.status}: ${body.slice(0, 200)}`);
+        return "";
+      }
       const data = await resp.json();
       return data.response ?? "";
-    } catch {
+    } catch (err) {
       clearTimeout(timeoutId);
+      console.warn("[OllamaProvider] generate failed:", err instanceof Error ? err.message : String(err));
       return "";
     }
   }

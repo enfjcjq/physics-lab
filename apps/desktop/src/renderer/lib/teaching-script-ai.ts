@@ -172,6 +172,10 @@ function entityDisplayName(e: { name?: string; type: string }): string {
 const COLLOQUIAL_TERMS = ["小球", "方块", "物块", "滑块", "物体"];
 
 /** Replace colloquial entity terms in hints with the scene entity display name. */
+/** Remove trailing incomplete punctuation (e.g. "小球落地," -> "小球落地"). */
+export function cleanTrailingPunctuation(s: string): string {
+  return s.replace(/[\s,，;；:：、…]+$/, "");
+}
 export function fixColloquialEntities(scene: PhysicsScene, hints: OverlayHints): OverlayHints {
   const entities = scene.entities ?? [];
   if (entities.length === 0) return hints;
@@ -180,7 +184,7 @@ export function fixColloquialEntities(scene: PhysicsScene, hints: OverlayHints):
     const fix = (s: string) => {
       let out = s;
       for (const term of COLLOQUIAL_TERMS) out = out.split(term).join(target);
-      return out;
+      return cleanTrailingPunctuation(out);
     };
     return {
       phase_cards: (hints.phase_cards ?? []).map((c) => (c.hint ? { ...c, hint: fix(c.hint) } : c)),

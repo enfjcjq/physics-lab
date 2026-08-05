@@ -1,20 +1,19 @@
-﻿# Current Milestone: S79 (Completed)
+﻿# Current Milestone: S79 (Completed) + S80（待 P2 走查）
 
-**Goal:** 实体幻觉修复（prompt 强制措辞 + 确定性后处理）+ P2 走查就绪
-**依据:** 产品/UX Agent 第 9 轮确认（实体幻觉不可接受、两步走方案、S79 范围）
+**Goal:** 实体幻觉修复（已完成）+ P2 第二步走查结果处理（S80，等待走查）
+**依据:** 产品/UX Agent 第 10 轮确认（S79 验收通过、S80 范围 = P2 走查结果处理）
 
-**Completed:**
-- [x] prompt 强制措辞规则：引用实体必须用 entities[].name 原文（如"电子流"），禁止按 type 俗称（小球/方块等）
-- [x] 确定性后处理 `fixColloquialEntities`：merge 后把 hint/text_override 中的俗称词
-      （小球/方块/物块/滑块/物体）按场景实体显示名替换（纯文本替换、不过校验器、结构不变）
-      - 欧姆题：小球→电子流（"观察电流通过电子流时的变化"）
-      - 真球场景：小球→小球（no-op，不误伤）
-- [x] 复跑实测：scripts/eval-ai-polish.ts **3/3 题 × 3 轮稳定 aiApplied=true，实体幻觉消除**
-- [x] 单测 +3（colloquial-entities.test.ts）
-- [x] 验证：tsc ×3 零错、vitest 22 文件 165 用例全过、生产构建成功
+**S79 已完成：**
+- [x] prompt 强制措辞（entities[].name 原文，禁按 type 俗称）
+- [x] 确定性后处理 fixColloquialEntities（俗称→实体显示名；真球场景 no-op）
+- [x] 复跑实测 3/3 × 3 稳定，实体幻觉消除；产品/UX Agent 独立复跑验收通过
+- [x] 顺手落地第 10 轮可选微修复：cleanTrailingPunctuation（去除结尾标点残缺，如"小球落地,"→"小球落地"）
 
-**待办：**
-- P2 第二步新用户走查由产品/UX Agent 与项目负责人组织（打点已就绪）
-- Ollama 解析 e2e 全量对比留长窗口（E2E_MAX 已支持子集）
+**S80（等待走查，不开发新功能）：**
+- 项目负责人完成新用户走查 → MenuBar 导出使用数据 → 产品/UX Agent 评估三项指标
+  （≤3 次点击 / 无零发现 / 无 P0P1 阻塞）→ 结果同步后处理
+- 期间可跑 E2E_MAX 解析子集采样（可选，不阻塞）
 
-**Next: S80** — 依走查/反馈修复；AI 直接生成场景列为长期探索（不急于开工）
+**验证（S79+微修复）：** tsc ×3 零错、vitest 23 文件 167 用例全过、生产构建成功
+
+**Next: S80** — 依走查结果处理（达标→P2 第二步结构合并；未达标→调默认组合/入口后复走）

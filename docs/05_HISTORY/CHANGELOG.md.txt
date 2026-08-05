@@ -3,33 +3,29 @@
 ## V5.6 (S79) — 2026-08-05
 
 ### Fixed
-- AI 润色实体幻觉（产品/UX 判定不可接受）：
-  - prompt 强制措辞：引用实体必须用 entities[].name 原文，禁止按 type 俗称
-  - 确定性后处理 fixColloquialEntities：merge 后把俗称词（小球/方块/物块/滑块/物体）
-    按场景实体显示名替换（纯文本、不过校验器、结构不变；真球场景 no-op）
-- 复跑实测：3/3 题 × 3 轮 aiApplied=true，欧姆题"小球"→"电子流"，实体幻觉消除
+- AI 润色实体幻觉：prompt 强制措辞 + 确定性后处理 fixColloquialEntities
+  （欧姆题"小球"→"电子流"；真球场景 no-op；3/3×3 稳定，产品/UX 独立复跑验收通过）
+- 结尾标点残缺微修复（cleanTrailingPunctuation：去除尾随逗号/省略号等，保留句号问号）
 
 ### Added
-- 单测 +3（colloquial-entities.test.ts）
+- 单测 +2（clean-punctuation.test.ts）
 
 ### Metrics
-- vitest 22 文件 / 165 用例全过；tsc ×3 零错；生产构建成功
+- vitest 23 文件 / 167 用例全过；tsc ×3 零错；生产构建成功
 
 ---
 
 ## V5.5 (S78) — 2026-08-05
 ### Changed
-- AI 润色 prompt 微调 3 条（重力主因保留受力 / 避免同义反复 / 只引用真实实体 + entities 参考）
-- run-e2e.ts 支持 E2E_MAX 限量
+- AI 润色 prompt 微调 3 条 + run-e2e E2E_MAX 限量
 
 ---
 
 ## V5.4 (S77) — 2026-08-05
 ### Fixed
-- AI 润色根因（prompt 重构 + 平衡括号提取 + JSON 修复 + 重试）→ 在线实测 3/3 通过
-- 英文题 "impact velocity" 误判碰撞
+- AI 润色根因 → 在线实测 3/3；英文题 "impact velocity" 误判碰撞
 ### Added
-- OLLAMA_MODEL 环境变量 + callOllama 诊断 | P2 打点（usage.store + MenuBar 导出）| 中文提示本地化（方案 a）
+- OLLAMA_MODEL + callOllama 诊断 | P2 打点 | 中文提示本地化（方案 a）
 
 ---
 

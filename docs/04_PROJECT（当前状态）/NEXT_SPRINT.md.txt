@@ -1,18 +1,19 @@
-﻿# Next Sprint: S79+
+﻿# Next Sprint: S80+
 
-## Completed (S78): prompt 微调 + 度量支持
-- [x] 3 条 prompt 微调（重力主因保留受力 / 避免同义反复 / 只引用真实实体 + entities 参考）
-- [x] AI 润色复跑 3/3 稳定；run-e2e.ts 支持 E2E_MAX 限量
-- [x] 门禁全绿（tsc ×3 / 162 用例 / 构建）
+## Completed (S79): 实体幻觉修复
+- [x] prompt 强制措辞（entities[].name 原文，禁按 type 俗称）
+- [x] 后处理 fixColloquialEntities（俗称→实体显示名；真球场景 no-op）
+- [x] 复跑 3/3×3 稳定，实体幻觉消除；单测 +3（共 165）
+- [x] 门禁全绿（tsc ×3 / 165 用例 / 构建）
 
 ## 待产品/UX Agent
 - [ ] P2 第二步新用户走查组织（打点已就绪；导出使用数据评估：≤3 次点击 / 无零发现 / 无 P0P1 阻塞）
-- [ ] Ollama 解析 e2e 全量对比（长窗口运行，E2E_MAX 可子集）
+- [ ] Ollama 解析 e2e 全量对比（长窗口，E2E_MAX 子集）
 
-## S79 候选
+## S80 候选
 - [ ] 依走查/反馈修复
-- [ ] AI 直接生成场景（长期方向：AI 输出 PhysicsScene + overlay_hints，规则系统校验兜底）
+- [ ] P2 第二步走查结果处理（未达标则调默认组合/入口后复走）
 - [ ] Knowledge graph mastery / Adaptive paths / Progress persistence
 
 ## 后续
-- [ ] PDF 逐页预览（可选）| 本地账户 | 插件市场
+- [ ] AI 直接生成场景（长期探索，不急于开工）| PDF 逐页预览（可选）| 本地账户 | 插件市场

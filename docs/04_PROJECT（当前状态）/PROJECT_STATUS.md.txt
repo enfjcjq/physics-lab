@@ -1,18 +1,18 @@
 ﻿# Project Status
 
-**Version:** V5.5 (Sprint S78)
-**Status:** Active Development — AI 润色质量打磨 + 度量就绪
+**Version:** V5.6 (Sprint S79)
+**Status:** Active Development — AI 润色实体准确性闭环
 
 ## Key Metrics
-- **18 experiments** | Zero TS errors | 162 tests passed (21 files) | AI parse 100%/100%
-- AI 润色实测稳定 3/3；P2 打点就绪；解析 e2e 支持限量对比
+- **18 experiments** | Zero TS errors | 165 tests passed (22 files) | AI parse 100%/100%
+- AI 润色：prompt + 确定性后处理双层保障实体准确性（无俗称误用）
 
-## S78: prompt 微调 + 解析 e2e 对比支持 (Completed)
-- ✍️ prompt 3 条微调（重力主因保留受力 / 避免同义反复 / 只引用真实实体，参考信息补 entities）
-- ✅ 复跑实测 3/3 稳定；自由落体/平抛受力标注保留
-- ⚙️ run-e2e.ts 支持 E2E_MAX 限量（Ollama 对比可子集运行）
-- 📊 P2 第二步走查就绪（打点已落地，走查由产品/UX Agent 组织）
+## S79: 实体幻觉修复 (Completed)
+- 🧠 prompt 强制措辞（entities[].name 原文）+ 后处理 fixColloquialEntities（俗称→实体显示名）
+- ✅ 欧姆题"小球"→"电子流"；真球场景不误伤；3/3×3 稳定
+- 📊 P2 走查就绪（打点已落地，组织待产品/UX Agent 与项目负责人）
 
+## S78: prompt 微调 + 度量支持 (Completed) — 设计验收通过
 ## S77: AI 润色根因修复 + P2 打点 + 中文本地化 (Completed) — 设计验收通过
 ## S76: PDF 输入 + Ollama 实测脚本 (Completed) — 设计验收通过
 ## S75: AI 接入 TeachingScript (Completed) — 全部验收点闭环
@@ -20,5 +20,5 @@
 ## S73-S71: 语义色 / 教学模板 / P0 首页 (Completed) — 设计验收通过
 ## S70: AI 解析质量 (Completed) — 24% → 100%
 
-## Next (S79)
-- 依走查/反馈修复；AI 直接生成场景（长期）；P2 第二步走查结果处理
+## Next (S80)
+- 依走查/反馈修复；P2 第二步走查结果处理

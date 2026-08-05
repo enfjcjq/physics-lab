@@ -1,18 +1,26 @@
 ﻿# Changelog
 
-## V5.5 (S78) — 2026-08-05
+## V5.6 (S79) — 2026-08-05
 
-### Changed
-- AI 润色 prompt 微调 3 条（产品/UX 建议）：
-  1) 重力主因场景（自由落体/抛体）必须保留受力标注
-  2) 避免同义反复，每条提示只表达一个要点
-  3) 只引用场景真实实体（参考信息补充 entities 列表）
-- run-e2e.ts 支持 E2E_MAX 限量（Ollama 对比可子集运行）
+### Fixed
+- AI 润色实体幻觉（产品/UX 判定不可接受）：
+  - prompt 强制措辞：引用实体必须用 entities[].name 原文，禁止按 type 俗称
+  - 确定性后处理 fixColloquialEntities：merge 后把俗称词（小球/方块/物块/滑块/物体）
+    按场景实体显示名替换（纯文本、不过校验器、结构不变；真球场景 no-op）
+- 复跑实测：3/3 题 × 3 轮 aiApplied=true，欧姆题"小球"→"电子流"，实体幻觉消除
+
+### Added
+- 单测 +3（colloquial-entities.test.ts）
 
 ### Metrics
-- AI 润色实测 3/3 × 多轮稳定 aiApplied=true；自由落体/平抛保留受力标注；
-  欧姆题实体幻觉 3/3 → 1/3（残余为 electron（ball 类型）命名习惯，非虚构实体）
-- vitest 21 文件 / 162 用例全过；tsc ×3 零错；生产构建成功
+- vitest 22 文件 / 165 用例全过；tsc ×3 零错；生产构建成功
+
+---
+
+## V5.5 (S78) — 2026-08-05
+### Changed
+- AI 润色 prompt 微调 3 条（重力主因保留受力 / 避免同义反复 / 只引用真实实体 + entities 参考）
+- run-e2e.ts 支持 E2E_MAX 限量
 
 ---
 

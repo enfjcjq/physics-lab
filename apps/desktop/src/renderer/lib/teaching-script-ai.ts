@@ -138,6 +138,7 @@ export function buildPrompt(scene: PhysicsScene, ruleHints: OverlayHints): strin
     '- 若场景中重力是运动的主因（如自由落体/抛体），必须保留受力标注（force_callouts）；仅在纯电路/纯光学等无机械受力的场景才可关闭',
     '- 避免同义反复，每条提示只表达一个要点',
     '- 提示文案中只引用场景中真实存在的实体名称，不要虚构实体',
+    '- 引用实体时必须使用参考信息中 entities[].name 的原文（如“电子流”），禁止按 type 自行俗称（小球/方块等）',
     '【参考信息】（仅作背景理解，不要回显）：',
     '' + JSON.stringify(reference),
     '',
@@ -151,6 +152,45 @@ export function buildPrompt(scene: PhysicsScene, ruleHints: OverlayHints): strin
   ].join("\n");
 }
 
+
+// ---- Deterministic post-processing: fix colloquial entity terms ----
+// llama3.2 tends to call any ball-typed entity "小球". If the entity has a
+// specific name (e.g. Electron Flow), replace the colloquial term with its
+// display name so students never read a misleading term. Pure text replace;
+// ids and structure are untouched (validator still applies afterwards).
+const ENTITY_NAME_ZH: Record<string, string> = {
+  "Electron Flow": "电子流",
+  "Charge 1": "电荷1",
+  "Charge 2": "电荷2",
+};
+function entityDisplayName(e: { name?: string; type: string }): string {
+  if (e.name && ENTITY_NAME_ZH[e.name]) return ENTITY_NAME_ZH[e.name];
+  if (e.type === "ball") return "小球";
+  if (e.type === "block") return "滑块";
+  return e.name ?? "物体";
+}
+const COLLOQUIAL_TERMS = ["小球", "方块", "物块", "滑块", "物体"];
+
+/** Replace colloquial entity terms in hints with the scene entity display name. */
+export function fixColloquialEntities(scene: PhysicsScene, hints: OverlayHints): OverlayHints {
+  const entities = scene.entities ?? [];
+  if (entities.length === 0) return hints;
+  const target = entityDisplayName(entities[0] as { name?: string; type: string });
+  if (!COLLOQUIAL_TERMS.includes(target)) {
+    const fix = (s: string) => {
+      let out = s;
+      for (const term of COLLOQUIAL_TERMS) out = out.split(term).join(target);
+      return out;
+    };
+    return {
+      phase_cards: (hints.phase_cards ?? []).map((c) => (c.hint ? { ...c, hint: fix(c.hint) } : c)),
+      formula_strips: hints.formula_strips,
+      force_callouts: hints.force_callouts,
+      event_pulses: (hints.event_pulses ?? []).map((e) => (e.text_override ? { ...e, text_override: fix(e.text_override) } : e)),
+    };
+  }
+  return hints;
+}
 export async function polishTeachingScriptWithAI(scene: PhysicsScene, provider?: OllamaProvider): Promise<PhysicsScene> {
   const ruleHints = scene.overlay_hints ?? generateTeachingScript(scene);
   const ollama = provider ?? new OllamaProvider();
@@ -165,7 +205,8 @@ export async function polishTeachingScriptWithAI(scene: PhysicsScene, provider?:
     if (!aiHints) return scene;
 
     const merged = mergeAiHints(ruleHints, aiHints);
-    const validated = validateTeachingScript(scene, merged);
+    const fixed = fixColloquialEntities(scene, merged);
+    const validated = validateTeachingScript(scene, fixed);
 
     // If validation dropped anything the AI provided, fall back to the rule version
     // (the student always sees correct, complete content).

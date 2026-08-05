@@ -1004,5 +1004,6 @@
   "home.pdf_error": "Could not read the PDF. Please type the problem instead.",
   "home.pdf_empty": "No text found in the PDF. Please type the problem instead.",
   "home.pdf_hint": "Multi-page PDFs are supported; text is combined into the input for editing before generating.",
-  "menu.help.export_usage": "Export usage data"
+  "menu.help.export_usage": "Export usage data",
+  "menu.help.developer": "Developer"
 }

@@ -17,7 +17,7 @@ import { useDashboard } from "../../core/dashboard.store";
 import { ToastContainer } from "./ToastContainer";
 import { useAchievements } from "../../core/achievements.store";
 import { useToasts } from "../../core/toast.store";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * P2 first step (S72): learning scene page default = canvas + Timeline +
@@ -30,22 +30,34 @@ function IconRail() {
   const { t } = useI18n();
   const panels = usePanelManager((s) => s.panels);
   const toggle = usePanelManager((s) => s.toggle);
+  const [hint, setHint] = useState(false);
+  // One-time breathing highlight for the first 2 scene entries (discoverability, S80).
+  useEffect(() => {
+    const n = Number(localStorage.getItem("physics-lab:iconrail-hint") ?? "0");
+    if (n < 2) {
+      setHint(true);
+      localStorage.setItem("physics-lab:iconrail-hint", String(n + 1));
+      const timer = setTimeout(() => setHint(false), 6000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
   const items = [
-    { id: "problem", icon: "\u2699\uFE0F", key: "rail.parameters" },
-    { id: "charts", icon: "\uD83D\uDCCA", key: "rail.charts" },
-    { id: "teaching", icon: "\uD83D\uDCD6", key: "rail.steps" },
-    { id: "analysis", icon: "\uD83D\uDD2D", key: "rail.graph" },
+    { id: "problem", icon: "⚙️", key: "rail.parameters" },
+    { id: "charts", icon: "📊", key: "rail.charts" },
+    { id: "teaching", icon: "📖", key: "rail.steps" },
+    { id: "analysis", icon: "🔭", key: "rail.graph" },
   ] as const;
   return (
-    <div className="flex-shrink-0 w-12 border-r flex flex-col items-center py-2 gap-1.5"
+    <div className={"flex-shrink-0 w-16 border-r flex flex-col items-center py-2 gap-1.5 " + (hint ? "iconrail-hint" : "")}
       style={{ borderColor: "var(--border-primary)", background: "var(--bg-primary)" }}>
       {items.map((it) => {
         const open = panels[it.id]?.isOpen ?? false;
         return (
-          <button key={it.id} title={t(it.key)} onClick={() => toggle(it.id)}
-            className={"w-9 h-9 rounded-lg flex items-center justify-center text-base transition-all duration-200 " +
+          <button key={it.id} title={t(it.key)} onClick={() => { toggle(it.id); useUsage.getState().incrementIcon(it.id); }}
+            className={"w-12 rounded-lg flex flex-col items-center justify-center gap-0.5 py-1.5 text-base transition-all duration-200 " +
               (open ? "bg-orange-600/15 text-orange-400 ring-1 ring-orange-500/40" : "text-slate-500 hover:text-slate-200 hover:bg-slate-800/60")}>
             <span>{it.icon}</span>
+            <span className="text-[10px] leading-none">{t(it.key)}</span>
           </button>
         );
       })}

@@ -1,21 +1,18 @@
 ﻿# Project Status
 
-**Version:** V5.6 (Sprint S79) → S80 等待 P2 走查
-**Status:** 核心闭环已交付并验收；S80 = P2 第二步走查结果处理（待项目负责人走查）
+**Version:** V5.7 (Sprint S80)
+**Status:** Active Development — P2 可发现性修复完成，待复走查
 
 ## Key Metrics
 - **18 experiments** | Zero TS errors | 167 tests passed (23 files) | AI parse 100%/100%
-- AI 润色实体准确性闭环（prompt 强制措辞 + 确定性后处理），S75-S79 全部验收通过
+- P2 走查：核心路径✅；四图标可发现性 + MenuBar 截断已修复，待复走查
 
-## S79: 实体幻觉修复 (Completed) — 设计验收通过
-- 🧠 prompt 强制措辞 + 后处理 fixColloquialEntities（俗称→实体显示名，真球 no-op）
-- ✅ 欧姆题"小球"→"电子流"；3/3×3 稳定；结尾标点残缺微修复（cleanTrailingPunctuation）
+## S80: P2 可发现性修复 (Completed)
+- 🎯 IconRail：常驻文字标签 + 宽度 64px + 一次性呼吸高亮 + 补打点
+- 📋 MenuBar：右侧下拉 right-0 对齐 + 溢出安全（根因：下拉超出窗口右缘被裁）
+- 🔧 导出使用数据移入 帮助/开发者 子菜单（P2）
 
-## S78: prompt 微调 + 度量支持 (Completed) — 设计验收通过
-## S77: AI 润色根因修复 + P2 打点 + 中文本地化 (Completed) — 设计验收通过
-## S76: PDF 输入 + Ollama 实测脚本 (Completed) — 设计验收通过
-## S75: AI 接入 TeachingScript (Completed) — 全部验收点闭环
-## S74-S70: Generator / 语义色 / 教学模板 / P0 首页 / 解析质量 (Completed)
+## S79-S70: AI 润色闭环 / PDF / 教学脚本 / 教学图层 / P0 首页 / 解析质量 (Completed) — 验收通过
 
-## Next (S80)
-- P2 第二步新用户走查（项目负责人）→ 导出使用数据 → 产品/UX 评估三项指标 → 结果处理
+## Next (S80 复走查)
+- 项目负责人复走 → 产品/UX 重评三项指标 → 达标启动 P2 第二步结构合并

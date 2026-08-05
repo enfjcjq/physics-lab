@@ -1,17 +1,26 @@
 ﻿# Changelog
 
-## V5.6 (S79) — 2026-08-05
+## V5.7 (S80) — 2026-08-05
 
 ### Fixed
-- AI 润色实体幻觉：prompt 强制措辞 + 确定性后处理 fixColloquialEntities
-  （欧姆题"小球"→"电子流"；真球场景 no-op；3/3×3 稳定，产品/UX 独立复跑验收通过）
-- 结尾标点残缺微修复（cleanTrailingPunctuation：去除尾随逗号/省略号等，保留句号问号）
+- P2 走查未达标修复：
+  1) IconRail 可发现性：常驻文字标签（48→64px、图标+10px 文字）、前 2 次一次性呼吸高亮；
+     并补上 S77 遗漏的 incrementIcon 打点（此前 iconClicks 未接入）
+  2) MenuBar 菜单项截断：根因为右侧下拉（Language/Theme/Help）从 left-0 展开超出窗口右缘被裁；
+     改为 right-0 对齐 + max-w/min(20rem,90vw) + max-h 80vh + overflow-y-auto；minWidth 900 评估合理
+- 导出使用数据移入 帮助/开发者 子菜单（P2，避免用户误点）
 
 ### Added
-- 单测 +2（clean-punctuation.test.ts）
+- i18n +1 键（menu.help.developer），两端对齐 1007
 
 ### Metrics
 - vitest 23 文件 / 167 用例全过；tsc ×3 零错；生产构建成功
+
+---
+
+## V5.6 (S79) — 2026-08-05
+### Fixed
+- AI 润色实体幻觉（prompt 强制措辞 + fixColloquialEntities 后处理）；结尾标点残缺微修复
 
 ---
 

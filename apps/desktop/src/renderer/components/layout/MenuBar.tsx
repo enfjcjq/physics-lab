@@ -15,7 +15,7 @@ import { useSimulation } from "../../features/experiment/experiment.store";
 import { generateMarkdownReport, generateHTMLReport, downloadReport, downloadFile, downloadPDFReport } from "../../lib/report";
 
 // ===== Dropdown Menu =====
-function Dropdown({ label, children }: { label: string; children: React.ReactNode }) {
+function Dropdown({ label, children, align = "left" }: { label: string; children: React.ReactNode; align?: "left" | "right" }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -39,7 +39,7 @@ function Dropdown({ label, children }: { label: string; children: React.ReactNod
         {label}
       </button>
       {open && (
-        <div className="absolute top-full left-0 mt-1 w-56 bg-slate-800 border border-slate-700 rounded-lg shadow-2xl py-1 z-50">
+        <div className={"absolute top-full mt-1 w-56 max-w-[min(20rem,90vw)] max-h-[80vh] overflow-y-auto bg-slate-800 border border-slate-700 rounded-lg shadow-2xl py-1 z-50 " + (align === "right" ? "right-0" : "left-0")}>
           {children}
         </div>
       )}
@@ -71,6 +71,24 @@ function MenuItem({
   );
 }
 
+
+function Submenu({ label, children }: { label: string; children: React.ReactNode }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+      <button onClick={() => setOpen(!open)} className="w-full flex items-center px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-700 hover:text-white transition-colors text-left">
+        <span className="w-4" />
+        <span className="flex-1">{label}</span>
+        <span className="text-slate-500 text-[10px]">▶</span>
+      </button>
+      {open && (
+        <div className="absolute left-full top-0 ml-0.5 w-44 max-w-[min(16rem,80vw)] bg-slate-800 border border-slate-700 rounded-lg shadow-2xl py-1 z-50">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
 function MenuSeparator() {
   return <div className="border-t border-slate-700 my-1" />;
 }
@@ -245,22 +263,24 @@ export function MenuBar() {
       </button>
 
       {/* Language (dropdown for discovery) */}
-      <Dropdown label={t("menu.language")}>
+      <Dropdown label={t("menu.language")} align="right">
         <MenuItem label="English" checked={locale === "en-US"} onClick={() => setLocale("en-US")} />
         <MenuItem label={"中文"} checked={locale === "zh-CN"} onClick={() => setLocale("zh-CN")} />
       </Dropdown>
 
       {/* Theme */}
-      <Dropdown label={t("menu.theme")}>
+      <Dropdown label={t("menu.theme")} align="right">
         <MenuItem label={t("menu.theme.dark")} checked={mode === "dark"} onClick={() => setMode("dark")} />
         <MenuItem label={t("menu.theme.light")} checked={mode === "light"} onClick={() => setMode("light")} />
         <MenuItem label={t("menu.theme.auto")} checked={mode === "auto"} onClick={() => setMode("auto")} />
       </Dropdown>
 
       {/* Help */}
-      <Dropdown label={t("menu.help")}>
+      <Dropdown label={t("menu.help")} align="right">
         <MenuItem label={t("about.title")} onClick={() => setShowAbout(true)} />
-        <MenuItem label={t("menu.help.export_usage")} onClick={() => useUsage.getState().exportData()} />
+        <Submenu label={t("menu.help.developer")}>
+          <MenuItem label={t("menu.help.export_usage")} onClick={() => useUsage.getState().exportData()} />
+        </Submenu>
         <MenuItem label="Documentation" />
         <MenuSeparator />
         <MenuItem label="Version 2.0.0" />

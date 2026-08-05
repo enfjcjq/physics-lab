@@ -1,44 +1,36 @@
 ﻿# Physics Lab TODO
 
-> Current version: V5.6 (S79)
+> Current version: V5.7 (S80)
 
 ---
 
-# Completed (S16-S79)
+# Completed (S16-S80)
 
 - [x] 18 experiments | P2 第一步（学习模式默认核心入口）| PhysicsScene-driven
 - [x] 输入通道：文字 / 拍照 OCR / PDF
 - [x] AI Parser: Rule-based (18 types) + OllamaProvider; e2e coverage 100% (T310)
 - [x] Timeline (drag/click/keyboard/phase nodes + event markers)
 - [x] Teacher panel + FormulaDisplay + KnowledgeGraph | Export suite
-- [x] i18n: 1006 zh-CN / 1006 en-US keys
-- [x] S71: P0 题目输入首页 + Teaching Layer（PhaseCard/FormulaStrip）+ overlay_hints
-- [x] S72: ForceCallout + EventPulse + P2 第一步
-- [x] S73: 语义色收尾
-- [x] S74: TeachingScript Generator（规则生产者 + 校验器 + 运行时接入）
-- [x] S75: AI 接入 TeachingScript（AI 润色 + 模板开关）— 全部验收点闭环
-- [x] S76: PDF 题目输入 + Ollama 在线实测脚本
-- [x] S77: AI 润色根因修复（在线实测 3/3）+ P2 打点 + 中文提示本地化（方案 a）
-- [x] S78: prompt 微调 3 条 + run-e2e E2E_MAX 限量
-- [x] S79: 实体幻觉修复（prompt 强制措辞 + 确定性后处理 fixColloquialEntities）
+- [x] i18n: 1007 zh-CN / 1007 en-US keys
+- [x] S71-S79: P0 首页 / 教学图层 4 模板 / TeachingScript / AI 润色 / PDF / 中文提示 / 语义色（验收通过）
+- [x] S80: P2 可发现性修复（IconRail 标签+宽度+呼吸高亮+补打点；MenuBar 下拉右对齐+溢出安全；导出入开发者子菜单）
 
 ---
 
-# 输入 / AI & Parser
+# P2 信息架构
 
-- [x] 文字 / OCR / PDF 输入；Rule-based parser (18 types)；AIProvider 抽象；Ollama auto-detect
-- [x] e2e test set + coverage (T310)；解析场景自动生成教学脚本 + AI 润色（实测通过、实体准确）
-- [x] 中文题目 → 中文教学提示（localize.ts 方案 a）
+- [x] 第一步：实验库抽屉、左缘 4 图标、默认组合、布局记忆、三模式切换器移除
+- [x] S80 修复：四图标可发现性 + 菜单完整可读（待复走查）
+- [ ] 第二步：结构合并（待复走查三项指标达标：≤3 次点击 / 无零发现 / 无 P0P1 阻塞）
+
+---
+
+# 输入 / AI & Parser / Teaching Layer
+
+- [x] 文字 / OCR / PDF 输入；Rule-based (18 types)；Ollama auto-detect
+- [x] TeachingScript（规则生成 + AI 润色 + 校验）；4 模板 + 显隐开关 + 降级
+- [x] e2e coverage (T310)；中文提示本地化；AI 润色实体准确性
 - [ ] Ollama 解析 e2e 全量对比（长窗口，E2E_MAX 已支持）
-- [ ] PDF 逐页预览（后期可选）
-
----
-
-# Teaching System / Teaching Layer
-
-- [x] PhaseCard / FormulaStrip / ForceCallout / EventPulse（4 模板）+ 显隐开关 + 降级
-- [x] overlay_hints（4 类）+ TeachingScript Generator + Validator + AI 润色管线（双层实体保障）
-- [ ] P2 第二步新用户走查（§7.2 三项指标；打点已就绪）
 - [ ] Knowledge graph mastery tracking | Adaptive paths | Progress persistence
 
 ---

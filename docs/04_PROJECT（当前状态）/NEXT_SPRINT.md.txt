@@ -1,21 +1,21 @@
-﻿# Next Sprint: S76+
+﻿# Next Sprint: S77+
 
-## Completed (S75): AI 接入 TeachingScript
-- [x] OllamaProvider.generate + lib/teaching-script-ai.ts（润色 prompt / 提取 / 合并 / 回退）
-- [x] 硬边界：validate 把关、离线无感知降级、formula_strips 红线
-- [x] 渲染层"空数组=禁用模板"；problem.store.submit 接入 polish
-- [x] 清理 clip() FYI；+14 用例（共 156）；门禁全绿（tsc ×3 / 156 / 构建）
+## Completed (S76): PDF 输入 + Ollama 实测脚本
+- [x] PDF 题目输入（次级按钮 / 提取填入可编辑 / 失败红字引导 / 多页拼接）
+- [x] scripts/eval-ai-polish.ts（规则版 vs AI 版，3 题对比）
+- [x] i18n +6（home.pdf*）；pdfjs-dist 依赖 + worker 打包验证
+- [x] 门禁全绿（tsc ×3 / 156 用例 / 构建）
 
-## 待产品/UX Agent 验收（S75 三要点）
-- [ ] AI 在线：文案口语化、引导式、不剧透答案
-- [ ] AI 离线：无感知回退规则版，图层完整
-- [ ] 非法 AI 输出：校验器拦截回退
+## 阻塞项（需本机操作）
+- [ ] Ollama 未运行 → 启动 `ollama serve` + pull 模型（如 llama3.2）
+- [ ] 运行 `npx vite-node -c vitest.config.ts scripts/eval-ai-polish.ts` 完成 AI 润色在线实测
+- [ ] 实测结果反馈产品/UX Agent（文案质量/回退率），按需调 prompt
 
-## S76 候选
-- [ ] 验收反馈修复（如有）
-- [ ] Ollama 在线实测：AI 润色效果走查 + 解析 e2e 对比（run-e2e.ts 已支持）
-- [ ] PDF 题目输入
+## S77 候选
+- [ ] Ollama 实测结果处理（调 prompt / 验收）
+- [ ] Ollama 解析 e2e 对比（run-e2e.ts 已支持）
+- [ ] P2 第二步验证走查（§7.2：≤3 次点击 / 无零发现 / 无 P0P1 阻塞）
+- [ ] PDF 逐页预览（可选，后期）
 
 ## 后续
-- [ ] P2 第二步（结构合并，待 §7.2 验证标准达标）
-- [ ] 长期：AI 直接生成场景 + 教学脚本（规则系统作为校验与兜底）
+- [ ] 长期：AI 直接生成场景 + 教学脚本（规则系统校验兜底）

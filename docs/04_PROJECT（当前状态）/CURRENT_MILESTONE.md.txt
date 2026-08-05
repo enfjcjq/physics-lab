@@ -1,33 +1,25 @@
-﻿# Current Milestone: S75 (Completed)
+﻿# Current Milestone: S76 (Completed)
 
-**Goal:** AI 接入 TeachingScript — AI 润色教学文案 + 模板开关，规则系统为质量关口
-**依据:** 产品/UX Agent 第 5 轮确认的 S75 范围（AI 职责 / 硬边界 / 文案约束）
+**Goal:** Ollama 在线实测（AI 润色）+ PDF 题目输入
+**依据:** 产品/UX Agent 第 6 轮确认的 S76 范围 + PDF UX 要点
 
 **Completed:**
-- [x] OllamaProvider 新增公共 `generate(prompt)`（复用 callOllama，失败返回 null）
-- [x] `lib/teaching-script-ai.ts`：
-      buildPrompt（面向中学生的润色 prompt：只允许改 phase_cards[].hint /
-      event_pulses[].text_override / force_callouts 开关；禁改 id/公式映射；≤30/≤20 字；不剧透答案）
-      extractAiHintsJson（普通 JSON / markdown 代码块 / 垃圾输入）
-      mergeAiHints（纯函数：AI 覆盖三组，formula_strips 永远来自规则版——教学红线）
-      polishTeachingScriptWithAI（offline/超时/解析失败/校验丢弃 → 无感知回退规则版）
-- [x] 硬边界落实：AI 输出必须过 validateTeachingScript，校验丢弃任一 AI 提供组 → 整体回退；
-      Ollama 离线无感知降级（不新增 UI 提示）
-- [x] 渲染层"空数组 = 禁用模板"语义：phase_cards/formula_strips/force_callouts/event_pulses
-      四组均支持（AI 模板开关生效；缺省=规则推导不变）
-- [x] 管线接入：problem.store.submit 在解析成功后、注册插件前调用 polish
-- [x] 清理 FYI：删除生成器未使用的 clip()
-- [x] 测试：merge/extract/polish（有效润色/非法回退/模板关闭/垃圾回退/离线回退）+
-      空数组禁用语义，共 +14 用例
-- [x] 验证：tsc ×3 零错、vitest 19 文件 156 用例全过、生产构建成功
+- [x] PDF 题目输入（首页「📄 导入 PDF 题目」次级按钮，与 OCR 并排，不新增视觉层级）
+      - lib/pdf.ts：pdfjs-dist 文本提取（多页拼接、无逐页预览）
+      - 流程：PDF → 提取文字 → 填入输入框（可编辑）→ 用户手动点 CTA（不自动提交）
+      - 失败态：一行红字 + 引导文字输入，不阻塞首页主流程；空 PDF 单独提示
+      - i18n +6 键（home.pdf*，zh/en 对齐）
+      - 新增依赖：pdfjs-dist（worker 由 Vite 正确打包为独立 asset）
+- [x] Ollama 在线实测脚本：scripts/eval-ai-polish.ts（力学/电学 3 题，规则版 vs AI 版对比输出 JSON）
+      - 本机 Ollama 未运行（localhost:11434 超时）→ 脚本正确跳过并提示，在线实测待 Ollama 启动后执行
+- [x] vite-env.d.ts（?url 模块类型）；修复 artifact 清理误删手写 .d.ts 的问题（已恢复）
+- [x] 验证：tsc ×3 零错、vitest 19 文件 156 用例全过、生产构建成功（pdf.worker 1.26MB asset 正常产出）
 
-**待产品/UX Agent 验收（S75 验收要点）：**
-1. AI 在线：文案更口语、更引导式，且不剧透答案
-2. AI 离线：无感知回退规则版，教学图层完整可用
-3. 人为非法 AI 输出：校验器拦截，回退规则版
+**阻塞/待办：**
+- Ollama 在线实测被本机 Ollama 未运行阻塞：启动 `ollama serve` 并 pull 模型（如 llama3.2）后，
+  运行 `npx vite-node -c vitest.config.ts scripts/eval-ai-polish.ts`，结果回报产品/UX Agent 调 prompt
 
 **Deferred:**
-- Ollama e2e 对比运行（需本机 Ollama 在线实测 AI 润色效果）
-- PDF 输入 | P2 第二步
+- PDF 逐页预览（本期不做）；Ollama 解析 e2e 对比（run-e2e.ts 已支持，同样待 Ollama 在线）
 
-**Next: S76** — 依验收反馈修复；或 Ollama 在线实测 AI 润色 + 解析 e2e 对比
+**Next: S77** — Ollama 在线实测结果处理（调 prompt / 验收）+ 后续 P1 深化或 P2 第二步验证

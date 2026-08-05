@@ -6,6 +6,7 @@ import { useTeaching } from "../../core/teaching.store";
 import { useSimulation } from "../experiment/experiment.store";
 import { useI18n } from "../../core/i18n";
 import { OcrPanel } from "../problem-input/OcrPanel";
+import { extractProblemTextFromPdf } from "../../lib/pdf";
 
 /** Built-in example problems (click to fill the input). */
 const EXAMPLES = [
@@ -46,6 +47,9 @@ export function HomePage() {
 
   const [progressStep, setProgressStep] = useState(0);
   const [ocrOpen, setOcrOpen] = useState(false);
+  const [pdfOpen, setPdfOpen] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
+  const [pdfParsing, setPdfParsing] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Auto-focus the primary input on mount
@@ -135,6 +139,13 @@ export function HomePage() {
             >
               📷 {t("home.ocr")}
             </button>
+            <button
+              onClick={() => { setPdfOpen(true); setPdfError(null); }}
+              disabled={isSubmitting}
+              className="px-4 py-2 rounded-lg text-xs font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-colors disabled:opacity-40"
+            >
+              📄 {t("home.pdf")}
+            </button>
             <div className="flex-1" />
             <button
               onClick={() => submitProblem()}
@@ -190,6 +201,58 @@ export function HomePage() {
         </div>
       </div>
 
+      {/* PDF modal (S76): extract text -> fill editable input -> user clicks CTA */}
+      {pdfOpen && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setPdfOpen(false)}>
+          <div className="w-[560px] max-w-[92vw] rounded-2xl border border-slate-700 shadow-2xl" style={{ background: "#0F172A" }} onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-800">
+              <span className="text-sm font-medium text-slate-200">{t("home.pdf")}</span>
+              <button onClick={() => setPdfOpen(false)} className="text-slate-500 hover:text-slate-300 text-sm">✕</button>
+            </div>
+            <div className="p-6">
+              {pdfParsing ? (
+                <div className="text-center py-6 text-sm text-slate-400">{t("home.pdf_parsing")}</div>
+              ) : (
+                <>
+                  <label className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-700 rounded-xl py-10 cursor-pointer hover:border-sky-600 hover:text-sky-400 transition-colors text-slate-400 text-sm">
+                    <span className="text-3xl">📄</span>
+                    <span>{t("home.pdf_pick")}</span>
+                    <input
+                      type="file"
+                      accept="application/pdf,.pdf"
+                      className="hidden"
+                      onChange={async (e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        setPdfParsing(true);
+                        setPdfError(null);
+                        try {
+                          const text = await extractProblemTextFromPdf(file);
+                          if (text) {
+                            setInputText(text);
+                            setInputMethod("pdf");
+                            setPdfOpen(false);
+                            textareaRef.current?.focus();
+                          } else {
+                            setPdfError(t("home.pdf_empty"));
+                          }
+                        } catch {
+                          setPdfError(t("home.pdf_error"));
+                        } finally {
+                          setPdfParsing(false);
+                          e.target.value = "";
+                        }
+                      }}
+                    />
+                  </label>
+                  {pdfError && <div className="mt-3 text-xs text-red-400">{pdfError}</div>}
+                  <p className="mt-3 text-[11px] text-slate-600">{t("home.pdf_hint")}</p>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       {/* OCR modal (reuses the existing OCR flow) */}
       {ocrOpen && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm" onClick={() => setOcrOpen(false)}>

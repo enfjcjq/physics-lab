@@ -1,28 +1,31 @@
 ﻿# Changelog
 
-## V5.2 (S75) — 2026-08-05
+## V5.3 (S76) — 2026-08-05
 
 ### Added
-- AI 接入 TeachingScript（lib/teaching-script-ai.ts）：
-  - OllamaProvider.generate（公共 prompt 接口）
-  - polishTeachingScriptWithAI：润色 hint/事件文案 + 模板开关（空数组=禁用）
-  - mergeAiHints（formula_strips 教学红线，AI 不可编辑）
-- 渲染层"空数组=禁用模板"语义（4 模板全支持）
-- problem.store.submit 接入 AI 润色（离线/超时/非法输出无感知回退规则版）
-
-### Changed
-- 删除 teaching-script-generator 中未使用的 clip()（产品/UX FYI）
+- PDF 题目输入（首页「📄 导入 PDF 题目」次级按钮）：
+  - lib/pdf.ts（pdfjs-dist 文本提取，多页拼接）
+  - 提取文字填入可编辑输入框，用户手动点 CTA（不自动提交）
+  - 失败/空 PDF 一行红字 + 引导文字输入
+  - i18n +6 键（home.pdf*），两端对齐 1005
+- scripts/eval-ai-polish.ts：规则版 vs AI 润色版对比脚本（待本机 Ollama 启动后实测）
+- 依赖：pdfjs-dist（worker 由 Vite 打包为独立 asset）
+- apps/desktop/src/vite-env.d.ts（?url 模块类型）
 
 ### Metrics
-- vitest 19 文件 / 156 用例全过（+14）；tsc ×3 零错；生产构建成功
+- vitest 19 文件 / 156 用例全过；tsc ×3 零错；生产构建成功
+
+---
+
+## V5.2 (S75) — 2026-08-05
+### Added
+- AI 接入 TeachingScript（润色文案 + 模板开关，校验器把关、离线无感知回退）；OllamaProvider.generate
 
 ---
 
 ## V5.1 (S74) — 2026-08-04
 ### Added
-- TeachingScript Generator（generate/validate/ensure）+ 规则解析器 & setScene 运行时接入
-### Metrics
-- 18 场景不变式 + 校验器单测（+11，共 142）
+- TeachingScript Generator（generate/validate/ensure）+ 运行时接入
 
 ---
 

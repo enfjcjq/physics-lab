@@ -1,46 +1,48 @@
 ﻿# Physics Lab TODO
 
-> Current version: V5.2 (S75)
+> Current version: V5.3 (S76)
 
 ---
 
-# Completed (S16-S75)
+# Completed (S16-S76)
 
 - [x] 18 experiments | P2 第一步（学习模式默认核心入口）| PhysicsScene-driven
+- [x] 输入通道：文字 / 拍照 OCR / PDF（S76）
 - [x] AI Parser: Rule-based (18 types) + OllamaProvider; e2e coverage 100% (T310)
 - [x] Timeline (drag/click/keyboard/phase nodes + event markers)
-- [x] Teacher panel + FormulaDisplay + KnowledgeGraph | Export suite | OCR input
-- [x] i18n: 999 zh-CN / 999 en-US keys
+- [x] Teacher panel + FormulaDisplay + KnowledgeGraph | Export suite
+- [x] i18n: 1005 zh-CN / 1005 en-US keys
 - [x] S71: P0 题目输入首页 + Teaching Layer（PhaseCard/FormulaStrip）+ overlay_hints
-- [x] S72: ForceCallout + EventPulse + P2 第一步（实验库抽屉、左缘 4 图标、默认面板组合、布局记忆）
-- [x] S73: 语义色收尾（token CSS 变量、变量符号 #00D4FF、IconRail 语义橙）
+- [x] S72: ForceCallout + EventPulse + P2 第一步
+- [x] S73: 语义色收尾
 - [x] S74: TeachingScript Generator（规则生产者 + 校验器 + 运行时接入）
 - [x] S75: AI 接入 TeachingScript（AI 润色 + 模板开关，校验器把关、离线无感知回退）
+- [x] S76: PDF 题目输入 + Ollama 在线实测脚本
+
+---
+
+# 输入 / AI & Parser
+
+- [x] 文字 / OCR / PDF 输入；Rule-based parser (18 types)；AIProvider 抽象；Ollama auto-detect
+- [x] e2e test set + coverage (T310)；解析场景自动生成教学脚本 + AI 润色
+- [ ] Ollama 在线实测（eval-ai-polish.ts + run-e2e.ts，需本机启动 Ollama）
+- [ ] PDF 逐页预览（后期可选）
 
 ---
 
 # Teaching System / Teaching Layer
 
-- [x] PhaseCard / FormulaStrip / ForceCallout / EventPulse（4 模板）+ 统一显隐开关 + 降级
+- [x] PhaseCard / FormulaStrip / ForceCallout / EventPulse（4 模板）+ 显隐开关 + 降级
 - [x] overlay_hints（4 类）+ TeachingScript Generator + Validator + AI 润色管线
-- [ ] AI 在线实测走查（Ollama 在线时润色效果）
+- [ ] AI 在线润色效果走查（待 Ollama）
 - [ ] Knowledge graph mastery tracking | Adaptive paths | Progress persistence
-
----
-
-# AI & Parser
-
-- [x] Rule-based parser (18 types) | AIProvider abstraction | Ollama auto-detect
-- [x] e2e test set + coverage (T310) | OCR input | 解析场景自动生成教学脚本 + AI 润色
-- [ ] Ollama e2e comparison run（在线实测）
-- [ ] PDF parsing
 
 ---
 
 # P2 信息架构
 
 - [x] 第一步：实验库抽屉、左缘 4 图标、默认组合、布局记忆、三模式切换器移除
-- [ ] 第二步：结构合并（待 §7.2 验证标准达标）
+- [ ] 第二步：结构合并（待 §7.2 验证标准达标：≤3 次点击 / 无零发现 / 无 P0P1 阻塞反馈）
 
 ---
 

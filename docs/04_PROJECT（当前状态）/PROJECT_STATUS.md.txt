@@ -1,24 +1,23 @@
 ﻿# Project Status
 
-**Version:** V5.2 (Sprint S75)
-**Status:** Active Development — AI 接入 TeachingScript（规则系统 = 质量关口）
+**Version:** V5.3 (Sprint S76)
+**Status:** Active Development — 题目输入三通道（文字/OCR/PDF）+ AI 教学脚本管线
 
 ## Key Metrics
 - **18 experiments** | Zero TS errors | 156 tests passed (19 files) | AI parse 100%/100%
-- 教学脚本闭环：规则生成（S74）→ AI 润色 + 模板开关（S75）→ 校验器把关 → 渲染层消费
+- 输入通道：文字 / 拍照 OCR / PDF（S76 新增）；教学脚本：规则生成 → AI 润色 → 校验 → 渲染
 
-## S75: AI 接入 TeachingScript (Completed)
-- 🤖 polishTeachingScriptWithAI：Ollama 润色 hint/事件文案 + 模板开关（如关闭受力标注）
-- 🛡️ 硬边界：输出必须过 validateTeachingScript；校验丢弃 → 整体回退规则版；
-  Ollama 离线/超时无感知降级；formula_strips 教学红线不可由 AI 编辑
-- 🎚️ 渲染层"空数组=禁用模板"语义（4 模板全支持）
-- 🧪 +14 用例（merge/extract/polish/空数组禁用），共 156
+## S76: PDF 输入 + Ollama 在线实测脚本 (Completed)
+- 📄 PDF 题目输入：次级按钮 + 提取文字填入可编辑输入框 + 失败红字引导（多页拼接）
+- ⚙️ scripts/eval-ai-polish.ts：规则版 vs AI 润色版对比（待本机 Ollama 启动后执行实测）
 
+## S75: AI 接入 TeachingScript (Completed) — 设计验收通过
 ## S74: TeachingScript Generator (Completed) — 设计验收通过
 ## S73: 语义色收尾 (Completed) — 设计验收通过
 ## S72: ForceCallout + EventPulse + P2 第一步 (Completed) — 设计验收通过
 ## S71: P0 首页 + P1 教学图层 (Completed) — 设计验收通过
 ## S70: AI 解析质量 (Completed) — 24% → 100%
 
-## Next (S76)
-- 依 S75 验收反馈修复；Ollama 在线实测（AI 润色效果 + 解析 e2e 对比）
+## Next (S77)
+- Ollama 在线实测（本机启动 Ollama 后跑 eval-ai-polish.ts，结果反馈产品/UX 调 prompt）
+- 或 P2 第二步验证走查 / 后续 P1 深化

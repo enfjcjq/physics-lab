@@ -997,5 +997,11 @@
   "rail.steps": "Teacher steps",
   "rail.graph": "Knowledge graph",
   "menu.view.force_callout": "Force callouts",
-  "menu.view.event_pulse": "Event pulses"
+  "menu.view.event_pulse": "Event pulses",
+  "home.pdf": "Import PDF problem",
+  "home.pdf_pick": "Choose a PDF file",
+  "home.pdf_parsing": "Extracting PDF text...",
+  "home.pdf_error": "Could not read the PDF. Please type the problem instead.",
+  "home.pdf_empty": "No text found in the PDF. Please type the problem instead.",
+  "home.pdf_hint": "Multi-page PDFs are supported; text is combined into the input for editing before generating."
 }

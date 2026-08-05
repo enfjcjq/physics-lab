@@ -1,27 +1,33 @@
 ﻿# Changelog
 
-## V5.4 (S77) — 2026-08-05
+## V5.5 (S78) — 2026-08-05
 
-### Fixed
-- AI 教学脚本润色根因：prompt 重构（参考/待编辑分区、overlay_hints 置尾、few-shot 用真实 id）、
-  平衡括号 JSON 提取 + 轻量修复 + 失败重试 → **Ollama 在线实测 3/3 × 3 次 aiApplied=true**
-- 英文自由落体题含 "impact velocity" 误判碰撞（碰撞关键词移除 impact）
-
-### Added
-- OllamaProvider：OLLAMA_MODEL 环境变量覆盖；callOllama 失败输出诊断（产品静默/开发可见）
-- P2 打点：core/usage.store（IconRail 计数 + 核心路径计数，localStorage、MenuBar 导出）
-- 中文提示本地化（方案 a）：packages/ai-parser/localize.ts（isChinese + 42 phase / 17 event 词典），
-  解析器按题目语言输出教学文本
-- i18n +1 键（menu.help.export_usage），两端对齐 1006
+### Changed
+- AI 润色 prompt 微调 3 条（产品/UX 建议）：
+  1) 重力主因场景（自由落体/抛体）必须保留受力标注
+  2) 避免同义反复，每条提示只表达一个要点
+  3) 只引用场景真实实体（参考信息补充 entities 列表）
+- run-e2e.ts 支持 E2E_MAX 限量（Ollama 对比可子集运行）
 
 ### Metrics
-- vitest 21 文件 / 162 用例全过（+6：usage 3 + localize 3）；tsc ×3 零错；生产构建成功
+- AI 润色实测 3/3 × 多轮稳定 aiApplied=true；自由落体/平抛保留受力标注；
+  欧姆题实体幻觉 3/3 → 1/3（残余为 electron（ball 类型）命名习惯，非虚构实体）
+- vitest 21 文件 / 162 用例全过；tsc ×3 零错；生产构建成功
+
+---
+
+## V5.4 (S77) — 2026-08-05
+### Fixed
+- AI 润色根因（prompt 重构 + 平衡括号提取 + JSON 修复 + 重试）→ 在线实测 3/3 通过
+- 英文题 "impact velocity" 误判碰撞
+### Added
+- OLLAMA_MODEL 环境变量 + callOllama 诊断 | P2 打点（usage.store + MenuBar 导出）| 中文提示本地化（方案 a）
 
 ---
 
 ## V5.3 (S76) — 2026-08-05
 ### Added
-- PDF 题目输入（pdfjs 文本提取、可编辑填入、失败红字引导）| scripts/eval-ai-polish.ts
+- PDF 题目输入（pdfjs）| scripts/eval-ai-polish.ts
 
 ---
 

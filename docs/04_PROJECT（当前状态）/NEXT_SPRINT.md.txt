@@ -1,20 +1,18 @@
-﻿# Next Sprint: S78+
+﻿# Next Sprint: S79+
 
-## Completed (S77): AI 润色修复 + P2 打点 + 中文提示本地化
-- [x] AI 润色在线实测 3/3×3 稳定通过（prompt 重构 / 平衡括号提取 / JSON 修复 / 重试）
-- [x] OLLAMA_MODEL 环境变量 + callOllama 诊断
-- [x] P2 打点：IconRail 计数 + 核心路径计数 + MenuBar 导出（localStorage、无 UI 露出）
-- [x] 中文提示本地化（方案 a）：解析器按题目语言输出教学文本（42 phase + 17 event 词典）
-- [x] 顺带修复英文题 "impact velocity" 误判碰撞；门禁全绿（tsc ×3 / 162 用例 / 构建）
+## Completed (S78): prompt 微调 + 度量支持
+- [x] 3 条 prompt 微调（重力主因保留受力 / 避免同义反复 / 只引用真实实体 + entities 参考）
+- [x] AI 润色复跑 3/3 稳定；run-e2e.ts 支持 E2E_MAX 限量
+- [x] 门禁全绿（tsc ×3 / 162 用例 / 构建）
 
-## 待产品/UX Agent 确认
-- [ ] S75 验收点 1 实测部分（3/3 aiApplied=true，文案风格）
-- [ ] 中文提示本地化（方案 a）落地确认
+## 待产品/UX Agent
+- [ ] P2 第二步新用户走查组织（打点已就绪；导出使用数据评估：≤3 次点击 / 无零发现 / 无 P0P1 阻塞）
+- [ ] Ollama 解析 e2e 全量对比（长窗口运行，E2E_MAX 可子集）
 
-## S78 候选
-- [ ] 依反馈修复
-- [ ] P2 第二步新用户走查（§7.2：≤3 次点击 / 无零发现 / 无 P0P1 阻塞；打点已就绪）
-- [ ] Ollama 解析 e2e 对比（run-e2e.ts 已支持，Ollama 在线即可跑）
+## S79 候选
+- [ ] 依走查/反馈修复
+- [ ] AI 直接生成场景（长期方向：AI 输出 PhysicsScene + overlay_hints，规则系统校验兜底）
+- [ ] Knowledge graph mastery / Adaptive paths / Progress persistence
 
 ## 后续
-- [ ] 长期：AI 直接生成场景 + 教学脚本（规则系统校验兜底）
+- [ ] PDF 逐页预览（可选）| 本地账户 | 插件市场

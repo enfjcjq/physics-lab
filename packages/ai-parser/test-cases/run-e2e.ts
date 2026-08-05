@@ -130,8 +130,11 @@ function summarize(reports: CaseReport[]) {
 async function main() {
   const t0 = Date.now();
   const reports: CaseReport[] = [];
+  const maxCases =
+    typeof process !== "undefined" && process.env.E2E_MAX ? parseInt(process.env.E2E_MAX, 10) : undefined;
+  const cases = maxCases ? parseTestCases.slice(0, maxCases) : parseTestCases;
 
-  for (const tc of parseTestCases) {
+  for (const tc of cases) {
     const res = await ruleParser.parseProblem(tc.text);
     reports.push(runCase(tc, res.scene));
   }
@@ -163,6 +166,7 @@ async function main() {
   const report = {
     generatedAt: new Date().toISOString(),
     durationMs: Date.now() - t0,
+    limitedTo: maxCases ?? undefined,
     ruleParser: ruleSummary,
     ollama: ollamaReport,
     cases: reports,

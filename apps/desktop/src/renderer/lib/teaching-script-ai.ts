@@ -111,6 +111,7 @@ export function buildPrompt(scene: PhysicsScene, ruleHints: OverlayHints): strin
   const reference = {
     title: scene.metadata.title,
     description: scene.metadata.description,
+    entities: scene.entities.map((e) => ({ id: e.id, type: e.type, name: e.name ?? e.id })),
     equations: scene.equations.map((e) => ({ id: e.id, expression: e.expression })),
     forces: scene.forces.map((f) => ({ id: f.id, type: f.type, description: f.description })),
     timeline: { phases: scene.timeline?.phases, events: scene.timeline?.events },
@@ -134,6 +135,9 @@ export function buildPrompt(scene: PhysicsScene, ruleHints: OverlayHints): strin
     '- 多用“观察…/注意…”句式；在最后一个 phase 之前不要剧透答案数值',
     '- force_callouts 若该题不需要受力标注则输出空数组 []',
     '',
+    '- 若场景中重力是运动的主因（如自由落体/抛体），必须保留受力标注（force_callouts）；仅在纯电路/纯光学等无机械受力的场景才可关闭',
+    '- 避免同义反复，每条提示只表达一个要点',
+    '- 提示文案中只引用场景中真实存在的实体名称，不要虚构实体',
     '【参考信息】（仅作背景理解，不要回显）：',
     '' + JSON.stringify(reference),
     '',

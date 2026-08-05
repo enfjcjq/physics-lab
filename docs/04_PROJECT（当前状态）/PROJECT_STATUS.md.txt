@@ -1,24 +1,24 @@
 ﻿# Project Status
 
-**Version:** V5.4 (Sprint S77)
-**Status:** Active Development — AI 润色实测通过 + 中文教学提示本地化
+**Version:** V5.5 (Sprint S78)
+**Status:** Active Development — AI 润色质量打磨 + 度量就绪
 
 ## Key Metrics
 - **18 experiments** | Zero TS errors | 162 tests passed (21 files) | AI parse 100%/100%
-- AI 润色在线实测 3/3 通过；中文题目 → 中文教学提示（方案 a 落地）
+- AI 润色实测稳定 3/3；P2 打点就绪；解析 e2e 支持限量对比
 
-## S77: AI 润色根因修复 + P2 打点 + 中文本地化 (Completed)
-- 🤖 AI 润色修复：prompt 重构 + 平衡括号提取 + JSON 修复 + 重试 → 3/3 稳定 aiApplied=true
-- ⚙️ OLLAMA_MODEL 环境变量 + callOllama 诊断（产品静默/开发可见）
-- 📊 P2 打点：IconRail 计数 + 核心路径计数 + MenuBar 导出（localStorage、无 UI 露出）
-- 🀄 中文提示本地化（方案 a）：解析器按题目语言输出教学文本，42 phase + 17 event 词典
-- 🐛 顺带修复：英文题 "impact velocity" 误判碰撞
+## S78: prompt 微调 + 解析 e2e 对比支持 (Completed)
+- ✍️ prompt 3 条微调（重力主因保留受力 / 避免同义反复 / 只引用真实实体，参考信息补 entities）
+- ✅ 复跑实测 3/3 稳定；自由落体/平抛受力标注保留
+- ⚙️ run-e2e.ts 支持 E2E_MAX 限量（Ollama 对比可子集运行）
+- 📊 P2 第二步走查就绪（打点已落地，走查由产品/UX Agent 组织）
 
+## S77: AI 润色根因修复 + P2 打点 + 中文本地化 (Completed) — 设计验收通过
 ## S76: PDF 输入 + Ollama 实测脚本 (Completed) — 设计验收通过
-## S75: AI 接入 TeachingScript (Completed) — 验收点 1 实测部分于 S77 通过
+## S75: AI 接入 TeachingScript (Completed) — 全部验收点闭环
 ## S74: TeachingScript Generator (Completed) — 设计验收通过
 ## S73-S71: 语义色 / 教学模板 / P0 首页 (Completed) — 设计验收通过
 ## S70: AI 解析质量 (Completed) — 24% → 100%
 
-## Next (S78)
-- 依反馈修复；P2 第二步新用户走查（打点已就绪）；Ollama 解析 e2e 对比
+## Next (S79)
+- 依走查/反馈修复；AI 直接生成场景（长期）；P2 第二步走查结果处理

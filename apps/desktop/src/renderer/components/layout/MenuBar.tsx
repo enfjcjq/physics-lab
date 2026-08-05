@@ -72,7 +72,7 @@ function MenuItem({
 }
 
 
-function Submenu({ label, children }: { label: string; children: React.ReactNode }) {
+function Submenu({ label, children, align = "left" }: { label: string; children: React.ReactNode; align?: "left" | "right" }) {
   const [open, setOpen] = useState(false);
   return (
     <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
@@ -82,7 +82,7 @@ function Submenu({ label, children }: { label: string; children: React.ReactNode
         <span className="text-slate-500 text-[10px]">▶</span>
       </button>
       {open && (
-        <div className="absolute left-full top-0 ml-0.5 w-44 max-w-[min(16rem,80vw)] bg-slate-800 border border-slate-700 rounded-lg shadow-2xl py-1 z-50">
+        <div className={"absolute top-0 ml-0.5 w-44 max-w-[min(16rem,80vw)] bg-slate-800 border border-slate-700 rounded-lg shadow-2xl py-1 z-50 " + (align === "right" ? "right-full" : "left-full")}>
           {children}
         </div>
       )}
@@ -278,7 +278,7 @@ export function MenuBar() {
       {/* Help */}
       <Dropdown label={t("menu.help")} align="right">
         <MenuItem label={t("about.title")} onClick={() => setShowAbout(true)} />
-        <Submenu label={t("menu.help.developer")}>
+        <Submenu label={t("menu.help.developer")} align="right">
           <MenuItem label={t("menu.help.export_usage")} onClick={() => useUsage.getState().exportData()} />
         </Submenu>
         <MenuItem label="Documentation" />

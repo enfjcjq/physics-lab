@@ -62,7 +62,6 @@ export function LeftPanel() {
   const parseError = useProblemStore((s) => s.parseError);
   const submit = useProblemStore((s) => s.submit);
   const history = useProblemStore((s) => s.history);
-  const { mode } = useTeaching();
   const { t } = useI18n();
 
   const setScene = useSimulation((s) => s.setScene);
@@ -78,7 +77,7 @@ export function LeftPanel() {
   const activePluginId = useSimulation((s) => s.activePluginId);
   const setActivePlugin = useSimulation((s) => s.setActivePlugin);
 
-  const showFullInput = mode !== "learning";
+  const showFullInput = true;
 
   const handleSubmit = async () => {
     const scene = await submit();
@@ -203,7 +202,7 @@ export function LeftPanel() {
           </button>
         </div>
 
-        {mode!=="analysis" && (
+        {(
           <DynamicControls />
         )}
 

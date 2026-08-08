@@ -1,20 +1,24 @@
 ﻿# Changelog
 
-## V5.7 (S80) — 2026-08-05
+## V5.8 (S81) — 2026-08-08
 
-### Fixed
-- P2 走查未达标修复：
-  1) IconRail 可发现性：常驻文字标签（48→64px、图标+10px 文字）、前 2 次一次性呼吸高亮；
-     并补上 S77 遗漏的 incrementIcon 打点（此前 iconClicks 未接入）
-  2) MenuBar 菜单项截断：根因为右侧下拉（Language/Theme/Help）从 left-0 展开超出窗口右缘被裁；
-     改为 right-0 对齐 + max-w/min(20rem,90vw) + max-h 80vh + overflow-y-auto；minWidth 900 评估合理
-- 导出使用数据移入 帮助/开发者 子菜单（P2，避免用户误点）
-
-### Added
-- i18n +1 键（menu.help.developer），两端对齐 1007
+### Changed（P2 第二步：模式概念彻底退出 UI）
+- 移除全部用户可见模式痕迹：MenuBar Teaching 子模式项、WelcomeScreen 模式选择（→ 单一开始按钮）、
+  mode.* / teaching.mode.* / menu.teaching.*_mode i18n 键（22 键）
+- teaching.store：mode 降级为纯内部状态（setMode 不再自动开合面板）
+- 面板渲染统一（无 mode 分支）：LeftPanel 恒显完整输入+参数；CenterPanel/TeachingOverlay/TeacherPanel 清理
+- HomePage enterScene / fallbackToScene 移除 setMode 调用
+- i18n 测试改用现有关键键位；新增 welcome.start
 
 ### Metrics
 - vitest 23 文件 / 167 用例全过；tsc ×3 零错；生产构建成功
+
+---
+
+## V5.7 (S80) — 2026-08-05
+### Fixed
+- P2 可发现性：IconRail 常驻文字标签 + 一次性呼吸高亮 + 补打点；MenuBar 下拉右对齐 + 溢出安全；导出入开发者子菜单
+- S80 循环内：Submenu 方向感知（right-full）修复越界
 
 ---
 
@@ -58,13 +62,13 @@
 
 ## V5.0 (S73) — 2026-08-04
 ### Changed
-- 语义色收尾（ForceCallout 按 type / FormulaDisplay #00D4FF / token CSS 变量 / IconRail 语义橙）
+- 语义色收尾
 
 ---
 
 ## V4.9 (S72) — 2026-08-04
 ### Added
-- ForceCallout + EventPulse | P2 第一步（实验库抽屉、左缘 4 图标、默认面板组合、布局记忆 v3）
+- ForceCallout + EventPulse | P2 第一步
 
 ---
 

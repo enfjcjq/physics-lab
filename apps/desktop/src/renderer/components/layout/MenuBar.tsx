@@ -98,7 +98,7 @@ export function MenuBar() {
   const { t, locale, setLocale } = useI18n();
   const { activeId: activeAI, setActive: setActiveAI, checkOllama, ollamaAvailable } = useAIProviderStore();
   const { mode, setMode } = useTheme();
-  const { mode: appMode, subMode: teachingMode, setSubMode: setTeachingMode, showPhaseCard, showFormulaStrip, showForceCallout, showEventPulse, teachingLayerEnabled, toggleTeachingElement, setTeachingLayerEnabled } = useTeaching();
+  const { showPhaseCard, showFormulaStrip, showForceCallout, showEventPulse, teachingLayerEnabled, toggleTeachingElement, setTeachingLayerEnabled } = useTeaching();
   const panelMgr = usePanelManager();
   const viz = useVisualization();
   const [showAbout, setShowAbout] = useState(false);
@@ -123,13 +123,6 @@ export function MenuBar() {
     label: t(def.titleKey),
     open: panelMgr.panels[def.id]?.isOpen ?? false,
   }));
-
-  const MODE_LABELS: Record<TeachingSubMode, string> = {
-    experiment: t("mode.experiment"),
-    teaching: t("mode.teaching"),
-    solving: t("mode.solving"),
-    explore: t("mode.explore"),
-  };
 
   return (
     <>
@@ -167,15 +160,12 @@ export function MenuBar() {
         <MenuItem label={t("menu.file.exit")} />
       </Dropdown>
 
-      {/* Edit - hidden in learning mode */}
-      {appMode !== "learning" && (
       <Dropdown label={t("menu.edit")}>
         <MenuItem label={t("menu.edit.undo")} shortcut="Ctrl+Z" />
         <MenuItem label={t("menu.edit.redo")} shortcut="Ctrl+Y" />
         <MenuSeparator />
         <MenuItem label={t("menu.edit.reset")} />
       </Dropdown>
-      )}
 
       {/* View */}
       <Dropdown label={t("menu.view")}>
@@ -218,10 +208,6 @@ export function MenuBar() {
 
       {/* Teaching */}
       <Dropdown label={t("menu.teaching")}>
-        <MenuItem label={t("teaching.mode.experiment")} checked={teachingMode === "experiment"} onClick={() => setTeachingMode("experiment")} />
-        <MenuItem label={t("teaching.mode.teaching")} checked={teachingMode === "teaching"} onClick={() => setTeachingMode("teaching")} />
-        <MenuItem label={t("teaching.mode.solving")} checked={teachingMode === "solving"} onClick={() => setTeachingMode("solving")} />
-        <MenuItem label={t("teaching.mode.explore")} checked={teachingMode === "explore"} onClick={() => setTeachingMode("explore")} />
         <MenuSeparator />
         <MenuItem label={t("menu.teaching.knowledge")} checked={true} />
         <MenuItem label={t("menu.teaching.forces")} checked={true} />

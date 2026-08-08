@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { useI18n } from "../../core/i18n";
-import { useTeaching, type AppMode } from "../../core/teaching.store";
 import { useSimulation } from "../../features/experiment/experiment.store";
 
 export function WelcomeScreen() {
   const { t } = useI18n();
-  const { setMode } = useTeaching();
   const play = useSimulation((s) => s.play);
   const [visible, setVisible] = useState(false);
 
@@ -17,14 +15,6 @@ export function WelcomeScreen() {
   const dismiss = () => {
     localStorage.setItem("physics-lab:welcome-seen", "1");
     setVisible(false);
-    setMode("learning");
-    setTimeout(() => play(), 300);
-  };
-
-  const startInMode = (mode: AppMode) => {
-    localStorage.setItem("physics-lab:welcome-seen", "1");
-    setVisible(false);
-    setMode(mode);
     setTimeout(() => play(), 300);
   };
 
@@ -66,16 +56,10 @@ export function WelcomeScreen() {
           </div>
         </div>
 
-        {/* Mode selection */}
-        <div className="flex gap-3 justify-center mb-4">
-          <button onClick={() => startInMode("learning")} className="flex-1 py-3 px-4 rounded-xl bg-gradient-to-br from-sky-600 to-sky-700 hover:from-sky-500 hover:to-sky-600 text-white text-sm font-medium shadow-lg shadow-sky-900/30">
-            \uD83C\uDF93 {t("mode.learning")}
-          </button>
-          <button onClick={() => startInMode("experiment")} className="flex-1 py-3 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-medium border border-slate-700">
-            \uD83D\uDD2C {t("mode.experiment")}
-          </button>
-        </div>
-
+        {/* Get started (P2: no mode division) */}
+        <button onClick={dismiss} className="w-full py-3 px-4 rounded-xl bg-gradient-to-br from-sky-600 to-sky-700 hover:from-sky-500 hover:to-sky-600 text-white text-sm font-medium shadow-lg shadow-sky-900/30">
+          {t("welcome.start")}
+        </button>
         <button onClick={dismiss} className="text-xs text-slate-600 hover:text-slate-400">
           {t("welcome.skip")}
         </button>

@@ -9,17 +9,17 @@ describe("I18n Store", () => {
   it("should translate known keys in Chinese", () => {
     useI18n.getState().setLocale("zh-CN");
     const { t } = useI18n.getState();
-    expect(t("mode.learning")).toBeTruthy();
-    expect(t("mode.experiment")).toBeTruthy();
-    expect(t("mode.analysis")).toBeTruthy();
+    expect(t("home.title")).toBeTruthy();
+    expect(t("home.cta")).toBeTruthy();
+    expect(t("menu.view.teaching_layer")).toBeTruthy();
   });
 
   it("should translate known keys in English", () => {
     useI18n.getState().setLocale("en-US");
     const { t } = useI18n.getState();
-    expect(t("mode.learning")).toBe("Learning");
-    expect(t("mode.experiment")).toBe("Experiment");
-    expect(t("mode.analysis")).toBe("Analysis");
+    expect(t("home.title")).toBe("Put your physics problem here");
+    expect(t("home.cta")).toBe("Generate teaching animation");
+    expect(t("menu.view.teaching_layer")).toBe("Teaching layer");
   });
 
   it("should return key as fallback for missing keys", () => {

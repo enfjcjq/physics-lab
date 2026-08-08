@@ -1,9 +1,9 @@
 ﻿import { create } from "zustand";
 
-/** V1.0 mode system: 3 primary modes */
+/** Internal app mode (S81: no longer exposed in the UI). */
 export type AppMode = "learning" | "experiment" | "analysis";
 
-/** Legacy teaching sub-mode (used within the old teaching overlay) */
+/** Legacy teaching sub-mode (internal only). */
 export type TeachingSubMode = "experiment" | "teaching" | "solving" | "explore";
 
 export interface TeachingOverlayState {
@@ -19,15 +19,15 @@ export interface TeachingOverlayState {
 export type TeachingElementKey = "phaseCard" | "formulaStrip" | "forceCallout" | "eventPulse";
 
 interface TeachingState {
-  /** Primary app mode (V1.0) */
+  /** Internal app mode (kept for compatibility; not rendered in the UI) */
   mode: AppMode;
-  /** Legacy teaching sub-mode (for overlay behavior) */
+  /** Legacy teaching sub-mode (internal) */
   subMode: TeachingSubMode;
   overlay: TeachingOverlayState;
-  /** S71 Teaching Layer (PhaseCard / FormulaStrip) visibility */
+  /** Teaching Layer (PhaseCard / FormulaStrip) visibility */
   showPhaseCard: boolean;
   showFormulaStrip: boolean;
-  /** S72 Teaching Layer (ForceCallout / EventPulse) visibility */
+  /** Teaching Layer (ForceCallout / EventPulse) visibility */
   showForceCallout: boolean;
   showEventPulse: boolean;
   /** Master switch for the 2D teaching layer (low-perf / user fallback) */
@@ -82,6 +82,7 @@ export const useTeaching = create<TeachingState>((set, get) => ({
 
   setTeachingLayerEnabled: (v) => set({ teachingLayerEnabled: v }),
 
+  // S81: mode is internal state only (no panel auto-open, no UI surface).
   setMode: (mode) => {
     const subModeMap: Record<AppMode, TeachingSubMode> = {
       learning: "teaching",
@@ -89,22 +90,6 @@ export const useTeaching = create<TeachingState>((set, get) => ({
       analysis: "solving",
     };
     const sub = subModeMap[mode];
-
-    // Open appropriate panels per mode via dynamic import
-    (async () => {
-      const { usePanelManager } = await import("./panel-manager.store");
-      const mgr = usePanelManager.getState();
-      if (mode === "learning") {
-        mgr.open("problem"); mgr.open("teaching");
-        mgr.close("analysis"); mgr.close("parameters");
-      } else if (mode === "experiment") {
-        mgr.open("problem"); mgr.open("parameters"); mgr.open("analysis");
-        mgr.close("teaching");
-      } else if (mode === "analysis") {
-        mgr.open("problem"); mgr.open("analysis"); mgr.open("teaching"); mgr.open("parameters");
-      }
-    })();
-
     set({ mode, subMode: sub, overlay: { ...SUB_MODE_PRESETS[sub] } });
   },
 

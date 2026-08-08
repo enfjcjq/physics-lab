@@ -54,7 +54,6 @@ export function CenterPanel() {
   const phases = useSimulation((s) => s.phases);
   const jumpToPhase = useSimulation((s) => s.jumpToPhase);
   const { t } = useI18n();
-  const { mode } = useTeaching();
   const teachingLayerEnabled = useTeaching((s) => s.teachingLayerEnabled);
   const showFormulaStrip = useTeaching((s) => s.showFormulaStrip);
 

@@ -91,11 +91,10 @@ export function TeacherPanel() {
   const stopPhaseLoop = useSimulation((s) => s.stopPhaseLoop);
   const loopPhaseActive = useSimulation((s) => s.loopPhaseActive);
   const { t } = useI18n();
-  const { subMode } = useTeaching();
 
   const steps: TeacherStep[] = scene?.teacher_steps ?? [];
   const sortedSteps = [...steps].sort((a, b) => a.order - b.order);
-  const isExplore = subMode === "explore";
+  const isExplore = false;
 
   const currentIdx = (() => {
     for (let i = sortedSteps.length - 1; i >= 0; i--) {
@@ -181,7 +180,7 @@ export function TeacherPanel() {
       <div className="px-4 pt-3 pb-2 flex items-center gap-2 flex-shrink-0">
         <span className="text-base">{isExplore ? "\uD83D\uDD0D" : "\uD83D\uDC68\u200D\uD83C\uDFEB"}</span>
         <h2 className="text-sm font-semibold text-white">
-          {isExplore ? t("teaching.mode.explore") : t("teacher.title")}
+          {t("teacher.title")}
         </h2>
         {loopPhaseActive && isExplore && <span className="text-[10px] text-amber-400 animate-pulse ml-1">\uD83D\uDD01</span>}
         <span className="ml-auto text-[10px] text-slate-600">

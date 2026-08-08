@@ -1,4 +1,4 @@
-import { useSimulation } from "../../features/experiment/experiment.store";
+﻿import { useSimulation } from "../../features/experiment/experiment.store";
 import { useTeaching } from "../../core/teaching.store";
 import { useI18n } from "../../core/i18n";
 import type { TeacherStep } from "@physics-lab/shared";
@@ -8,10 +8,8 @@ export function TeachingOverlay() {
   const currentPhaseId = useSimulation((s) => s.currentPhaseId);
   const phases = useSimulation((s) => s.phases);
   const scene = useSimulation((s) => s.scene);
-  const { mode, subMode, overlay: ov, setSubMode } = useTeaching();
+  const { overlay: ov } = useTeaching();
   const { t } = useI18n();
-
-  if (mode === "experiment") return null;
 
   // Derive overlay steps from scene teacher_steps (data-driven!)
   const steps: TeacherStep[] = scene?.teacher_steps ?? [];
@@ -36,21 +34,6 @@ export function TeachingOverlay() {
     <div className="absolute left-4 bottom-20 z-20 max-w-sm transition-all duration-500"
          style={{ opacity: 1, transform: "translateY(0)" }}>
       <div className="bg-slate-900/90 backdrop-blur border border-sky-800/40 rounded-xl p-4 shadow-2xl transition-all duration-300">
-        {/* Sub-mode selector */}
-        <div className="flex gap-1 mb-3">
-          {(["experiment", "teaching", "solving", "explore"] as const).map((m) => (
-            <button
-              key={m}
-              onClick={() => setSubMode(m)}
-              className={`px-2 py-1 rounded text-[10px] font-medium transition-colors ${
-                subMode === m ? "bg-sky-600 text-white" : "bg-slate-800 text-slate-500 hover:text-slate-300"
-              }`}
-            >
-              {t("teaching.mode." + m)}
-            </button>
-          ))}
-        </div>
-
         {/* Step progress */}
         <div className="flex gap-1 mb-3">
           {sortedSteps.map((_, i) => (
@@ -88,7 +71,7 @@ export function TeachingOverlay() {
         )}
 
         {/* Next step hint (explore mode) */}
-        {subMode === "explore" && nextStep && (
+        {nextStep && (
           <div className="mt-2 pt-2 border-t border-slate-800">
             <div className="text-[10px] text-slate-600">{t("overlay.next")}:</div>
             <div className="text-xs text-slate-500 mt-0.5">{t(nextStep.titleKey)}</div>

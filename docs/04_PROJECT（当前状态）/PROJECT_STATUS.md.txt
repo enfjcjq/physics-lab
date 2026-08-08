@@ -1,18 +1,20 @@
 ﻿# Project Status
 
-**Version:** V5.7 (Sprint S80)
-**Status:** Active Development — P2 可发现性修复完成，待复走查
+**Version:** V5.8 (Sprint S81)
+**Status:** P2 第二步结构合并完成（模式概念退出 UI），待收口确认走查
 
 ## Key Metrics
 - **18 experiments** | Zero TS errors | 167 tests passed (23 files) | AI parse 100%/100%
-- P2 走查：核心路径✅；四图标可发现性 + MenuBar 截断已修复，待复走查
+- P2 两步走完成：第一步（实验库抽屉/IconRail/默认面板）→ 走查达标 → 第二步（模式概念退出 UI）
 
-## S80: P2 可发现性修复 (Completed)
-- 🎯 IconRail：常驻文字标签 + 宽度 64px + 一次性呼吸高亮 + 补打点
-- 📋 MenuBar：右侧下拉 right-0 对齐 + 溢出安全（根因：下拉超出窗口右缘被裁）
-- 🔧 导出使用数据移入 帮助/开发者 子菜单（P2）
+## S81: 模式概念移除 (Completed)
+- 🧹 用户可见模式痕迹全清：MenuBar 子模式项 / mode.* 键（22）/ WelcomeScreen 模式选择 → 单一开始
+- 🧹 teaching.store mode 降级为内部状态；面板渲染统一（无 mode 分支）
+- ✅ 功能可达性保留：MenuBar / IconRail / 实验库抽屉 / 打点
 
+## S80: 可发现性修复 (Completed) — 复走查三项达标，P2 放行
 ## S79-S70: AI 润色闭环 / PDF / 教学脚本 / 教学图层 / P0 首页 / 解析质量 (Completed) — 验收通过
 
-## Next (S80 复走查)
-- 项目负责人复走 → 产品/UX 重评三项指标 → 达标启动 P2 第二步结构合并
+## Next
+- P2 收口确认走查（项目负责人）→ P2 正式完成
+- 长期方向：AI 直接生成场景 / 知识图谱掌握度 / 自适应路径

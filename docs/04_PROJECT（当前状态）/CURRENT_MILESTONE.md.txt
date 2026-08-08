@@ -1,16 +1,25 @@
-﻿# Current Milestone: S80 循环内修复（Submenu 方向感知）+ 待复走查
+﻿# Current Milestone: S81 (Completed)
 
-**Goal:** S80 可发现性修复（已完成，验收通过）+ S80 循环内 P0 修复（Submenu 越界）+ 复走查
-**依据:** 产品/UX Agent 留言 14（S80 验收通过）+ 留言 15（复走查新 bug：Submenu 向右越界）
+**Goal:** P2 第二步结构合并 —— 模式概念彻底退出 UI
+**依据:** 产品/UX Agent 留言 16（复走查三项指标全部达标、P2 第二步正式放行、S81 范围）
 
 **Completed:**
-- [x] S80 主修复（IconRail 标签/宽度/呼吸高亮/补打点；MenuBar 一级下拉右对齐+溢出安全；导出入开发者子菜单）— 验收通过
-- [x] **S80 循环内 P0 修复（留言 15）**：Submenu 方向感知
-      - 根因：帮助下拉为 right-0 对齐（贴窗口右缘），Submenu 固定 left-full 向右展开 → 越界不可见
-      - 修复：Submenu 增加 align 属性，父级右对齐时用 right-full 向左展开（与一级下拉同一套碰撞避让）
-      - 验收：帮助→开发者→导出使用数据 任意窗口宽度完整可见可点
+- [x] **Submenu 方向修复**（留言 15 未闭环项）：上轮已提交（52aede6）
+- [x] **模式概念移除（结构合并核心）**：
+      - 用户可见模式痕迹全部移除：MenuBar Teaching 子模式项、mode.* / teaching.mode.* /
+        menu.teaching.*_mode i18n 键（22 键）、模式提示文案、WelcomeScreen 学习/实验模式选择
+        （改为单一「开始使用」按钮）
+      - teaching.store：mode 降级为纯内部状态（默认 learning，setMode 不再自动开合面板，
+        移除按模式分支的面板逻辑）
+      - 面板渲染不再按 mode 条件分支：LeftPanel 统一显示完整输入 + 参数；
+        CenterPanel 移除 mode 读取；TeachingOverlay 移除 experiment 守卫 + 子模式标签页
+        （next-step 提示始终显示）；TeacherPanel 移除 explore 分支显示
+      - HomePage enterScene / fallbackToScene 移除 setMode("learning") 调用
+- [x] i18n 测试更新（改用现有关键键位）；welcome.start 新键
 - [x] 验证：tsc ×3 零错、vitest 23 文件 167 用例全过、生产构建成功
 
-**待复走查：** 项目负责人复走（重点：四功能入口可发现 + 菜单完整可读 + 开发者子菜单可见可点）→ 产品/UX 重评三项指标 → 达标启动 P2 第二步结构合并（S81）
+**约束确认：** 全部既有功能保持可达（MenuBar/IconRail/实验库抽屉保留）；打点保留（结构合并后确认走查用）
 
-**Next: S81** — 复走查达标后 P2 第二步结构合并（模式概念彻底退出 UI）
+**待确认走查：** 项目负责人做 P2 收口确认走查（重点：无模式痕迹、功能可达、菜单完整）
+
+**Next:** P2 收口确认走查 → P2 正式完成；后续按长期方向（AI 直接生成场景等）

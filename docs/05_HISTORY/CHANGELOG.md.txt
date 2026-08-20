@@ -1,83 +1,19 @@
 ﻿# Changelog
 
-## V5.8 (S81) — 2026-08-08
+## V5.9 (S82) + V6.0 (S83) — 2026-08-19/20
 
-### Changed（P2 第二步：模式概念彻底退出 UI）
-- 移除全部用户可见模式痕迹：MenuBar Teaching 子模式项、WelcomeScreen 模式选择（→ 单一开始按钮）、
-  mode.* / teaching.mode.* / menu.teaching.*_mode i18n 键（22 键）
-- teaching.store：mode 降级为纯内部状态（setMode 不再自动开合面板）
-- 面板渲染统一（无 mode 分支）：LeftPanel 恒显完整输入+参数；CenterPanel/TeachingOverlay/TeacherPanel 清理
-- HomePage enterScene / fallbackToScene 移除 setMode 调用
-- i18n 测试改用现有关键键位；新增 welcome.start
+### S82 导出质量修复
+- Markdown→HTML 完整转换（标题/加粗/表格/代码块）；i18n 键名解析（zh 回退、不泄漏键名）
+- 参数按 simulation.params 驱动；状态按实验类型（电机：τ/ω/θ/I；无数据整区隐藏）；空知识点不渲染
+- Submenu portal 渲染（不再被父级 overflow 裁剪；视口钳制）
+- 自验脚本 scripts/check-export.ts（3 类型导出全过）
+
+### S83 布局规则
+- 规则1：docked 面板 FIFO 上限 2 + 一次性提示；底抽屉 ≤35% 窗口高
+- 规则2：TeachingOverlay 中央浮卡默认关（视图菜单开）；画布 HUD 默认关
+- 规则3：死菜单清理（File new/open/save、Edit、Documentation、Version 移除；Experiment/Teaching 接线）
+- 规则4：公式书面排版 beautifyFormula（v₀/t²/½/θ/ω/τ/·/−），覆盖四出口
+- i18n +3 键（panel.limit_hint*、menu.view.legacy_overlay）
 
 ### Metrics
-- vitest 23 文件 / 167 用例全过；tsc ×3 零错；生产构建成功
-
----
-
-## V5.7 (S80) — 2026-08-05
-### Fixed
-- P2 可发现性：IconRail 常驻文字标签 + 一次性呼吸高亮 + 补打点；MenuBar 下拉右对齐 + 溢出安全；导出入开发者子菜单
-- S80 循环内：Submenu 方向感知（right-full）修复越界
-
----
-
-## V5.6 (S79) — 2026-08-05
-### Fixed
-- AI 润色实体幻觉（prompt 强制措辞 + fixColloquialEntities 后处理）；结尾标点残缺微修复
-
----
-
-## V5.5 (S78) — 2026-08-05
-### Changed
-- AI 润色 prompt 微调 3 条 + run-e2e E2E_MAX 限量
-
----
-
-## V5.4 (S77) — 2026-08-05
-### Fixed
-- AI 润色根因 → 在线实测 3/3；英文题 "impact velocity" 误判碰撞
-### Added
-- OLLAMA_MODEL + callOllama 诊断 | P2 打点 | 中文提示本地化（方案 a）
-
----
-
-## V5.3 (S76) — 2026-08-05
-### Added
-- PDF 题目输入（pdfjs）| scripts/eval-ai-polish.ts
-
----
-
-## V5.2 (S75) — 2026-08-05
-### Added
-- AI 接入 TeachingScript（润色 + 模板开关，校验器把关、离线无感知回退）
-
----
-
-## V5.1 (S74) — 2026-08-04
-### Added
-- TeachingScript Generator（generate/validate/ensure）+ 运行时接入
-
----
-
-## V5.0 (S73) — 2026-08-04
-### Changed
-- 语义色收尾
-
----
-
-## V4.9 (S72) — 2026-08-04
-### Added
-- ForceCallout + EventPulse | P2 第一步
-
----
-
-## V4.8 (S71) — 2026-08-04
-### Added
-- P0 题目输入首页 | Teaching Layer（PhaseCard/FormulaStrip）| overlay_hints
-
----
-
-## V4.7 (S70) — 2026-08-03
-### Added
-- AI parse e2e test set + coverage (T310) | Rule parser v3.0 (18 types) | 24% → 100%
+- vitest 25 文件 / 175 用例全过（+4：beautify 3 + panel-fifo 1）；tsc ×3 零错；生产构建成功

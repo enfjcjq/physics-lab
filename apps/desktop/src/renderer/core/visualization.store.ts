@@ -29,7 +29,7 @@ export const useVisualization = create<VisState>((set) => ({
     showNetForce: false,
     showAxes: true,
     showGrid: true,
-    showDataLabels: true,
+    showDataLabels: false,
     showTeachingLabels: true,
     showFormulas: true,
     showUnits: true,

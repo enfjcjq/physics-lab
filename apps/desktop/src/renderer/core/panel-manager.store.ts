@@ -1,5 +1,7 @@
 ﻿import { create } from "zustand";
 import { loadJSON, saveJSON } from "../lib/storage";
+import { useToasts } from "./toast.store";
+import { t as i18nT } from "./i18n";
 
 export type DockZone = "left" | "right" | "bottom" | "center" | "floating";
 
@@ -37,6 +39,8 @@ const PANEL_DEFS: PanelConfig[] = [
 interface PanelManagerState {
   panels: Record<string, PanelState>;
   panelDefs: PanelConfig[];
+  /** FIFO order of docked panels that are open (S83: max 2 docked) */
+  dockedOrder: string[];
 
   toggle: (id: string) => void;
   open: (id: string) => void;
@@ -75,29 +79,56 @@ function getDefaultState(): Record<string, PanelState> {
   return state;
 }
 
+
+// ===== S83 rule 1: at most 2 docked panels open (FIFO eviction) =====
+const DOCKED_LIMIT = 2;
+
+function evictIfOverLimit(panels: Record<string, PanelState>, order: string[]): { panels: Record<string, PanelState>; order: string[]; evicted?: string } {
+  const dockedOpen = Object.entries(panels).filter(([, p]) => p.isOpen && p.zone !== "floating");
+  if (dockedOpen.length <= DOCKED_LIMIT) return { panels, order };
+  const evictId = order.find((id) => panels[id]?.isOpen && panels[id]?.zone !== "floating");
+  if (!evictId) return { panels, order };
+  return {
+    panels: { ...panels, [evictId]: { ...panels[evictId], isOpen: false } },
+    order: order.filter((id) => id !== evictId),
+    evicted: evictId,
+  };
+}
+
 const saved = loadLayout();
 const initialState = saved ?? getDefaultState();
 
 export const usePanelManager = create<PanelManagerState>((set, get) => ({
   panels: initialState,
   panelDefs: PANEL_DEFS,
+  dockedOrder: Object.entries(initialState).filter(([, p]) => p.isOpen && p.zone !== "floating").map(([id]) => id),
 
   toggle: (id) => set((s) => {
-    const next = { ...s.panels, [id]: { ...s.panels[id], isOpen: !s.panels[id].isOpen } };
-    saveLayout(next);
-    return { panels: next };
+    let next = { ...s.panels, [id]: { ...s.panels[id], isOpen: !s.panels[id].isOpen } };
+    let order = [...s.dockedOrder];
+    if (next[id].isOpen && next[id].zone !== "floating" && !order.includes(id)) order.push(id);
+    if (!next[id].isOpen) order = order.filter((x) => x !== id);
+    const r = evictIfOverLimit(next, order);
+    if (r.evicted) useToasts.getState().show({ title: i18nT("panel.limit_hint"), message: i18nT("panel.limit_hint_desc"), icon: "📋" });
+    saveLayout(r.panels);
+    return { panels: r.panels, dockedOrder: r.order };
   }),
 
   open: (id) => set((s) => {
-    const next = { ...s.panels, [id]: { ...s.panels[id], isOpen: true } };
-    saveLayout(next);
-    return { panels: next };
+    let next = { ...s.panels, [id]: { ...s.panels[id], isOpen: true } };
+    let order = [...s.dockedOrder];
+    if (next[id].zone !== "floating" && !order.includes(id)) order.push(id);
+    const r = evictIfOverLimit(next, order);
+    if (r.evicted) useToasts.getState().show({ title: i18nT("panel.limit_hint"), message: i18nT("panel.limit_hint_desc"), icon: "📋" });
+    saveLayout(r.panels);
+    return { panels: r.panels, dockedOrder: r.order };
   }),
 
   close: (id) => set((s) => {
     const next = { ...s.panels, [id]: { ...s.panels[id], isOpen: false } };
+    const order = s.dockedOrder.filter((x) => x !== id);
     saveLayout(next);
-    return { panels: next };
+    return { panels: next, dockedOrder: order };
   }),
 
   moveTo: (id, zone) => set((s) => {
@@ -123,7 +154,8 @@ export const usePanelManager = create<PanelManagerState>((set, get) => ({
 
   resetLayout: () => {
     const def = getDefaultState();
-    set({ panels: def });
+    const order = Object.entries(def).filter(([, p]) => p.isOpen && p.zone !== "floating").map(([id]) => id);
+    set({ panels: def, dockedOrder: order });
     saveLayout(def);
   },
 }));

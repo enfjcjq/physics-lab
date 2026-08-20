@@ -1,20 +1,21 @@
 ﻿# Project Status
 
-**Version:** V5.8 (Sprint S81)
-**Status:** P2 第二步结构合并完成（模式概念退出 UI），待收口确认走查
+**Version:** V6.0 (Sprint S82+S83)
+**Status:** 导出质量 + 布局规则修复完成，待 P2 收口重走查
 
 ## Key Metrics
-- **18 experiments** | Zero TS errors | 167 tests passed (23 files) | AI parse 100%/100%
-- P2 两步走完成：第一步（实验库抽屉/IconRail/默认面板）→ 走查达标 → 第二步（模式概念退出 UI）
+- **18 experiments** | Zero TS errors | 175 tests passed (25 files) | AI parse 100%/100%
+- 导出 = 对外交付物（Markdown→HTML、i18n 解析、按场景参数/状态）；布局 = 画布最小可视 + 浮层去重 + 死菜单 + 公式排版
 
-## S81: 模式概念移除 (Completed)
-- 🧹 用户可见模式痕迹全清：MenuBar 子模式项 / mode.* 键（22）/ WelcomeScreen 模式选择 → 单一开始
-- 🧹 teaching.store mode 降级为内部状态；面板渲染统一（无 mode 分支）
-- ✅ 功能可达性保留：MenuBar / IconRail / 实验库抽屉 / 打点
+## S82: 导出质量修复 (Completed)
+- 📄 Markdown→HTML | i18n 键名解析 | simulation 驱动参数/状态 | 空知识点跳过 | Submenu portal
 
-## S80: 可发现性修复 (Completed) — 复走查三项达标，P2 放行
-## S79-S70: AI 润色闭环 / PDF / 教学脚本 / 教学图层 / P0 首页 / 解析质量 (Completed) — 验收通过
+## S83: 布局规则 (Completed)
+- 🧭 画布 ≥40%（docked FIFO ≤2、底抽屉 ≤35%）| 浮层去重（中央浮卡默认关、HUD 默认关）
+- 🧹 死菜单清理（File/Edit/Documentation/Version；Experiment/Teaching 接线）
+- 📐 公式书面排版 beautifyFormula（四出口）
+
+## S81-S70: P2 结构合并 / 可发现性 / AI 润色闭环 / 教学脚本 / 教学图层 / P0 首页 / 解析质量 (Completed)
 
 ## Next
-- P2 收口确认走查（项目负责人）→ P2 正式完成
-- 长期方向：AI 直接生成场景 / 知识图谱掌握度 / 自适应路径
+- P2 收口确认重走查（S82/S83 后）；Ollama 解析 e2e 对比（长窗口）

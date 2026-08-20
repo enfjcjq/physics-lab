@@ -32,6 +32,9 @@ interface TeachingState {
   showEventPulse: boolean;
   /** Master switch for the 2D teaching layer (low-perf / user fallback) */
   teachingLayerEnabled: boolean;
+  /** Legacy center overlay (S83: default off; content duplicates TeacherPanel) */
+  showLegacyOverlay: boolean;
+  setLegacyOverlay: (v: boolean) => void;
   setMode: (mode: AppMode) => void;
   setSubMode: (subMode: TeachingSubMode) => void;
   toggleOverlay: (key: keyof TeachingOverlayState) => void;
@@ -68,6 +71,9 @@ export const useTeaching = create<TeachingState>((set, get) => ({
   showForceCallout: true,
   showEventPulse: true,
   teachingLayerEnabled: true,
+  showLegacyOverlay: false,
+
+  setLegacyOverlay: (v) => set({ showLegacyOverlay: v }),
 
   toggleTeachingElement: (key) =>
     set((s) => {

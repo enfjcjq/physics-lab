@@ -46,7 +46,8 @@ export function BottomDrawer() {
   const onMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging.current) return;
     const delta = startY.current - e.clientY;
-    const newH = Math.max(150, Math.min(500, startHeight.current + delta));
+    const maxH = Math.max(150, Math.floor(window.innerHeight * 0.35));
+    const newH = Math.max(150, Math.min(maxH, startHeight.current + delta));
     setDrawerHeight(newH);
   }, [setDrawerHeight]);
 

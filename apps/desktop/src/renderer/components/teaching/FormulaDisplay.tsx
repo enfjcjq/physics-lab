@@ -1,4 +1,5 @@
 ﻿import { useMemo } from "react";
+import { beautifyFormula } from "../../features/experiment/components/teaching/formula-beautify";
 
 /**
  * Renders a physics formula string as styled HTML with proper mathematical notation.

@@ -17,6 +17,7 @@ function createMockReportData() {
         subject: "Physics",
         difficulty: "Medium",
         grade: "10",
+        topic: "free_fall",
       },
       entities: [{ position: [0, 10, 0], properties: { mass: 2 } }],
       environment: [{ type: "gravity_field", properties: { acceleration: 9.8 } }],
@@ -30,6 +31,17 @@ function createMockReportData() {
         { titleKey: "释放小球", descKey: "从静止开始", order: 1, timeStart: 0, formulaKey: null },
       ],
       forces: [],
+      timeline: { total_duration: 2, fps: 60, events: [] },
+      simulation: {
+        params: { h0: 10, g: 9.8, m: 2 },
+        equations: {
+          y: "h0 - 0.5 * g * t * t",
+          v: "-g * t",
+          ke: "0.5 * m * v * v",
+          pe: "m * g * y",
+          total_e: "ke + pe",
+        },
+      },
     } as any,
     params: { mass: 2, gravity: 9.8, height: 10 },
     currentTime: 1.5,
@@ -71,23 +83,26 @@ describe("generateMarkdownReport", () => {
   it("应包含正确的参数表格", () => {
     const data = createMockReportData();
     const result = generateMarkdownReport(data, "zh-CN");
-    expect(result).toContain("| mass | 2 | |");
-    expect(result).toContain("| gravity | 9.8 | |");
+    expect(result).toContain("| 初始高度 h₀ | 10 | m |");
+    expect(result).toContain("| 重力加速度 g | 9.8 | m/s² |");
+    expect(result).not.toContain("| mass |");
   });
 
   it("应包含当前状态数值", () => {
     const data = createMockReportData();
     const result = generateMarkdownReport(data, "zh-CN");
-    expect(result).toContain("1.50 s");
-    expect(result).toContain("y = 8.90 m");
-    expect(result).toContain("v = -14.70 m/s");
+    expect(result).toContain("(t = 1.50 s)");
+    expect(result).toContain("位置 y");
+    expect(result).toContain("8.90 m");
+    expect(result).toContain("速度 v");
+    expect(result).toContain("-14.70 m/s");
   });
 
   it("应包含公式和知识点详情", () => {
     const data = createMockReportData();
     const result = generateMarkdownReport(data, "zh-CN");
     expect(result).toContain("位移公式");
-    expect(result).toContain("y = h - 0.5*g*t^2");
+    expect(result).toContain("y = h − 0.5·g·t²");
     expect(result).toContain("重力加速度");
     expect(data.scene.knowledge_tags[0].learning_tips && result.includes(data.scene.knowledge_tags[0].learning_tips)).toBe(true);
   });
@@ -205,4 +220,41 @@ describe("captureScreenshot", () => {
     const result = captureScreenshot("#custom-canvas");
     expect(result).not.toBeNull();
   });
+});
+
+// ==================== S82: export quality ====================
+
+describe("S82 export quality", () => {
+  it("HTML 正文不含原始 Markdown 符号（# ** |）", () => {
+    const data = createMockReportData();
+    const html = generateHTMLReport(data, "zh-CN");
+    const body = html.slice(html.indexOf("<body>"), html.indexOf("</body>"));
+    expect(body).not.toMatch(/#{1,3}\s/);
+    expect(body).not.toContain("**");
+    expect(body).not.toContain("|---");
+  });
+
+  it("HTML 表格已转换为 <table> 元素", () => {
+    const data = createMockReportData();
+    const html = generateHTMLReport(data, "zh-CN");
+    expect(html).toContain("<table>");
+    expect(html).toContain("<th>");
+  });
+
+  it("i18n 键名解析为文案，不泄漏原始键名", () => {
+    const data = createMockReportData();
+    data.scene.teacher_steps.push({ titleKey: "menu.file", descKey: "menu.file.new", order: 2, timeStart: 0 } as never);
+    const result = generateMarkdownReport(data, "zh-CN");
+    expect(result).toContain("文件");
+    expect(result).toContain("新建实验");
+    expect(result).not.toContain("menu.file.new");
+  });
+
+  it("无内容的知识点不渲染（不留空壳）", () => {
+    const data = createMockReportData();
+    data.scene.knowledge_tags.push({ id: "kpEmpty", name: "空知识点", category: "力学", level: 1 } as never);
+    const result = generateMarkdownReport(data, "zh-CN");
+    expect(result).not.toContain("空知识点");
+  });
+
 });

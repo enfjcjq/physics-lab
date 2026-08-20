@@ -1,4 +1,5 @@
 ﻿import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { usePanelManager } from "../../core/panel-manager.store";
 import { useI18n } from "../../core/i18n";
 import { useTheme } from "../../core/theme.store";
@@ -74,17 +75,32 @@ function MenuItem({
 
 function Submenu({ label, children, align = "left" }: { label: string; children: React.ReactNode; align?: "left" | "right" }) {
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
+  const btnRef = useRef<HTMLDivElement>(null);
+
+  const place = () => {
+    const r = btnRef.current?.getBoundingClientRect();
+    if (!r) return;
+    const W = 176; // w-44
+    const left = align === "right" ? r.left - W : r.right;
+    const clampedLeft = Math.max(4, Math.min(left, window.innerWidth - W - 4));
+    setPos({ top: r.top, left: clampedLeft });
+  };
+
   return (
-    <div className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <div ref={btnRef} className="relative"
+      onMouseEnter={() => { place(); setOpen(true); }}
+      onMouseLeave={() => setOpen(false)}>
       <button onClick={() => setOpen(!open)} className="w-full flex items-center px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-700 hover:text-white transition-colors text-left">
         <span className="w-4" />
         <span className="flex-1">{label}</span>
         <span className="text-slate-500 text-[10px]">▶</span>
       </button>
-      {open && (
-        <div className={"absolute top-0 ml-0.5 w-44 max-w-[min(16rem,80vw)] bg-slate-800 border border-slate-700 rounded-lg shadow-2xl py-1 z-50 " + (align === "right" ? "right-full" : "left-full")}>
+      {open && pos && createPortal(
+        <div className="fixed z-[60] w-44 max-w-[min(16rem,80vw)] max-h-[80vh] overflow-y-auto bg-slate-800 border border-slate-700 rounded-lg shadow-2xl py-1" style={{ top: pos.top, left: pos.left }}>
           {children}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
@@ -98,7 +114,7 @@ export function MenuBar() {
   const { t, locale, setLocale } = useI18n();
   const { activeId: activeAI, setActive: setActiveAI, checkOllama, ollamaAvailable } = useAIProviderStore();
   const { mode, setMode } = useTheme();
-  const { showPhaseCard, showFormulaStrip, showForceCallout, showEventPulse, teachingLayerEnabled, toggleTeachingElement, setTeachingLayerEnabled } = useTeaching();
+  const { showPhaseCard, showFormulaStrip, showForceCallout, showEventPulse, teachingLayerEnabled, toggleTeachingElement, setTeachingLayerEnabled, overlay: ov, toggleOverlay, showLegacyOverlay, setLegacyOverlay } = useTeaching();
   const panelMgr = usePanelManager();
   const viz = useVisualization();
   const [showAbout, setShowAbout] = useState(false);
@@ -132,9 +148,6 @@ export function MenuBar() {
     >
       {/* File */}
       <Dropdown label={t("menu.file")}>
-        <MenuItem label={t("menu.file.new")} shortcut="Ctrl+N" />
-        <MenuItem label={t("menu.file.open")} shortcut="Ctrl+O" />
-        <MenuItem label={t("menu.file.save")} shortcut="Ctrl+S" />
         <MenuSeparator />
         <MenuItem label={t("menu.file.export") + " (MD)"} shortcut="Ctrl+E" onClick={handleExport} />
         <MenuItem label={t("menu.file.export") + " (HTML)"} shortcut="Ctrl+H" onClick={() => {
@@ -157,14 +170,7 @@ export function MenuBar() {
           downloadCSV(csvContent, "physics-lab-data.csv");
         }} />
         <MenuSeparator />
-        <MenuItem label={t("menu.file.exit")} />
-      </Dropdown>
-
-      <Dropdown label={t("menu.edit")}>
-        <MenuItem label={t("menu.edit.undo")} shortcut="Ctrl+Z" />
-        <MenuItem label={t("menu.edit.redo")} shortcut="Ctrl+Y" />
-        <MenuSeparator />
-        <MenuItem label={t("menu.edit.reset")} />
+        <MenuItem label={t("menu.file.exit")} onClick={() => window.close()} />
       </Dropdown>
 
       {/* View */}
@@ -183,6 +189,7 @@ export function MenuBar() {
         <MenuItem label={t("menu.view.formula_strip")} checked={showFormulaStrip} onClick={() => toggleTeachingElement("formulaStrip")} />
         <MenuItem label={t("menu.view.force_callout")} checked={showForceCallout} onClick={() => toggleTeachingElement("forceCallout")} />
         <MenuItem label={t("menu.view.event_pulse")} checked={showEventPulse} onClick={() => toggleTeachingElement("eventPulse")} />
+        <MenuItem label={t("menu.view.legacy_overlay")} checked={showLegacyOverlay} onClick={() => setLegacyOverlay(!showLegacyOverlay)} />
         <MenuSeparator />
         <MenuItem label={t("menu.view.dashboard")} shortcut="Ctrl+D" onClick={() => useDashboard.getState().toggle()} />
         <MenuSeparator />
@@ -191,31 +198,31 @@ export function MenuBar() {
 
       {/* Experiment */}
       <Dropdown label={t("menu.experiment")}>
-        <MenuItem label={t("ctrl.play")} shortcut="Space" />
-        <MenuItem label={t("ctrl.pause")} shortcut="Space" />
-        <MenuItem label={t("ctrl.stop")} />
-        <MenuItem label={t("ctrl.replay")} shortcut="Ctrl+R" />
+        <MenuItem label={t("ctrl.play")} shortcut="Space" onClick={() => sim.play()} />
+        <MenuItem label={t("ctrl.pause")} shortcut="Space" onClick={() => sim.pause()} />
+        <MenuItem label={t("ctrl.stop")} onClick={() => sim.stop()} />
+        <MenuItem label={t("ctrl.replay")} shortcut="Ctrl+R" onClick={() => sim.replay()} />
         <MenuSeparator />
-        <MenuItem label={t("ctrl.prevFrame")} shortcut={"←"} />
-        <MenuItem label={t("ctrl.nextFrame")} shortcut={"→"} />
+        <MenuItem label={t("ctrl.prevFrame")} shortcut={"←"} onClick={() => sim.stepBackward()} />
+        <MenuItem label={t("ctrl.nextFrame")} shortcut={"→"} onClick={() => sim.stepForward()} />
         <MenuSeparator />
-        <MenuItem label="0.25x" />
-        <MenuItem label="0.5x" />
-        <MenuItem label="1x" checked={true} />
-        <MenuItem label="2x" />
-        <MenuItem label="4x" />
+        <MenuItem label="0.25x" onClick={() => sim.setSpeed(0.25)} />
+        <MenuItem label="0.5x" onClick={() => sim.setSpeed(0.5)} />
+        <MenuItem label="1x" checked={sim.timeScale === 1} onClick={() => sim.setSpeed(1)} />
+        <MenuItem label="2x" onClick={() => sim.setSpeed(2)} />
+        <MenuItem label="4x" onClick={() => sim.setSpeed(4)} />
       </Dropdown>
 
       {/* Teaching */}
       <Dropdown label={t("menu.teaching")}>
         <MenuSeparator />
-        <MenuItem label={t("menu.teaching.knowledge")} checked={true} />
-        <MenuItem label={t("menu.teaching.forces")} checked={true} />
-        <MenuItem label={t("menu.teaching.motion")} checked={true} />
-        <MenuItem label={t("menu.teaching.derivation")} checked={true} />
-        <MenuItem label={t("menu.teaching.tips")} checked={true} />
+        <MenuItem label={t("menu.teaching.knowledge")} checked={ov.showKnowledge} onClick={() => toggleOverlay("showKnowledge")} />
+        <MenuItem label={t("menu.teaching.forces")} checked={ov.showForces} onClick={() => toggleOverlay("showForces")} />
+        <MenuItem label={t("menu.teaching.motion")} checked={ov.showMotion} onClick={() => toggleOverlay("showMotion")} />
+        <MenuItem label={t("menu.teaching.derivation")} checked={ov.showDerivation} onClick={() => toggleOverlay("showDerivation")} />
+        <MenuItem label={t("menu.teaching.tips")} checked={ov.showTips} onClick={() => toggleOverlay("showTips")} />
         <MenuSeparator />
-        <MenuItem label={t("menu.teaching.answer")} checked={true} />
+        <MenuItem label={t("menu.teaching.answer")} checked={ov.showAnswer} onClick={() => toggleOverlay("showAnswer")} />
       </Dropdown>
 
       {/* Spacer */}
@@ -267,9 +274,7 @@ export function MenuBar() {
         <Submenu label={t("menu.help.developer")} align="right">
           <MenuItem label={t("menu.help.export_usage")} onClick={() => useUsage.getState().exportData()} />
         </Submenu>
-        <MenuItem label="Documentation" />
         <MenuSeparator />
-        <MenuItem label="Version 2.0.0" />
       </Dropdown>
     </div>
     {/* About Dialog */}

@@ -1,25 +1,27 @@
-﻿# Current Milestone: S81 (Completed)
+﻿# Current Milestone: S82+S83 (Completed)
 
-**Goal:** P2 第二步结构合并 —— 模式概念彻底退出 UI
-**依据:** 产品/UX Agent 留言 16（复走查三项指标全部达标、P2 第二步正式放行、S81 范围）
+**Goal:** S82 导出质量修复（留言 18/19）+ S83 布局规则（留言 20）
+**依据:** 产品/UX Agent 第 14/15 轮：导出 4 缺陷 + Submenu portal 根因 + 布局混乱诊断
 
-**Completed:**
-- [x] **Submenu 方向修复**（留言 15 未闭环项）：上轮已提交（52aede6）
-- [x] **模式概念移除（结构合并核心）**：
-      - 用户可见模式痕迹全部移除：MenuBar Teaching 子模式项、mode.* / teaching.mode.* /
-        menu.teaching.*_mode i18n 键（22 键）、模式提示文案、WelcomeScreen 学习/实验模式选择
-        （改为单一「开始使用」按钮）
-      - teaching.store：mode 降级为纯内部状态（默认 learning，setMode 不再自动开合面板，
-        移除按模式分支的面板逻辑）
-      - 面板渲染不再按 mode 条件分支：LeftPanel 统一显示完整输入 + 参数；
-        CenterPanel 移除 mode 读取；TeachingOverlay 移除 experiment 守卫 + 子模式标签页
-        （next-step 提示始终显示）；TeacherPanel 移除 explore 分支显示
-      - HomePage enterScene / fallbackToScene 移除 setMode("learning") 调用
-- [x] i18n 测试更新（改用现有关键键位）；welcome.start 新键
-- [x] 验证：tsc ×3 零错、vitest 23 文件 167 用例全过、生产构建成功
+**S82 完成：**
+- [x] 导出 Markdown→HTML 完整转换（标题/加粗/表格/代码块/列表/hr；markdownToHtml）
+- [x] i18n 键名解析：导出统一过 translate()（当前语言 → zh 回退，绝不泄漏原始键名）
+- [x] 参数按场景 simulation.params 驱动（消除 mass/height/gravity 张冠李戴）；状态按实验类型
+      （电机：力矩 τ/角速度 ω/转角 θ/电流 I；无数据整区隐藏——无空壳）
+- [x] 空知识点（无 tips/mistakes）不渲染
+- [x] Submenu portal 修复（留言 19）：createPortal 到 body + 视口钳制，不再被父级 overflow 裁剪；
+      一级下拉仍可滚动
+- [x] 自验：3 类型（力学/电学/电磁）HTML 导出全过（无原始符号/无键名/参数状态正确）
 
-**约束确认：** 全部既有功能保持可达（MenuBar/IconRail/实验库抽屉保留）；打点保留（结构合并后确认走查用）
+**S83 完成：**
+- [x] 规则1 画布最小可视：docked 面板 FIFO 上限 2（开第 3 个自动收起最早 + 一次性提示）；
+      底抽屉高度上限 min(500, 35% 窗口高)，不遮 Timeline
+- [x] 规则2 浮层去重：TeachingOverlay 中央浮卡默认关闭（视图菜单可开）；画布 HUD 实时数据默认关闭
+      （数据在右侧/图表区）
+- [x] 规则3 死菜单清理：File new/open/save、Edit undo/redo/reset、Documentation、Version 移除
+      （Version 已在「关于」弹窗）；Experiment 播放/步进/速度接线；Teaching 假开关接线到 overlay 状态
+- [x] 规则4 公式书面排版：beautifyFormula（v₀/t²/½/θ/ω/τ/·/−）覆盖 FormulaDisplay（含
+      FormulaStrip/FormulaHTML/教师面板）与导出报告
+- [x] 验证：tsc ×3 零错、vitest 25 文件 175 用例全过、生产构建成功
 
-**待确认走查：** 项目负责人做 P2 收口确认走查（重点：无模式痕迹、功能可达、菜单完整）
-
-**Next:** P2 收口确认走查 → P2 正式完成；后续按长期方向（AI 直接生成场景等）
+**待办：** P2 收口确认走查（S82/S83 后重做）；Ollama 解析 e2e 对比（长窗口）

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Scene3D } from "../../features/experiment/components/Scene3D";
 import { TeachingOverlay } from "../teaching/TeachingOverlay";
 import { TeachingLayer } from "../../features/experiment/components/teaching/TeachingLayer";
+import { beautifyFormula } from "../../features/experiment/components/teaching/formula-beautify";
 import { useI18n } from "../../core/i18n";
 import { useVisualization } from "../../core/visualization.store";
 import { pluginRegistry } from "../../core/plugin-registry";
@@ -37,7 +38,7 @@ function FormulaHTML() {
       <div className="bg-slate-900/85 backdrop-blur border border-amber-500/30 rounded-xl px-5 py-3 shadow-2xl shadow-amber-900/20">
         {lines.map((line: string, i: number) => (
           <div key={i} className="text-sm font-mono text-amber-300 text-center whitespace-nowrap leading-relaxed">
-            {line.trim()}
+{beautifyFormula(line.trim())}
           </div>
         ))}
       </div>
@@ -55,6 +56,7 @@ export function CenterPanel() {
   const jumpToPhase = useSimulation((s) => s.jumpToPhase);
   const { t } = useI18n();
   const teachingLayerEnabled = useTeaching((s) => s.teachingLayerEnabled);
+  const showLegacyOverlay = useTeaching((s) => s.showLegacyOverlay);
   const showFormulaStrip = useTeaching((s) => s.showFormulaStrip);
 
   const currentPhase = phases.find((p) => p.id === currentPhaseId);
@@ -118,7 +120,7 @@ export function CenterPanel() {
       )}
       <Scene3D />
       <TeachingLayer />
-      <TeachingOverlay />
+      {showLegacyOverlay && <TeachingOverlay />}
       {!(teachingLayerEnabled && showFormulaStrip) && <FormulaHTML />}
       {/* Phase indicator */}
       <div className="absolute bottom-4 left-4 z-10">

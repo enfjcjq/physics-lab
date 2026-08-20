@@ -984,5 +984,8 @@
   "home.pdf_hint": "Multi-page PDFs are supported; text is combined into the input for editing before generating.",
   "menu.help.export_usage": "Export usage data",
   "menu.help.developer": "Developer",
-  "welcome.start": "Get started"
+  "welcome.start": "Get started",
+  "panel.limit_hint": "Panel limit reached",
+  "panel.limit_hint_desc": "At most 2 panels can be open at once; the earliest one was closed automatically.",
+  "menu.view.legacy_overlay": "Legacy overlay"
 }

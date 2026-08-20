@@ -36,10 +36,10 @@ export function beautifyFormula(input: string): string {
   s = s.replace(/\^([0-9n])\b/g, (_, d) => SUP[d] ?? ("^" + d));
   s = s.replace(/\^\{([0-9n]+)\}/g, (_, d) => d.split("").map((c: string) => SUP[c] ?? c).join(""));
   // functions: sin( -> sin, sqrt( -> √
-  s = s.replace(/sin\s*\(/g, "sin ");
-  s = s.replace(/cos\s*\(/g, "cos ");
-  s = s.replace(/tan\s*\(/g, "tan ");
-  s = s.replace(/sqrt\s*\(/g, "√");
+  s = s.replace(/sin\s*\(\s*([^()]*?)\s*\)/g, "sin $1");
+  s = s.replace(/cos\s*\(\s*([^()]*?)\s*\)/g, "cos $1");
+  s = s.replace(/tan\s*\(\s*([^()]*?)\s*\)/g, "tan $1");
+  s = s.replace(/sqrt\s*\(\s*([^()]*?)\s*\)/g, "√($1)");
   // implicit multiplication: 2x / g*t / v₀·t -> use · (but keep digit-symbol boundaries)
   s = s.replace(/([0-9₀-₉])\s*\*\s*([A-Za-zθωτφμ])/g, "$1·$2");
   s = s.replace(/([A-Za-zθωτφμ])\s*\*\s*([A-Za-zθωτφμ])/g, "$1·$2");

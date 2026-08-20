@@ -106,12 +106,15 @@ export function substituteExpression(
 ): string {
   let out = expression;
   const vars = Object.keys(equation.variables ?? {});
+  // theta -> angle etc. when the scene stores the angle under another param name
+  const PARAM_ALIASES: Record<string, string> = { theta: "angle", theta0: "theta0", phi: "phi", omega: "omega", tau: "tau" };
   for (const v of vars) {
     if (v === "t") {
       out = out.replace(/(?<![a-zA-Z(])t\b/g, formatNumber(time));
       continue;
     }
-    const value = params?.[v];
+    let value = params?.[v];
+    if (typeof value !== "number") { const alias = PARAM_ALIASES[v]; value = alias ? params?.[alias] : undefined; }
     if (typeof value === "number" && Number.isFinite(value)) {
       out = out.replace(new RegExp(`\\b${escapeRegExp(v)}\\b`, "g"), formatNumber(value));
     }

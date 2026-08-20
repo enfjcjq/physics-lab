@@ -1,10 +1,12 @@
 ﻿import { create } from "zustand";
 import { useResume } from "../../core/resume.store";
+import { useI18n } from "../../core/i18n";
 import type { PhysicsScene, TimelinePhase, PhysicsState } from "@physics-lab/shared";
 import { useHistory } from "../../core/history.store";
 import { pluginRegistry } from "../../core/plugin-registry";
 import { createEngine } from "@physics-lab/shared";
 import { ensureTeachingScript } from "@physics-lab/shared";
+import { localizeScene } from "@physics-lab/ai-parser";
 import type { PhysicsSceneV2 } from "@physics-lab/shared";
 import { ensurePlugin } from "../../core/plugin-loader";
 

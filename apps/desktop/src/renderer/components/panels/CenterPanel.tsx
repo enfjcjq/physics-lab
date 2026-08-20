@@ -86,7 +86,7 @@ export function CenterPanel() {
           {libOpen && (
             <>
               <div className="fixed inset-0 z-30" onClick={() => setLibOpen(false)} />
-              <div className="absolute top-full left-0 mt-1 z-40 w-56 bg-slate-900/95 backdrop-blur-md border border-slate-700 rounded-xl shadow-2xl overflow-hidden py-1">
+              <div className="absolute top-full left-0 mt-1 z-40 w-56 max-h-[60vh] overflow-y-auto bg-slate-900/95 backdrop-blur-md border border-slate-700 rounded-xl shadow-2xl py-1">
                 {pluginRegistry.list().map((p) => (
                   <button
                     key={p.id}

@@ -18,7 +18,7 @@ describe("I18n Store", () => {
     useI18n.getState().setLocale("en-US");
     const { t } = useI18n.getState();
     expect(t("home.title")).toBe("Put your physics problem here");
-    expect(t("home.cta")).toBe("Generate teaching animation");
+    expect(t("home.cta")).toBe("Generate");
     expect(t("menu.view.teaching_layer")).toBe("Teaching layer");
   });
 

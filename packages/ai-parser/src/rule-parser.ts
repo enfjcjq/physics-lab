@@ -127,7 +127,7 @@ function detectMotion(text: string): MotionType {
       /projectile|平抛|斜抛|抛体运动|trajectory|parabolic|parabola/i,
     ]],
     ["free_fall", [
-      /free.?fall|自由落体|下落|释放|falling|drop(?:ped)?|falls?\b/i,
+      /free.?fall|自由落体|下落|释放|falling|drop(?:ped)?|falls?\b|竖直向下抛|向下抛/i,
     ]],
   ];
 
@@ -422,6 +422,16 @@ export const ruleParser: AIProvider = {
     const start = performance.now();
     try {
       const params = extractParams(text);
+      // S84-2 teaching red line: never hard-fit an unsupported problem into a wrong animation.
+      if (params.motionType === "unknown") {
+        return {
+          scene: null,
+          success: false,
+          error: "这道题暂时不能可靠生成动画。请换一种更明确的表述，或从实验库选择最接近的实验。",
+          provider: "rule-based",
+          durationMs: performance.now() - start,
+        };
+      }
       const scene = buildScene(params, text);
       const durationMs = performance.now() - start;
 

@@ -1,27 +1,24 @@
-﻿# Current Milestone: S82+S83 (Completed)
+﻿# Current Milestone: S84 (Completed)
 
-**Goal:** S82 导出质量修复（留言 18/19）+ S83 布局规则（留言 20）
-**依据:** 产品/UX Agent 第 14/15 轮：导出 4 缺陷 + Submenu portal 根因 + 布局混乱诊断
+**Goal:** P2 收口重走查缺陷包（留言 22/23：7 项 + A 类 4 项）
+**依据:** 产品/UX Agent 第 16 轮（P2 结构目标达成；S84 缺陷包 + A 类全批 + DD-002 确认）
 
-**S82 完成：**
-- [x] 导出 Markdown→HTML 完整转换（标题/加粗/表格/代码块/列表/hr；markdownToHtml）
-- [x] i18n 键名解析：导出统一过 translate()（当前语言 → zh 回退，绝不泄漏原始键名）
-- [x] 参数按场景 simulation.params 驱动（消除 mass/height/gravity 张冠李戴）；状态按实验类型
-      （电机：力矩 τ/角速度 ω/转角 θ/电流 I；无数据整区隐藏——无空壳）
-- [x] 空知识点（无 tips/mistakes）不渲染
-- [x] Submenu portal 修复（留言 19）：createPortal 到 body + 视口钳制，不再被父级 overflow 裁剪；
-      一级下拉仍可滚动
-- [x] 自验：3 类型（力学/电学/电磁）HTML 导出全过（无原始符号/无键名/参数状态正确）
+**Completed:**
+- [x] P0 欢迎页乱码：`\u269B\uFE0F` 字面转义 → `{"\u269B\uFE0F"}`（⚛）
+- [x] P0 诚实失败守卫（教学红线）：规则解析器对未知题型明确返回
+      "这道题暂时不能可靠生成动画" + 推荐实验库，禁止硬凑错误动画；
+      并补"竖直向下抛"识别（真实自由落体仍正常解析）
+- [x] P1 导出使用数据点击链路：Submenu portal 共享 hover 状态 + 150ms 延迟关闭（移入面板不再误关）
+- [x] P1 实验列表滚动：实验库抽屉 max-h-[60vh] + overflow-y-auto
+- [x] P1 公式条代入态排版：substituteExpression 增加参数别名回退（theta→angle 等）；
+      beautifyFormula 覆盖代入态（√(…)、· 分隔、函数括号归一 sinθ）
+- [x] P1 英文 hint 残留：渲染层 setScene 本地化钩子（zh-CN UI 下内置场景也走 localizeScene；
+      词典已覆盖点名描述）
+- [x] P2 欢迎页文案：步骤改"输入题目 → 理解过程 → 巩固掌握"
+- [x] A1 解析等待区漂浮物理符号（α/Ω/Δ/v₀/F=ma/θ/E=mc²，半透明慢漂，仅等待区）
+- [x] A2 编号步骤进度（01识别实体 ✓ → 02建立模型 ✓ → 03编排动画 ✓）
+- [x] A3 首页品牌副标「看见看不见的物理过程」
+- [x] A4 CTA 精简「一键生成」
+- [x] 验证：tsc ×3 零错、vitest 25 文件 175 用例全过、生产构建成功；e2e 50/50 保持
 
-**S83 完成：**
-- [x] 规则1 画布最小可视：docked 面板 FIFO 上限 2（开第 3 个自动收起最早 + 一次性提示）；
-      底抽屉高度上限 min(500, 35% 窗口高)，不遮 Timeline
-- [x] 规则2 浮层去重：TeachingOverlay 中央浮卡默认关闭（视图菜单可开）；画布 HUD 实时数据默认关闭
-      （数据在右侧/图表区）
-- [x] 规则3 死菜单清理：File new/open/save、Edit undo/redo/reset、Documentation、Version 移除
-      （Version 已在「关于」弹窗）；Experiment 播放/步进/速度接线；Teaching 假开关接线到 overlay 状态
-- [x] 规则4 公式书面排版：beautifyFormula（v₀/t²/½/θ/ω/τ/·/−）覆盖 FormulaDisplay（含
-      FormulaStrip/FormulaHTML/教师面板）与导出报告
-- [x] 验证：tsc ×3 零错、vitest 25 文件 175 用例全过、生产构建成功
-
-**待办：** P2 收口确认走查（S82/S83 后重做）；Ollama 解析 e2e 对比（长窗口）
+**Next: S85** — CloudProvider（OpenAI 兼容）+ 设置页（API key/Provider 选择）+ 首页三态 AI 状态 + 诚实失败联动（DD-002 已确认）

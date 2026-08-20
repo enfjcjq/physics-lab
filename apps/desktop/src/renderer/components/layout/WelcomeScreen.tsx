@@ -25,7 +25,7 @@ export function WelcomeScreen() {
       <div className="max-w-lg w-full mx-4 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-8 text-center">
         {/* Logo */}
         <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-sky-600 to-violet-600 flex items-center justify-center text-2xl shadow-lg shadow-sky-900/40">
-          \u269B\uFE0F
+          {"\u269B\uFE0F"}
         </div>
 
         <h1 className="text-2xl font-bold text-white mb-2">Physics Lab</h1>

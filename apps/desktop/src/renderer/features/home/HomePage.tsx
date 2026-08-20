@@ -103,6 +103,14 @@ export function HomePage() {
 
   return (
     <div className="w-full h-full flex flex-col items-center" style={{ background: "#0A0E1A" }}>
+      {isSubmitting && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+          {["α", "Ω", "Δ", "v₀", "F=ma", "θ", "E=mc²"].map((s, i) => (
+            <span key={i} className="symbol-float absolute text-3xl text-slate-700/40 select-none"
+              style={{ left: `${6 + i * 12}%`, top: `${18 + (i % 3) * 18}%`, animationDelay: `${i * 0.9}s` }}>{s}</span>
+          ))}
+        </div>
+      )}
       {/* AI status (top-right, weak hint) */}
       <div className="absolute top-4 right-5 flex items-center gap-1.5 text-[11px] text-slate-500">
         <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: aiDot }} />
@@ -115,6 +123,7 @@ export function HomePage() {
         <h1 className="text-lg font-semibold text-slate-100 tracking-wide">Physics Lab</h1>
         <h2 className="mt-1 text-xl font-bold text-white text-center">{t("home.title")}</h2>
         <p className="mt-1.5 text-sm text-slate-400 text-center">{t("home.subtitle")}</p>
+        <p className="mt-1 text-xs text-slate-500 text-center">{t("home.tagline")}</p>
 
         {/* Input area — the single visual focus */}
         <div className="w-full mt-8">
@@ -152,9 +161,24 @@ export function HomePage() {
               className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white shadow-lg transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               style={{ backgroundColor: "var(--color-accent-action, #FF6B00)", boxShadow: "0 8px 24px rgba(255,107,0,0.25)" }}
             >
-              {isSubmitting ? (progressStep === 1 ? t("home.progress.step1") : progressStep === 2 ? t("home.progress.step2") : progressStep === 3 ? t("home.progress.step3") : t("home.cta")) : t("home.cta")}
+              {t("home.cta")}
             </button>
           </div>
+
+          {/* A2: numbered step progress while parsing */}
+          {isSubmitting && (
+            <div className="mt-4 space-y-2">
+              {[1, 2, 3].map((n) => (
+                <div key={n} className="flex items-center gap-2 text-xs">
+                  <span className="font-mono text-slate-600">0{n}</span>
+                  <span className={progressStep >= n ? "text-slate-200" : "text-slate-500"}>
+                    {n === 1 ? t("home.progress.step1") : n === 2 ? t("home.progress.step2") : t("home.progress.step3")}
+                  </span>
+                  {progressStep >= n && <span className="text-green-400">{"✓"}</span>}
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Parse error with retry / fallback */}
           {parseError && !isSubmitting && (

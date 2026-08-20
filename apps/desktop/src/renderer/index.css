@@ -177,3 +177,10 @@ body, .bg-slate-900, .bg-slate-950, .bg-slate-800 {
   50% { box-shadow: inset 0 0 0 2px rgba(255, 107, 0, 0.35); }
 }
 .iconrail-hint { animation: iconrail-breathe 1.6s ease-in-out 3; border-radius: 8px; }
+
+/* ===== S84-A1: floating physics symbols while parsing ===== */
+@keyframes symbol-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.35; }
+  50% { transform: translateY(-14px) rotate(6deg); opacity: 0.7; }
+}
+.symbol-float { animation: symbol-float 4.5s ease-in-out infinite; }

@@ -77,6 +77,8 @@ function Submenu({ label, children, align = "left" }: { label: string; children:
   const [open, setOpen] = useState(false);
   const [pos, setPos] = useState<{ top: number; left: number } | null>(null);
   const btnRef = useRef<HTMLDivElement>(null);
+  const hoverRef = useRef(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const place = () => {
     const r = btnRef.current?.getBoundingClientRect();
@@ -87,17 +89,27 @@ function Submenu({ label, children, align = "left" }: { label: string; children:
     setPos({ top: r.top, left: clampedLeft });
   };
 
+  const enter = () => {
+    hoverRef.current = true;
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    place();
+    setOpen(true);
+  };
+  const leave = () => {
+    hoverRef.current = false;
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => { if (!hoverRef.current) setOpen(false); }, 150);
+  };
+
   return (
-    <div ref={btnRef} className="relative"
-      onMouseEnter={() => { place(); setOpen(true); }}
-      onMouseLeave={() => setOpen(false)}>
+    <div ref={btnRef} className="relative" onMouseEnter={enter} onMouseLeave={leave}>
       <button onClick={() => setOpen(!open)} className="w-full flex items-center px-3 py-1.5 text-xs text-slate-300 hover:bg-slate-700 hover:text-white transition-colors text-left">
         <span className="w-4" />
         <span className="flex-1">{label}</span>
         <span className="text-slate-500 text-[10px]">▶</span>
       </button>
       {open && pos && createPortal(
-        <div className="fixed z-[60] w-44 max-w-[min(16rem,80vw)] max-h-[80vh] overflow-y-auto bg-slate-800 border border-slate-700 rounded-lg shadow-2xl py-1" style={{ top: pos.top, left: pos.left }}>
+        <div className="fixed z-[60] w-44 max-w-[min(16rem,80vw)] max-h-[80vh] overflow-y-auto bg-slate-800 border border-slate-700 rounded-lg shadow-2xl py-1" style={{ top: pos.top, left: pos.left }} onMouseEnter={enter} onMouseLeave={leave}>
           {children}
         </div>,
         document.body
@@ -105,6 +117,7 @@ function Submenu({ label, children, align = "left" }: { label: string; children:
     </div>
   );
 }
+
 function MenuSeparator() {
   return <div className="border-t border-slate-700 my-1" />;
 }

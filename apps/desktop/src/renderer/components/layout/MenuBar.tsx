@@ -7,6 +7,7 @@ import { useTeaching } from "../../core/teaching.store";
 import { useVisualization } from "../../core/visualization.store";
 import { useDashboard } from "../../core/dashboard.store";
 import { useUsage } from "../../core/usage.store";
+import { SettingsDialog } from "./SettingsDialog";
 import { useAIProviderStore } from "../../stores/ai-provider.store";
 import type { Locale } from "../../core/i18n";
 import type { ThemeMode } from "../../core/theme.store";
@@ -131,6 +132,7 @@ export function MenuBar() {
   const panelMgr = usePanelManager();
   const viz = useVisualization();
   const [showAbout, setShowAbout] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const sim = useSimulation();
 
   const handleExport = () => {
@@ -284,12 +286,16 @@ export function MenuBar() {
       {/* Help */}
       <Dropdown label={t("menu.help")} align="right">
         <MenuItem label={t("about.title")} onClick={() => setShowAbout(true)} />
+        <MenuItem label={t("settings.title")} onClick={() => setShowSettings(true)} />
         <Submenu label={t("menu.help.developer")} align="right">
           <MenuItem label={t("menu.help.export_usage")} onClick={() => useUsage.getState().exportData()} />
         </Submenu>
         <MenuSeparator />
       </Dropdown>
     </div>
+    {/* Settings Dialog (S85) */}
+    {showSettings && <SettingsDialog onClose={() => setShowSettings(false)} />}
+
     {/* About Dialog */}
       {showAbout && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowAbout(false)}>

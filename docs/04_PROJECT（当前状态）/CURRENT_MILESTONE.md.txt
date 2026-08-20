@@ -1,24 +1,17 @@
-﻿# Current Milestone: S84 (Completed)
+﻿# Current Milestone: S85 (Completed)
 
-**Goal:** P2 收口重走查缺陷包（留言 22/23：7 项 + A 类 4 项）
-**依据:** 产品/UX Agent 第 16 轮（P2 结构目标达成；S84 缺陷包 + A 类全批 + DD-002 确认）
+**Goal:** 云 AI 接入（DD-002 确认）——CloudProvider + 设置页 + 三态 AI 状态 + 诚实失败联动
+**依据:** 产品/UX Agent 第 16 轮（S84 缺陷包验收后）；战略：先做本地需联网，完全离线版延后
 
 **Completed:**
-- [x] P0 欢迎页乱码：`\u269B\uFE0F` 字面转义 → `{"\u269B\uFE0F"}`（⚛）
-- [x] P0 诚实失败守卫（教学红线）：规则解析器对未知题型明确返回
-      "这道题暂时不能可靠生成动画" + 推荐实验库，禁止硬凑错误动画；
-      并补"竖直向下抛"识别（真实自由落体仍正常解析）
-- [x] P1 导出使用数据点击链路：Submenu portal 共享 hover 状态 + 150ms 延迟关闭（移入面板不再误关）
-- [x] P1 实验列表滚动：实验库抽屉 max-h-[60vh] + overflow-y-auto
-- [x] P1 公式条代入态排版：substituteExpression 增加参数别名回退（theta→angle 等）；
-      beautifyFormula 覆盖代入态（√(…)、· 分隔、函数括号归一 sinθ）
-- [x] P1 英文 hint 残留：渲染层 setScene 本地化钩子（zh-CN UI 下内置场景也走 localizeScene；
-      词典已覆盖点名描述）
-- [x] P2 欢迎页文案：步骤改"输入题目 → 理解过程 → 巩固掌握"
-- [x] A1 解析等待区漂浮物理符号（α/Ω/Δ/v₀/F=ma/θ/E=mc²，半透明慢漂，仅等待区）
-- [x] A2 编号步骤进度（01识别实体 ✓ → 02建立模型 ✓ → 03编排动画 ✓）
-- [x] A3 首页品牌副标「看见看不见的物理过程」
-- [x] A4 CTA 精简「一键生成」
-- [x] 验证：tsc ×3 零错、vitest 25 文件 175 用例全过、生产构建成功；e2e 50/50 保持
+- [x] CloudProvider（packages/ai-parser）：OpenAI 兼容（baseUrl/apiKey/model 可配，复用 AIProvider 抽象，
+      架构不变）；unsupported → 诚实失败"不能可靠生成动画"；HTTP 失败/超时 → 明确降级提示
+- [x] 设置页 SettingsDialog（MenuBar 帮助 → 设置）：API key / baseUrl / model 配置（localStorage）、
+      Provider 偏好（自动=云端优先切本地 / 云端优先 / 本地优先）、云端在线状态指示
+- [x] 首页 AI 状态三态：云端在线（绿）/ 本地在线（青）/ 离线降级（红），沿用小圆点形态
+- [x] Provider 选择逻辑：auto → cloud(online) > ollama > rule；cloud/local 偏好强制
+- [x] Ollama 保留为可选降级档；完全离线版延后（大后期）
+- [x] 测试：CloudProvider（可用性/有效解析/unsupported 诚实失败/HTTP 401 降级）4 用例
+- [x] 验证：tsc ×3 零错、vitest 26 文件 179 用例全过、生产构建成功
 
-**Next: S85** — CloudProvider（OpenAI 兼容）+ 设置页（API key/Provider 选择）+ 首页三态 AI 状态 + 诚实失败联动（DD-002 已确认）
+**Next: S86** — 动画质感攻坚（产品/UX 产出清单中：缓动/相机过渡/phase 节奏/3D 减负）

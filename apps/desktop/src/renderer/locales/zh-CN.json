@@ -988,5 +988,22 @@
   "panel.limit_hint": "\u9762\u677f\u5df2\u8fbe\u4e0a\u9650",
   "panel.limit_hint_desc": "\u540c\u65f6\u6700\u591a\u6253\u5f00 2 \u4e2a\u9762\u677f\uff0c\u5df2\u81ea\u52a8\u6536\u8d77\u6700\u65e9\u6253\u5f00\u7684\u9762\u677f\u3002",
   "menu.view.legacy_overlay": "\u65e7\u6559\u5b66\u6d6e\u5361",
-  "home.tagline": "\u770b\u89c1\u770b\u4e0d\u89c1\u7684\u7269\u7406\u8fc7\u7a0b"
+  "home.tagline": "\u770b\u89c1\u770b\u4e0d\u89c1\u7684\u7269\u7406\u8fc7\u7a0b",
+  "home.ai_cloud": "\u4e91\u7aef AI \u5df2\u5c31\u7eea",
+  "home.ai_local": "\u672c\u5730 AI \u5df2\u5c31\u7eea",
+  "settings.title": "\u8bbe\u7f6e",
+  "settings.cloud.title": "\u4e91 AI\uff08OpenAI \u517c\u5bb9\uff09",
+  "settings.cloud.baseUrl": "\u63a5\u53e3\u5730\u5740",
+  "settings.cloud.apiKey": "API \u5bc6\u94a5",
+  "settings.cloud.model": "\u6a21\u578b",
+  "settings.cloud.save": "\u4fdd\u5b58",
+  "settings.cloud.saved": "\u5df2\u4fdd\u5b58",
+  "settings.provider.title": "AI \u63d0\u4f9b\u65b9",
+  "settings.provider.auto": "\u81ea\u52a8\uff08\u4e91\u7aef\u4f18\u5148\uff0c\u5931\u8d25\u5207\u672c\u5730\uff09",
+  "settings.provider.cloud": "\u4e91\u7aef\u4f18\u5148",
+  "settings.provider.local": "\u672c\u5730\u4f18\u5148",
+  "settings.cloud.status.online": "\u4e91\u7aef\u5728\u7ebf",
+  "settings.cloud.status.offline": "\u4e91\u7aef\u79bb\u7ebf",
+  "settings.cloud.status.unconfigured": "\u672a\u914d\u7f6e\u5bc6\u94a5",
+  "settings.cloud.hint": "\u5bc6\u94a5\u4ec5\u4fdd\u5b58\u5728\u672c\u673a\uff0c\u4e0d\u4f1a\u4e0a\u4f20\u3002"
 }

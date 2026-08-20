@@ -1,6 +1,7 @@
 ﻿import { create } from "zustand";
-import { aiRegistry, ruleParser, OllamaProvider } from "@physics-lab/ai-parser";
-import type { AIProvider } from "@physics-lab/ai-parser";
+import { aiRegistry, ruleParser, OllamaProvider, CloudProvider } from "@physics-lab/ai-parser";
+import type { AIProvider, ParseResult } from "@physics-lab/ai-parser";
+import { loadJSON, saveJSON } from "../lib/storage";
 
 // Eagerly register rule parser
 if (!aiRegistry.get("rule-based")) {
@@ -13,74 +14,123 @@ let ollamaProvider: OllamaProvider | null = null;
 function getOllamaProvider(): OllamaProvider {
   if (!ollamaProvider) {
     ollamaProvider = new OllamaProvider();
-    if (!aiRegistry.get("ollama")) {
-      aiRegistry.register(ollamaProvider);
-    }
+    if (!aiRegistry.get("ollama")) aiRegistry.register(ollamaProvider);
   }
   return ollamaProvider;
 }
 
-export type AIProviderId = "rule-based" | "ollama";
+// Cloud provider (S85, DD-002): configurable OpenAI-compatible endpoint
+const CLOUD_KEY = "physics-lab:cloud-ai";
+export interface CloudConfig {
+  baseUrl: string;
+  apiKey: string;
+  model: string;
+}
+const CLOUD_DEFAULTS: CloudConfig = { baseUrl: "https://api.openai.com/v1", apiKey: "", model: "gpt-4o-mini" };
+const savedCloud = loadJSON<CloudConfig | null>(CLOUD_KEY, null);
+
+let cloudProvider: CloudProvider | null = null;
+function getCloudProvider(): CloudProvider {
+  if (!cloudProvider) {
+    const cfg = savedCloud ?? CLOUD_DEFAULTS;
+    cloudProvider = new CloudProvider(cfg);
+    if (!aiRegistry.get("cloud")) aiRegistry.register(cloudProvider);
+  }
+  return cloudProvider;
+}
+
+export type ProviderPreference = "auto" | "cloud" | "local";
+export type AICloudState = "checking" | "online" | "offline" | "unconfigured";
 
 interface AIProviderState {
-  activeId: AIProviderId;
+  activeId: string;
   ollamaAvailable: boolean | null;
+  cloudAvailable: AICloudState;
   isChecking: boolean;
-  lastResult: import("@physics-lab/ai-parser").ParseResult | null;
-  setActive: (id: AIProviderId) => void;
+  preference: ProviderPreference;
+  cloudConfig: CloudConfig;
+  lastResult: ParseResult | null;
+  setActive: (id: string) => void;
   checkOllama: () => Promise<void>;
+  checkCloud: () => Promise<void>;
+  setCloudConfig: (cfg: CloudConfig) => void;
+  setPreference: (p: ProviderPreference) => void;
   getProviders: () => Array<{ id: string; name: string; available: boolean | null }>;
-  parseWithActive: (text: string) => Promise<import("@physics-lab/ai-parser").ParseResult>;
+  parseWithActive: (text: string) => Promise<ParseResult>;
+}
+
+function resolveProvider(s: AIProviderState): AIProvider {
+  // preference: cloud -> cloud if available; local -> ollama if available else rule; auto -> cloud > ollama > rule
+  const preferCloud = s.preference === "cloud" || (s.preference === "auto" && s.cloudAvailable === "online");
+  if (preferCloud) {
+    const c = aiRegistry.get("cloud");
+    if (c) return c;
+  }
+  const preferLocal = s.preference === "local" || (s.preference === "auto" && s.cloudAvailable !== "online");
+  if (preferLocal && s.ollamaAvailable) {
+    const o = aiRegistry.get("ollama");
+    if (o) return o;
+  }
+  return aiRegistry.get("rule-based") ?? ruleParser;
 }
 
 export const useAIProviderStore = create<AIProviderState>((set, get) => ({
-  // Auto-detect Ollama on first access
-  _init: (() => { setTimeout(() => get().checkOllama(), 2000); })(),
+  _init: (() => { setTimeout(() => { get().checkOllama(); get().checkCloud(); }, 1500); })(),
   activeId: "rule-based",
   ollamaAvailable: null,
+  cloudAvailable: savedCloud?.apiKey ? ("checking" as AICloudState) : ("unconfigured" as AICloudState),
   isChecking: false,
+  preference: "auto",
+  cloudConfig: savedCloud ?? CLOUD_DEFAULTS,
   lastResult: null,
 
   setActive: (id) => {
-    if (id === "ollama") {
-      getOllamaProvider(); // Register if not already
-    }
+    if (id === "ollama") getOllamaProvider();
+    if (id === "cloud") getCloudProvider();
     aiRegistry.setActive(id);
     set({ activeId: id });
   },
 
   checkOllama: async () => {
-    set({ isChecking: true });
-    try {
-      const provider = getOllamaProvider();
-      const available = await provider.isAvailable();
-      if (available) {
-        provider.warmUp().catch(function() {});
-      }
-      set({ ollamaAvailable: available, isChecking: false });
-    } catch {
-      set({ ollamaAvailable: false, isChecking: false });
-    }
+    const provider = getOllamaProvider();
+    const available = await provider.isAvailable();
+    if (available) provider.warmUp().catch(() => {});
+    set({ ollamaAvailable: available });
   },
+
+  checkCloud: async () => {
+    const cfg = get().cloudConfig;
+    if (!cfg.apiKey) { set({ cloudAvailable: "unconfigured" }); return; }
+    set({ cloudAvailable: "checking" });
+    const provider = getCloudProvider();
+    const ok = await provider.isAvailable();
+    set({ cloudAvailable: ok ? "online" : "offline" });
+  },
+
+  setCloudConfig: (cfg) => {
+    const next = { ...CLOUD_DEFAULTS, ...cfg };
+    saveJSON(CLOUD_KEY, next);
+    cloudProvider = new CloudProvider(next);
+    if (!aiRegistry.get("cloud")) aiRegistry.register(cloudProvider);
+    set({ cloudConfig: next, cloudAvailable: next.apiKey ? "checking" : "unconfigured" });
+    get().checkCloud();
+  },
+
+  setPreference: (preference) => set({ preference }),
 
   getProviders: () => {
     const providers = aiRegistry.list();
     return providers.map((p) => ({
       id: p.id,
       name: p.name,
-      available: p.id === "rule-based" ? true : get().ollamaAvailable,
+      available: p.id === "rule-based" ? true : p.id === "ollama" ? get().ollamaAvailable : get().cloudAvailable === "online",
     }));
   },
 
   parseWithActive: async (text) => {
-    const provider = aiRegistry.getActive();
-    if (!provider) {
-      const r = { scene: null, success: false, error: "No AI provider selected", provider: "none", durationMs: 0 };
-      set({ lastResult: r });
-      return r;
-    }
+    const provider = resolveProvider(get());
     const result = await provider.parseProblem(text);
-    set({ lastResult: result });
+    set({ lastResult: result, activeId: provider.id });
     return result;
   },
 }));

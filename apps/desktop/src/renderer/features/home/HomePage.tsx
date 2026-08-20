@@ -44,6 +44,7 @@ export function HomePage() {
   const history = useProblemStore((s) => s.history);
   const submit = useProblemStore((s) => s.submit);
   const ollamaAvailable = useAIProviderStore((s) => s.ollamaAvailable);
+  const cloudAvailable = useAIProviderStore((s) => s.cloudAvailable);
 
   const [progressStep, setProgressStep] = useState(0);
   const [ocrOpen, setOcrOpen] = useState(false);
@@ -97,8 +98,15 @@ export function HomePage() {
     }
   };
 
-  const aiStatus = ollamaAvailable === null ? t("home.ai_checking") : ollamaAvailable ? t("home.ai_online") : t("home.ai_offline");
-  const aiDot = ollamaAvailable === null ? "#94a3b8" : ollamaAvailable ? "#22c55e" : "#ef4444";
+  // S85: 3-state AI status (cloud online / local online / offline degraded)
+  const aiStatus = cloudAvailable === "online" ? t("home.ai_cloud")
+    : cloudAvailable === "checking" ? t("home.ai_checking")
+    : ollamaAvailable === true ? t("home.ai_local")
+    : t("home.ai_offline");
+  const aiDot = cloudAvailable === "online" ? "#22c55e"
+    : cloudAvailable === "checking" ? "#94a3b8"
+    : ollamaAvailable === true ? "#38bdf8"
+    : "#ef4444";
   const recent = history.slice(0, 5);
 
   return (

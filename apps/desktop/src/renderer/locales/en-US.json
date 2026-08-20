@@ -988,5 +988,22 @@
   "panel.limit_hint": "Panel limit reached",
   "panel.limit_hint_desc": "At most 2 panels can be open at once; the earliest one was closed automatically.",
   "menu.view.legacy_overlay": "Legacy overlay",
-  "home.tagline": "See the invisible physics"
+  "home.tagline": "See the invisible physics",
+  "home.ai_cloud": "Cloud AI ready",
+  "home.ai_local": "Local AI ready",
+  "settings.title": "Settings",
+  "settings.cloud.title": "Cloud AI (OpenAI-compatible)",
+  "settings.cloud.baseUrl": "Base URL",
+  "settings.cloud.apiKey": "API key",
+  "settings.cloud.model": "Model",
+  "settings.cloud.save": "Save",
+  "settings.cloud.saved": "Saved",
+  "settings.provider.title": "AI provider",
+  "settings.provider.auto": "Auto (cloud first, fallback to local)",
+  "settings.provider.cloud": "Cloud first",
+  "settings.provider.local": "Local first",
+  "settings.cloud.status.online": "Cloud online",
+  "settings.cloud.status.offline": "Cloud offline",
+  "settings.cloud.status.unconfigured": "No API key",
+  "settings.cloud.hint": "The key is stored locally and never uploaded."
 }

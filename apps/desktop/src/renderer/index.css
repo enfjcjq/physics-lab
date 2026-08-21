@@ -22,6 +22,10 @@
   --warning: #f59e0b;
   --danger: #ef4444;
   --gradient-1: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+  /* S86 motion tokens */
+  --dur-enter: 250ms;
+  --dur-exit: 200ms;
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
   /* P3 teaching semantic colors (TEACHING_LAYER_SPEC §3) */
   --color-accent-action: #FF6B00;
   --color-accent-info: #00D4FF;
@@ -155,13 +159,14 @@ body, .bg-slate-900, .bg-slate-950, .bg-slate-800 {
 
 @keyframes event-pulse-ring {
   0% { transform: translate(-50%, -50%) scale(0.1); opacity: 0.9; border-width: 3px; }
-  100% { transform: translate(-50%, -50%) scale(1); opacity: 0; border-width: 1px; }
+  60% { transform: translate(-50%, -50%) scale(1); opacity: 0.15; border-width: 1px; }
+  100% { transform: translate(-50%, -50%) scale(1.04); opacity: 0; border-width: 1px; }
 }
 .event-pulse-ring {
   width: 80px; height: 80px;
   border: 3px solid var(--color-accent-action, #FF6B00);
   border-radius: 999px;
-  animation: event-pulse-ring 600ms ease-out forwards;
+  animation: event-pulse-ring 900ms ease-out forwards; /* 600ms expand + 300ms hold */
 }
 
 @keyframes event-pulse-text-in {
@@ -184,3 +189,12 @@ body, .bg-slate-900, .bg-slate-950, .bg-slate-800 {
   50% { transform: translateY(-14px) rotate(6deg); opacity: 0.7; }
 }
 .symbol-float { animation: symbol-float 4.5s ease-in-out infinite; }
+
+/* ===== S86: prefers-reduced-motion degradation (chain kept) ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -138,7 +138,7 @@ export function CenterPanel() {
             <div key={p.id} className="flex items-center">
               <button
                 onClick={() => jumpToPhase(p.id)}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200 ${
                   currentPhaseId === p.id
                     ? "bg-sky-600 text-white shadow-md shadow-sky-900/30 scale-105"
                     : "text-slate-500 hover:text-slate-300 hover:bg-slate-800/50"

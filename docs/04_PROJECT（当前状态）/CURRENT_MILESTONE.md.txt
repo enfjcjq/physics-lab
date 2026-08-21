@@ -1,17 +1,20 @@
-﻿# Current Milestone: S85 (Completed)
+﻿# Current Milestone: S86 (Completed)
 
-**Goal:** 云 AI 接入（DD-002 确认）——CloudProvider + 设置页 + 三态 AI 状态 + 诚实失败联动
-**依据:** 产品/UX Agent 第 16 轮（S84 缺陷包验收后）；战略：先做本地需联网，完全离线版延后
+**Goal:** 动画质感攻坚（留言 24 M1-M6，纯质感调整，不新增 UI 元素）
+**依据:** 产品/UX Agent 第 16 轮闭环（S84+S85 验收通过）+ S86 清单
 
 **Completed:**
-- [x] CloudProvider（packages/ai-parser）：OpenAI 兼容（baseUrl/apiKey/model 可配，复用 AIProvider 抽象，
-      架构不变）；unsupported → 诚实失败"不能可靠生成动画"；HTTP 失败/超时 → 明确降级提示
-- [x] 设置页 SettingsDialog（MenuBar 帮助 → 设置）：API key / baseUrl / model 配置（localStorage）、
-      Provider 偏好（自动=云端优先切本地 / 云端优先 / 本地优先）、云端在线状态指示
-- [x] 首页 AI 状态三态：云端在线（绿）/ 本地在线（青）/ 离线降级（红），沿用小圆点形态
-- [x] Provider 选择逻辑：auto → cloud(online) > ollama > rule；cloud/local 偏好强制
-- [x] Ollama 保留为可选降级档；完全离线版延后（大后期）
-- [x] 测试：CloudProvider（可用性/有效解析/unsupported 诚实失败/HTTP 401 降级）4 用例
+- [x] M1 动效 token 统一：--dur-enter 250ms / --dur-exit 200ms / --ease-standard cubic-bezier(0.22,1,0.36,1)；
+      面板开合/浮层入场套用 token
+- [x] M2 相机平滑：CameraAnimator 重写——≥600ms easeInOutCubic 阻尼过渡（位置 + 目标 + FOV），
+      无瞬时跳切；讲解播放期目标点微漂移（幅度 <2%，呼吸感）；prefers-reduced-motion 全局降级链保持
+- [x] M3 节奏呼吸：phase 边界 0.3x/1.2s 减速保持；phase pills 高亮切换 200ms；
+      EventPulse 脉冲 600ms 扩散 + 300ms 静止帧（视线落点）
+- [x] M4 3D 减负：网格线 opacity 0.12；地面压向背景（#1e293b、roughness 1）；轨迹/箭头细线化
+      （glow 4→2px）；光照柔化（ambient 0.7→0.55、directional 1.2→0.85 + shadow-bias、point 0.5→0.35）
+- [x] M5 图表减负：网格/轴线透明度 ≤0.2；曲线 1.5px；数据连续绘制
+- [x] M6 留白呼吸感：面板动效 token；LeftPanel 区块间距加大、边框透明度减半（部分面板间距
+      待走查后按反馈微调）
 - [x] 验证：tsc ×3 零错、vitest 26 文件 179 用例全过、生产构建成功
 
-**Next: S86** — 动画质感攻坚（产品/UX 产出清单中：缓动/相机过渡/phase 节奏/3D 减负）
+**待走查：** 产品/UX Agent 按 M1-M6 逐项走查（自由落体 + 电动机连续播放：相机/节奏/视觉重量）

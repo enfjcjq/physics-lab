@@ -96,9 +96,9 @@ export function AppShell() {
         <IconRail />
 
         {showLeft && (
-          <div className="flex-shrink-0 border-r flex flex-col transition-all duration-500 ease-in-out"
+          <div className="flex-shrink-0 border-r flex flex-col transition-all duration-[var(--dur-enter)] ease-[var(--ease-standard)]"
             style={{ width: 280, borderColor: "var(--border-primary)", background: "var(--bg-primary)" }}>
-            <div className="animate-in fade-in slide-in-from-left duration-300">
+            <div className="animate-in fade-in slide-in-from-left duration-[var(--dur-enter)]">
               <LeftPanel />
             </div>
           </div>
@@ -107,9 +107,9 @@ export function AppShell() {
         <CenterPanel />
 
         {showTeacher && (
-          <div className="flex-shrink-0 border-l flex flex-col transition-all duration-500 ease-in-out"
+          <div className="flex-shrink-0 border-l flex flex-col transition-all duration-[var(--dur-enter)] ease-[var(--ease-standard)]"
             style={{ width: 320, borderColor: "var(--border-primary)", background: "var(--bg-primary)" }}>
-            <div className="animate-in fade-in slide-in-from-right duration-300">
+            <div className="animate-in fade-in slide-in-from-right duration-[var(--dur-enter)]">
               <TeacherPanel />
             </div>
           </div>

@@ -184,7 +184,8 @@ function CanvasChart({ activeTab, frameCache, mass, gravity, height, currentTime
 
     if (data.length < 2) return;
 
-    // Grid
+    // Grid (S86 M5: low emphasis)
+    ctx.globalAlpha = 0.15;
     ctx.strokeStyle = COLORS.grid;
     ctx.lineWidth = 0.5;
     for (let i = 0; i <= 4; i++) {
@@ -202,7 +203,8 @@ function CanvasChart({ activeTab, frameCache, mass, gravity, height, currentTime
       ctx.stroke();
     }
 
-    // Axes
+    // Axes (S86 M5: low emphasis)
+    ctx.globalAlpha = 0.2;
     ctx.strokeStyle = COLORS.axis;
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -210,6 +212,8 @@ function CanvasChart({ activeTab, frameCache, mass, gravity, height, currentTime
     ctx.lineTo(pad.left, pad.top + ph);
     ctx.lineTo(pad.left + pw, pad.top + ph);
     ctx.stroke();
+
+    ctx.globalAlpha = 1;
 
     // Determine which values to plot
     type PlotKey = "s" | "v" | "a" | "ke" | "pe" | "me";

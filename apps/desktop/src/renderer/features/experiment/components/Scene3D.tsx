@@ -46,6 +46,8 @@ class SceneErrorBoundary extends Component<{children: ReactNode}, SceneErrorBoun
   }
 }
 
+let orbitControlsRef: { target: THREE.Vector3 } | null = null;
+
 const Axes = memo(function Axes() {
   const pts = useMemo(() => ({
     x: [new THREE.Vector3(0,0,0), new THREE.Vector3(15,0,0)],
@@ -59,8 +61,8 @@ const Axes = memo(function Axes() {
   </group>;
 });
 
-const Ground = memo(function Ground() {return<mesh rotation={[-Math.PI/2,0,0]} position={[0,0,0]} receiveShadow><planeGeometry args={[20,20]}/><meshStandardMaterial color="#334155" roughness={0.8}/></mesh>;});
-const Grid = memo(function Grid(){return<gridHelper args={[20,20,"#334155","#1e293b"]} position={[0,0.01,0]}/>;});
+const Ground = memo(function Ground() {return<mesh rotation={[-Math.PI/2,0,0]} position={[0,0,0]} receiveShadow><planeGeometry args={[20,20]}/><meshStandardMaterial color="#1e293b" roughness={1} metalness={0}/></mesh>;});
+const Grid = memo(function Grid(){const ref=useRef<any>(null);useEffect(()=>{const m=ref.current?.material;if(m){m.transparent=true;m.opacity=0.12;}},[ref]);return<gridHelper ref={ref} args={[20,20,"#334155","#1e293b"]} position={[0,0.01,0]}/>;});
 
 const Ball = memo(function Ball(){
   const x=useSimulation(s=>s.ballX),y=useSimulation(s=>s.ballY),m=useSimulation(s=>s.mass),isBouncing=useSimulation(s=>s.isBouncing);
@@ -97,7 +99,7 @@ const Arrow3D = memo(function Arrow3D({o,d,len,c}:{o:[number,number,number];d:[n
   if(len<0.05)return null;
   return<group>
     {/* Glow arrow */}
-    <Line points={pts} color={c} lineWidth={4} transparent opacity={0.1}/>
+    <Line points={pts} color={c} lineWidth={2} transparent opacity={0.08}/>
     {/* Core arrow */}
     <Line points={pts} color={c} lineWidth={2}/>
     <mesh position={e}>
@@ -165,39 +167,56 @@ function ImpactParticles() {
   );
 }
 
-// Smooth camera transition between phase presets
+// Smooth camera transition between phase presets (S86 M2: min 600ms damped, target+FOV, idle drift)
 function CameraAnimator(){
   const currentPhaseId = useSimulation(s=>s.currentPhaseId);
   const phases = useSimulation(s=>s.phases);
   const scene = useSimulation(s=>s.scene);
+  const playing = useSimulation(s=>s.playing);
   const { camera } = useThree();
-  const targetPos = useRef(new THREE.Vector3(8,6,8));
-  const animating = useRef(false);
+  const cam = camera as THREE.PerspectiveCamera;
+  const timeRef = useRef(0);
+  const anim = useRef<{fromPos: THREE.Vector3; toPos: THREE.Vector3; fromTarget: THREE.Vector3; toTarget: THREE.Vector3; fromFov: number; toFov: number; t0: number} | null>(null);
+  const prevPresetRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (!scene?.camera_script || phases.length===0) return;
     const phase = phases.find(p=>p.id===currentPhaseId);
     if (!phase?.cameraPresetId) return;
     const preset = scene.camera_script.find(c=>c.id===phase.cameraPresetId);
-    if (preset) {
-      targetPos.current.set(...preset.position);
-      animating.current = true;
-    }
-  }, [currentPhaseId, phases, scene]);
+    if (!preset || preset.id === prevPresetRef.current) return;
+    prevPresetRef.current = preset.id;
+    const target = orbitControlsRef?.target ?? new THREE.Vector3(0, 2, 0);
+    anim.current = {
+      fromPos: camera.position.clone(),
+      toPos: new THREE.Vector3(...preset.position),
+      fromTarget: target.clone(),
+      toTarget: new THREE.Vector3(...(preset.target ?? [0, 2, 0])),
+      fromFov: cam.fov,
+      toFov: preset.fov ?? cam.fov,
+      t0: timeRef.current,
+    };
+  }, [currentPhaseId, phases, scene, camera]);
 
   useFrame((_, delta) => {
-    if (!animating.current) return;
-    const f = 1 - Math.exp(-3 * delta);
-    camera.position.lerp(targetPos.current, f);
-    if (camera.position.distanceTo(targetPos.current) < 0.05) {
-      camera.position.copy(targetPos.current);
-      animating.current = false;
+    timeRef.current += delta;
+    const a = anim.current;
+    const MIN_DUR = 0.6;
+    if (a) {
+      const t = Math.min(1, (timeRef.current - a.t0) / MIN_DUR);
+      const e = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; // easeInOutCubic
+      camera.position.lerpVectors(a.fromPos, a.toPos, e);
+      if (orbitControlsRef) orbitControlsRef.target.lerpVectors(a.fromTarget, a.toTarget, e);
+      if (Math.abs(a.fromFov - a.toFov) > 0.01) { cam.fov = a.fromFov + (a.toFov - a.fromFov) * e; cam.updateProjectionMatrix(); }
+      if (t >= 1) anim.current = null;
+    } else if (playing && orbitControlsRef) {
+      // Idle breathing drift during narration (<2% of scene scale, gentle)
+      const drift = Math.sin(timeRef.current * 0.5) * 0.06;
+      orbitControlsRef.target.set(0 + drift, 2, 0 + Math.cos(timeRef.current * 0.4) * 0.05);
     }
   });
-
   return null;
 }
-
 const Ball2 = memo(function Ball2(){
   const x=useSimulation(s=>s.ball2X),y=useSimulation(s=>s.ball2Y),activePlugin=useSimulation(s=>s.activePluginId);
   const ref=useRef<THREE.Mesh>(null),r=0.25;
@@ -387,9 +406,9 @@ export const Scene3D = memo(function Scene3D() {
       dpr={[1, 2]}
     >
       <color attach="background" args={["#0f172a"]} />
-      <ambientLight intensity={0.7}/>
-      <directionalLight position={[10,15,5]} intensity={1.2} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024}/>
-      <pointLight position={[0,8,0]} intensity={0.5} color="#FF6B6B"/>
+      <ambientLight intensity={0.55}/>
+      <directionalLight position={[10,15,5]} intensity={0.85} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} shadow-bias={-0.0002}/>
+      <pointLight position={[0,8,0]} intensity={0.35} color="#FF6B6B"/>
       <SceneErrorBoundary>
         {viz.showAxes&&<Axes/>}{viz.showGrid&&<Grid/>}<Ground/><Ball/>
         {viz.showTrail&&<Trail/>}
@@ -398,7 +417,7 @@ export const Scene3D = memo(function Scene3D() {
         <ForceCalloutLayer /><EventPulseLayer />
         {viz.showDataLabels&&<HudLabels/>}
         <WavePoints/><CircuitViz/><CoulombField/><RefractionBoundary/><DopplerWavefronts/><FaradayCoil/><MotorViz/><GasCylinder/><LensViz/><ACGeneratorViz/>
-        <CameraAnimator/><OrbitControls enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>
+        <CameraAnimator/><OrbitControls ref={(ctl) => { orbitControlsRef = ctl as unknown as { target: THREE.Vector3 } | null; }} enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>
         <Animator/>
       </SceneErrorBoundary>
     </Canvas>

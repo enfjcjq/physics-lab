@@ -10,7 +10,7 @@ import { localizeScene } from "@physics-lab/ai-parser";
 import type { PhysicsSceneV2 } from "@physics-lab/shared";
 import { ensurePlugin } from "../../core/plugin-loader";
 
-export type SpeedLevel = 0.25 | 0.3 | 0.5 | 1 | 2 | 4;
+export type SpeedLevel = 0.25 | 0.3 | 0.5 | 0.8 | 1 | 2;
 
 // ---- Frame Cache: precomputed physics data for instant scrubbing ----
 
@@ -140,6 +140,13 @@ function getPhaseIdFromCache(phases: TimelinePhase[], t: number): string {
   return phases.length > 0 ? phases[0].id : "unknown";
 }
 
+function findPhaseIndex(phases: TimelinePhase[], t: number): number {
+  for (let i = 0; i < phases.length; i++) {
+    if (t >= phases[i].timeRange[0] && t <= phases[i].timeRange[1]) return i;
+  }
+  return phases.length > 0 ? 0 : -1;
+}
+
 /** Binary search in frame cache for nearest frame at or before time t. */
 function findFrame(frames: CachedFrame[], t: number): CachedFrame {
   if (frames.length === 0) {
@@ -202,6 +209,12 @@ export interface SimulationState {
   /** Phase loop: lock playback to current phase range */
   loopPhaseActive: boolean;
   loopPhaseId: string | null;
+  /** S87 R1: current playback is the first teaching pass (phase-end pauses enabled) */
+  teachingPass: boolean;
+  /** S87 R1: first complete playback finished for the current scene session */
+  firstPassDone: boolean;
+  /** S87 R3: if set, playback stops at this phase's end (single phase replay) */
+  singlePhaseReplayId: string | null;
   bounceCount: number;
   trail: Array<{ x: number; y: number; z: number }>;
 
@@ -228,6 +241,8 @@ export interface SimulationState {
   stepForward: () => void;
   stepBackward: () => void;
   jumpToPhase: (phaseId: string) => void;
+  /** S87 R3: jump to phase start and replay just that phase once */
+  replayPhase: (phaseId: string) => void;
   tick: (deltaTime: number) => void;
   undo: () => void;
   redo: () => void;
@@ -255,6 +270,18 @@ function extractParams(scene: PhysicsScene) {
 // Module-level counter for trail throttling (not in React state)
 let tickCounter = 0;
 
+// S87: first-play teaching rhythm (phase-end / core-event freeze frames)
+let phasePauseRemaining = 0;
+const FIRST_PLAY_PHASE_PAUSE = 0.8;
+const CORE_EVENT_PAUSE = 0.7;
+function prefersReducedMotion(): boolean {
+  try {
+    return typeof window !== "undefined" && !!window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch {
+    return false;
+  }
+}
+
 export const useSimulation = create<SimulationState>()((set, get) => ({
   scene: null,
   sceneLoaded: false,
@@ -275,6 +302,9 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
   isBouncing: false,
   loopPhaseActive: false,
   loopPhaseId: null, bounceCount: 0,
+  teachingPass: false,
+  firstPassDone: false,
+  singlePhaseReplayId: null,
   trail: [],
 
   phases: [],
@@ -296,6 +326,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
       mass, height, gravity,
       totalDuration: duration, phases,
       currentTime: 0, playing: false,
+      teachingPass: false, firstPassDone: false, singlePhaseReplayId: null,
       ballX: frame.ballX, ballY: frame.ballY,
       ball2X: frame.ball2X, ball2Y: frame.ball2Y,
       ballVelocity: frame.ballVelocity, ballAcceleration: frame.ballAcceleration,
@@ -323,6 +354,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
         mass, height, gravity,
         totalDuration: duration, phases,
         currentTime: 0, playing: false,
+      teachingPass: false, firstPassDone: false, singlePhaseReplayId: null,
         ballX: frame.ballX, ballY: frame.ballY,
         ball2X: frame.ball2X, ball2Y: frame.ball2Y,
         ballVelocity: frame.ballVelocity, ballAcceleration: frame.ballAcceleration,
@@ -394,14 +426,21 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
 
   // ===== Playback =====
   play: () => {
-    const { currentTime, totalDuration } = get();
+    const { currentTime, totalDuration, firstPassDone } = get();
     if (currentTime >= totalDuration) get().replay();
-    else set({ playing: true });
+    else {
+      const freshStart = currentTime <= 0.001;
+      set({
+        playing: true,
+        ...(freshStart ? { teachingPass: !firstPassDone, singlePhaseReplayId: null } : {}),
+      });
+    }
   },
   pause: () => set({ playing: false }),
   stop: () => {
     const { frameCache, gravity, mass, height, phases, activePluginId } = get();
     const frame0 = frameCache[0];
+    phasePauseRemaining = 0;
     set({
       playing: false, currentTime: 0,
       ballX: frame0.ballX, ballY: frame0.ballY,
@@ -409,11 +448,13 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
       ballVelocity: frame0.ballVelocity, ballAcceleration: frame0.ballAcceleration,
       currentPhaseId: frame0.phaseId,
       trail: [], bounceCount: 0, isBouncing: false,
+      teachingPass: false, singlePhaseReplayId: null,
     });
   },
   replay: () => {
     const { frameCache } = get();
     const frame0 = frameCache[0];
+    phasePauseRemaining = 0;
     set({
       playing: true, currentTime: 0,
       ballX: frame0.ballX, ballY: frame0.ballY,
@@ -421,6 +462,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
       ballVelocity: frame0.ballVelocity, ballAcceleration: frame0.ballAcceleration,
       currentPhaseId: frame0.phaseId,
       trail: [], bounceCount: 0, isBouncing: false,
+      teachingPass: false, firstPassDone: true, singlePhaseReplayId: null,
     });
   },
   togglePlay: () => {
@@ -435,6 +477,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
     const clamped = Math.max(0, Math.min(t, totalDuration));
     const frame = findFrame(frameCache, clamped);
     const trail = trailFromCache(frameCache, clamped);
+    phasePauseRemaining = 0;
     set({
       currentTime: clamped,
       ballX: frame.ballX, ballY: frame.ballY,
@@ -444,6 +487,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
       playing: false,
       trail,
       isBouncing: frame.isOnGround,
+      singlePhaseReplayId: null,
     });
   },
 
@@ -484,6 +528,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
     const t = p.timeRange[0];
     const frame = findFrame(frameCache, t);
     const trail = trailFromCache(frameCache, t);
+    phasePauseRemaining = 0;
     set({
       currentTime: t,
       ballX: frame.ballX, ballY: frame.ballY,
@@ -491,6 +536,32 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
       currentPhaseId: phaseId,
       playing: false,
       trail,
+      singlePhaseReplayId: null,
+    });
+  },
+
+  // S87 R3: jump to phase start and replay just that phase once
+  replayPhase: (phaseId) => {
+    const { phases, frameCache } = get();
+    const p = phases.find((ph) => ph.id === phaseId);
+    if (!p) return;
+    const t = p.timeRange[0];
+    const frame = findFrame(frameCache, t);
+    const trail = trailFromCache(frameCache, t);
+    phasePauseRemaining = 0;
+    set({
+      currentTime: t,
+      ballX: frame.ballX, ballY: frame.ballY,
+      ball2X: frame.ball2X, ball2Y: frame.ball2Y,
+      ballVelocity: frame.ballVelocity, ballAcceleration: frame.ballAcceleration,
+      currentPhaseId: phaseId,
+      playing: true,
+      teachingPass: false,
+      singlePhaseReplayId: phaseId,
+      loopPhaseActive: false,
+      loopPhaseId: null,
+      trail,
+      isBouncing: frame.isOnGround,
     });
   },
 
@@ -563,6 +634,13 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
   tick: (rawDelta) => {
     const s = get();
     if (!s.playing) return;
+
+    // S87 R1/R4: hold a freeze frame without advancing time
+    if (phasePauseRemaining > 0) {
+      phasePauseRemaining -= rawDelta;
+      return;
+    }
+
     const dt = Math.min(rawDelta * s.timeScale, 0.05);
     const newTime = s.currentTime + dt;
 
@@ -578,6 +656,69 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
       }
     }
 
+    // S87 R3: single-phase replay stops at the phase end
+    if (s.singlePhaseReplayId) {
+      const replayPhase = s.phases.find((p) => p.id === s.singlePhaseReplayId);
+      if (replayPhase && effectiveNewTime >= replayPhase.timeRange[1]) {
+        const end = replayPhase.timeRange[1];
+        const frame = findFrame(s.frameCache, end);
+        const trail = trailFromCache(s.frameCache, end);
+        set({
+          currentTime: end,
+          ballX: frame.ballX, ballY: frame.ballY,
+          ball2X: frame.ball2X, ball2Y: frame.ball2Y,
+          ballVelocity: frame.ballVelocity, ballAcceleration: frame.ballAcceleration,
+          currentPhaseId: frame.phaseId,
+          playing: false,
+          singlePhaseReplayId: null,
+          trail,
+          isBouncing: frame.isOnGround,
+        });
+        return;
+      }
+    }
+
+    // S87 R1/R4: teaching-pass holds (phase end + core events), skipped under reduced motion
+    if (s.teachingPass && !prefersReducedMotion() && !s.loopPhaseActive && !s.singlePhaseReplayId) {
+      const curIdx = findPhaseIndex(s.phases, s.currentTime);
+      if (curIdx >= 0 && curIdx < s.phases.length - 1) {
+        const phaseEnd = s.phases[curIdx].timeRange[1];
+        if (s.currentTime < phaseEnd && effectiveNewTime >= phaseEnd) {
+          const frame = findFrame(s.frameCache, phaseEnd);
+          const trail = trailFromCache(s.frameCache, phaseEnd);
+          phasePauseRemaining = FIRST_PLAY_PHASE_PAUSE;
+          set({
+            currentTime: phaseEnd,
+            ballX: frame.ballX, ballY: frame.ballY,
+            ball2X: frame.ball2X, ball2Y: frame.ball2Y,
+            ballVelocity: frame.ballVelocity, ballAcceleration: frame.ballAcceleration,
+            currentPhaseId: frame.phaseId,
+            trail,
+            isBouncing: frame.isOnGround,
+          });
+          return;
+        }
+      }
+      const events = s.scene?.timeline?.events ?? [];
+      for (const ev of events) {
+        if ((ev.type === "collision" || ev.type === "state_change") && ev.time > s.currentTime && ev.time <= effectiveNewTime) {
+          const frame = findFrame(s.frameCache, ev.time);
+          const trail = trailFromCache(s.frameCache, ev.time);
+          phasePauseRemaining = CORE_EVENT_PAUSE;
+          set({
+            currentTime: ev.time,
+            ballX: frame.ballX, ballY: frame.ballY,
+            ball2X: frame.ball2X, ball2Y: frame.ball2Y,
+            ballVelocity: frame.ballVelocity, ballAcceleration: frame.ballAcceleration,
+            currentPhaseId: frame.phaseId,
+            trail,
+            isBouncing: frame.isOnGround,
+          });
+          return;
+        }
+      }
+    }
+
     if (effectiveNewTime >= s.totalDuration) {
       const lastFrame = s.frameCache[s.frameCache.length - 1];
       set({
@@ -589,24 +730,27 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
         currentPhaseId: lastFrame.phaseId,
         isBouncing: lastFrame.isOnGround,
         trail: trailFromCache(s.frameCache, s.totalDuration),
+        teachingPass: false,
+        firstPassDone: true,
+        singlePhaseReplayId: null,
       });
       return;
     }
 
-    const frame = findFrame(s.frameCache, newTime);
+    const frame = findFrame(s.frameCache, effectiveNewTime);
     const justBounced = frame.isOnGround && !s.isBouncing;
 
     tickCounter += 1;
     // Save resume state every 30 ticks (~0.5s)
     if (tickCounter % 30 === 0) {
-      useResume.getState().saveState(s.activePluginId, { mass: s.mass, height: s.height, gravity: s.gravity }, newTime);
+      useResume.getState().saveState(s.activePluginId, { mass: s.mass, height: s.height, gravity: s.gravity }, effectiveNewTime);
     }
     const trail = tickCounter % 3 === 0
-      ? trailFromCache(s.frameCache, newTime)
+      ? trailFromCache(s.frameCache, effectiveNewTime)
       : s.trail;
 
     set({
-      currentTime: newTime,
+      currentTime: effectiveNewTime,
       ballX: frame.ballX, ballY: frame.ballY,
       ball2X: frame.ball2X, ball2Y: frame.ball2Y,
       ballVelocity: frame.ballVelocity, ballAcceleration: frame.ballAcceleration,

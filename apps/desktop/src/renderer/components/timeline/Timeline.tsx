@@ -6,7 +6,7 @@ import { getEventPulseText } from "../../features/experiment/components/teaching
 
 const SPEEDS: { label: string; value: SpeedLevel }[] = [
   { label: "0.25x", value: 0.25 }, { label: "0.5x", value: 0.5 },
-  { label: "1x", value: 1 }, { label: "2x", value: 2 }, { label: "4x", value: 4 },
+  { label: "0.8x", value: 0.8 }, { label: "1x", value: 1 }, { label: "2x", value: 2 },
 ];
 
 const PHASE_COLORS: Record<string, string> = {
@@ -39,6 +39,7 @@ export function Timeline() {
   const stepBackward = useSimulation((s) => s.stepBackward);
   const jumpToTime = useSimulation((s) => s.jumpToTime);
   const jumpToPhase = useSimulation((s) => s.jumpToPhase);
+  const replayPhase = useSimulation((s) => s.replayPhase);
   const setSpeed = useSimulation((s) => s.setSpeed);
   const { t } = useI18n();
   const scene = useSimulation((s) => s.scene);
@@ -132,6 +133,7 @@ export function Timeline() {
         <TransBtn onClick={() => setLoop(!loop)} title={t("ctrl.loop")} active={loop}>
           <svg width="12" height="12" viewBox="0 0 12 12"><path d="M3 3h5a2.5 2.5 0 010 5H3" stroke="currentColor" strokeWidth="1.5" fill="none"/><path d="M5 1L3 3l2 2" stroke="currentColor" strokeWidth="1.5" fill="none"/></svg>
         </TransBtn>
+        <button onClick={() => replayPhase(currentPhaseId)} title={t("ctrl.replayPhase")} className="px-1.5 py-0.5 rounded text-[10px] font-medium text-slate-400 hover:text-white hover:bg-slate-800 transition-all">{t("ctrl.replayPhase")}</button>
         <div className="w-px h-4 bg-slate-700 mx-0.5"/>
         <span className="text-xs font-mono text-sky-400 w-20 text-right tabular-nums">{currentTime.toFixed(2)} s</span>
         {loopPhaseActive && loopPhaseId && (
@@ -169,7 +171,7 @@ export function Timeline() {
           const l = (p.timeRange[0]/totalDuration)*100, isActive = currentPhaseId===p.id;
           const idx = phases.findIndex(ph=>ph.id===p.id), isPast = phaseIdx>idx, isCurrentOrPast = phaseIdx>=idx;
           const c = PHASE_COLORS[p.id]||"#475569";
-          return <button key={p.id} onClick={(e)=>{e.stopPropagation();jumpToPhase(p.id);}} className="absolute -translate-x-1/2 group" style={{left:`${l}%`,top:0}} title={t(p.label)}>
+          return <button key={p.id} onClick={(e)=>{e.stopPropagation();replayPhase(p.id);}} className="absolute -translate-x-1/2 group" style={{left:`${l}%`,top:0}} title={t(p.label)}>
             <div className="rounded-full transition-all duration-200" style={{width:isActive?14:10,height:isActive?14:10,marginTop:isActive?0:2,backgroundColor:isCurrentOrPast?c:"#334155",border:isActive?"2px solid white":isPast?`2px solid ${c}`:"2px solid #475569",boxShadow:isActive?`0 0 8px ${c}`:"none"}}/>
             <span className={`absolute top-full mt-1 left-1/2 -translate-x-1/2 text-[9px] whitespace-nowrap transition-all duration-200 ${isActive?"text-white font-medium opacity-100":isPast?"text-slate-400 opacity-80":"text-slate-600 opacity-0 group-hover:opacity-60"}`}>{t(p.label)}</span>
           </button>;

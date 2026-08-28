@@ -223,9 +223,9 @@ export function MenuBar() {
         <MenuSeparator />
         <MenuItem label="0.25x" onClick={() => sim.setSpeed(0.25)} />
         <MenuItem label="0.5x" onClick={() => sim.setSpeed(0.5)} />
+        <MenuItem label="0.8x" checked={sim.timeScale === 0.8} onClick={() => sim.setSpeed(0.8)} />
         <MenuItem label="1x" checked={sim.timeScale === 1} onClick={() => sim.setSpeed(1)} />
         <MenuItem label="2x" onClick={() => sim.setSpeed(2)} />
-        <MenuItem label="4x" onClick={() => sim.setSpeed(4)} />
       </Dropdown>
 
       {/* Teaching */}

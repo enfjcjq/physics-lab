@@ -5,6 +5,8 @@ import * as THREE from "three";
 import { useSimulation } from "../experiment.store";
 import { useVisualization } from "../../../core/visualization.store";
 import { useCompare } from "../../../core/compare.store";
+import { useI18n } from "../../../core/i18n";
+import { useCameraControl } from "../../../core/camera-control.store";
 import CoulombField from "./viz/CoulombField";
 import RefractionBoundary from "./viz/RefractionBoundary";
 import DopplerWavefronts from "./viz/DopplerWavefronts";
@@ -167,39 +169,87 @@ function ImpactParticles() {
   );
 }
 
-// Smooth camera transition between phase presets (S86 M2: min 600ms damped, target+FOV, idle drift)
+// Smooth camera transitions (S86 M2) + S87 camera control (teaching/free, reset view)
 function CameraAnimator(){
   const currentPhaseId = useSimulation(s=>s.currentPhaseId);
   const phases = useSimulation(s=>s.phases);
   const scene = useSimulation(s=>s.scene);
   const playing = useSimulation(s=>s.playing);
+  const mode = useCameraControl(s=>s.mode);
+  const backNonce = useCameraControl(s=>s.backNonce);
+  const resetNonce = useCameraControl(s=>s.resetNonce);
   const { camera } = useThree();
   const cam = camera as THREE.PerspectiveCamera;
   const timeRef = useRef(0);
   const anim = useRef<{fromPos: THREE.Vector3; toPos: THREE.Vector3; fromTarget: THREE.Vector3; toTarget: THREE.Vector3; fromFov: number; toFov: number; t0: number} | null>(null);
   const prevPresetRef = useRef<string | null>(null);
 
-  useEffect(() => {
-    if (!scene?.camera_script || phases.length===0) return;
-    const phase = phases.find(p=>p.id===currentPhaseId);
-    if (!phase?.cameraPresetId) return;
-    const preset = scene.camera_script.find(c=>c.id===phase.cameraPresetId);
-    if (!preset || preset.id === prevPresetRef.current) return;
-    prevPresetRef.current = preset.id;
+  const presetForPhase = useCallback((phaseId: string) => {
+    if (!scene?.camera_script || phases.length===0) return null;
+    const phase = phases.find(p=>p.id===phaseId);
+    if (!phase?.cameraPresetId) return null;
+    return scene.camera_script.find(c=>c.id===phase.cameraPresetId) ?? null;
+  }, [scene, phases]);
+
+  const firstPreset = useMemo(() => {
+    if (!scene?.camera_script || scene.camera_script.length===0) return null;
+    return [...scene.camera_script].sort((a,b)=>a.time-b.time)[0];
+  }, [scene]);
+
+  const startTransition = useCallback((to: { position: [number,number,number]; target?: [number,number,number]; fov?: number; id: string }) => {
     const target = orbitControlsRef?.target ?? new THREE.Vector3(0, 2, 0);
     anim.current = {
       fromPos: camera.position.clone(),
-      toPos: new THREE.Vector3(...preset.position),
+      toPos: new THREE.Vector3(...to.position),
       fromTarget: target.clone(),
-      toTarget: new THREE.Vector3(...(preset.target ?? [0, 2, 0])),
+      toTarget: new THREE.Vector3(...(to.target ?? [0, 2, 0])),
       fromFov: cam.fov,
-      toFov: preset.fov ?? cam.fov,
+      toFov: to.fov ?? cam.fov,
       t0: timeRef.current,
     };
-  }, [currentPhaseId, phases, scene, camera]);
+    prevPresetRef.current = to.id;
+  }, [camera, cam]);
+
+  // C5: snap to recommended teaching view on scene load
+  useEffect(() => {
+    if (!firstPreset) return;
+    camera.position.set(...firstPreset.position);
+    if (orbitControlsRef) orbitControlsRef.target.set(...(firstPreset.target ?? [0, 2, 0]));
+    cam.fov = firstPreset.fov ?? cam.fov;
+    cam.updateProjectionMatrix();
+    prevPresetRef.current = firstPreset.id;
+  }, [firstPreset, camera, cam]);
+
+  // User drag takes over: forget the guided preset so return re-snaps cleanly
+  useEffect(() => {
+    if (mode === "free") prevPresetRef.current = null;
+  }, [mode]);
+
+  // Phase change -> guided transition (teaching mode only)
+  useEffect(() => {
+    if (mode !== "teaching") return;
+    const preset = presetForPhase(currentPhaseId);
+    if (!preset || preset.id === prevPresetRef.current) return;
+    startTransition(preset);
+  }, [currentPhaseId, mode, presetForPhase, startTransition]);
+
+  // Back to guided view command (current phase preset)
+  useEffect(() => {
+    if (backNonce === 0) return;
+    const preset = presetForPhase(currentPhaseId) ?? firstPreset;
+    if (preset) startTransition(preset);
+  }, [backNonce, currentPhaseId, presetForPhase, firstPreset, startTransition]);
+
+  // Reset view command -> recommended teaching view (camera_script first frame)
+  useEffect(() => {
+    if (resetNonce === 0) return;
+    const preset = firstPreset ?? presetForPhase(currentPhaseId);
+    if (preset) startTransition(preset);
+  }, [resetNonce, currentPhaseId, firstPreset, presetForPhase, startTransition]);
 
   useFrame((_, delta) => {
     timeRef.current += delta;
+    if (mode === "free") { anim.current = null; return; } // user priority: no script writes
     const a = anim.current;
     const MIN_DUR = 0.6;
     if (a) {
@@ -377,6 +427,10 @@ export const Scene3D = memo(function Scene3D() {
   const currentPhaseId=useSimulation(s=>s.currentPhaseId);
   const scene=useSimulation(s=>s.scene);
   const phases=useSimulation(s=>s.phases);
+  const mode=useCameraControl((s)=>s.mode);
+  const backToTeaching=useCameraControl((s)=>s.backToTeaching);
+  const resetView=useCameraControl((s)=>s.resetView);
+  const { t } = useI18n();
   const targetVec=useMemo(()=>{
     if(!scene?.camera_script||phases.length===0)return [0,5,0] as [number,number,number];
     const phase=phases.find(p=>p.id===currentPhaseId);
@@ -417,10 +471,28 @@ export const Scene3D = memo(function Scene3D() {
         <ForceCalloutLayer /><EventPulseLayer />
         {viz.showDataLabels&&<HudLabels/>}
         <WavePoints/><CircuitViz/><CoulombField/><RefractionBoundary/><DopplerWavefronts/><FaradayCoil/><MotorViz/><GasCylinder/><LensViz/><ACGeneratorViz/>
-        <CameraAnimator/><OrbitControls ref={(ctl) => { orbitControlsRef = ctl as unknown as { target: THREE.Vector3 } | null; }} enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8}/>
+        <CameraAnimator/><OrbitControls ref={(ctl) => { orbitControlsRef = ctl as unknown as { target: THREE.Vector3 } | null; }} enableDamping dampingFactor={0.1} target={targetVec} maxPolarAngle={Math.PI*0.8} onStart={() => useCameraControl.getState().goFree()}/>
         <Animator/>
       </SceneErrorBoundary>
     </Canvas>
+    {/* S87 camera control overlay */}
+    <div className="absolute top-3 right-3 z-20 flex flex-col items-end gap-1.5 pointer-events-none">
+      {mode === "free" && (
+        <div className="px-2 py-0.5 rounded-full text-[10px] bg-slate-800/80 text-amber-300 border border-amber-500/20">
+          {t("camera.free_mode")}
+        </div>
+      )}
+      <div className="flex gap-1.5 pointer-events-auto">
+        {mode === "free" && (
+          <button onClick={backToTeaching} className="px-2 py-1 rounded-md text-[11px] bg-sky-600 hover:bg-sky-500 text-white shadow-sm transition-colors">
+            {t("camera.back_to_teaching")}
+          </button>
+        )}
+        <button onClick={resetView} className="px-2 py-1 rounded-md text-[11px] bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-colors">
+          {t("camera.reset_view")}
+        </button>
+      </div>
+    </div>
     {/* Transition overlay */}
     {transitioning && (
       <div style={{

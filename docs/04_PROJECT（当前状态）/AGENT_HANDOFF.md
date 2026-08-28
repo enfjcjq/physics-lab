@@ -32,9 +32,9 @@
 - `docs/04_PROJECT（当前状态）/`（CURRENT_MILESTONE / PROJECT_STATUS / TODO / NEXT_SPRINT / DESIGN_STATUS / MENTOR_STATUS）
 - `docs/05_HISTORY/`（CHANGELOG / DESIGN_DECISIONS）
 
-## 4. 当前状态（V6.0+，Sprint S86 已完成）
+## 4. 当前状态（V6.0+，Sprint S87 快修包已实现，待设计走查）
 
-- 最近提交：`75e794d`（S86 动画质感）→ `5ef2225`(S85) → `1dfeac3`(S84) → `f8c33c9`(S82+S83) → `7c00cd7`(S81) → S80/79/78/77/76/75/74/73/72/71/70 全部完成。
+- 最近提交：`ba98f3e`（S87 节奏+相机快修包）→ `75e794d`（S86 动画质感）→ `5ef2225`(S85) → `1dfeac3`(S84) → `f8c33c9`(S82+S83) → `7c00cd7`(S81) → S80/79/78/77/76/75/74/73/72/71/70 全部完成。
 - S70-S86 全部交付并经产品/UX Agent 验收通过；**P2 结构目标达成**（模式概念退出 UI）。
 - 门禁基线：shared tsc 0 错 / ai-parser tsc 0 错 / desktop tsc 0 错 / vitest **26 文件 179 用例** / `npm run build` 成功。
 
@@ -70,10 +70,11 @@ cd apps/desktop && npm run build   # 生产构建
 
 ## 8. 待办 / 下一步
 
-- **S86 走查**：产品/UX Agent 按 M1-M6 走查（自由落体+电动机连续播放）。我已注明 M6 部分面板（RightPanel/TeacherPanel）间距未全部命中，走查反馈后微调。
-- **P2 收口确认重走查**：S82-S86 后项目负责人重做（无模式痕迹/四功能可发现/菜单可读/画布不扎堆/公式排版）。
+- **S87 走查（当前）**：产品/UX Agent 按留言 27 验收方式走查（自由落体+电动机连续播放：拖动接管 / 首播节奏 / 分阶段重播 / 重置视角）。若 0.8x 基准或 0.8s/0.7s 停顿需标定，按其反馈微调。
+- **P2 收口确认重走查**：S82-S87 后项目负责人重做（无模式痕迹/四功能可发现/菜单可读/画布不扎堆/公式排版）。
 - **Ollama 解析 e2e 全量对比**：`npx vite-node -c vitest.config.ts packages/ai-parser/test-cases/run-e2e.ts`（E2E_MAX 已支持限量，长窗口运行）。
-- 长期：AI 直接生成场景（规则系统校验兜底，不急于开工）；S86 后续质感微调；S87+ 依产品/UX 反馈。
+- **S88+（2D 动画系统）**：按 `HYBRID_2D3D_ANIMATION_SPEC.md` 建设 2D 矢量渲染层，待 S87 验收后与产品/UX Agent 协调切分。
+- 独立主线：S85 云 AI 真实题目实测（待项目负责人提供可用云端 API key）。
 
 ## 9. 并行 Agent 现状（勿动其文件）
 

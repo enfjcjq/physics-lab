@@ -4,6 +4,7 @@ import { aiRegistry, ruleParser } from "@physics-lab/ai-parser";
 import { createVirtualPlugin, hasSimulation } from "@physics-lab/shared";
 import { pluginRegistry } from "../core/plugin-registry";
 import { useSimulation } from "../features/experiment/experiment.store";
+import { useAIProviderStore } from "./ai-provider.store";
 import { loadJSON, saveJSON, removeKey } from "../lib/storage";
 import { polishTeachingScriptWithAI } from "../lib/teaching-script-ai";
 
@@ -29,6 +30,7 @@ interface ProblemState {
   inputText: string;
   isSubmitting: boolean;
   parseError: string | null;
+  parseNotice: string | null;
   history: HistoryItem[];
   setInputMethod: (m: InputMethod) => void;
   setInputText: (t: string) => void;
@@ -42,22 +44,18 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
   inputText: "",
   isSubmitting: false,
   parseError: null,
+  parseNotice: null,
   history: loadJSON<HistoryItem[]>(HISTORY_KEY, []),
   setInputMethod: (inputMethod) => set({ inputMethod }),
   setInputText: (inputText) => set({ inputText }),
   submit: async () => {
     const { inputText } = get();
-    set({ isSubmitting: true, parseError: null });
-
-    const provider = aiRegistry.getActive();
-    if (!provider) {
-      set({ isSubmitting: false, parseError: "No AI provider available" });
-      return null;
-    }
+    set({ isSubmitting: true, parseError: null, parseNotice: null });
 
     try {
-      const result = await provider.parseProblem(inputText);
-      set({ isSubmitting: false });
+      const result = await useAIProviderStore.getState().parseWithActive(inputText);
+      const fallback = useAIProviderStore.getState().lastFallback;
+      set({ isSubmitting: false, parseNotice: fallback ? "home.fallback." + fallback : null });
 
       if (result.success && result.scene) {
         // Add to history
@@ -83,7 +81,7 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
         }
         return result.scene;
       } else {
-        set({ parseError: result.error || "Failed to parse problem" });
+        set({ parseError: result.error || "Failed to parse problem", parseNotice: null });
         return null;
       }
     } catch (e: any) {

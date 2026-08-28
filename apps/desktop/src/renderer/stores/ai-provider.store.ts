@@ -26,7 +26,7 @@ export interface CloudConfig {
   apiKey: string;
   model: string;
 }
-const CLOUD_DEFAULTS: CloudConfig = { baseUrl: "https://api.openai.com/v1", apiKey: "", model: "gpt-4o-mini" };
+const CLOUD_DEFAULTS: CloudConfig = { baseUrl: "https://api.openai.com/v1", apiKey: "", model: "deepseek-chat" };
 const savedCloud = loadJSON<CloudConfig | null>(CLOUD_KEY, null);
 
 let cloudProvider: CloudProvider | null = null;
@@ -50,6 +50,7 @@ interface AIProviderState {
   preference: ProviderPreference;
   cloudConfig: CloudConfig;
   lastResult: ParseResult | null;
+  lastFallback: "cloud" | "local" | null;
   setActive: (id: string) => void;
   checkOllama: () => Promise<void>;
   checkCloud: () => Promise<void>;
@@ -83,6 +84,7 @@ export const useAIProviderStore = create<AIProviderState>((set, get) => ({
   preference: "auto",
   cloudConfig: savedCloud ?? CLOUD_DEFAULTS,
   lastResult: null,
+  lastFallback: null,
 
   setActive: (id) => {
     if (id === "ollama") getOllamaProvider();
@@ -128,9 +130,21 @@ export const useAIProviderStore = create<AIProviderState>((set, get) => ({
   },
 
   parseWithActive: async (text) => {
-    const provider = resolveProvider(get());
-    const result = await provider.parseProblem(text);
-    set({ lastResult: result, activeId: provider.id });
+    const preferred = resolveProvider(get());
+    let result = await preferred.parseProblem(text);
+    let lastFallback: "cloud" | "local" | null = null;
+    // Honest fallback: if a remote provider failed, actually switch to the rule parser.
+    if (!result.success && preferred.id !== "rule-based") {
+      const rule = aiRegistry.get("rule-based") ?? ruleParser;
+      const ruleResult = await rule.parseProblem(text);
+      if (ruleResult.success) {
+        lastFallback = preferred.id === "cloud" ? "cloud" : "local";
+        result = ruleResult;
+      } else {
+        result = ruleResult;
+      }
+    }
+    set({ lastResult: result, activeId: result.provider, lastFallback });
     return result;
   },
 }));

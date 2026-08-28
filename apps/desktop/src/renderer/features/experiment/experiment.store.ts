@@ -293,7 +293,7 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
   gravity: 9.8,
 
   playing: false,
-  timeScale: 1,
+  timeScale: 0.8,
   currentTime: 0,
   totalDuration: 3,
 
@@ -743,7 +743,8 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
     tickCounter += 1;
     // Save resume state every 30 ticks (~0.5s)
     if (tickCounter % 30 === 0) {
-      useResume.getState().saveState(s.activePluginId, { mass: s.mass, height: s.height, gravity: s.gravity }, effectiveNewTime);
+      const resumeTime = s.totalDuration > 0 && effectiveNewTime / s.totalDuration >= 0.9 ? 0 : effectiveNewTime;
+      useResume.getState().saveState(s.activePluginId, { mass: s.mass, height: s.height, gravity: s.gravity }, resumeTime);
     }
     const trail = tickCounter % 3 === 0
       ? trailFromCache(s.frameCache, effectiveNewTime)

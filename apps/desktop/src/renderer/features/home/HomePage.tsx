@@ -41,6 +41,7 @@ export function HomePage() {
   const setInputMethod = useProblemStore((s) => s.setInputMethod);
   const isSubmitting = useProblemStore((s) => s.isSubmitting);
   const parseError = useProblemStore((s) => s.parseError);
+  const parseNotice = useProblemStore((s) => s.parseNotice);
   const history = useProblemStore((s) => s.history);
   const submit = useProblemStore((s) => s.submit);
   const ollamaAvailable = useAIProviderStore((s) => s.ollamaAvailable);
@@ -185,6 +186,12 @@ export function HomePage() {
                   {progressStep >= n && <span className="text-green-400">{"✓"}</span>}
                 </div>
               ))}
+            </div>
+          )}
+
+          {parseNotice && !isSubmitting && (
+            <div className="mt-3">
+              <span className="text-xs text-amber-400">{t(parseNotice)}</span>
             </div>
           )}
 

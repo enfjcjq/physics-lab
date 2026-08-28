@@ -962,6 +962,8 @@
   "home.progress.step3": "Composing the teaching animation...",
   "home.error.retry": "Retry",
   "home.error.fallback": "Continue with sample scene",
+  "home.fallback.cloud": "Cloud AI unavailable - using local rule parser",
+  "home.fallback.local": "Local model unavailable - using local rule parser",
   "home.ai_online": "AI ready",
   "home.ai_offline": "AI offline - using local parser",
   "home.ai_checking": "Checking local AI...",

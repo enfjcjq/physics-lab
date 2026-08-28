@@ -16,7 +16,7 @@ export interface CloudConfig {
 }
 
 const DEFAULT_BASE_URL = "https://api.openai.com/v1";
-const DEFAULT_MODEL = "gpt-4o-mini";
+const DEFAULT_MODEL = "deepseek-chat";
 
 function buildScenePrompt(text: string): string {
   return `You are a physics problem parser. Convert the following physics problem into a valid PhysicsScene JSON object.
@@ -78,7 +78,17 @@ export class CloudProvider implements AIProvider {
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
-      return resp.ok;
+      if (!resp.ok) return false;
+      try {
+        const data = await resp.json();
+        const models: Array<{ id?: string }> = Array.isArray(data) ? data : Array.isArray(data?.data) ? data.data : [];
+        if (models.length > 0) {
+          return models.some((m) => m.id === this.model);
+        }
+      } catch {
+        // fall through to best-effort resp.ok when the list is unreadable
+      }
+      return true;
     } catch {
       return false;
     }

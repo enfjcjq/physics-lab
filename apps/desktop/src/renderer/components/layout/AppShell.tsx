@@ -17,6 +17,7 @@ import { useDashboard } from "../../core/dashboard.store";
 import { ToastContainer } from "./ToastContainer";
 import { useAchievements } from "../../core/achievements.store";
 import { useToasts } from "../../core/toast.store";
+import { useProblemStore } from "../../stores/problem.store";
 import { useEffect, useRef, useState } from "react";
 
 /**
@@ -71,6 +72,16 @@ export function AppShell() {
   const { open: showDashboard, closeDashboard } = useDashboard();
   const { badges } = useAchievements();
   const prevBadgeCount = useRef(0);
+  const parseNotice = useProblemStore((s) => s.parseNotice);
+  const lastNoticeRef = useRef<string | null>(null);
+
+  // Toast when a cloud-scene fallback notice appears (visible in the experiment view)
+  useEffect(function() {
+    if (parseNotice && parseNotice !== lastNoticeRef.current) {
+      lastNoticeRef.current = parseNotice;
+      useToasts.getState().show({ title: t("home.notice.title"), message: t(parseNotice), icon: "ℹ️" });
+    }
+  }, [parseNotice, t]);
 
   // Toast when new achievement unlocks
   useEffect(function() {

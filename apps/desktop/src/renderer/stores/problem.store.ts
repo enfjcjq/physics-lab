@@ -3,6 +3,7 @@ import type { InputMethod } from "./ui.store";
 import { aiRegistry, ruleParser } from "@physics-lab/ai-parser";
 import { createVirtualPlugin, hasSimulation } from "@physics-lab/shared";
 import { pluginRegistry } from "../core/plugin-registry";
+import { ensurePlugin } from "../core/plugin-loader";
 import { useSimulation } from "../features/experiment/experiment.store";
 import { useAIProviderStore } from "./ai-provider.store";
 import { loadJSON, saveJSON, removeKey } from "../lib/storage";
@@ -100,18 +101,28 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
           // Switch to the generated experiment
           await useSimulation.getState().setActivePlugin(pluginId);
         } else {
-          // Cloud scene lacks simulation: never load silently. Map to the closest built-in experiment.
+          // Cloud scene lacks simulation: attach the closest built-in simulation block and load it as a virtual plugin.
           const builtinId = TOPIC_TO_PLUGIN[result.scene.metadata.topic ?? ""];
-          if (builtinId) {
-            await useSimulation.getState().setActivePlugin(builtinId);
-            if (pluginRegistry.get(builtinId)) {
-              set({ parseNotice: "home.fallback.no_simulation" });
-            } else {
-              set({ parseError: "云端场景无法加载（缺少可仿真数据），请换一种表述或从实验库选择。" });
-              return null;
+          try {
+            if (!builtinId) throw new Error("no builtin mapping for topic: " + (result.scene.metadata.topic ?? ""));
+            await ensurePlugin(builtinId);
+            const builtin = pluginRegistry.get(builtinId);
+            const builtinScene = builtin?.getDefaultScene();
+            if (!builtinScene || !hasSimulation(builtinScene)) throw new Error("builtin scene lacks simulation: " + builtinId);
+            const sceneWithSim = { ...result.scene, simulation: builtinScene.simulation };
+            const virtualPlugin = createVirtualPlugin(sceneWithSim as any);
+            const pluginId = result.scene.metadata.topic ?? "ai-generated";
+            (virtualPlugin as any).id = pluginId;
+            pluginRegistry.register(virtualPlugin);
+            await useSimulation.getState().setActivePlugin(pluginId);
+            const sim = useSimulation.getState();
+            if (!sim.sceneLoaded || sim.phases.length === 0) {
+              throw new Error("scene did not load after setActivePlugin");
             }
-          } else {
-            set({ parseError: "云端场景无法加载（缺少可仿真数据），请换一种表述或从实验库选择。" });
+            set({ parseNotice: "home.fallback.no_simulation" });
+          } catch (err) {
+            console.error("[Physics Lab] cloud scene load failed:", err);
+            set({ parseError: "云端场景加载失败，请从实验库选择。" });
             return null;
           }
         }

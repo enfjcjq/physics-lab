@@ -964,6 +964,7 @@
   "home.error.fallback": "Continue with sample scene",
   "home.fallback.cloud": "Cloud AI unavailable - using local rule parser",
   "home.fallback.local": "Local model unavailable - using local rule parser",
+  "home.fallback.no_simulation": "Problem parsed, but the cloud scene lacked simulation data - loaded the matching built-in experiment.",
   "home.ai_online": "AI ready",
   "home.ai_offline": "AI offline - using local parser",
   "home.ai_checking": "Checking local AI...",

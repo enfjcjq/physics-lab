@@ -10,6 +10,28 @@ import { polishTeachingScriptWithAI } from "../lib/teaching-script-ai";
 
 const HISTORY_KEY = "physics-lab:history";
 
+// Cloud scenes lack a simulation block; map topic -> closest loadable built-in plugin.
+const TOPIC_TO_PLUGIN: Record<string, string> = {
+  free_fall: "free-fall",
+  projectile: "projectile-motion",
+  inclined_plane: "inclined-plane",
+  spring: "spring-mass",
+  pendulum: "pendulum",
+  circular_motion: "circular-motion",
+  collision: "collision",
+  buoyancy: "buoyancy",
+  ohms_law: "ohms_law",
+  coulombs_law: "coulombs_law",
+  faraday_law: "faraday_law",
+  electric_motor: "electric_motor",
+  ac_generator: "ac_generator",
+  ideal_gas: "ideal_gas",
+  refraction: "refraction",
+  lens_optics: "lens_optics",
+  transverse_wave: "transverse_wave",
+  doppler_effect: "doppler_effect",
+};
+
 // Register the rule parser on first import
 if (!aiRegistry.get("rule-based")) {
   aiRegistry.register(ruleParser);
@@ -67,17 +89,31 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
           timestamp: Date.now(),
           text: inputText.slice(0, 500),
         });
-        // S75: AI polish of the teaching script (seamless fallback to rule version)
-        if (result.scene) await polishTeachingScriptWithAI(result.scene);
-        // If scene has simulation block, register as virtual plugin
         if (hasSimulation(result.scene)) {
+          // S75: AI polish of the teaching script (seamless fallback to rule version)
+          await polishTeachingScriptWithAI(result.scene);
           const virtualPlugin = createVirtualPlugin(result.scene);
           const pluginId = result.scene.metadata.topic ?? "ai-generated";
           // Override the plugin id for registration
           (virtualPlugin as any).id = pluginId;
           pluginRegistry.register(virtualPlugin);
           // Switch to the generated experiment
-          useSimulation.getState().setActivePlugin(pluginId);
+          await useSimulation.getState().setActivePlugin(pluginId);
+        } else {
+          // Cloud scene lacks simulation: never load silently. Map to the closest built-in experiment.
+          const builtinId = TOPIC_TO_PLUGIN[result.scene.metadata.topic ?? ""];
+          if (builtinId) {
+            await useSimulation.getState().setActivePlugin(builtinId);
+            if (pluginRegistry.get(builtinId)) {
+              set({ parseNotice: "home.fallback.no_simulation" });
+            } else {
+              set({ parseError: "云端场景无法加载（缺少可仿真数据），请换一种表述或从实验库选择。" });
+              return null;
+            }
+          } else {
+            set({ parseError: "云端场景无法加载（缺少可仿真数据），请换一种表述或从实验库选择。" });
+            return null;
+          }
         }
         return result.scene;
       } else {

@@ -94,14 +94,11 @@ export class CloudProvider implements AIProvider {
     }
   }
 
-  async parseProblem(text: string, _existingScene?: PhysicsScene): Promise<ParseResult> {
-    const start = Date.now();
+  /** One raw chat completion request. Returns status/body and parsed JSON (best-effort). */
+  private async chat(text: string): Promise<{ ok: boolean; status: number; body: string; data: any }> {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), this.timeout);
     try {
-      if (!this.apiKey) {
-        return { scene: null, success: false, error: "尚未配置云端 AI 密钥（帮助 → 设置 → 云 AI）。", provider: this.id, durationMs: Date.now() - start };
-      }
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), this.timeout);
       const resp = await fetch(`${this.baseUrl}/chat/completions`, {
         method: "POST",
         headers: {
@@ -112,18 +109,44 @@ export class CloudProvider implements AIProvider {
           model: this.model,
           messages: [{ role: "user", content: buildScenePrompt(text) }],
           temperature: 0.1,
-          max_tokens: 2048,
+          max_tokens: 4096,
         }),
         signal: controller.signal,
       });
+      const body = await resp.text().catch(() => "");
+      let data: any = null;
+      try { data = body ? JSON.parse(body) : null; } catch { data = null; }
+      return { ok: resp.ok, status: resp.status, body, data };
+    } finally {
       clearTimeout(timeoutId);
-      if (!resp.ok) {
-        const body = await resp.text().catch(() => "");
-        console.warn(`[CloudProvider] HTTP ${resp.status}: ${body.slice(0, 200)}`);
-        return { scene: null, success: false, error: `云端 AI 请求失败（HTTP ${resp.status}），已切换本地解析。`, provider: this.id, durationMs: Date.now() - start };
+    }
+  }
+
+  async parseProblem(text: string, _existingScene?: PhysicsScene): Promise<ParseResult> {
+    const start = Date.now();
+    if (!this.apiKey) {
+      return { scene: null, success: false, error: "尚未配置云端 AI 密钥（帮助 → 设置 → 云 AI）。", provider: this.id, durationMs: Date.now() - start };
+    }
+    try {
+      let r = await this.chat(text);
+      if (!r.ok) {
+        console.warn(`[CloudProvider] HTTP ${r.status}: ${r.body.slice(0, 200)}`);
+        return { scene: null, success: false, error: `云端 AI 请求失败（HTTP ${r.status}），已切换本地解析。`, provider: this.id, durationMs: Date.now() - start };
       }
-      const data = await resp.json();
-      const content: string = data?.choices?.[0]?.message?.content ?? "";
+      let choice = r.data?.choices?.[0];
+      // Reasoning models may hit the token cap intermittently: retry once on truncation.
+      if (choice?.finish_reason === "length") {
+        r = await this.chat(text);
+        if (!r.ok) {
+          console.warn(`[CloudProvider] HTTP ${r.status}: ${r.body.slice(0, 200)}`);
+          return { scene: null, success: false, error: `云端 AI 请求失败（HTTP ${r.status}），已切换本地解析。`, provider: this.id, durationMs: Date.now() - start };
+        }
+        choice = r.data?.choices?.[0];
+        if (choice?.finish_reason === "length") {
+          return { scene: null, success: false, error: "云端 AI 输出被截断（token 不足），请简化题目或稍后重试。", provider: this.id, durationMs: Date.now() - start };
+        }
+      }
+      const content: string = choice?.message?.content ?? "";
       const json = extractJson(content);
       if (!json) return { scene: null, success: false, error: "云端 AI 返回无法解析，已切换本地解析。", provider: this.id, durationMs: Date.now() - start };
       const parsed = JSON.parse(json) as PhysicsScene & { unsupported?: boolean };

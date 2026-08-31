@@ -70,11 +70,11 @@ cd apps/desktop && npm run build   # 生产构建
 
 ## 8. 待办 / 下一步
 
-- **S87（当前）**：快修包 + 收尾全部完成，P1-3 已按留言 29 再标定（完整下落路径入画）+ 内置场景中文残留已清理；待产品/UX Agent 复走查确认后正式闭环。
+- **S87**：快修包 + 收尾全部完成并经验收，第 18 轮已收官。
 - **P2 收口确认重走查**：S82-S87 后项目负责人重做（无模式痕迹/四功能可发现/菜单可读/画布不扎堆/公式排版）。
 - **Ollama 解析 e2e 全量对比**：`npx vite-node -c vitest.config.ts packages/ai-parser/test-cases/run-e2e.ts`（E2E_MAX 已支持限量，长窗口运行）。
-- **S88+（2D 动画系统）**：按 `HYBRID_2D3D_ANIMATION_SPEC.md` 建设 2D 矢量渲染层；下一步工程侧先评估 Sprint 切分，再与产品/UX Agent 协调。
-- 独立主线：S85 云 AI 真实题目实测（待项目负责人提供可用云端 API key）。
+- **S88+（2D 动画系统，下一主线）**：已向产品/UX Agent 提出 Sprint 切分建议（S88-A 2D 渲染层地基 → S88-B 平面问题迁移 → S88-C 3D→2D 锁定 → S88-D 音效），待其拍板后启动 S88-A。
+- 独立主线：S85 云 AI 真实题目实测——第一轮 2 个 P0（云端场景无 simulation 静默不加载 / max_tokens 截断）已修复，待产品/UX Agent 复测 10 题测试集。
 
 ## 9. 并行 Agent 现状（勿动其文件）
 

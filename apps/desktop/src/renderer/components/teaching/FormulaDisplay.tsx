@@ -40,20 +40,22 @@ export function FormulaDisplay({ formula, className }: FormulaDisplayProps) {
   const segments = useMemo(() => {
     if (!formula) return [];
 
+    const rendered = beautifyFormula(formula);
+
     // Split by variable references: h0, v0, vx, vy, t2, etc.
     // We"ll tokenize the formula into text and highlight segments
     const parts: Array<{ type: "text" | "var" | "num" | "op"; value: string }> = [];
-    let remaining = formula;
+    let remaining = rendered;
 
     // Regex to match math tokens
     const tokenRegex = /\s*([a-zA-Z₀₋₉⁰⁻⁹][₀₋₉⁰⁻⁹ₓₙₐₘₑₓ]*|[\d.]+|√|∑|∫|∂|−|[+\-*/=<>→⇒⇔≈≠≤≥±·×]|\(|\)|\[|\]|\{|\}|,|;|\.{3}|→|↑|↓)\s*/g;
 
     let match;
     let lastIndex = 0;
-    while ((match = tokenRegex.exec(formula)) !== null) {
+    while ((match = tokenRegex.exec(rendered)) !== null) {
       if (match.index > lastIndex) {
         // Text between tokens
-        const text = formula.slice(lastIndex, match.index).trim();
+        const text = rendered.slice(lastIndex, match.index).trim();
         if (text) parts.push({ type: "text", value: text });
       }
       const token = match[1].trim();
@@ -74,8 +76,8 @@ export function FormulaDisplay({ formula, className }: FormulaDisplayProps) {
       lastIndex = match.index + match[1].length;
     }
 
-    if (lastIndex < formula.length) {
-      parts.push({ type: "text", value: formula.slice(lastIndex).trim() });
+    if (lastIndex < rendered.length) {
+      parts.push({ type: "text", value: rendered.slice(lastIndex).trim() });
     }
 
     return parts;

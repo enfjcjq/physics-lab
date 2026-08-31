@@ -86,7 +86,7 @@ export const FREE_FALL_SCENE: PhysicsScene & { simulation?: any } = {
     ],
   },
   camera_script: [
-    { id: "overview", time: 0.0, position: [6, 3.5, 8], target: [0, 4.5, 0], fov: 52, description: "Overview" },
+    { id: "overview", time: 0.0, position: [7, 5, 9], target: [0, 5, 0], fov: 56, description: "Overview" },
     { id: "closeup", time: 1.3, duration: 0.5, position: [3, 3, 3], target: [0, 2, 0], fov: 45, description: "Impact close-up" },
   ],
   ui_controls: [

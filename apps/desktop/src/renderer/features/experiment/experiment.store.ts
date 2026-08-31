@@ -267,6 +267,20 @@ function extractParams(scene: PhysicsScene) {
   return { height: h, mass: m, gravity: g, duration: dur, phases };
 }
 
+/** Localize built-in scene descriptions for zh-CN without mutating the shared constant scene. */
+function prepareScene(scene: PhysicsScene): PhysicsScene {
+  if (useI18n.getState().locale !== "zh-CN") return scene;
+  const localized: PhysicsScene = {
+    ...scene,
+    timeline: scene.timeline ? {
+      ...scene.timeline,
+      phases: (scene.timeline.phases ?? []).map((p) => ({ ...p })),
+      events: (scene.timeline.events ?? []).map((e) => ({ ...e })),
+    } : scene.timeline,
+  };
+  return localizeScene(localized);
+}
+
 // Module-level counter for trail throttling (not in React state)
 let tickCounter = 0;
 
@@ -314,14 +328,15 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
 
   // ===== Scene management =====
   setScene: (scene) => {
+    const prepared = prepareScene(scene);
     // S74: attach generated teaching hints when absent (built-in scenes at runtime)
-    ensureTeachingScript(scene);
-    const { height, mass, gravity, duration, phases } = extractParams(scene);
-    const pluginId = scene.metadata.topic ?? "free-fall";
-    const cache = buildFrameCache(duration, height, gravity, mass, pluginId, phases, scene);
+    ensureTeachingScript(prepared);
+    const { height, mass, gravity, duration, phases } = extractParams(prepared);
+    const pluginId = prepared.metadata.topic ?? "free-fall";
+    const cache = buildFrameCache(duration, height, gravity, mass, pluginId, phases, prepared);
     const frame = cache[0];
     set({
-      scene, sceneLoaded: true,
+      scene: prepared, sceneLoaded: true,
       activePluginId: pluginId,
       mass, height, gravity,
       totalDuration: duration, phases,
@@ -344,17 +359,18 @@ export const useSimulation = create<SimulationState>()((set, get) => ({
       const plugin = ok ? pluginRegistry.get(pluginId) : null;
       if (!plugin) { set({ pluginLoading: false }); return; }
       const scene = plugin.getDefaultScene();
-      const { height, mass, gravity, duration, phases } = extractParams(scene);
-      const cache = buildFrameCache(duration, height, gravity, mass, pluginId, phases, scene);
+      const prepared = prepareScene(scene);
+      const { height, mass, gravity, duration, phases } = extractParams(prepared);
+      const cache = buildFrameCache(duration, height, gravity, mass, pluginId, phases, prepared);
       const frame = cache[0];
       set({
-        scene, sceneLoaded: true,
+        scene: prepared, sceneLoaded: true,
         activePluginId: pluginId,
         pluginLoading: false,
         mass, height, gravity,
         totalDuration: duration, phases,
         currentTime: 0, playing: false,
-      teachingPass: false, firstPassDone: false, singlePhaseReplayId: null,
+        teachingPass: false, firstPassDone: false, singlePhaseReplayId: null,
         ballX: frame.ballX, ballY: frame.ballY,
         ball2X: frame.ball2X, ball2Y: frame.ball2Y,
         ballVelocity: frame.ballVelocity, ballAcceleration: frame.ballAcceleration,

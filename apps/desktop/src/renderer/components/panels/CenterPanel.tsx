@@ -1,5 +1,5 @@
 ﻿import { useSimulation } from "../../features/experiment/experiment.store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Scene3D } from "../../features/experiment/components/Scene3D";
 import { Scene2D } from "../../features/experiment/components/scene2d/Scene2D";
 import { TeachingOverlay } from "../teaching/TeachingOverlay";
@@ -50,8 +50,14 @@ function FormulaHTML() {
 export function CenterPanel() {
   const [libOpen, setLibOpen] = useState(false);
   const [view2D, setView2D] = useState(false);
+
   const pluginLoading = useSimulation((s) => s.pluginLoading);
   const activePluginId = useSimulation((s) => s.activePluginId);
+
+  // B1 routing: free-fall defaults to 2D; other plane scenes join as their 2D renderers land in B2.
+  useEffect(() => {
+    setView2D(activePluginId === "free-fall");
+  }, [activePluginId]);
   const setActivePlugin = useSimulation((s) => s.setActivePlugin);
   const currentPhaseId = useSimulation((s) => s.currentPhaseId);
   const phases = useSimulation((s) => s.phases);

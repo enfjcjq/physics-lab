@@ -11,6 +11,7 @@ import {
   type Viewport,
 } from "./scene2d-data";
 import { Arrow, COLORS } from "./primitives";
+import { OhmsLaw2D } from "./OhmsLaw2D";
 
 const VIEWPORT: Viewport = { width: 1200, height: 675, padding: 54 };
 
@@ -24,6 +25,7 @@ export function Scene2D() {
   const mass = useSimulation((s) => s.mass);
   const gravity = useSimulation((s) => s.gravity);
   const scene = useSimulation((s) => s.scene);
+  const activePluginId = useSimulation((s) => s.activePluginId);
   const { t } = useI18n();
   const card = scene ? getPhaseCardData(scene, currentTime) : null;
   const strip = scene ? getFormulaStripData(scene, currentTime) : null;
@@ -80,6 +82,17 @@ export function Scene2D() {
   }
 
   const heightLabel = { x: ball.x - 14, y: (ball.y + groundY) / 2 };
+
+  // B2 dispatcher: keep the free-fall renderer; add other plane renderers here.
+  const sceneKey = activePluginId === "free_fall" ? "free-fall" : activePluginId;
+  if (sceneKey === "ohms_law") return <OhmsLaw2D />;
+  if (sceneKey !== "free-fall") {
+    return (
+      <div className="w-full h-full flex items-center justify-center" style={{ background: "#0A0E1A" }}>
+        <span className="text-slate-500 text-sm">2D 图解接入中</span>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-full" style={{ background: "#0A0E1A" }}>

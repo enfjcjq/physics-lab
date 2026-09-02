@@ -73,7 +73,7 @@ cd apps/desktop && npm run build   # 生产构建
 - **S87**：快修包 + 收尾全部完成并经验收，第 18 轮已收官。
 - **P2 收口确认重走查**：S82-S87 后项目负责人重做（无模式痕迹/四功能可发现/菜单可读/画布不扎堆/公式排版）。
 - **Ollama 解析 e2e 全量对比**：`npx vite-node -c vitest.config.ts packages/ai-parser/test-cases/run-e2e.ts`（E2E_MAX 已支持限量，长窗口运行）。
-- **S88+（2D 动画系统，下一主线）**：S88-A 主体已实现且冒烟通过，待完整走查；S88-B 排期已提出（B1 公共 2D 原语+路由 → B2 第一批平面场景 → B3 第二批+剩余模板 → B4 收口），待设计侧确认后开工。
+- **S88+（2D 动画系统，下一主线）**：S88-A 已完整走查（P0 播放冻结已修复，能量条右缘已对齐 padding）；S88-B 排期已确认，B1（公共 2D 原语 + 平面类默认 2D 路由 + PhaseCard/FormulaStrip）开工中，B2 三场景（projectile/inclined_plane/ohms_law）布局规格已交付。
 - 独立主线：S85 云 AI 真实题目实测——已闭环（5/5 复测通过，0 错误动画）。遗留 P1 清单（假设声明/简化提示/云端间歇性失败/润色后台回归/topic 枚举）已记录。
 
 ## 9. 并行 Agent 现状（勿动其文件）

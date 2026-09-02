@@ -12,6 +12,8 @@ import {
 } from "./scene2d-data";
 import { Arrow, COLORS } from "./primitives";
 import { OhmsLaw2D } from "./OhmsLaw2D";
+import { ProjectileScene2D } from "./ProjectileScene2D";
+import { InclinedPlaneScene2D } from "./InclinedPlaneScene2D";
 
 const VIEWPORT: Viewport = { width: 1200, height: 675, padding: 54 };
 
@@ -84,8 +86,13 @@ export function Scene2D() {
   const heightLabel = { x: ball.x - 14, y: (ball.y + groundY) / 2 };
 
   // B2 dispatcher: keep the free-fall renderer; add other plane renderers here.
-  const sceneKey = activePluginId === "free_fall" ? "free-fall" : activePluginId;
+  const sceneKey = activePluginId === "free_fall" ? "free-fall"
+    : activePluginId === "projectile" ? "projectile-motion"
+    : activePluginId === "inclined_plane" ? "inclined-plane"
+    : activePluginId;
   if (sceneKey === "ohms_law") return <OhmsLaw2D />;
+  if (sceneKey === "projectile-motion") return <ProjectileScene2D />;
+  if (sceneKey === "inclined-plane") return <InclinedPlaneScene2D />;
   if (sceneKey !== "free-fall") {
     return (
       <div className="w-full h-full flex items-center justify-center" style={{ background: "#0A0E1A" }}>

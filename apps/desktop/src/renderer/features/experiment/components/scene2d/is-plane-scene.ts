@@ -15,3 +15,11 @@ const PLANE_IDS = new Set([
 export function isPlaneScene(id: string): boolean {
   return PLANE_IDS.has(id);
 }
+
+// Which plane scenes currently have a 2D renderer ready.
+// Only these should default to 2D; others stay 3D until their renderer lands.
+export function has2DRenderer(id: string): boolean {
+  return id === "free-fall" || id === "free_fall" || id === "ohms_law"
+    || id === "projectile-motion" || id === "projectile"
+    || id === "inclined-plane" || id === "inclined_plane";
+}

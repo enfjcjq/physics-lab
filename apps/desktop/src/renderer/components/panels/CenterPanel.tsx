@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Scene3D } from "../../features/experiment/components/Scene3D";
 import { Scene2D } from "../../features/experiment/components/scene2d/Scene2D";
-import { isPlaneScene } from "../../features/experiment/components/scene2d/is-plane-scene";
+import { isPlaneScene, has2DRenderer } from "../../features/experiment/components/scene2d/is-plane-scene";
 import { TeachingOverlay } from "../teaching/TeachingOverlay";
 import { TeachingLayer } from "../../features/experiment/components/teaching/TeachingLayer";
 import { beautifyFormula } from "../../features/experiment/components/teaching/formula-beautify";
@@ -60,7 +60,7 @@ export function CenterPanel() {
   useEffect(() => {
     if (activePluginId !== routedPluginRef.current) {
       routedPluginRef.current = activePluginId;
-      setView2D(isPlaneScene(activePluginId));
+      setView2D(isPlaneScene(activePluginId) && has2DRenderer(activePluginId));
     }
   }, [activePluginId]);
   const setActivePlugin = useSimulation((s) => s.setActivePlugin);

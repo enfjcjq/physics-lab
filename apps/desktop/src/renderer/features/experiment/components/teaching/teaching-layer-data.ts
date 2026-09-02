@@ -29,8 +29,11 @@ export interface FormulaStripData {
 
 export function getActivePhase(scene: PhysicsScene, time: number): TimelinePhase | null {
   const phases = scene.timeline?.phases ?? [];
-  for (const p of phases) {
-    if (time >= p.timeRange[0] && time < p.timeRange[1]) return p;
+  for (let i = 0; i < phases.length; i++) {
+    const p = phases[i];
+    const isLast = i === phases.length - 1;
+    // Keep the final phase visible at t=total so students can review the "landing" step.
+    if (time >= p.timeRange[0] && (time < p.timeRange[1] || (isLast && time <= p.timeRange[1]))) return p;
   }
   return null;
 }

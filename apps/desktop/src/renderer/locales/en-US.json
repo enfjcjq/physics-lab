@@ -964,6 +964,8 @@
   "home.error.fallback": "Continue with sample scene",
   "home.error.truncated": "Cloud AI output was truncated (token limit). Please simplify the problem or try again later.",
   "home.notice.title": "Notice",
+  "view.switch_2d": "Switch to 2D diagram",
+  "view.switch_3d": "Switch to 3D scene",
   "home.fallback.cloud": "Cloud AI unavailable - using local rule parser",
   "home.fallback.local": "Local model unavailable - using local rule parser",
   "home.fallback.no_simulation": "Problem parsed, but the cloud scene lacked simulation data - loaded the matching built-in experiment (sample parameters, not this problem's values).",

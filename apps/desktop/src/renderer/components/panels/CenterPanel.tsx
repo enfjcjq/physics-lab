@@ -1,6 +1,7 @@
 ﻿import { useSimulation } from "../../features/experiment/experiment.store";
 import { useState } from "react";
 import { Scene3D } from "../../features/experiment/components/Scene3D";
+import { Scene2D } from "../../features/experiment/components/scene2d/Scene2D";
 import { TeachingOverlay } from "../teaching/TeachingOverlay";
 import { TeachingLayer } from "../../features/experiment/components/teaching/TeachingLayer";
 import { beautifyFormula } from "../../features/experiment/components/teaching/formula-beautify";
@@ -48,6 +49,7 @@ function FormulaHTML() {
 
 export function CenterPanel() {
   const [libOpen, setLibOpen] = useState(false);
+  const [view2D, setView2D] = useState(false);
   const pluginLoading = useSimulation((s) => s.pluginLoading);
   const activePluginId = useSimulation((s) => s.activePluginId);
   const setActivePlugin = useSimulation((s) => s.setActivePlugin);
@@ -103,6 +105,15 @@ export function CenterPanel() {
           )}
         </div>
       </div>
+      {/* 2D/3D view toggle (S88-A vertical slice preview) */}
+      <div className="absolute top-3 right-4 z-20">
+        <button
+          onClick={() => setView2D(!view2D)}
+          className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 bg-slate-900/90 backdrop-blur-md border border-slate-600/50 shadow-xl text-slate-200 hover:bg-slate-800/80"
+        >
+          {view2D ? t("view.switch_3d") : t("view.switch_2d")}
+        </button>
+      </div>
       {pluginLoading && (
         <div className="absolute inset-0 z-20 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
           <div className="flex flex-col items-center gap-4">
@@ -118,10 +129,10 @@ export function CenterPanel() {
           </div>
         </div>
       )}
-      <Scene3D />
-      <TeachingLayer />
-      {showLegacyOverlay && <TeachingOverlay />}
-      {!(teachingLayerEnabled && showFormulaStrip) && <FormulaHTML />}
+      {view2D ? <Scene2D /> : <Scene3D />}
+      {!view2D && <TeachingLayer />}
+      {!view2D && showLegacyOverlay && <TeachingOverlay />}
+      {!view2D && !(teachingLayerEnabled && showFormulaStrip) && <FormulaHTML />}
       {/* Phase indicator */}
       <div className="absolute bottom-4 left-4 z-10">
         <div className="bg-slate-900/80 backdrop-blur border border-slate-700/50 rounded-lg px-3 py-1.5 flex items-center gap-2">

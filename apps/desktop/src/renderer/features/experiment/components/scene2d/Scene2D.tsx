@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSimulation } from "../../experiment.store";
 import {
   computeBounds,
@@ -80,6 +80,20 @@ export function Scene2D() {
   const gravity = useSimulation((s) => s.gravity);
   const scene = useSimulation((s) => s.scene);
 
+  // S88-A: drive the simulation clock while the 2D view is mounted (3D Animator is unmounted in this view).
+  useEffect(() => {
+    let raf = 0;
+    let last = performance.now();
+    const loop = (now: number) => {
+      const delta = Math.min((now - last) / 1000, 0.1);
+      last = now;
+      useSimulation.getState().tick(delta);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
   const { bounds, toSvg } = useMemo(() => {
     const world: Point2[] = [];
     for (let y = 0.2; y <= height + 0.01; y += 0.2) world.push({ x: 0, y });
@@ -152,11 +166,11 @@ export function Scene2D() {
         <circle cx={ball.x} cy={ball.y} r={14} fill={COLORS.structure} stroke={COLORS.emphasis} strokeWidth={2} />
 
         <g>
-          <rect x={1126} y={100 + (barMax - peH)} width={14} height={peH} fill={COLORS.energy} opacity={0.6} />
-          <rect x={1144} y={100 + (barMax - keH)} width={14} height={keH} fill={COLORS.energy} />
-          <line x1={1124} y1={100} x2={1162} y2={100} stroke={COLORS.secondary} strokeWidth={1.5} />
-          <text x={1133} y={318} fill={COLORS.energy} fontSize={12} textAnchor="middle">PE</text>
-          <text x={1151} y={318} fill={COLORS.energy} fontSize={12} textAnchor="middle">KE</text>
+          <rect x={1118} y={100 + (barMax - peH)} width={14} height={peH} fill={COLORS.energy} opacity={0.6} />
+          <rect x={1132} y={100 + (barMax - keH)} width={14} height={keH} fill={COLORS.energy} />
+          <line x1={1116} y1={100} x2={1148} y2={100} stroke={COLORS.secondary} strokeWidth={1.5} />
+          <text x={1125} y={318} fill={COLORS.energy} fontSize={12} textAnchor="middle">PE</text>
+          <text x={1139} y={318} fill={COLORS.energy} fontSize={12} textAnchor="middle">KE</text>
         </g>
 
         {pulse && (

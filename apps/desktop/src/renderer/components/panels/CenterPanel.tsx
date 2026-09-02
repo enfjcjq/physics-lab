@@ -1,7 +1,8 @@
 ﻿import { useSimulation } from "../../features/experiment/experiment.store";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Scene3D } from "../../features/experiment/components/Scene3D";
 import { Scene2D } from "../../features/experiment/components/scene2d/Scene2D";
+import { isPlaneScene } from "../../features/experiment/components/scene2d/is-plane-scene";
 import { TeachingOverlay } from "../teaching/TeachingOverlay";
 import { TeachingLayer } from "../../features/experiment/components/teaching/TeachingLayer";
 import { beautifyFormula } from "../../features/experiment/components/teaching/formula-beautify";
@@ -54,9 +55,13 @@ export function CenterPanel() {
   const pluginLoading = useSimulation((s) => s.pluginLoading);
   const activePluginId = useSimulation((s) => s.activePluginId);
 
-  // B1 routing: free-fall defaults to 2D; other plane scenes join as their 2D renderers land in B2.
+  // B1 routing: apply the default view once per plugin switch; do not overwrite a manual toggle afterwards.
+  const routedPluginRef = useRef<string | null>(null);
   useEffect(() => {
-    setView2D(activePluginId === "free-fall");
+    if (activePluginId !== routedPluginRef.current) {
+      routedPluginRef.current = activePluginId;
+      setView2D(isPlaneScene(activePluginId));
+    }
   }, [activePluginId]);
   const setActivePlugin = useSimulation((s) => s.setActivePlugin);
   const currentPhaseId = useSimulation((s) => s.currentPhaseId);

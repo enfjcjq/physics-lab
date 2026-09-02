@@ -141,8 +141,9 @@ export const useAIProviderStore = create<AIProviderState>((set, get) => ({
       lastCloudError = result.error ?? "unknown";
       console.warn("[CloudProvider] parse failed:", lastCloudError);
     }
-    // Honest fallback: if a remote provider failed, actually switch to the rule parser.
-    if (!result.success && preferred.id !== "rule-based") {
+    // Honest fallback: if a remote provider had a TECHNICAL failure, switch to the rule parser.
+    // A content rejection (rejected=true) is the correct answer and must NOT be overridden.
+    if (!result.success && preferred.id !== "rule-based" && !result.rejected) {
       const rule = aiRegistry.get("rule-based") ?? ruleParser;
       const ruleResult = await rule.parseProblem(text);
       if (ruleResult.success) {

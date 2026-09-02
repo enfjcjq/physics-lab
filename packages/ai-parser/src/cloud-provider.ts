@@ -154,7 +154,7 @@ export class CloudProvider implements AIProvider {
       }
       const parsed = JSON.parse(json) as PhysicsScene & { unsupported?: boolean };
       if (parsed.unsupported) {
-        return { scene: null, success: false, error: "这道题暂时不能可靠生成动画。请换一种更明确的表述，或从实验库选择最接近的实验。", provider: this.id, durationMs: Date.now() - start };
+        return { scene: null, success: false, rejected: true, error: "这道题暂时不能可靠生成动画。请换一种更明确的表述，或从实验库选择最接近的实验。", provider: this.id, durationMs: Date.now() - start };
       }
       if (!parsed.version || !parsed.entities || !parsed.timeline) {
         return { scene: null, success: false, error: "云端 AI 返回场景不完整，已切换本地解析。", provider: this.id, durationMs: Date.now() - start };

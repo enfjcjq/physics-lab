@@ -31,6 +31,11 @@ const TOPIC_TO_PLUGIN: Record<string, string> = {
   lens_optics: "lens_optics",
   transverse_wave: "transverse_wave",
   doppler_effect: "doppler_effect",
+  longitudinal_wave: "transverse_wave",
+  wave: "transverse_wave",
+  series: "ohms_law",
+  parallel: "ohms_law",
+  circuit: "ohms_law",
 };
 
 // Register the rule parser on first import
@@ -111,8 +116,11 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
         } else {
           // Cloud scene lacks simulation: attach the closest built-in simulation block and load it as a virtual plugin.
           const builtinId = TOPIC_TO_PLUGIN[result.scene.metadata.topic ?? ""];
+          if (!builtinId) {
+            set({ parseError: "云端场景类型暂不支持，请从实验库选择。" });
+            return null;
+          }
           try {
-            if (!builtinId) throw new Error("no builtin mapping for topic: " + (result.scene.metadata.topic ?? ""));
             await ensurePlugin(builtinId);
             const builtin = pluginRegistry.get(builtinId);
             const builtinScene = builtin?.getDefaultScene();

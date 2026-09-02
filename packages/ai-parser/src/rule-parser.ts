@@ -388,6 +388,12 @@ function applyParams(scene: PhysicsScene, p: ExtractedParams, sceneKey: MotionTy
   }
 }
 
+function isNonPhysicsRequest(text: string): boolean {
+  const hasDigit = /\d/.test(text);
+  const nonPhysics = /(poem|poetry|song|story|joke|translate|recipe|novel|lyrics|haiku)/i.test(text);
+  return nonPhysics && !hasDigit;
+}
+
 function buildScene(params: ExtractedParams, text: string): PhysicsScene {
   const sceneKey = params.motionType === "unknown" ? "free_fall" : params.motionType;
   const template = SCENE_MAP[sceneKey] || FREE_FALL_SCENE;
@@ -421,12 +427,23 @@ export const ruleParser: AIProvider = {
   async parseProblem(text: string, _existingScene?: PhysicsScene): Promise<ParseResult> {
     const start = performance.now();
     try {
+      if (isNonPhysicsRequest(text)) {
+        return {
+          scene: null,
+          success: false,
+          rejected: true,
+          error: "这不是物理题，请提供一道物理题目。",
+          provider: "rule-based",
+          durationMs: performance.now() - start,
+        };
+      }
       const params = extractParams(text);
       // S84-2 teaching red line: never hard-fit an unsupported problem into a wrong animation.
       if (params.motionType === "unknown") {
         return {
           scene: null,
           success: false,
+          rejected: true,
           error: "这道题暂时不能可靠生成动画。请换一种更明确的表述，或从实验库选择最接近的实验。",
           provider: "rule-based",
           durationMs: performance.now() - start,

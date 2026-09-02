@@ -19,6 +19,8 @@ export interface ParseResult {
   durationMs: number;
   /** Confidence score 0-1 */
   confidence?: number;
+  /** True when the model correctly rejected the input as unsupported (content refusal, not a technical failure) */
+  rejected?: boolean;
 }
 
 export interface AIProvider {

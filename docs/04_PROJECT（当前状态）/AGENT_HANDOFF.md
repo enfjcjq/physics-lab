@@ -74,7 +74,7 @@ cd apps/desktop && npm run build   # 生产构建
 - **P2 收口确认重走查**：S82-S87 后项目负责人重做（无模式痕迹/四功能可发现/菜单可读/画布不扎堆/公式排版）。
 - **Ollama 解析 e2e 全量对比**：`npx vite-node -c vitest.config.ts packages/ai-parser/test-cases/run-e2e.ts`（E2E_MAX 已支持限量，长窗口运行）。
 - **S88+（2D 动画系统，下一主线）**：S88-A 主体已实现（scene2d-data 投影层 + Scene2D SVG 渲染器 + 自由落体纵切 + 2D/3D 开关），待设计侧走查；S88-B 平面问题迁移、S88-C 3D→2D 锁定、S88-D 音效按排期推进。
-- 独立主线：S85 云 AI 真实题目实测——第一轮 2 个 P0 已修复；第二轮集成层 bug（场景加载失败/提示不可见）已修复；第三轮 P0-A（规则路径非自由落体不加载，移除阻塞式 AI 润色并加加载校验）、P0-B（云端失败原因保留 lastCloudError + console.warn）、P1-C（userData 迁至 %APPDATA%）也已修复。待产品/UX Agent 复测并跑 T8-T10/B1-B3 出 S85 最终报告。
+- 独立主线：S85 云 AI 真实题目实测——已修复 P0-A/B/C/D 与 P1-C（规则路径加载、云端错误保留、未知 topic 诚实报错、内容拒绝不降级、userData 迁移）。待产品/UX Agent 复测 5 例（T8/T9/B1/B2/T10）后闭环。
 
 ## 9. 并行 Agent 现状（勿动其文件）
 

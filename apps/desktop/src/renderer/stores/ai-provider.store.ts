@@ -51,6 +51,7 @@ interface AIProviderState {
   cloudConfig: CloudConfig;
   lastResult: ParseResult | null;
   lastFallback: "cloud" | "local" | null;
+  lastCloudError: string | null;
   setActive: (id: string) => void;
   checkOllama: () => Promise<void>;
   checkCloud: () => Promise<void>;
@@ -85,6 +86,7 @@ export const useAIProviderStore = create<AIProviderState>((set, get) => ({
   cloudConfig: savedCloud ?? CLOUD_DEFAULTS,
   lastResult: null,
   lastFallback: null,
+  lastCloudError: null,
 
   setActive: (id) => {
     if (id === "ollama") getOllamaProvider();
@@ -133,6 +135,12 @@ export const useAIProviderStore = create<AIProviderState>((set, get) => ({
     const preferred = resolveProvider(get());
     let result = await preferred.parseProblem(text);
     let lastFallback: "cloud" | "local" | null = null;
+    let lastCloudError: string | null = null;
+    // Preserve the remote failure reason before the rule fallback overwrites it.
+    if (!result.success && preferred.id === "cloud") {
+      lastCloudError = result.error ?? "unknown";
+      console.warn("[CloudProvider] parse failed:", lastCloudError);
+    }
     // Honest fallback: if a remote provider failed, actually switch to the rule parser.
     if (!result.success && preferred.id !== "rule-based") {
       const rule = aiRegistry.get("rule-based") ?? ruleParser;
@@ -144,7 +152,7 @@ export const useAIProviderStore = create<AIProviderState>((set, get) => ({
         result = ruleResult;
       }
     }
-    set({ lastResult: result, activeId: result.provider, lastFallback });
+    set({ lastResult: result, activeId: result.provider, lastFallback, lastCloudError });
     return result;
   },
 }));

@@ -148,7 +148,10 @@ export class CloudProvider implements AIProvider {
       }
       const content: string = choice?.message?.content ?? "";
       const json = extractJson(content);
-      if (!json) return { scene: null, success: false, error: "云端 AI 返回无法解析，已切换本地解析。", provider: this.id, durationMs: Date.now() - start };
+      if (!json) {
+        console.warn("[CloudProvider] extractJson failed; raw:", content.slice(0, 300));
+        return { scene: null, success: false, error: "云端 AI 返回无法解析，已切换本地解析。", provider: this.id, durationMs: Date.now() - start };
+      }
       const parsed = JSON.parse(json) as PhysicsScene & { unsupported?: boolean };
       if (parsed.unsupported) {
         return { scene: null, success: false, error: "这道题暂时不能可靠生成动画。请换一种更明确的表述，或从实验库选择最接近的实验。", provider: this.id, durationMs: Date.now() - start };
@@ -158,6 +161,7 @@ export class CloudProvider implements AIProvider {
       }
       return { scene: parsed, success: true, provider: this.id, durationMs: Date.now() - start, confidence: 0.9 };
     } catch (err) {
+      console.warn("[CloudProvider] parseProblem error:", err instanceof Error ? err.message : String(err));
       return { scene: null, success: false, error: "云端 AI 不可用，已切换本地解析。", provider: this.id, durationMs: Date.now() - start };
     }
   }

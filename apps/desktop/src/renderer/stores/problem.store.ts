@@ -91,15 +91,23 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
           text: inputText.slice(0, 500),
         });
         if (hasSimulation(result.scene)) {
-          // S75: AI polish of the teaching script (seamless fallback to rule version)
-          await polishTeachingScriptWithAI(result.scene);
-          const virtualPlugin = createVirtualPlugin(result.scene);
-          const pluginId = result.scene.metadata.topic ?? "ai-generated";
-          // Override the plugin id for registration
-          (virtualPlugin as any).id = pluginId;
-          pluginRegistry.register(virtualPlugin);
-          // Switch to the generated experiment
-          await useSimulation.getState().setActivePlugin(pluginId);
+          try {
+            const virtualPlugin = createVirtualPlugin(result.scene);
+            const pluginId = result.scene.metadata.topic ?? "ai-generated";
+            // Override the plugin id for registration
+            (virtualPlugin as any).id = pluginId;
+            pluginRegistry.register(virtualPlugin);
+            // Switch to the generated experiment
+            await useSimulation.getState().setActivePlugin(pluginId);
+            const sim = useSimulation.getState();
+            if (!sim.sceneLoaded || sim.phases.length === 0) {
+              throw new Error("scene did not load after setActivePlugin: " + pluginId);
+            }
+          } catch (err) {
+            console.error("[Physics Lab] rule scene load failed:", err);
+            set({ parseError: "场景加载失败，请从实验库选择。" });
+            return null;
+          }
         } else {
           // Cloud scene lacks simulation: attach the closest built-in simulation block and load it as a virtual plugin.
           const builtinId = TOPIC_TO_PLUGIN[result.scene.metadata.topic ?? ""];

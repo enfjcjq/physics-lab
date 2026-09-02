@@ -66,8 +66,8 @@ app.whenReady().then(() => {
   app.commandLine.appendSwitch("disable-renderer-backgrounding"); // Keep GPU awake
   app.commandLine.appendSwitch("ignore-gpu-blocklist"); // Force-enable WebGL on older GPUs
 
-  // Use temp directory for cache to avoid permission errors (also requires ready app)
-  app.setPath("userData", path.join(app.getPath("temp"), "physics-lab-electron"));
+  // Stable userData location: %TEMP% gets wiped by OS cleanup and loses saved settings.
+  app.setPath("userData", path.join(app.getPath("appData"), "physics-lab"));
 
   registerIPC();
   createWindow();

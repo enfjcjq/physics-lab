@@ -7,3 +7,7 @@ out/
 .env
 .DS_Store
 Thumbs.db
+.playwright-cli/
+*.log
+dist-electron/
+release/

@@ -61,7 +61,7 @@ export function ProjectileScene2D() {
         )}
         <Arrow x={ball.x - 20} y={ball.y} length={forceLen} direction={{ x: 0, y: 1 }} color={COLORS.force} label="G" />
         {speedLen > 1 && (
-          <Arrow x={ball.x + 20} y={ball.y} length={speedLen} direction={{ x: Math.sign(vx) || 1, y: Math.sign(vy) || 0 }} color={COLORS.velocity} label="v" labelItalic />
+          <Arrow x={ball.x + 20} y={ball.y} length={speedLen} direction={{ x: vx, y: vy }} color={COLORS.velocity} label="v" labelItalic />
         )}
         <circle cx={ball.x} cy={ball.y} r={14} fill={COLORS.structure} stroke={COLORS.emphasis} strokeWidth={2} />
         <g>

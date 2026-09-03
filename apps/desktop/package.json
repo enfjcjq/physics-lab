@@ -1,6 +1,9 @@
 {
   "name": "@physics-lab/desktop",
   "version": "0.1.0",
+  "description": "AI physics teaching animation engine - turns any physics problem into an interactive animated lesson",
+  "author": "enfjcjq",
+  "license": "MIT",
   "private": true,
   "main": "dist-electron/main/index.js",
   "scripts": {

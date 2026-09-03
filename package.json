@@ -10,7 +10,7 @@
     "build": "npm -w @physics-lab/desktop run build",
     "typecheck": "npm -w @physics-lab/shared run typecheck",
     "test": "vitest --run",
-    "package": "npm -w @physics-lab/desktop run build && cd apps/desktop && electron-builder --win portable"
+    "package": "npm -w @physics-lab/desktop run build && cd apps/desktop && electron-builder --win zip"
   },
   "engines": {
     "node": ">=20"

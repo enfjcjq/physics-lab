@@ -32,8 +32,9 @@ export function Arrow({
   labelItalic?: boolean;
 }) {
   const len = Math.max(length, 0.0001);
-  const nx = direction.x === 0 ? 0 : Math.sign(direction.x);
-  const ny = direction.y === 0 ? 0 : Math.sign(direction.y);
+  const mag = Math.hypot(direction.x, direction.y) || 1;
+  const nx = direction.x / mag;
+  const ny = direction.y / mag;
   const tip = { x: x + nx * len, y: y + ny * len };
   const head = 10;
   const halfW = 4;

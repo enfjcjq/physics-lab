@@ -35,7 +35,7 @@ function createWindow() {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
     console.log("Loading dev server:", process.env.VITE_DEV_SERVER_URL);
   } else {
-    const rendererPath = path.join(__dirname, "../renderer/index.html");
+    const rendererPath = path.join(__dirname, "../../dist/index.html");
     console.log("Loading file:", rendererPath);
     mainWindow.loadFile(rendererPath);
   }

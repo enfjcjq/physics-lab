@@ -154,6 +154,8 @@
 
 **S88-B2 斜面走查（2026-09-02 深夜，留言 42，提交 82c8b06）**：路由就绪门控生效（斜面默认 2D ✓）、θ 标注/PhaseCard/**物理正确的加速度公式** ✓、G 矢量 ✓。**❌ P0 退回：速度矢量方向错误**（实测 45° 右下，应沿斜边左下，偏差约 108°——2D 图解教错物理）。小项：滑块未旋转贴合斜边、图形角度 26.6° vs 标注 30°。**平抛验收阻塞**：云端 key 再次丢失（根因=测试流程 taskkill /F 强杀致 localStorage 未刷盘，磁盘已无 key，需用户重粘；已建议工程 P1：设置改存主进程 settings.json）。规则解析器英文平抛题行为异常（先归 free_fall 后直接失败）待工程确认。欧姆定律 2D 已通过（留言 41）。
 
+**🚀 开源发布里程碑（2026-09-03，留言 45）**：**项目正式开源上线 GitHub（enfjcjq/physics-lab）**。发布链路：①Demo 白屏事故（打包版 renderer 未加载）——设计侧定位双根因（main 加载路径 `../renderer/` vs 实际产物 `dist/` + asar 内 renderer 缺失）并直接修复（loadFile 路径一行 + 完整重构建），asar 实测 1151 个 renderer 文件、启动 `Page loaded successfully`；②产物：`release/Physics Lab-0.1.0-win.zip`（162MB，解压即用；portable 单文件因 nsis-resources 镜像 404 暂缺，工程跟进）；③`README.md` + `CASE_STUDY.md`（FDE 面试叙事 8 段）+ 安全扫描 key 0 命中；④用户完成 git push（walked through 凭据配置 + Astar 系统代理 127.0.0.1:58309 接入 git），146 个提交推送成功。**用户实测打包版运行正常并截得完整 2D 教学动画首屏**。待收尾：README 截图（docs/assets/screenshot.png）、GitHub About/Topics/Release 设置、斜面矢量角度修复（工程）。项目作为 FDE 岗位面试作品交付完成。
+
 **Demo 三项验收（2026-09-03，留言 44，提交 8a0d0ba/5d7b56a/21d2ebe）**：✅ **打包产物验证通过**——`release\Physics Lab 0.1.0.exe`（95.79MB portable）双击启动成功（窗口正常）；✅ 斜面几何精确（tan30°=0.5774 分毫不差）、滑块 rotate(-30) 贴合、v 矢量象限修正（左下）+ |v| 长度物理精确；✅ settings.json 持久化机制走查通过。**❌ 最后一步退回：v 矢量方向 45° vs 应为 30°**（疑似 (-1,1)/√2 固定归一化而非 (-cosθ,sinθ)；修复公式已给出）。修完即斜面闭环、项目可开源发布。
 
 ## P2 第二步走查指引（给项目负责人）

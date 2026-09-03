@@ -74,7 +74,7 @@ cd apps/desktop && npm run build   # 生产构建
 - **P2 收口确认重走查**：S82-S87 后项目负责人重做（无模式痕迹/四功能可发现/菜单可读/画布不扎堆/公式排版）。
 - **Ollama 解析 e2e 全量对比**：`npx vite-node -c vitest.config.ts packages/ai-parser/test-cases/run-e2e.ts`（E2E_MAX 已支持限量，长窗口运行）。
 - **S88+（2D 动画系统，下一主线）**：S88-A 已闭环；S88-B1 完成。S88-B2 三场景 2D 渲染器均已实现，路由按 has2DRenderer 就绪门控；斜面矢量方向/几何/滑块旋转 P0 已修复待复测，平抛走查待 key 恢复。B3（collision/spring/pendulum/circular + ForceCallout/EventPulse 2D）待 B2 走查后推进。
-- 工程发布：已配置 electron-builder portable 打包（`npm run package` → `release/Physics Lab 0.1.0.exe`，约 95.8MB）；云设置迁移主进程 settings.json（IPC 读写，强杀不丢）。
+- 工程发布：已配置 electron-builder 打包（`npm run package` → `release/Physics Lab-0.1.0-win.zip`，约 162.5MB；portable 单文件恢复依赖 nsis-resources 缓存）；云设置迁移主进程 settings.json；renderer 路径已修正；2D 箭头方向已单位化修复。
 - 独立主线：S85 云 AI 真实题目实测——已闭环（5/5 复测通过，0 错误动画）。遗留 P1 清单（假设声明/简化提示/云端间歇性失败/润色后台回归/topic 枚举）已记录。
 
 ## 9. 并行 Agent 现状（勿动其文件）

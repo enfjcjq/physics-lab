@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from "electron";
+import fs from "fs";
 import path from "path";
 
 let mainWindow: BrowserWindow | null = null;
@@ -55,6 +56,24 @@ function registerIPC() {
   ipcMain.handle("scene:getDefault", async () => {
     const { FREE_FALL_SCENE } = await import("@physics-lab/shared");
     return FREE_FALL_SCENE;
+  });
+
+  const settingsPath = () => path.join(app.getPath("userData"), "settings.json");
+  ipcMain.handle("settings:read", () => {
+    try {
+      return JSON.parse(fs.readFileSync(settingsPath(), "utf8"));
+    } catch {
+      return null;
+    }
+  });
+  ipcMain.handle("settings:write", (_event, value) => {
+    try {
+      fs.writeFileSync(settingsPath(), JSON.stringify(value, null, 2), "utf8");
+      return true;
+    } catch (err) {
+      console.error("[settings:write] failed:", err);
+      return false;
+    }
   });
 }
 

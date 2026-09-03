@@ -56,6 +56,7 @@ interface AIProviderState {
   checkOllama: () => Promise<void>;
   checkCloud: () => Promise<void>;
   setCloudConfig: (cfg: CloudConfig) => void;
+  hydrateCloudSettings: () => Promise<void>;
   setPreference: (p: ProviderPreference) => void;
   getProviders: () => Array<{ id: string; name: string; available: boolean | null }>;
   parseWithActive: (text: string) => Promise<ParseResult>;
@@ -77,7 +78,7 @@ function resolveProvider(s: AIProviderState): AIProvider {
 }
 
 export const useAIProviderStore = create<AIProviderState>((set, get) => ({
-  _init: (() => { setTimeout(() => { get().checkOllama(); get().checkCloud(); }, 1500); })(),
+  _init: (() => { setTimeout(() => { get().checkOllama(); get().checkCloud(); get().hydrateCloudSettings(); }, 1500); })(),
   activeId: "rule-based",
   ollamaAvailable: null,
   cloudAvailable: savedCloud?.apiKey ? ("checking" as AICloudState) : ("unconfigured" as AICloudState),
@@ -114,6 +115,8 @@ export const useAIProviderStore = create<AIProviderState>((set, get) => ({
   setCloudConfig: (cfg) => {
     const next = { ...CLOUD_DEFAULTS, ...cfg };
     saveJSON(CLOUD_KEY, next);
+    // P1-C follow-up: persist through the main process file too (survives localStorage flush loss on force-kill).
+    (window as any).physicsLab?.settings?.write(next).catch(() => {});
     cloudProvider = new CloudProvider(next);
     if (!aiRegistry.get("cloud")) aiRegistry.register(cloudProvider);
     set({ cloudConfig: next, cloudAvailable: next.apiKey ? "checking" : "unconfigured" });
@@ -129,6 +132,22 @@ export const useAIProviderStore = create<AIProviderState>((set, get) => ({
       name: p.name,
       available: p.id === "rule-based" ? true : p.id === "ollama" ? get().ollamaAvailable : get().cloudAvailable === "online",
     }));
+  },
+
+  hydrateCloudSettings: async () => {
+    try {
+      const saved = await (window as any).physicsLab?.settings?.read();
+      if (saved && typeof saved === "object" && (saved as any).apiKey) {
+        const cfg = { ...CLOUD_DEFAULTS, ...(saved as CloudConfig) };
+        cloudProvider = new CloudProvider(cfg);
+        if (!aiRegistry.get("cloud")) aiRegistry.register(cloudProvider);
+        saveJSON(CLOUD_KEY, cfg);
+        set({ cloudConfig: cfg, cloudAvailable: "checking" });
+        get().checkCloud();
+      }
+    } catch {
+      // settings.json not available yet (dev/browser fallback)
+    }
   },
 
   parseWithActive: async (text) => {
